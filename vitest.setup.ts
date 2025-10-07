@@ -16,6 +16,14 @@ vi.mock("next/image", () => ({
   },
 }));
 
+vi.mock("next/link", () => ({
+  __esModule: true,
+  default: (props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => {
+    const { href, children, ...rest } = props;
+    return React.createElement("a", { href, ...rest }, children);
+  },
+}));
+
 vi.mock("@/db/drizzle", () => ({
   __esModule: true,
   default: {

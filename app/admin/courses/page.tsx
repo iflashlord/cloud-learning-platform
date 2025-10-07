@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import Image from "next/image";
 
@@ -16,6 +17,8 @@ interface Course {
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     fetchCourses();
@@ -94,45 +97,59 @@ export default function CoursesPage() {
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <Card key={course.id} className="overflow-hidden">
-              <div className="aspect-video relative bg-gray-100">
-                <Image
-                  src={course.imageSrc}
-                  alt={course.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-semibold text-lg text-gray-900 mb-4">
-                  {course.title}
-                </h3>
-                <div className="flex space-x-2">
-                  <Link href={`/admin/courses/${course.id}`} className="flex-1">
-                    <Button variant="primaryOutline" className="w-full" size="sm">
-                      <Eye className="w-4 h-4 mr-2" />
-                      View
-                    </Button>
-                  </Link>
-                  <Link href={`/admin/courses/${course.id}/edit`}>
-                    <Button variant="secondaryOutline" size="sm">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="dangerOutline"
-                    size="sm"
-                    onClick={() => deleteCourse(course.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((course) => (
+              <Card key={course.id} className="overflow-hidden">
+                <div className="aspect-video relative bg-gray-100">
+                  <Image
+                    src={course.imageSrc}
+                    alt={course.title}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+                <div className="p-6">
+                  <h3 className="font-semibold text-lg text-gray-900 mb-4">
+                    {course.title}
+                  </h3>
+                  <div className="flex space-x-2">
+                    <Link href={`/admin/courses/${course.id}`} className="flex-1">
+                      <Button variant="primaryOutline" className="w-full" size="sm">
+                        <Eye className="w-4 h-4 mr-2" />
+                        View
+                      </Button>
+                    </Link>
+                    <Link href={`/admin/courses/${course.id}/edit`}>
+                      <Button variant="secondaryOutline" size="sm">
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="dangerOutline"
+                      size="sm"
+                      onClick={() => deleteCourse(course.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {courses.length > itemsPerPage && (
+            <div className="mt-8 border-t pt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(courses.length / itemsPerPage)}
+                onPageChange={setCurrentPage}
+                showTotal={true}
+                totalItems={courses.length}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

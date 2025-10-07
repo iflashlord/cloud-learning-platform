@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/ui/pagination";
 import { 
   CreditCard, 
   DollarSign, 
@@ -69,6 +70,8 @@ export default function PaymentManagementPage() {
   const [activeTab, setActiveTab] = useState<"payments" | "subscriptions" | "analytics">("payments");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchPaymentData();
@@ -178,6 +181,19 @@ export default function PaymentManagementPage() {
     
     return matchesSearch && matchesStatus;
   });
+
+  // Pagination logic for payments and subscriptions
+  const currentData = activeTab === 'payments' ? filteredPayments : filteredSubscriptions;
+  const totalPages = Math.ceil(currentData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPayments = filteredPayments.slice(startIndex, endIndex);
+  const paginatedSubscriptions = filteredSubscriptions.slice(startIndex, endIndex);
+
+  // Reset to first page when filters or tab changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, activeTab]);
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
@@ -360,7 +376,7 @@ export default function PaymentManagementPage() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {filteredPayments.map((payment) => (
+                  {paginatedPayments.map((payment) => (
                     <div key={payment.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center space-x-4">
                         <div className={`w-3 h-3 rounded-full ${
@@ -397,6 +413,18 @@ export default function PaymentManagementPage() {
                   ))}
                 </div>
               )}
+
+              {filteredPayments.length > 0 && (
+                <div className="mt-6 border-t pt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(filteredPayments.length / itemsPerPage)}
+                    onPageChange={setCurrentPage}
+                    showTotal={true}
+                    totalItems={filteredPayments.length}
+                  />
+                </div>
+              )}
             </div>
           )}
 
@@ -412,7 +440,7 @@ export default function PaymentManagementPage() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {filteredSubscriptions.map((subscription) => (
+                  {paginatedSubscriptions.map((subscription) => (
                     <div key={subscription.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center space-x-4">
                         <div className={`w-3 h-3 rounded-full ${
@@ -451,6 +479,18 @@ export default function PaymentManagementPage() {
                       )}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {filteredSubscriptions.length > 0 && (
+                <div className="mt-6 border-t pt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(filteredSubscriptions.length / itemsPerPage)}
+                    onPageChange={setCurrentPage}
+                    showTotal={true}
+                    totalItems={filteredSubscriptions.length}
+                  />
                 </div>
               )}
             </div>

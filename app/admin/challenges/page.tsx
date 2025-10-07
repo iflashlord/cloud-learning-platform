@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
 import { Plus, Edit, Trash2, FileQuestion } from "lucide-react";
 
 interface Challenge {
@@ -26,6 +27,8 @@ interface Challenge {
 export default function ChallengesPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchChallenges();
@@ -110,7 +113,7 @@ export default function ChallengesPage() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {challenges.map((challenge) => (
+          {challenges.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((challenge) => (
             <Card key={challenge.id} className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -153,6 +156,18 @@ export default function ChallengesPage() {
               </div>
             </Card>
           ))}
+
+          {challenges.length > 0 && (
+            <div className="mt-6 border-t pt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(challenges.length / itemsPerPage)}
+                onPageChange={setCurrentPage}
+                showTotal={true}
+                totalItems={challenges.length}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

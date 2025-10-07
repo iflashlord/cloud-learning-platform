@@ -1,35 +1,65 @@
-import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/admin";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle } from "lucide-react";
-import db from "@/db/drizzle";
 
-const AdminChallengeOptionsPage = async () => {
-  if (!await isAdmin()) {
-    return redirect("/");
+interface ChallengeOption {
+  id: number;
+  text: string;
+  correct: boolean;
+  imageSrc?: string;
+  audioSrc?: string;
+  guide?: string;
+  challenge: {
+    id: number;
+    question: string;
+    lesson?: {
+      id: number;
+      title: string;
+    };
+  };
+}
+
+const AdminChallengeOptionsPage = () => {
+  const [challengeOptions, setChallengeOptions] = useState<ChallengeOption[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    fetchChallengeOptions();
+  }, []);
+
+  const fetchChallengeOptions = async () => {
+    try {
+      const response = await fetch("/api/challengeOptions");
+      if (response.ok) {
+        const data = await response.json();
+        setChallengeOptions(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch challenge options:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const totalPages = Math.ceil(challengeOptions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedOptions = challengeOptions.slice(startIndex, endIndex);
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-8">Loading challenge options...</div>
+      </div>
+    );
   }
-
-  // Fetch challenge options directly from database
-  const challengeOptions = await db.query.challengeOptions.findMany({
-    with: {
-      challenge: {
-        columns: {
-          id: true,
-          question: true,
-        },
-        with: {
-          lesson: {
-            columns: {
-              id: true,
-              title: true,
-            },
-          },
-        },
-      },
-    },
-  });
 
   return (
     <div className="p-6">
@@ -61,7 +91,7 @@ const AdminChallengeOptionsPage = async () => {
         </Card>
       ) : (
         <div className="space-y-4">
-          {challengeOptions.map((option: any) => (
+          {paginatedOptions.map((option: any) => (
             <Card key={option.id} className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -128,6 +158,18 @@ const AdminChallengeOptionsPage = async () => {
               </div>
             </Card>
           ))}
+
+          {challengeOptions.length > 0 && (
+            <div className="mt-6 border-t pt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                showTotal={true}
+                totalItems={challengeOptions.length}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
