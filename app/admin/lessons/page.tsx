@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
+import { AdminPageHeader } from "@/components/ui/admin-page-header";
 import { Plus, Edit, Trash2, ListChecks } from "lucide-react";
 
 interface Lesson {
@@ -22,6 +24,9 @@ interface Lesson {
 export default function LessonsPage() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchLessons();
@@ -60,6 +65,18 @@ export default function LessonsPage() {
     }
   };
 
+  // Filter lessons based on search term
+  const filteredLessons = lessons.filter(lesson =>
+    lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lesson.unit?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lesson.unit?.course?.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -70,19 +87,16 @@ export default function LessonsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Lessons</h1>
-          <p className="text-gray-600">Manage individual lessons within units</p>
-        </div>
-        <Link href="/admin/lessons/new">
-          <Button variant="primary">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Lesson
-          </Button>
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="Lessons"
+        description="Manage individual lessons within units"
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search lessons, units, or courses..."
+        addNewHref="/admin/lessons/new"
+        addNewLabel="Add Lesson"
+        addNewIcon={ListChecks}
+      />
 
       {/* Lessons List */}
       {lessons.length === 0 ? (
@@ -98,9 +112,19 @@ export default function LessonsPage() {
             </Link>
           </div>
         </Card>
+      ) : filteredLessons.length === 0 ? (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <ListChecks className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">No lessons found</h3>
+            <p className="mb-4">Try adjusting your search to find what you&apos;re looking for.</p>
+          </div>
+        </Card>
       ) : (
         <div className="space-y-4">
-          {lessons.map((lesson) => (
+          {filteredLessons.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((lesson) => (
             <Card key={lesson.id} className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -140,6 +164,18 @@ export default function LessonsPage() {
               </div>
             </Card>
           ))}
+
+          {filteredLessons.length > itemsPerPage && (
+            <div className="mt-6 border-t pt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(filteredLessons.length / itemsPerPage)}
+                onPageChange={setCurrentPage}
+                showTotal={true}
+                totalItems={filteredLessons.length}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
