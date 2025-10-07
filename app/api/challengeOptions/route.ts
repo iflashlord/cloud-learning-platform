@@ -10,19 +10,24 @@ export const GET = async (req: Request) => {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  // Get query parameters from the URL
-  const { searchParams } = new URL(req.url);
-  const challengeId = searchParams.get("challengeId");
-
-  // If challengeId is provided, filter by it
-  let data;
-  if (challengeId) {
-    data = await db.query.challengeOptions.findMany({
-      where: eq(challengeOptions.challengeId, parseInt(challengeId)),
-    });
-  } else {
-    data = await db.query.challengeOptions.findMany();
-  }
+  const data = await db.query.challengeOptions.findMany({
+    with: {
+      challenge: {
+        columns: {
+          id: true,
+          question: true,
+        },
+        with: {
+          lesson: {
+            columns: {
+              id: true,
+              title: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
   return NextResponse.json(data);
 };
@@ -35,7 +40,12 @@ export const POST = async (req: Request) => {
   const body = await req.json();
 
   const data = await db.insert(challengeOptions).values({
-    ...body,
+    challengeId: body.challengeId,
+    text: body.text,
+    correct: body.correct,
+    imageSrc: body.imageSrc || null,
+    audioSrc: body.audioSrc || null,
+    guide: body.guide || null,
   }).returning();
 
   return NextResponse.json(data[0]);

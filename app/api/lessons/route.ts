@@ -10,26 +10,25 @@ export const GET = async (req: Request) => {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { searchParams } = new URL(req.url);
-  const courseId = searchParams.get("courseId");
-
-  let data;
-  
-  if (courseId) {
-    // Get lessons for a specific course by joining with units
-    data = await db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        unitId: lessons.unitId,
-        order: lessons.order,
-      })
-      .from(lessons)
-      .innerJoin(units, eq(lessons.unitId, units.id))
-      .where(eq(units.courseId, parseInt(courseId)));
-  } else {
-    data = await db.query.lessons.findMany();
-  }
+  const data = await db.query.lessons.findMany({
+    orderBy: (lessons, { asc }) => [asc(lessons.order)],
+    with: {
+      unit: {
+        columns: {
+          id: true,
+          title: true,
+        },
+        with: {
+          course: {
+            columns: {
+              id: true,
+              title: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
   return NextResponse.json(data);
 };
@@ -42,7 +41,9 @@ export const POST = async (req: Request) => {
   const body = await req.json();
 
   const data = await db.insert(lessons).values({
-    ...body,
+    title: body.title,
+    unitId: body.unitId,
+    order: body.order,
   }).returning();
 
   return NextResponse.json(data[0]);

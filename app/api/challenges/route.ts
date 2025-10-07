@@ -10,28 +10,33 @@ export const GET = async (req: Request) => {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { searchParams } = new URL(req.url);
-  const courseId = searchParams.get("courseId");
-
-  let data;
-  
-  if (courseId) {
-    // Get challenges for a specific course by joining with lessons and units
-    data = await db
-      .select({
-        id: challenges.id,
-        lessonId: challenges.lessonId,
-        type: challenges.type,
-        question: challenges.question,
-        order: challenges.order,
-      })
-      .from(challenges)
-      .innerJoin(lessons, eq(challenges.lessonId, lessons.id))
-      .innerJoin(units, eq(lessons.unitId, units.id))
-      .where(eq(units.courseId, parseInt(courseId)));
-  } else {
-    data = await db.query.challenges.findMany();
-  }
+  const data = await db.query.challenges.findMany({
+    orderBy: (challenges, { asc }) => [asc(challenges.order)],
+    with: {
+      lesson: {
+        columns: {
+          id: true,
+          title: true,
+        },
+        with: {
+          unit: {
+            columns: {
+              id: true,
+              title: true,
+            },
+            with: {
+              course: {
+                columns: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 
   return NextResponse.json(data);
 };
@@ -44,7 +49,11 @@ export const POST = async (req: Request) => {
   const body = await req.json();
 
   const data = await db.insert(challenges).values({
-    ...body,
+    lessonId: body.lessonId,
+    type: body.type,
+    question: body.question,
+    hint: body.hint || null,
+    order: body.order,
   }).returning();
 
   return NextResponse.json(data[0]);

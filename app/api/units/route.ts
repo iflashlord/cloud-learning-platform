@@ -9,7 +9,17 @@ export const GET = async () => {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const data = await db.query.units.findMany();
+  const data = await db.query.units.findMany({
+    orderBy: (units, { asc }) => [asc(units.order)],
+    with: {
+      course: {
+        columns: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
 
   return NextResponse.json(data);
 };
@@ -22,7 +32,10 @@ export const POST = async (req: Request) => {
   const body = await req.json();
 
   const data = await db.insert(units).values({
-    ...body,
+    title: body.title,
+    description: body.description,
+    courseId: body.courseId,
+    order: body.order,
   }).returning();
 
   return NextResponse.json(data[0]);
