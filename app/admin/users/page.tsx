@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
+import { AdminPageHeader } from "@/components/ui/admin-page-header";
 import { 
   Users, 
   UserPlus, 
@@ -115,19 +116,25 @@ export default function UserManagementPage() {
     ).length,
   };
 
+  const filterOptions = [
+    { value: "all", label: "All Users", count: users.length },
+    { value: "active", label: "Active", count: stats.active },
+    { value: "inactive", label: "Inactive", count: stats.inactive },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage platform users and their access</p>
-        </div>
-        <Button>
-          <UserPlus className="w-4 h-4 mr-2" />
-          Invite User
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="User Management"
+        description="Manage platform users and their access"
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search users by name or ID..."
+        filterOptions={filterOptions}
+        activeFilter={filter}
+        onFilterChange={(value) => setFilter(value as "all" | "active" | "inactive")}
+        showAddButton={false}
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -180,47 +187,7 @@ export default function UserManagementPage() {
         </Card>
       </div>
 
-      {/* Filters and Search */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div className="flex gap-2">
-              <Button
-                variant={filter === "all" ? "default" : "secondary"}
-                size="sm"
-                onClick={() => setFilter("all")}
-              >
-                All Users
-              </Button>
-              <Button
-                variant={filter === "active" ? "default" : "secondary"}
-                size="sm"
-                onClick={() => setFilter("active")}
-              >
-                Active
-              </Button>
-              <Button
-                variant={filter === "inactive" ? "default" : "secondary"}
-                size="sm"
-                onClick={() => setFilter("inactive")}
-              >
-                Inactive
-              </Button>
-            </div>
-            
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+
 
       {/* Users List */}
       <Card>

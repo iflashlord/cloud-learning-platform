@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
+import { AdminPageHeader } from "@/components/ui/admin-page-header";
+import { SearchBar } from "@/components/ui/search-bar";
 import { 
   CreditCard, 
   DollarSign, 
@@ -351,16 +353,12 @@ export default function PaymentManagementPage() {
               </select>
             </div>
             
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              placeholder={activeTab === "payments" ? "Search payments..." : "Search subscriptions..."}
+              className="w-full md:w-80"
+            />
           </div>
 
           {/* Content */}

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { AdminPageHeader } from "@/components/ui/admin-page-header";
+import { Plus, Edit, Trash2, Eye, GraduationCap } from "lucide-react";
 import Image from "next/image";
 
 interface Course {
@@ -18,6 +19,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 6;
 
   useEffect(() => {
@@ -58,6 +60,16 @@ export default function CoursesPage() {
     }
   };
 
+  // Filter courses based on search term
+  const filteredCourses = courses.filter(course =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -68,26 +80,23 @@ export default function CoursesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">AWS Certifications</h1>
-          <p className="text-gray-600">Manage AWS certification courses</p>
-        </div>
-        <Link href="/admin/courses/new">
-          <Button variant="primary">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Certification
-          </Button>
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="AWS Certifications"
+        description="Manage AWS certification courses"
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search certifications..."
+        addNewHref="/admin/courses/new"
+        addNewLabel="Add Certification"
+        addNewIcon={Plus}
+      />
 
       {/* Courses Grid */}
       {courses.length === 0 ? (
         <Card className="p-8 text-center">
           <div className="text-gray-500">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Plus className="w-8 h-8" />
+              <GraduationCap className="w-8 h-8" />
             </div>
             <h3 className="text-lg font-medium mb-2">No certifications yet</h3>
             <p className="mb-4">Get started by creating your first AWS certification course.</p>
@@ -96,10 +105,20 @@ export default function CoursesPage() {
             </Link>
           </div>
         </Card>
+      ) : filteredCourses.length === 0 ? (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <GraduationCap className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">No certifications found</h3>
+            <p className="mb-4">Try adjusting your search to find what you&apos;re looking for.</p>
+          </div>
+        </Card>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((course) => (
+            {filteredCourses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((course) => (
               <Card key={course.id} className="overflow-hidden">
                 <div className="aspect-video relative bg-gray-100">
                   <Image
@@ -138,14 +157,14 @@ export default function CoursesPage() {
             ))}
           </div>
 
-          {courses.length > itemsPerPage && (
+          {filteredCourses.length > itemsPerPage && (
             <div className="mt-8 border-t pt-6">
               <Pagination
                 currentPage={currentPage}
-                totalPages={Math.ceil(courses.length / itemsPerPage)}
+                totalPages={Math.ceil(filteredCourses.length / itemsPerPage)}
                 onPageChange={setCurrentPage}
                 showTotal={true}
-                totalItems={courses.length}
+                totalItems={filteredCourses.length}
               />
             </div>
           )}

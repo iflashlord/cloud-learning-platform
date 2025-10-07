@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
+import { AdminPageHeader } from "@/components/ui/admin-page-header";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle } from "lucide-react";
 
@@ -28,6 +29,8 @@ const AdminChallengeOptionsPage = () => {
   const [challengeOptions, setChallengeOptions] = useState<ChallengeOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState<"all" | "correct" | "incorrect">("all");
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -48,10 +51,33 @@ const AdminChallengeOptionsPage = () => {
     }
   };
 
-  const totalPages = Math.ceil(challengeOptions.length / itemsPerPage);
+  // Filter and search challenge options
+  const filteredOptions = challengeOptions.filter(option => {
+    const matchesSearch = option.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         option.challenge.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         option.challenge.lesson?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = 
+      filter === "all" || 
+      (filter === "correct" && option.correct) || 
+      (filter === "incorrect" && !option.correct);
+    return matchesSearch && matchesFilter;
+  });
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filter]);
+
+  const totalPages = Math.ceil(filteredOptions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedOptions = challengeOptions.slice(startIndex, endIndex);
+  const paginatedOptions = filteredOptions.slice(startIndex, endIndex);
+
+  const filterOptions = [
+    { value: "all", label: "All Options", count: challengeOptions.length },
+    { value: "correct", label: "Correct", count: challengeOptions.filter(o => o.correct).length },
+    { value: "incorrect", label: "Incorrect", count: challengeOptions.filter(o => !o.correct).length },
+  ];
 
   if (loading) {
     return (
@@ -62,19 +88,20 @@ const AdminChallengeOptionsPage = () => {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Challenge Options</h1>
-          <p className="text-gray-600 mt-1">Manage answer options for challenges</p>
-        </div>
-        <Link href="/admin/challenge-options/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Challenge Option
-          </Button>
-        </Link>
-      </div>
+    <div className="p-6 space-y-6">
+      <AdminPageHeader
+        title="Challenge Options"
+        description="Manage answer options for challenges"
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search options or questions..."
+        filterOptions={filterOptions}
+        activeFilter={filter}
+        onFilterChange={(value) => setFilter(value as "all" | "correct" | "incorrect")}
+        addNewHref="/admin/challenge-options/new"
+        addNewLabel="Add Option"
+        addNewIcon={Plus}
+      />
 
       {challengeOptions.length === 0 ? (
         <Card className="p-8 text-center">
@@ -87,6 +114,16 @@ const AdminChallengeOptionsPage = () => {
             <Link href="/admin/challenge-options/new">
               <Button>Add Challenge Option</Button>
             </Link>
+          </div>
+        </Card>
+      ) : filteredOptions.length === 0 ? (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">No options found</h3>
+            <p className="mb-4">Try adjusting your search or filter to find what you&apos;re looking for.</p>
           </div>
         </Card>
       ) : (
@@ -159,14 +196,14 @@ const AdminChallengeOptionsPage = () => {
             </Card>
           ))}
 
-          {challengeOptions.length > 0 && (
+          {filteredOptions.length > itemsPerPage && (
             <div className="mt-6 border-t pt-4">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 showTotal={true}
-                totalItems={challengeOptions.length}
+                totalItems={filteredOptions.length}
               />
             </div>
           )}
