@@ -10,9 +10,9 @@ I have successfully implemented a **centralized branding system** that allows yo
 ```typescript
 export const BRAND_CONFIG = {
   // 🏷️ Single source of truth for platform name
-  PLATFORM_NAME: "TechLingo",
+  PLATFORM_NAME: "CloudLingo",
   PLATFORM_DESCRIPTION: "Interactive Technology Learning Platform",
-  PLATFORM_SLUG: "techlingo-platform",
+  PLATFORM_SLUG: "cloudlingo-platform",
   CONTENT_THEME: "Technology",
   DOMAIN_FOCUS: "cloud computing and modern technology",
   // ... more branding properties

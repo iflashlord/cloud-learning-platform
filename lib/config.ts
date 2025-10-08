@@ -7,13 +7,13 @@
 
 export const BRAND_CONFIG = {
   // Platform name - used throughout the application
-  PLATFORM_NAME: "TechLingo",
+  PLATFORM_NAME: "CloudLingo",
   
   // Platform description/tagline
   PLATFORM_DESCRIPTION: "Interactive Technology Learning Platform",
   
   // Platform URL slug (used in package.json, URLs, etc.)
-  PLATFORM_SLUG: "techlingo-platform",
+  PLATFORM_SLUG: "cloudlingo-platform",
   
   // Course/content theme
   CONTENT_THEME: "Technology",
@@ -22,16 +22,16 @@ export const BRAND_CONFIG = {
   DOMAIN_FOCUS: "cloud computing and modern technology",
   
   // Company/Organization name (if different from platform name)
-  COMPANY_NAME: "TechLingo",
+  COMPANY_NAME: "CloudLingo",
   
   // Short description for metadata/SEO
   META_DESCRIPTION: "Learn technology concepts through interactive lessons, quests, and challenges",
   
   // GitHub/repository related
-  REPO_NAME: "techlingo-platform",
+  REPO_NAME: "cloudlingo-platform",
   
   // File/asset naming patterns
-  ASSET_PREFIX: "techlingo",
+  ASSET_PREFIX: "cloudlingo",
 } as const;
 
 // Global Color Theme Configuration

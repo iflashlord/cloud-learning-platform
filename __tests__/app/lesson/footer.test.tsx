@@ -5,10 +5,17 @@ const {
   mockUseKey,
   mockUseMedia,
   hrefSetter,
+  mockUseThemeClasses,
 } = vi.hoisted(() => ({
   mockUseKey: vi.fn(),
   mockUseMedia: vi.fn().mockReturnValue(false),
   hrefSetter: vi.fn(),
+  mockUseThemeClasses: vi.fn().mockReturnValue({
+    successBg: "bg-green-50",
+    successText: "text-green-800",
+    errorBg: "bg-red-50",
+    errorText: "text-red-800",
+  }),
 }));
 
 vi.mock("react-use", async () => {
@@ -26,6 +33,10 @@ vi.mock("react-use", async () => {
     useMedia: (query: string) => mockUseMedia(query),
   };
 });
+
+vi.mock("@/lib/theme-utils", () => ({
+  useThemeClasses: () => mockUseThemeClasses(),
+}));
 
 import { Footer } from "@/app/lesson/footer";
 
@@ -61,6 +72,7 @@ describe("Lesson Footer", () => {
     mockUseMedia.mockReturnValue(false);
     hrefSetter.mockClear();
     currentHref = "";
+    mockUseThemeClasses.mockClear();
   });
 
   it("shows success feedback and wires the enter key handler", () => {

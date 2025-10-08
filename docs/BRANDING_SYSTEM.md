@@ -20,13 +20,13 @@ This is the **single source of truth** for all branding configuration:
 ```typescript
 export const BRAND_CONFIG = {
   // 🏷️ Main platform name - change this to rebrand everywhere
-  PLATFORM_NAME: "TechLingo",
+  PLATFORM_NAME: "CloudLingo",
   
   // 📝 Platform description/tagline
   PLATFORM_DESCRIPTION: "Interactive Technology Learning Platform",
   
   // 🔗 Platform URL slug (used in package.json, URLs, etc.)
-  PLATFORM_SLUG: "techlingo-platform",
+  PLATFORM_SLUG: "cloudlingo-platform",
   
   // 🎯 Course/content theme
   CONTENT_THEME: "Technology",
@@ -35,16 +35,16 @@ export const BRAND_CONFIG = {
   DOMAIN_FOCUS: "cloud computing and modern technology",
   
   // 🏢 Company/Organization name (if different from platform name)
-  COMPANY_NAME: "TechLingo",
+  COMPANY_NAME: "CloudLingo",
   
   // 📄 Short description for metadata/SEO
   META_DESCRIPTION: "Learn technology concepts through interactive lessons, quests, and challenges",
   
   // 📦 GitHub/repository related
-  REPO_NAME: "techlingo-platform",
+  REPO_NAME: "cloudlingo-platform",
   
   // 🖼️ File/asset naming patterns
-  ASSET_PREFIX: "techlingo",
+  ASSET_PREFIX: "cloudlingo",
 }
 ```
 
@@ -99,7 +99,7 @@ This script:
 
 ## 📝 Example Rebranding
 
-### Change from "TechLingo" to "CodeMaster":
+### Change from "CloudLingo" to "CodeMaster":
 
 1. **Edit `/lib/config.ts`**:
 ```typescript
@@ -156,7 +156,7 @@ To find any remaining hardcoded platform names, use:
 
 ```bash
 # Search for the old platform name
-grep -r "TechLingo" . --exclude-dir=node_modules --exclude-dir=.git
+grep -r "CloudLingo" . --exclude-dir=node_modules --exclude-dir=.git
 
 # Search for specific patterns
 grep -r "aws\|AWS" . --exclude-dir=node_modules --exclude-dir=.git

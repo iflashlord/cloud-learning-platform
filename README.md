@@ -1,6 +1,6 @@
-# TechLingo - Interactive Technology Learning Platform
+# CloudLingo - Interactive Technology Learning Platform
 
-![TechLingo](https://img.shields.io/badge/TechLingo-Learning%20Platform-orange)
+![CloudLingo](https://img.shields.io/badge/CloudLingo-Learning%20Platform-orange)
 
 🎓 **Learn Technology Skills through Gamified Learning!**
 

@@ -42,7 +42,7 @@ describe("CourseForm", () => {
 
     render(<CourseForm mode="create" />);
 
-    await userEvent.type(screen.getByLabelText("Certification Title *"), "New Course");
+    await userEvent.type(screen.getByLabelText("Course Title *"), "New Course");
     await userEvent.type(screen.getByLabelText("Image URL *"), "https://example.com/image.svg");
 
     await userEvent.click(screen.getByRole("button", { name: "Create" }));
@@ -70,12 +70,12 @@ describe("CourseForm", () => {
 
     render(<CourseForm mode="create" />);
 
-    await userEvent.type(screen.getByLabelText("Certification Title *"), "Bad Course");
+    await userEvent.type(screen.getByLabelText("Course Title *"), "Bad Course");
     await userEvent.type(screen.getByLabelText("Image URL *"), "https://example.com/bad.svg");
     await userEvent.click(screen.getByRole("button", { name: "Create" }));
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith("Failed to create certification");
+      expect(window.alert).toHaveBeenCalledWith("Failed to create course");
     });
     expect(pushMock).not.toHaveBeenCalled();
   });
@@ -95,7 +95,7 @@ describe("CourseForm", () => {
       />,
     );
 
-    const titleInput = screen.getByLabelText("Certification Title *");
+    const titleInput = screen.getByLabelText("Course Title *");
     expect(titleInput).toHaveValue("Existing Course");
 
     await userEvent.clear(titleInput);

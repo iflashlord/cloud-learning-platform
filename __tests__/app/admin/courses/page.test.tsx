@@ -30,7 +30,7 @@ describe("Admin CoursesPage", () => {
     expect(container.querySelector(".animate-spin")).not.toBeNull();
 
     await waitFor(() => {
-      expect(screen.getByText("No certifications yet")).toBeInTheDocument();
+      expect(screen.getByText("No courses yet")).toBeInTheDocument();
     });
 
     expect(fetchMock).toHaveBeenCalledWith("/api/courses");
@@ -53,7 +53,7 @@ describe("Admin CoursesPage", () => {
       expect(screen.getByText("Solutions Architect")).toBeInTheDocument();
     });
 
-    expect(screen.getAllByRole("link", { name: "Add Certification" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Add Course" }).length).toBeGreaterThan(0);
   });
 
   it("deletes a course after confirmation", async () => {
@@ -88,7 +88,7 @@ describe("Admin CoursesPage", () => {
     await userEvent.click(deleteButton);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith("Certification deleted successfully");
+      expect(window.alert).toHaveBeenCalledWith("Course deleted successfully");
     });
 
     expect(fetchMock).toHaveBeenNthCalledWith(2, "/api/courses/1", { method: "DELETE" });

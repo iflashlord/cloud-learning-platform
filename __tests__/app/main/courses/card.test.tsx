@@ -32,7 +32,7 @@ describe("Course Card", () => {
       />,
     );
 
-    const card = screen.getByText("Starter").closest("div");
+    const card = screen.getByRole("button", { name: /Start Starter course/i });
     expect(card?.className).toContain("pointer-events-none");
     expect(card?.className).toContain("opacity-50");
   });

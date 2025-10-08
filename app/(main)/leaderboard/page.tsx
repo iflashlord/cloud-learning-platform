@@ -74,18 +74,47 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
       </StickyWrapper>
       <FeedWrapper>
         <div className="w-full flex flex-col items-center">
-          <Image
-            src="/leaderboard.svg"
-            alt="Leaderboard"
-            height={90}
-            width={90}
-          />
-          <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            {CONFIG.PLATFORM_NAME} Leaderboard
-          </h1>
-          <p className="text-muted-foreground text-center text-lg mb-6">
-            See where you rank among other technology learners in the community.
-          </p>
+          {/* Enhanced Header */}
+          <div className="text-center mb-8">
+            <div className="relative inline-block mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-xl">
+                <Image
+                  src="/leaderboard.svg"
+                  alt="Leaderboard"
+                  height={40}
+                  width={40}
+                  className="filter brightness-0 invert"
+                />
+              </div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-xs font-bold text-white">🏆</span>
+              </div>
+            </div>
+            
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-4">
+              {CONFIG.PLATFORM_NAME} Champions
+            </h1>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+              Compete with fellow learners, track your progress, and celebrate achievements 
+              in our community of technology enthusiasts. Every challenge completed brings you closer to the top!
+            </p>
+            
+            {/* Quick Stats */}
+            <div className="flex items-center justify-center gap-6 mt-6 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Live Rankings</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span>Real-time Updates</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span>Fair Competition</span>
+              </div>
+            </div>
+          </div>
           
           <LeaderboardTabs
             courses={courses}
