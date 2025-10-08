@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { ExitModal } from "@/components/modals/exit-modal";
 import { HeartsModal } from "@/components/modals/hearts-modal";
 import { PracticeModal } from "@/components/modals/practice-modal";
+import { ThemeProvider } from "@/lib/theme";
+import { ThemeLayoutWrapper } from "@/components/theme-layout-wrapper";
 import { CONFIG } from "@/lib/config";
 import "./globals.css";
 
@@ -24,11 +26,15 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={font.className}>
-          <Toaster />
-          <ExitModal />
-          <HeartsModal />
-          <PracticeModal />
-          {children}
+          <ThemeProvider>
+            <ThemeLayoutWrapper>
+              <Toaster />
+              <ExitModal />
+              <HeartsModal />
+              <PracticeModal />
+              {children}
+            </ThemeLayoutWrapper>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

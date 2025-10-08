@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -8,7 +10,8 @@ import {
 import { Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { PLATFORM_NAME } from "@/constants";
+import { CONFIG } from "@/lib/config";
+import { useThemeClasses } from "@/lib/theme-utils";
 
 import { SidebarItem } from "./sidebar-item";
 
@@ -17,6 +20,8 @@ type Props = {
 };
 
 export const Sidebar = ({ className }: Props) => {
+  const themeClasses = useThemeClasses();
+  
   return (
     <div className={cn(
       "flex h-full lg:w-[256px] lg:fixed left-0 top-0 px-4 border-r-2 flex-col",
@@ -25,8 +30,8 @@ export const Sidebar = ({ className }: Props) => {
       <Link href="/learn">
         <div className="pt-8 pl-4 pb-7 flex items-center gap-x-3">
           <Image src="/mascot.svg" height={40} width={40} alt="Mascot" />
-          <h1 className="text-2xl font-extrabold text-orange-600 tracking-wide">
-            {PLATFORM_NAME}
+          <h1 className={cn("text-2xl font-extrabold tracking-wide", themeClasses.primaryText)}>
+            {CONFIG.PLATFORM_NAME}
           </h1>
         </div>
       </Link>

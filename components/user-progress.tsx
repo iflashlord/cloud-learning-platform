@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { InfinityIcon } from "lucide-react";
 
 import { courses } from "@/db/schema";
 import { Button } from "@/components/ui/button";
+import { useThemeClasses } from "@/lib/theme-utils";
+import { cn } from "@/lib/utils";
 
 type Props = {
   activeCourse: typeof courses.$inferSelect;
@@ -18,6 +22,8 @@ export const UserProgress = ({
   hearts, 
   hasActiveSubscription
 }: Props) => {
+  const themeClasses = useThemeClasses();
+  
   return (
     <div className="flex items-center justify-between gap-x-2 w-full">
       <Link href="/courses">
@@ -32,7 +38,7 @@ export const UserProgress = ({
         </Button>
       </Link>
       <Link href="/shop">
-        <Button variant="ghost" className="text-orange-500">
+        <Button variant="ghost" className={themeClasses.primaryText}>
           <Image src="/points.svg" height={28} width={28} alt="Points" className="mr-2" />
           {points}
         </Button>
