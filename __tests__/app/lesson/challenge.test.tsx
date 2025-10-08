@@ -46,7 +46,9 @@ describe("Challenge component", () => {
       />,
     );
 
-    expect(container.firstChild).toHaveClass("grid-cols-1");
+    const grid = container.querySelector(".grid");
+    expect(grid).not.toBeNull();
+    expect(grid).toHaveClass("grid-cols-1");
     expect(mockCard).toHaveBeenCalledWith(expect.objectContaining({
       id: 1,
       text: "Option A",
@@ -69,7 +71,9 @@ describe("Challenge component", () => {
       />,
     );
 
-    expect(container.firstChild).toHaveClass("grid-cols-2");
+    const grid = container.querySelector(".grid");
+    expect(grid).not.toBeNull();
+    expect(grid).toHaveClass("grid-cols-2");
     expect(mockCard).toHaveBeenCalledTimes(2);
 
     await userEvent.click(screen.getByTestId("challenge-card-2"));
