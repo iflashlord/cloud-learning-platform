@@ -261,6 +261,57 @@ export const getTopTenUsers = cache(async () => {
   return data;
 });
 
+export const getTopTenUsersByCourse = cache(async (courseId: number) => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return [];
+  }
+
+  const data = await db.query.userProgress.findMany({
+    where: eq(userProgress.activeCourseId, courseId),
+    orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
+    limit: 10,
+    columns: {
+      userId: true,
+      userName: true,
+      userImageSrc: true,
+      points: true,
+      activeCourseId: true,
+    },
+    with: {
+      activeCourse: {
+        columns: {
+          id: true,
+          title: true,
+          imageSrc: true,
+        },
+      },
+    },
+  });
+
+  return data;
+});
+
+export const getAllCoursesForLeaderboard = cache(async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return [];
+  }
+
+  const data = await db.query.courses.findMany({
+    columns: {
+      id: true,
+      title: true,
+      imageSrc: true,
+    },
+    orderBy: (courses, { asc }) => [asc(courses.id)],
+  });
+
+  return data;
+});
+
 export const getAdminCourseById = cache(async (courseId: number) => {
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, courseId),

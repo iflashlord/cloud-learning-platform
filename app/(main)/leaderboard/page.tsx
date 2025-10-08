@@ -4,26 +4,40 @@ import { redirect } from "next/navigation";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { UserProgress } from "@/components/user-progress";
 import { StickyWrapper } from "@/components/sticky-wrapper";
-import { getTopTenUsers, getUserProgress, getUserSubscription } from "@/db/queries";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { 
+  getTopTenUsers, 
+  getTopTenUsersByCourse,
+  getAllCoursesForLeaderboard,
+  getUserProgress, 
+  getUserSubscription 
+} from "@/db/queries";
 import { Promo } from "@/components/promo";
 import { Quests } from "@/components/quests";
-import { BRAND_CONFIG } from "@/lib/config";
+import { CONFIG } from "@/lib/config";
+import { LeaderboardTabs } from "./leaderboard-tabs";
 
-const LearderboardPage = async () => {
+type Props = {
+  searchParams: {
+    course?: string;
+  };
+};
+
+const LeaderboardPage = async ({ searchParams }: Props) => {
   const userProgressData = getUserProgress();
   const userSubscriptionData = getUserSubscription();
   const leaderboardData = getTopTenUsers();
+  const coursesData = getAllCoursesForLeaderboard();
 
   const [
     userProgress,
     userSubscription,
-    leaderboard,
+    generalLeaderboard,
+    courses,
   ] = await Promise.all([
     userProgressData,
     userSubscriptionData,
     leaderboardData,
+    coursesData,
   ]);
 
   if (!userProgress || !userProgress.activeCourse) {
@@ -31,6 +45,18 @@ const LearderboardPage = async () => {
   }
 
   const isPro = !!userSubscription?.isActive;
+  
+  // Use active course by default, allow URL override
+  const defaultCourseId = userProgress.activeCourse?.id || null;
+  const selectedCourseId = searchParams.course ? parseInt(searchParams.course) : defaultCourseId;
+
+  // Get course-specific leaderboard for active course by default
+  let courseLeaderboard = null;
+  let selectedCourse = null;
+  if (selectedCourseId) {
+    courseLeaderboard = await getTopTenUsersByCourse(selectedCourseId);
+    selectedCourse = courses.find(course => course.id === selectedCourseId) || null;
+  }
 
   return ( 
     <div className="flex flex-row-reverse gap-[48px] px-6">
@@ -55,38 +81,23 @@ const LearderboardPage = async () => {
             width={90}
           />
           <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            {BRAND_CONFIG.PLATFORM_NAME} Leaderboard
+            {CONFIG.PLATFORM_NAME} Leaderboard
           </h1>
           <p className="text-muted-foreground text-center text-lg mb-6">
             See where you rank among other technology learners in the community.
           </p>
-          <Separator className="mb-4 h-0.5 rounded-full" />
-          {leaderboard.map((userProgress, index) => (
-            <div 
-              key={userProgress.userId}
-              className="flex items-center w-full p-2 px-4 rounded-xl hover:bg-gray-200/50"
-            >
-              <p className="font-bold text-lime-700 mr-4">{index + 1}</p>
-              <Avatar
-                className="border bg-green-500 h-12 w-12 ml-3 mr-6"
-              >
-                <AvatarImage
-                  className="object-cover"
-                  src={userProgress.userImageSrc}
-                />
-              </Avatar>
-              <p className="font-bold text-neutral-800 flex-1">
-                {userProgress.userName}
-              </p>
-              <p className="text-muted-foreground">
-                {userProgress.points} XP
-              </p>
-            </div>
-          ))}
+          
+          <LeaderboardTabs
+            courses={courses}
+            generalLeaderboard={generalLeaderboard}
+            courseLeaderboard={courseLeaderboard}
+            selectedCourse={selectedCourse}
+            selectedCourseId={selectedCourseId}
+          />
         </div>
       </FeedWrapper>
     </div>
   );
 };
  
-export default LearderboardPage;
+export default LeaderboardPage;

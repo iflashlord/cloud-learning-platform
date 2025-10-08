@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin";
+import { CONFIG } from "@/lib/config";
 import db from "@/db/drizzle";
 
 export const GET = async (req: Request) => {
@@ -45,7 +46,7 @@ export const GET = async (req: Request) => {
       const response = new NextResponse(JSON.stringify(exportData, null, 2), {
         headers: {
           "Content-Type": "application/json",
-          "Content-Disposition": `attachment; filename="techlingo-platform-export-${new Date().toISOString().split('T')[0]}.json"`,
+          "Content-Disposition": `attachment; filename="${CONFIG.PLATFORM_SLUG}-export-${new Date().toISOString().split('T')[0]}.json"`,
         },
       });
       return response;
