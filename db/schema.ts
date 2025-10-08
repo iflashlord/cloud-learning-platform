@@ -1,10 +1,24 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgEnum, pgTable, serial, text, timestamp, jsonb } from "drizzle-orm/pg-core";
 
 export const courses = pgTable("courses", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   imageSrc: text("image_src").notNull(),
+  category: text("category").notNull().default("General"),
+  description: text("description"),
+  level: text("level").default("Beginner"), // Beginner, Intermediate, Advanced
+  duration: text("duration"), // e.g., "2-3 hours"
+  themeConfig: jsonb("theme_config").$type<{
+    themeName: string;
+    colors: {
+      primary: Record<string, string>;
+      success: Record<string, string>;
+      error: Record<string, string>;
+      info: Record<string, string>;
+      neutral: Record<string, string>;
+    };
+  }>(),
 });
 
 export const coursesRelations = relations(courses, ({ many }) => ({

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion, CheckSquare, Type, MousePointer, ImageIcon, Volume2, ArrowUpDown, Mic } from "lucide-react";
 import Image from "next/image";
+import { CourseThemeConfig } from "../components/course-theme-config";
 
 interface Unit {
   id: number;
@@ -249,6 +250,22 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
           </CardContent>
         </Card>
       </div>
+
+      {/* Course Theme Configuration */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">T</span>
+            </div>
+            <span>Course Theme Configuration</span>
+          </CardTitle>
+          <p className="text-gray-600">Customize the visual theme and colors for this course</p>
+        </CardHeader>
+        <CardContent>
+          <CourseThemeConfig courseId={course.id} />
+        </CardContent>
+      </Card>
 
       {/* Units and Lessons */}
       <div className="space-y-6">

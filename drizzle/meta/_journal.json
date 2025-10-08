@@ -22,6 +22,20 @@
       "when": 1759912831977,
       "tag": "0002_third_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1759938258226,
+      "tag": "0003_safe_gorilla_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1759938992935,
+      "tag": "0004_odd_night_thrasher",
+      "breakpoints": true
     }
   ]
 }

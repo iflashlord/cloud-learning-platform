@@ -27,7 +27,7 @@ export const UserProgress = ({
   return (
     <div className="flex items-center justify-between gap-x-2 w-full">
       <Link href="/courses">
-        <Button variant="ghost">
+        <Button variant="ghost" className="flex items-center gap-x-2 hover:bg-gray-100">
           <Image
             src={activeCourse.imageSrc}
             alt={activeCourse.title}
@@ -35,6 +35,12 @@ export const UserProgress = ({
             width={32}
             height={32}
           />
+          <div className="hidden sm:flex flex-col items-start">
+            <span className="text-xs text-gray-500">Switch Course</span>
+            <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
+              {activeCourse.title}
+            </span>
+          </div>
         </Button>
       </Link>
       <Link href="/shop">

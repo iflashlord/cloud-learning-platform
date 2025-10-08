@@ -22,7 +22,14 @@ export const getUserProgress = cache(async () => {
   const data = await db.query.userProgress.findFirst({
     where: eq(userProgress.userId, userId),
     with: {
-      activeCourse: true,
+      activeCourse: {
+        columns: {
+          id: true,
+          title: true,
+          imageSrc: true,
+          // themeConfig: true, // TODO: Enable after migration
+        },
+      },
     },
   });
 
@@ -84,9 +91,86 @@ export const getUnits = cache(async () => {
 });
 
 export const getCourses = cache(async () => {
-  const data = await db.query.courses.findMany();
+  try {
+    const { userId } = await auth();
+    
+    const data = await db.query.courses.findMany({
+      orderBy: (courses, { asc }) => [asc(courses.title)],
+    });
 
-  return data;
+    if (!userId) {
+      return data.map(course => ({ 
+        ...course, 
+        progress: null, 
+        isActive: false 
+      }));
+    }
+
+    const userProgressData = await getUserProgress();
+    
+    // Calculate progress for each course
+    const coursesWithProgress = await Promise.all(
+      data.map(async (course) => {
+        try {
+          // Get all challenges for this course
+          const courseUnits = await db.query.units.findMany({
+            where: eq(units.courseId, course.id),
+            with: {
+              lessons: {
+                with: {
+                  challenges: {
+                    with: {
+                      challengeProgress: {
+                        where: eq(challengeProgress.userId, userId),
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          const allChallenges = courseUnits.flatMap((unit: any) => 
+            unit.lessons.flatMap((lesson: any) => lesson.challenges)
+          );
+
+          const completedChallenges = allChallenges.filter((challenge: any) =>
+            challenge.challengeProgress.some((progress: any) => progress.completed === true)
+          );
+
+          const totalChallenges = allChallenges.length;
+          const completedCount = completedChallenges.length;
+          const percentage = totalChallenges > 0 ? Math.round((completedCount / totalChallenges) * 100) : 0;
+
+          return {
+            ...course,
+            progress: {
+              percentage,
+              totalChallenges,
+              completedChallenges: completedCount,
+            },
+            isActive: course.id === userProgressData?.activeCourseId,
+          };
+        } catch (error) {
+          console.error(`Error calculating progress for course ${course.id}:`, error);
+          return {
+            ...course,
+            progress: {
+              percentage: 0,
+              totalChallenges: 0,
+              completedChallenges: 0,
+            },
+            isActive: course.id === userProgressData?.activeCourseId,
+          };
+        }
+      })
+    );
+
+    return coursesWithProgress;
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    return [];
+  }
 });
 
 export const getCourseById = cache(async (courseId: number) => {
@@ -285,6 +369,7 @@ export const getTopTenUsersByCourse = cache(async (courseId: number) => {
           id: true,
           title: true,
           imageSrc: true,
+          // themeConfig: true, // TODO: Enable after migration
         },
       },
     },
