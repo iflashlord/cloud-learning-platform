@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion } from "lucide-react";
+import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion, CheckSquare, Type, MousePointer, ImageIcon, Volume2, ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 
 interface Unit {
@@ -26,8 +26,12 @@ interface Lesson {
 interface Challenge {
   id: number;
   question: string;
-  type: "SELECT" | "ASSIST";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING";
   order: number;
+  hint?: string;
+  audioSrc?: string;
+  imageSrc?: string;
+  correctAnswer?: string;
   challengeOptions: ChallengeOption[];
 }
 
@@ -37,6 +41,9 @@ interface ChallengeOption {
   correct: boolean;
   imageSrc?: string;
   audioSrc?: string;
+  guide?: string;
+  order?: number;
+  value?: string;
 }
 
 interface Course {
@@ -45,6 +52,48 @@ interface Course {
   imageSrc: string;
   units: Unit[];
 }
+
+const getQuestionTypeIcon = (type: Challenge["type"]) => {
+  switch (type) {
+    case "SELECT":
+      return <CheckSquare className="w-4 h-4" />;
+    case "ASSIST":
+      return <MousePointer className="w-4 h-4" />;
+    case "TRUE_FALSE":
+      return <FileQuestion className="w-4 h-4" />;
+    case "DRAG_DROP":
+      return <ArrowUpDown className="w-4 h-4" />;
+    case "TEXT_INPUT":
+      return <Type className="w-4 h-4" />;
+    case "IMAGE_SELECT":
+      return <ImageIcon className="w-4 h-4" />;
+    case "LISTENING":
+      return <Volume2 className="w-4 h-4" />;
+    default:
+      return <FileQuestion className="w-4 h-4" />;
+  }
+};
+
+const getQuestionTypeColor = (type: Challenge["type"]) => {
+  switch (type) {
+    case "SELECT":
+      return "bg-blue-100 text-blue-800";
+    case "ASSIST":
+      return "bg-green-100 text-green-800";
+    case "TRUE_FALSE":
+      return "bg-purple-100 text-purple-800";
+    case "DRAG_DROP":
+      return "bg-orange-100 text-orange-800";
+    case "TEXT_INPUT":
+      return "bg-yellow-100 text-yellow-800";
+    case "IMAGE_SELECT":
+      return "bg-pink-100 text-pink-800";
+    case "LISTENING":
+      return "bg-indigo-100 text-indigo-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
 
 export default function CourseViewPage({ params }: { params: { courseId: string } }) {
   const [course, setCourse] = useState<Course | null>(null);
@@ -105,7 +154,7 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
               <Image
                 src={course.imageSrc}
                 alt={course.title}
-                fill
+                fill={true}
                 className="object-cover"
               />
             </div>
@@ -275,32 +324,99 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
                         </div>
                         
                         {lesson.challenges.length > 0 && (
-                          <div className="ml-6 space-y-2">
-                            {lesson.challenges.slice(0, 3).map((challenge, challengeIndex) => (
-                              <div key={challenge.id} className="flex items-center justify-between py-2 px-3 bg-white rounded border text-sm">
-                                <div className="flex items-center space-x-2">
-                                  <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs">
-                                    {challenge.type}
-                                  </span>
-                                  <span className="truncate max-w-md">{challenge.question}</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                  <span className="text-xs text-gray-500">
-                                    {challenge.challengeOptions.length} options
-                                  </span>
+                          <div className="ml-6 space-y-3">
+                            {lesson.challenges.map((challenge, challengeIndex) => (
+                              <div key={challenge.id} className="bg-white rounded-lg border p-4 shadow-sm">
+                                <div className="flex items-start justify-between mb-3">
+                                  <div className="flex items-start space-x-3 flex-1">
+                                    <span className={`flex items-center px-2 py-1 rounded text-xs font-medium ${getQuestionTypeColor(challenge.type)}`}>
+                                      {getQuestionTypeIcon(challenge.type)}
+                                      <span className="ml-1">{challenge.type}</span>
+                                    </span>
+                                    <div className="flex-1">
+                                      <p className="font-medium text-sm text-gray-900 mb-1">
+                                        Q{challenge.order}: {challenge.question}
+                                      </p>
+                                      {challenge.hint && (
+                                        <p className="text-xs text-gray-600 italic">Hint: {challenge.hint}</p>
+                                      )}
+                                    </div>
+                                  </div>
                                   <Link href={`/admin/challenges/${challenge.id}/edit`}>
                                     <Button variant="ghost" size="sm">
                                       <Edit className="w-3 h-3" />
                                     </Button>
                                   </Link>
                                 </div>
+
+                                {/* Audio/Image indicators */}
+                                <div className="flex items-center space-x-2 mb-2">
+                                  {challenge.audioSrc && (
+                                    <span className="flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                      <Volume2 className="w-3 h-3 mr-1" />
+                                      Audio
+                                    </span>
+                                  )}
+                                  {challenge.imageSrc && (
+                                    <span className="flex items-center text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                      <ImageIcon className="w-3 h-3 mr-1" />
+                                      Image
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Question-specific details */}
+                                <div className="text-xs text-gray-700">
+                                  {challenge.type === "TEXT_INPUT" && challenge.correctAnswer && (
+                                    <div className="mb-2">
+                                      <span className="font-medium">Correct Answer:</span> {challenge.correctAnswer}
+                                    </div>
+                                  )}
+                                  
+                                  {challenge.challengeOptions.length > 0 && (
+                                    <div className="space-y-1">
+                                      <span className="font-medium">Options ({challenge.challengeOptions.length}):</span>
+                                      <div className="ml-2 space-y-1">
+                                        {challenge.challengeOptions
+                                          .sort((a, b) => (a.order || 0) - (b.order || 0))
+                                          .map((option, optionIndex) => (
+                                          <div key={option.id} className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-2">
+                                              {challenge.type === "DRAG_DROP" && (
+                                                <span className="text-gray-400 text-xs">#{option.order || optionIndex + 1}</span>
+                                              )}
+                                              <span className={`px-1.5 py-0.5 rounded text-xs ${
+                                                option.correct 
+                                                  ? "bg-green-100 text-green-800 font-medium" 
+                                                  : "bg-gray-100 text-gray-700"
+                                              }`}>
+                                                {option.text}
+                                              </span>
+                                              {option.correct && (
+                                                <span className="text-green-600 font-bold">✓</span>
+                                              )}
+                                            </div>
+                                            <div className="flex items-center space-x-1">
+                                              {option.imageSrc && (
+                                                <ImageIcon className="w-3 h-3 text-blue-500" />
+                                              )}
+                                              {option.audioSrc && (
+                                                <Volume2 className="w-3 h-3 text-blue-500" />
+                                              )}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      {challenge.type === "DRAG_DROP" && (
+                                        <div className="text-xs text-blue-600 mt-1 italic">
+                                          ↑ Correct order shown above
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             ))}
-                            {lesson.challenges.length > 3 && (
-                              <p className="text-sm text-gray-500 text-center">
-                                +{lesson.challenges.length - 3} more questions
-                              </p>
-                            )}
                           </div>
                         )}
                       </div>

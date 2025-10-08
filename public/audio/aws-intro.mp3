@@ -1,0 +1,7 @@
+# Audio Placeholder
+
+This is a placeholder for the AWS intro audio file.
+In a real implementation, this would be an MP3 file with spoken content about Amazon EC2.
+
+Content would be something like:
+"Amazon EC2 provides scalable computing capacity in the Amazon Web Services cloud. Using Amazon EC2 eliminates your need to invest in hardware up front, so you can develop and deploy applications faster."

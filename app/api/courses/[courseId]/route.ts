@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import db from "@/db/drizzle";
 import { courses } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
+import { getAdminCourseById } from "@/db/queries";
 
 export const GET = async (
   req: Request,
@@ -13,27 +14,7 @@ export const GET = async (
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
-  const data = await db.query.courses.findFirst({
-    where: eq(courses.id, parseInt(params.courseId)),
-    with: {
-      units: {
-        orderBy: (units, { asc }) => [asc(units.order)],
-        with: {
-          lessons: {
-            orderBy: (lessons, { asc }) => [asc(lessons.order)],
-            with: {
-              challenges: {
-                orderBy: (challenges, { asc }) => [asc(challenges.order)],
-                with: {
-                  challengeOptions: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  const data = await getAdminCourseById(parseInt(params.courseId));
 
   if (!data) {
     return new NextResponse("Course not found", { status: 404 });

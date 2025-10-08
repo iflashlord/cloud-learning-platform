@@ -46,6 +46,8 @@ export const POST = async (req: Request) => {
     imageSrc: body.imageSrc || null,
     audioSrc: body.audioSrc || null,
     guide: body.guide || null,
+    order: body.order || null,
+    value: body.value || null,
   }).returning();
 
   return NextResponse.json(data[0]);

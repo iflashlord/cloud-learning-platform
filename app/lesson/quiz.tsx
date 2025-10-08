@@ -108,13 +108,30 @@ export const Quiz = ({
       return;
     }
 
-    const correctOption = options.find((option) => option.correct);
+    let isCorrect = false;
 
-    if (!correctOption) {
-      return;
+    // Handle different question types
+    if (challenge.type === "DRAG_DROP") {
+      // For drag-drop, trigger the validation by calling the stored function
+      if (typeof (window as any).checkCurrentDragOrder === 'function') {
+        isCorrect = (window as any).checkCurrentDragOrder();
+      } else {
+        // Fallback to previous method
+        isCorrect = selectedOption === 999;
+      }
+    } else if (challenge.type === "TEXT_INPUT") {
+      // For text input, selectedOption 1 means correct answer, 0 means wrong
+      isCorrect = selectedOption === 1;
+    } else {
+      // For other types (SELECT, ASSIST, TRUE_FALSE, IMAGE_SELECT, LISTENING), find correct option
+      const correctOption = options.find((option) => option.correct);
+      if (!correctOption) {
+        return;
+      }
+      isCorrect = correctOption.id === selectedOption;
     }
 
-    if (correctOption.id === selectedOption) {
+    if (isCorrect) {
       startTransition(() => {
         upsertChallengeProgress(challenge.id)
           .then((response) => {
@@ -224,8 +241,19 @@ export const Quiz = ({
               {title}
             </h1>
             <div>
-              {challenge.type === "ASSIST" && (
-                <QuestionBubble question={challenge.question} />
+              {(challenge.type === "ASSIST" || challenge.type === "TEXT_INPUT" || challenge.type === "LISTENING") && (
+                <QuestionBubble question={challenge.question} hint={challenge.hint || undefined} />
+              )}
+              {challenge.imageSrc && challenge.type === "IMAGE_SELECT" && (
+                <div className="mb-4 flex justify-center">
+                  <Image 
+                    src={challenge.imageSrc} 
+                    alt="Question image" 
+                    width={400} 
+                    height={300} 
+                    className="rounded-lg"
+                  />
+                </div>
               )}
               <Challenge
                 options={options}
@@ -234,6 +262,17 @@ export const Quiz = ({
                 selectedOption={selectedOption}
                 disabled={pending}
                 type={challenge.type}
+                challenge={challenge}
+                onTextSubmit={(text) => {
+                  // Handle text input submission
+                  if (challenge.correctAnswer && text.toLowerCase().trim() === challenge.correctAnswer.toLowerCase().trim()) {
+                    setStatus("correct");
+                    setSelectedOption(1); // Dummy selection for correct answer
+                  } else {
+                    setStatus("wrong");
+                    setSelectedOption(0); // Dummy selection for wrong answer
+                  }
+                }}
               />
             </div>
           </div>

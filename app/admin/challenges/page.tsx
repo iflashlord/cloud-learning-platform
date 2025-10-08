@@ -11,7 +11,7 @@ import { Plus, Edit, Trash2, FileQuestion } from "lucide-react";
 interface Challenge {
   id: number;
   question: string;
-  type: "SELECT" | "ASSIST";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING";
   lessonId: number;
   order: number;
   lesson?: {
@@ -30,7 +30,7 @@ export default function ChallengesPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState<"all" | "SELECT" | "ASSIST">("all");
+  const [filter, setFilter] = useState<"all" | Challenge['type']>("all");
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -70,10 +70,17 @@ export default function ChallengesPage() {
     }
   };
 
-  const getTypeColor = (type: "SELECT" | "ASSIST") => {
-    return type === "SELECT" 
-      ? "bg-purple-100 text-purple-800" 
-      : "bg-orange-100 text-orange-800";
+  const getTypeColor = (type: Challenge['type']) => {
+    const colors = {
+      SELECT: "bg-purple-100 text-purple-800",
+      ASSIST: "bg-orange-100 text-orange-800",
+      TRUE_FALSE: "bg-blue-100 text-blue-800",
+      DRAG_DROP: "bg-green-100 text-green-800",
+      TEXT_INPUT: "bg-yellow-100 text-yellow-800",
+      IMAGE_SELECT: "bg-pink-100 text-pink-800",
+      LISTENING: "bg-indigo-100 text-indigo-800"
+    };
+    return colors[type] || "bg-gray-100 text-gray-800";
   };
 
   // Filter and search challenges
@@ -94,7 +101,12 @@ export default function ChallengesPage() {
   const filterOptions = [
     { value: "all", label: "All Types", count: challenges.length },
     { value: "SELECT", label: "Multiple Choice", count: challenges.filter(c => c.type === "SELECT").length },
-    { value: "ASSIST", label: "Assist", count: challenges.filter(c => c.type === "ASSIST").length },
+    { value: "ASSIST", label: "Fill in Blank", count: challenges.filter(c => c.type === "ASSIST").length },
+    { value: "TRUE_FALSE", label: "True/False", count: challenges.filter(c => c.type === "TRUE_FALSE").length },
+    { value: "DRAG_DROP", label: "Drag & Drop", count: challenges.filter(c => c.type === "DRAG_DROP").length },
+    { value: "TEXT_INPUT", label: "Text Input", count: challenges.filter(c => c.type === "TEXT_INPUT").length },
+    { value: "IMAGE_SELECT", label: "Image Selection", count: challenges.filter(c => c.type === "IMAGE_SELECT").length },
+    { value: "LISTENING", label: "Listening", count: challenges.filter(c => c.type === "LISTENING").length },
   ];
 
   if (loading) {

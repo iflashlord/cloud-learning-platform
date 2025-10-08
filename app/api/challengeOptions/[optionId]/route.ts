@@ -59,6 +59,8 @@ export const PUT = async (
       imageSrc: body.imageSrc || null,
       audioSrc: body.audioSrc || null,
       guide: body.guide || null,
+      order: body.order || null,
+      value: body.value || null,
     })
     .where(eq(challengeOptions.id, parseInt(params.optionId)))
     .returning();

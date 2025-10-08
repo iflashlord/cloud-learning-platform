@@ -25,14 +25,19 @@ type ChallengeOption = {
   imageSrc?: string;
   audioSrc?: string;
   guide?: string;
+  order?: number;
+  value?: string;
 };
 
 type ChallengeData = {
   question: string;
-  type: "SELECT" | "ASSIST";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING";
   lessonId: number;
   order: number;
   hint?: string;
+  audioSrc?: string;
+  imageSrc?: string;
+  correctAnswer?: string;
   challengeOptions: ChallengeOption[];
 };
 
@@ -53,6 +58,9 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
     lessonId: initialData?.lessonId || preselectedLessonId || 0,
     order: initialData?.order || 1,
     hint: initialData?.hint || "",
+    audioSrc: initialData?.audioSrc || "",
+    imageSrc: initialData?.imageSrc || "",
+    correctAnswer: initialData?.correctAnswer || "",
     challengeOptions: initialData?.challengeOptions || [
       { text: "", correct: true, guide: "" },
       { text: "", correct: false, guide: "" },
@@ -98,12 +106,12 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
     }
   }, [lessons.length, formData.lessonId, initialData, calculateOrder]);
 
-  const handleOptionChange = (index: number, field: keyof ChallengeOption, value: string | boolean) => {
+  const handleOptionChange = (index: number, field: keyof ChallengeOption, value: string | boolean | number) => {
     const newOptions = [...formData.challengeOptions];
     newOptions[index] = { ...newOptions[index], [field]: value };
     
-    // If this option is being set as correct, make sure others are false
-    if (field === "correct" && value === true) {
+    // If this option is being set as correct, make sure others are false (except for drag-drop)
+    if (field === "correct" && value === true && formData.type !== "DRAG_DROP") {
       newOptions.forEach((option, i) => {
         if (i !== index) {
           option.correct = false;
@@ -115,9 +123,17 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
   };
 
   const addOption = () => {
+    const newOption: ChallengeOption = {
+      text: "",
+      correct: false,
+      guide: "",
+      ...(formData.type === "DRAG_DROP" && { order: formData.challengeOptions.length + 1 }),
+      ...(formData.type === "IMAGE_SELECT" && { imageSrc: "" }),
+    };
+    
     setFormData(prev => ({
       ...prev,
-      challengeOptions: [...prev.challengeOptions, { text: "", correct: false, guide: "" }],
+      challengeOptions: [...prev.challengeOptions, newOption],
     }));
   };
 
@@ -133,17 +149,54 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
     setLoading(true);
 
     try {
-      // Validate that at least one option is correct
-      const hasCorrectOption = formData.challengeOptions.some(option => option.correct);
-      if (!hasCorrectOption) {
-        toast.error("At least one option must be marked as correct");
-        return;
+      // Type-specific validation
+      if (formData.type === "TEXT_INPUT") {
+        if (!formData.correctAnswer?.trim()) {
+          toast.error("Text input questions must have a correct answer");
+          return;
+        }
+      } else {
+        // For all other types that use options
+        
+        // Validate that at least one option is correct (except DRAG_DROP which uses order)
+        if (formData.type !== "DRAG_DROP") {
+          const hasCorrectOption = formData.challengeOptions.some(option => option.correct);
+          if (!hasCorrectOption) {
+            toast.error("At least one option must be marked as correct");
+            return;
+          }
+        }
+
+        // Validate that all options have text
+        const hasEmptyOption = formData.challengeOptions.some(option => !option.text.trim());
+        if (hasEmptyOption) {
+          toast.error("All options must have text");
+          return;
+        }
+
+        // Validate IMAGE_SELECT has images for all options
+        if (formData.type === "IMAGE_SELECT") {
+          const hasEmptyImage = formData.challengeOptions.some(option => !option.imageSrc?.trim());
+          if (hasEmptyImage) {
+            toast.error("Image selection questions require all options to have images");
+            return;
+          }
+        }
+
+        // Validate DRAG_DROP has unique order values
+        if (formData.type === "DRAG_DROP") {
+          const orders = formData.challengeOptions.map(option => option.order || 0);
+          const uniqueOrders = new Set(orders);
+          if (orders.length !== uniqueOrders.size || orders.some(o => o < 1 || o > orders.length)) {
+            toast.error("Drag & drop questions must have unique order values from 1 to " + orders.length);
+            return;
+          }
+        }
       }
 
-      // Validate that all options have text
-      const hasEmptyOption = formData.challengeOptions.some(option => !option.text.trim());
-      if (hasEmptyOption) {
-        toast.error("All options must have text");
+      // Validate LISTENING type has audio
+      if (formData.type === "LISTENING" && !formData.audioSrc?.trim()) {
+        toast.error("Listening questions must have an audio source");
         return;
       }
 
@@ -217,13 +270,81 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
           <select
             id="type"
             value={formData.type}
-            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as "SELECT" | "ASSIST" }))}
+            onChange={(e) => {
+              const newType = e.target.value as ChallengeData['type'];
+              setFormData(prev => ({ 
+                ...prev, 
+                type: newType,
+                // Reset challenge options based on type
+                challengeOptions: newType === 'TRUE_FALSE' 
+                  ? [
+                      { text: "True", correct: true, guide: "" },
+                      { text: "False", correct: false, guide: "" }
+                    ]
+                  : newType === 'TEXT_INPUT'
+                  ? []
+                  : prev.challengeOptions
+              }));
+            }}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
           >
-            <option value="SELECT">Select (Multiple Choice)</option>
-            <option value="ASSIST">Assist (Fill in the blank)</option>
+            <option value="SELECT">📝 Multiple Choice - Students pick from several options</option>
+            <option value="ASSIST">✏️ Fill in the Blank - Students complete a sentence</option>
+            <option value="TRUE_FALSE">✅ True/False - Students choose true or false</option>
+            <option value="DRAG_DROP">🔄 Drag & Drop - Students arrange items in order</option>
+            <option value="TEXT_INPUT">⌨️ Text Input - Students type their answer</option>
+            <option value="IMAGE_SELECT">🖼️ Image Selection - Students choose from images</option>
+            <option value="LISTENING">🎵 Listening - Students listen to audio and answer</option>
           </select>
+          
+          {/* Type-specific descriptions */}
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800">
+              {formData.type === "SELECT" && (
+                <>
+                  <strong>Multiple Choice:</strong> Students will see your question and select one correct answer from multiple options. 
+                  Mark one option as correct. Great for testing knowledge and concepts.
+                </>
+              )}
+              {formData.type === "ASSIST" && (
+                <>
+                  <strong>Fill in the Blank:</strong> Students complete a sentence by choosing the right word/phrase. 
+                  Use &quot;__&quot; in your question where the blank should appear. Perfect for vocabulary and key terms.
+                </>
+              )}
+              {formData.type === "TRUE_FALSE" && (
+                <>
+                  <strong>True/False:</strong> Students determine if a statement is true or false. 
+                  Mark the correct answer. Ideal for testing facts and understanding of concepts.
+                </>
+              )}
+              {formData.type === "DRAG_DROP" && (
+                <>
+                  <strong>Drag & Drop:</strong> Students arrange items in the correct order by dragging and dropping. 
+                  Set the correct order position for each item (1, 2, 3, etc.). Great for sequences and procedures.
+                </>
+              )}
+              {formData.type === "TEXT_INPUT" && (
+                <>
+                  <strong>Text Input:</strong> Students type their answer in a text field. 
+                  Set the correct answer below. Perfect for names, definitions, and short answers.
+                </>
+              )}
+              {formData.type === "IMAGE_SELECT" && (
+                <>
+                  <strong>Image Selection:</strong> Students choose the correct image from multiple visual options. 
+                  Each option needs an image URL. Excellent for visual recognition and identification.
+                </>
+              )}
+              {formData.type === "LISTENING" && (
+                <>
+                  <strong>Listening:</strong> Students listen to audio and answer questions about what they heard. 
+                  Requires an audio file URL. Perfect for pronunciation, comprehension, and audio content.
+                </>
+              )}
+            </p>
+          </div>
         </div>
 
         <div>
@@ -268,11 +389,66 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
           />
         </div>
 
-        {!hideOptions && (
+        {/* Conditional fields based on challenge type */}
+        {(formData.type === "LISTENING" || formData.type === "IMAGE_SELECT") && (
+          <div>
+            <label htmlFor="imageSrc" className="block text-sm font-medium text-gray-700 mb-2">
+              {formData.type === "IMAGE_SELECT" ? "Question Image URL" : "Image URL (Optional)"}
+            </label>
+            <input
+              type="url"
+              id="imageSrc"
+              value={formData.imageSrc}
+              onChange={(e) => setFormData(prev => ({ ...prev, imageSrc: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://example.com/image.jpg"
+            />
+          </div>
+        )}
+
+        {formData.type === "LISTENING" && (
+          <div>
+            <label htmlFor="audioSrc" className="block text-sm font-medium text-gray-700 mb-2">
+              Audio URL <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="url"
+              id="audioSrc"
+              value={formData.audioSrc}
+              onChange={(e) => setFormData(prev => ({ ...prev, audioSrc: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://example.com/audio.mp3"
+              required={formData.type === "LISTENING"}
+            />
+          </div>
+        )}
+
+        {formData.type === "TEXT_INPUT" && (
+          <div>
+            <label htmlFor="correctAnswer" className="block text-sm font-medium text-gray-700 mb-2">
+              Correct Answer <span className="text-red-500">*</span>
+              <span className="text-sm text-gray-500 ml-1">- Expected user input (case-insensitive)</span>
+            </label>
+            <input
+              type="text"
+              id="correctAnswer"
+              value={formData.correctAnswer}
+              onChange={(e) => setFormData(prev => ({ ...prev, correctAnswer: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter the expected answer"
+              required={formData.type === "TEXT_INPUT"}
+            />
+          </div>
+        )}
+
+        {!hideOptions && formData.type !== "TEXT_INPUT" && (
           <div>
             <div className="flex items-center justify-between mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Answer Options
+                {formData.type === "DRAG_DROP" && (
+                  <span className="text-sm text-gray-500 ml-1">- Items will be shuffled for drag & drop</span>
+                )}
               </label>
               <Button
                 type="button"
@@ -302,17 +478,37 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                 </div>
                 
                 <div className="space-y-3">
-                  {/* Correct Answer Toggle */}
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      name="correctOption"
-                      checked={option.correct}
-                      onChange={(e) => handleOptionChange(index, "correct", e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">This is the correct answer</span>
-                  </div>
+                  {/* Correct Answer Toggle - Hide for DRAG_DROP as correctness is determined by order */}
+                  {formData.type !== "DRAG_DROP" && (
+                    <div className="flex items-center">
+                      <input
+                        type={formData.type === "TRUE_FALSE" ? "radio" : "radio"}
+                        name="correctOption"
+                        checked={option.correct}
+                        onChange={(e) => handleOptionChange(index, "correct", e.target.checked)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">This is the correct answer</span>
+                    </div>
+                  )}
+
+                  {/* Order field for DRAG_DROP */}
+                  {formData.type === "DRAG_DROP" && (
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Correct Order Position
+                      </label>
+                      <input
+                        type="number"
+                        value={option.order || index + 1}
+                        onChange={(e) => handleOptionChange(index, "order", parseInt(e.target.value))}
+                        min="1"
+                        max={formData.challengeOptions.length}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                  )}
                   
                   {/* Option Text */}
                   <div>
@@ -345,7 +541,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Image URL <span className="text-gray-400">(Optional)</span>
+                        Image URL {formData.type === "IMAGE_SELECT" ? <span className="text-red-500">*</span> : <span className="text-gray-400">(Optional)</span>}
                       </label>
                       <input
                         type="url"
@@ -353,6 +549,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                         onChange={(e) => handleOptionChange(index, "imageSrc", e.target.value)}
                         placeholder="https://example.com/image.jpg"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required={formData.type === "IMAGE_SELECT"}
                       />
                     </div>
                     

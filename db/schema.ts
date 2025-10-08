@@ -43,7 +43,15 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
   challenges: many(challenges),
 }));
 
-export const challengesEnum = pgEnum("type", ["SELECT", "ASSIST"]);
+export const challengesEnum = pgEnum("type", [
+  "SELECT",        // Multiple choice question
+  "ASSIST",        // Fill in the blank/matching
+  "TRUE_FALSE",    // True/False question
+  "DRAG_DROP",     // Drag and drop ordering
+  "TEXT_INPUT",    // Free text input
+  "IMAGE_SELECT",  // Select from images
+  "LISTENING"      // Audio-based question
+]);
 
 export const challenges = pgTable("challenges", {
   id: serial("id").primaryKey(),
@@ -52,6 +60,9 @@ export const challenges = pgTable("challenges", {
   question: text("question").notNull(),
   hint: text("hint"), // Optional hint for users
   order: integer("order").notNull(),
+  audioSrc: text("audio_src"), // For listening comprehension questions
+  imageSrc: text("image_src"), // For image-based questions
+  correctAnswer: text("correct_answer"), // For text input questions
 });
 
 export const challengesRelations = relations(challenges, ({ one, many }) => ({
@@ -71,6 +82,8 @@ export const challengeOptions = pgTable("challenge_options", {
   imageSrc: text("image_src"),
   audioSrc: text("audio_src"),
   guide: text("guide"), // Optional explanation why this answer is correct/incorrect
+  order: integer("order").default(0), // For drag-drop ordering
+  value: text("value"), // For text input expected answers
 });
 
 export const challengeOptionsRelations = relations(challengeOptions, ({ one }) => ({

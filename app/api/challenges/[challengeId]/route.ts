@@ -58,13 +58,41 @@ export const PUT = async (
   }
 
   const body = await req.json();
+  const challengeId = parseInt(params.challengeId);
+  
+  // Update the challenge
   const data = await db.update(challenges).set({
     lessonId: body.lessonId,
     type: body.type,
     question: body.question,
     hint: body.hint || null,
     order: body.order,
-  }).where(eq(challenges.id, parseInt(params.challengeId))).returning();
+    audioSrc: body.audioSrc || null,
+    imageSrc: body.imageSrc || null,
+    correctAnswer: body.correctAnswer || null,
+  }).where(eq(challenges.id, challengeId)).returning();
+
+  // Update challenge options if provided
+  if (body.challengeOptions && body.challengeOptions.length > 0) {
+    const { challengeOptions } = await import("@/db/schema");
+    
+    // Delete existing options
+    await db.delete(challengeOptions).where(eq(challengeOptions.challengeId, challengeId));
+    
+    // Insert new options
+    const optionsToInsert = body.challengeOptions.map((option: any) => ({
+      challengeId: challengeId,
+      text: option.text,
+      correct: option.correct || false,
+      imageSrc: option.imageSrc || null,
+      audioSrc: option.audioSrc || null,
+      guide: option.guide || null,
+      order: option.order || null,
+      value: option.value || null,
+    }));
+
+    await db.insert(challengeOptions).values(optionsToInsert);
+  }
 
   return NextResponse.json(data[0]);
 };
@@ -77,8 +105,15 @@ export const DELETE = async (
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
+  const challengeId = parseInt(params.challengeId);
+  const { challengeOptions } = await import("@/db/schema");
+  
+  // Delete challenge options first (foreign key constraint)
+  await db.delete(challengeOptions).where(eq(challengeOptions.challengeId, challengeId));
+  
+  // Delete the challenge
   const data = await db.delete(challenges)
-    .where(eq(challenges.id, parseInt(params.challengeId))).returning();
+    .where(eq(challenges.id, challengeId)).returning();
 
   return NextResponse.json(data[0]);
 };

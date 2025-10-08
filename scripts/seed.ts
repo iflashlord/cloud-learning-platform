@@ -161,38 +161,75 @@ const main = async () => {
     ]);
 
     await db.insert(schema.challenges).values([
-      // Lesson 1: What is Cloud Computing?
+      // Lesson 1: What is Cloud Computing? - ALL QUESTION TYPES DEMO
       {
         id: 1,
         lessonId: 1,
         type: "SELECT",
         order: 1,
         question: 'What is Cloud Computing?',
+        hint: 'Think about accessing resources remotely via the internet rather than owning physical hardware.',
       },
       {
         id: 2,
         lessonId: 1,
-        type: "SELECT",
+        type: "ASSIST",
         order: 2,
-        question: 'Which of these is NOT a cloud deployment model?',
+        question: 'Complete: Cloud computing provides ____ access to IT resources',
+        hint: 'Consider how you can access cloud services whenever you need them.',
       },
       {
         id: 3,
         lessonId: 1,
-        type: "ASSIST",
+        type: "TRUE_FALSE",
         order: 3,
-        question: 'Complete: Cloud computing provides ____ access to IT resources',
+        question: 'Cloud computing eliminates the need for physical data centers completely.',
+        hint: 'Cloud providers still need physical infrastructure to host services.',
+      },
+      {
+        id: 4,
+        lessonId: 1,
+        type: "TEXT_INPUT",
+        order: 4,
+        question: 'What does AWS stand for? (Type the full name)',
+        correctAnswer: 'Amazon Web Services',
+        hint: 'It\'s the full name of Amazon\'s cloud platform. Think about the company name + Web Services.',
+      },
+      {
+        id: 5,
+        lessonId: 1,
+        type: "DRAG_DROP",
+        order: 5,
+        question: 'Arrange these AWS service types by typical learning order (most basic first):',
+        hint: 'Start with storage (where you keep files), then compute (where you run code), then networking (how they connect), then management tools.',
+      },
+      {
+        id: 6,
+        lessonId: 1,
+        type: "IMAGE_SELECT",
+        order: 6,
+        question: 'Which image represents the AWS cloud icon?',
+        hint: 'Look for the orange and white cloud logo that AWS uses in their branding.',
+      },
+      {
+        id: 7,
+        lessonId: 1,
+        type: "LISTENING",
+        order: 7,
+        question: 'Listen to the audio and select the correct AWS service mentioned:',
+        audioSrc: '/audio/aws-intro.mp3',
+        hint: 'Listen carefully for the specific AWS service name mentioned in the audio.',
       },
       // Lesson 2: Benefits of AWS Cloud
       {
-        id: 4,
+        id: 8,
         lessonId: 2,
         type: "SELECT",
         order: 1,
         question: 'What is a key benefit of AWS Cloud?',
       },
       {
-        id: 5,
+        id: 9,
         lessonId: 2,
         type: "SELECT",
         order: 2,
@@ -200,7 +237,7 @@ const main = async () => {
       },
       // Lesson 3: Cloud Architecture
       {
-        id: 6,
+        id: 10,
         lessonId: 3,
         type: "SELECT",
         order: 1,
@@ -208,14 +245,14 @@ const main = async () => {
       },
       // Lesson 4: AWS Global Infrastructure
       {
-        id: 7,
+        id: 11,
         lessonId: 4,
         type: "SELECT",
         order: 1,
         question: 'What is an AWS Region?',
       },
       {
-        id: 8,
+        id: 12,
         lessonId: 4,
         type: "SELECT",
         order: 2,
@@ -223,14 +260,14 @@ const main = async () => {
       },
       // Lesson 6: Shared Responsibility Model
       {
-        id: 9,
+        id: 13,
         lessonId: 6,
         type: "SELECT",
         order: 1,
         question: 'Who is responsible for patching the guest OS on EC2?',
       },
       {
-        id: 10,
+        id: 14,
         lessonId: 6,
         type: "SELECT",
         order: 2,
@@ -238,14 +275,14 @@ const main = async () => {
       },
       // Lesson 7: IAM Basics
       {
-        id: 11,
+        id: 15,
         lessonId: 7,
         type: "SELECT",
         order: 1,
         question: 'What does IAM stand for?',
       },
       {
-        id: 12,
+        id: 16,
         lessonId: 7,
         type: "SELECT",
         order: 2,
@@ -253,14 +290,14 @@ const main = async () => {
       },
       // Lesson 9: EC2 Fundamentals
       {
-        id: 13,
+        id: 17,
         lessonId: 9,
         type: "SELECT",
         order: 1,
         question: 'What does EC2 stand for?',
       },
       {
-        id: 14,
+        id: 18,
         lessonId: 9,
         type: "SELECT",
         order: 2,
@@ -268,14 +305,14 @@ const main = async () => {
       },
       // Lesson 10: S3 Storage
       {
-        id: 15,
+        id: 19,
         lessonId: 10,
         type: "SELECT",
         order: 1,
         question: 'What does S3 stand for?',
       },
       {
-        id: 16,
+        id: 20,
         lessonId: 10,
         type: "SELECT",
         order: 2,
@@ -283,7 +320,7 @@ const main = async () => {
       },
     ]);
 
-    // Challenge 1: What is Cloud Computing?
+    // Challenge 1: Multiple Choice (SELECT) - What is Cloud Computing?
     await db.insert(schema.challengeOptions).values([
       {
         challengeId: 1,
@@ -302,120 +339,181 @@ const main = async () => {
       },
     ]);
 
-    // Challenge 2: Cloud deployment models
+    // Challenge 2: Fill in the Blank (ASSIST) - Complete the sentence
     await db.insert(schema.challengeOptions).values([
       {
         challengeId: 2,
-        correct: false,
-        text: "Public Cloud",
-      },
-      {
-        challengeId: 2,
-        correct: false,
-        text: "Private Cloud",
-      },
-      {
-        challengeId: 2,
-        correct: false,
-        text: "Hybrid Cloud",
-      },
-      {
-        challengeId: 2,
-        correct: true,
-        text: "Local Cloud",
-      },
-    ]);
-
-    // Challenge 3: Complete the sentence
-    await db.insert(schema.challengeOptions).values([
-      {
-        challengeId: 3,
         correct: true,
         text: "on-demand",
       },
       {
-        challengeId: 3,
+        challengeId: 2,
         correct: false,
         text: "scheduled",
       },
       {
-        challengeId: 3,
+        challengeId: 2,
         correct: false,
         text: "limited",
       },
     ]);
 
-    // Challenge 4: Benefits
+    // Challenge 3: True/False (TRUE_FALSE) - Cloud computing eliminates physical data centers
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 4,
+        challengeId: 3,
+        correct: false,
+        text: "True",
+      },
+      {
+        challengeId: 3,
+        correct: true,
+        text: "False",
+      },
+    ]);
+
+    // Challenge 4: Text Input (TEXT_INPUT) - No options needed, uses correctAnswer field
+
+    // Challenge 5: Drag & Drop (DRAG_DROP) - AWS Service Types Learning Order
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 5,
+        correct: false, // Not used for drag-drop
+        text: "�️ Storage Services (S3, EBS)",
+        order: 1,
+      },
+      {
+        challengeId: 5,
+        correct: false, // Not used for drag-drop
+        text: "� Compute Services (EC2, Lambda)",
+        order: 2,
+      },
+      {
+        challengeId: 5,
+        correct: false, // Not used for drag-drop
+        text: "🌐 Networking Services (VPC, CloudFront)",
+        order: 3,
+      },
+      {
+        challengeId: 5,
+        correct: false, // Not used for drag-drop
+        text: "🔧 Management Services (CloudWatch, CloudFormation)",
+        order: 4,
+      },
+    ]);
+
+    // Challenge 6: Image Selection (IMAGE_SELECT) - AWS Cloud Icon
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 6,
+        correct: true,
+        text: "AWS Cloud Icon",
+        imageSrc: "/aws-cloud-icon.png",
+      },
+      {
+        challengeId: 6,
+        correct: false,
+        text: "Microsoft Azure Icon",
+        imageSrc: "/azure-icon.png",
+      },
+      {
+        challengeId: 6,
+        correct: false,
+        text: "Google Cloud Icon",
+        imageSrc: "/gcp-icon.png",
+      },
+    ]);
+
+    // Challenge 7: Listening (LISTENING) - AWS Service from Audio
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 19,
+        correct: false,
+        text: "Amazon S3",
+      },
+      {
+        challengeId: 19,
+        correct: true,
+        text: "Amazon EC2",
+      },
+      {
+        challengeId: 19,
+        correct: false,
+        text: "AWS Lambda",
+      },
+    ]);
+
+    // Challenge 8: Benefits (Lesson 2)
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 20,
         correct: true,
         text: "Pay-as-you-go pricing",
       },
       {
-        challengeId: 4,
+        challengeId: 20,
         correct: false,
         text: "Requires large upfront investment",
       },
       {
-        challengeId: 4,
+        challengeId: 20,
         correct: false,
         text: "Limited scalability",
       },
     ]);
 
-    // Challenge 5: CapEx vs OpEx
+    // Challenge 9: CapEx vs OpEx (Lesson 2)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 5,
+        challengeId: 17,
         correct: true,
         text: "Variable operational expense",
       },
       {
-        challengeId: 5,
+        challengeId: 17,
         correct: false,
         text: "Fixed operational expense",
       },
       {
-        challengeId: 5,
+        challengeId: 17,
         correct: false,
         text: "Variable capital expense",
       },
     ]);
 
-    // Challenge 6: Elasticity
+    // Challenge 10: Elasticity (Lesson 3)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 6,
+        challengeId: 18,
         correct: true,
         text: "Ability to scale resources up or down based on demand",
       },
       {
-        challengeId: 6,
+        challengeId: 18,
         correct: false,
         text: "Fixed resource allocation",
       },
       {
-        challengeId: 6,
+        challengeId: 18,
         correct: false,
         text: "Manual server provisioning",
       },
     ]);
 
-    // Challenge 7: AWS Region
+    // Challenge 11: AWS Region (Lesson 4)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 7,
+        challengeId: 19,
         correct: true,
         text: "A geographical area with multiple Availability Zones",
       },
       {
-        challengeId: 7,
+        challengeId: 19,
         correct: false,
         text: "A single data center",
       },
       {
-        challengeId: 7,
+        challengeId: 19,
         correct: false,
         text: "A subnet within a VPC",
       },
@@ -424,17 +522,17 @@ const main = async () => {
     // Challenge 8: Availability Zone
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 8,
+        challengeId: 20,
         correct: true,
         text: "One or more discrete data centers with redundant power and networking",
       },
       {
-        challengeId: 8,
+        challengeId: 20,
         correct: false,
         text: "A region",
       },
       {
-        challengeId: 8,
+        challengeId: 20,
         correct: false,
         text: "An edge location",
       },
@@ -443,17 +541,17 @@ const main = async () => {
     // Challenge 9: Shared Responsibility - Guest OS
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 9,
+        challengeId: 17,
         correct: true,
         text: "Customer",
       },
       {
-        challengeId: 9,
+        challengeId: 17,
         correct: false,
         text: "AWS",
       },
       {
-        challengeId: 9,
+        challengeId: 17,
         correct: false,
         text: "Both AWS and Customer",
       },
@@ -462,17 +560,17 @@ const main = async () => {
     // Challenge 10: AWS Responsibility
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 10,
+        challengeId: 18,
         correct: true,
         text: "Physical security of data centers",
       },
       {
-        challengeId: 10,
+        challengeId: 18,
         correct: false,
         text: "Customer data encryption",
       },
       {
-        challengeId: 10,
+        challengeId: 18,
         correct: false,
         text: "Application-level security",
       },
@@ -481,17 +579,17 @@ const main = async () => {
     // Challenge 11: IAM
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 11,
+        challengeId: 19,
         correct: true,
         text: "Identity and Access Management",
       },
       {
-        challengeId: 11,
+        challengeId: 19,
         correct: false,
         text: "Internet Access Manager",
       },
       {
-        challengeId: 11,
+        challengeId: 19,
         correct: false,
         text: "Integrated Application Monitor",
       },
@@ -500,17 +598,17 @@ const main = async () => {
     // Challenge 12: Root account best practice
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 12,
+        challengeId: 20,
         correct: true,
         text: "Enable MFA and use it only for account setup",
       },
       {
-        challengeId: 12,
+        challengeId: 20,
         correct: false,
         text: "Use it for all daily operations",
       },
       {
-        challengeId: 12,
+        challengeId: 20,
         correct: false,
         text: "Share credentials with team members",
       },
@@ -519,17 +617,17 @@ const main = async () => {
     // Challenge 13: EC2
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 13,
+        challengeId: 17,
         correct: true,
         text: "Elastic Compute Cloud",
       },
       {
-        challengeId: 13,
+        challengeId: 17,
         correct: false,
         text: "Elastic Container Cloud",
       },
       {
-        challengeId: 13,
+        challengeId: 17,
         correct: false,
         text: "Enterprise Compute Cloud",
       },
@@ -538,17 +636,17 @@ const main = async () => {
     // Challenge 14: EC2 instance
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 14,
+        challengeId: 18,
         correct: true,
         text: "A virtual server in the cloud",
       },
       {
-        challengeId: 14,
+        challengeId: 18,
         correct: false,
         text: "A physical server",
       },
       {
-        challengeId: 14,
+        challengeId: 18,
         correct: false,
         text: "A storage bucket",
       },
@@ -557,17 +655,17 @@ const main = async () => {
     // Challenge 15: S3
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 15,
+        challengeId: 19,
         correct: true,
         text: "Simple Storage Service",
       },
       {
-        challengeId: 15,
+        challengeId: 19,
         correct: false,
         text: "Secure Storage Service",
       },
       {
-        challengeId: 15,
+        challengeId: 19,
         correct: false,
         text: "Scalable Server Service",
       },
@@ -576,21 +674,66 @@ const main = async () => {
     // Challenge 16: S3 object size
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 16,
+        challengeId: 20,
         correct: true,
         text: "5 TB",
       },
       {
-        challengeId: 16,
+        challengeId: 20,
         correct: false,
         text: "5 GB",
       },
       {
-        challengeId: 16,
+        challengeId: 20,
         correct: false,
         text: "Unlimited",
       },
     ]);
+
+    // Challenge 17: True/False question
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 17,
+        correct: false,
+        text: "True",
+      },
+      {
+        challengeId: 17,
+        correct: true,
+        text: "False",
+      },
+    ]);
+
+    // Challenge 18: Text input question (no options needed as it uses correctAnswer field)
+
+    // Challenge 19: Drag & Drop question  
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 19,
+        correct: false, // Not used for drag-drop
+        text: "Security",
+        order: 1,
+      },
+      {
+        challengeId: 19,
+        correct: false, // Not used for drag-drop
+        text: "Reliability", 
+        order: 2,
+      },
+      {
+        challengeId: 19,
+        correct: false, // Not used for drag-drop
+        text: "Performance Efficiency",
+        order: 3,
+      },
+      {
+        challengeId: 19,
+        correct: false, // Not used for drag-drop
+        text: "Cost Optimization",
+        order: 4,
+      },
+    ]);
+
     console.log("Seeding finished");
   } catch (error) {
     console.error(error);

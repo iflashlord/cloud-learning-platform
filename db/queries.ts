@@ -260,3 +260,31 @@ export const getTopTenUsers = cache(async () => {
 
   return data;
 });
+
+export const getAdminCourseById = cache(async (courseId: number) => {
+  const data = await db.query.courses.findFirst({
+    where: eq(courses.id, courseId),
+    with: {
+      units: {
+        orderBy: (units, { asc }) => [asc(units.order)],
+        with: {
+          lessons: {
+            orderBy: (lessons, { asc }) => [asc(lessons.order)],
+            with: {
+              challenges: {
+                orderBy: (challenges, { asc }) => [asc(challenges.order)],
+                with: {
+                  challengeOptions: {
+                    orderBy: (challengeOptions, { asc }) => [asc(challengeOptions.order)],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return data;
+});
