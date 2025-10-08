@@ -8,6 +8,7 @@ import { getUserProgress, getUserSubscription } from "@/db/queries";
 import { Progress } from "@/components/ui/progress";
 import { Promo } from "@/components/promo";
 import { quests } from "@/constants";
+import { BRAND_CONFIG } from "@/lib/config";
 
 const QuestsPage = async () => {
   const userProgressData = getUserProgress();
@@ -49,10 +50,10 @@ const QuestsPage = async () => {
             width={90}
           />
           <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            AWS Learning Quests
+            {BRAND_CONFIG.PLATFORM_NAME} Quests
           </h1>
           <p className="text-muted-foreground text-center text-lg mb-6">
-            Complete daily quests to earn bonus XP and advance your AWS knowledge.
+            Complete daily quests to earn bonus XP and advance your technology knowledge.
           </p>
           <ul className="w-full">
             {quests.map((quest) => {

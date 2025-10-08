@@ -17,6 +17,7 @@ type Props = {
   challenge: typeof challenges.$inferSelect;
   onTextSubmit?: (text: string) => void;
   onTextChange?: (text: string) => void;
+  showCorrectAnswer?: boolean;
 };
 
 export const Challenge = ({
@@ -29,6 +30,7 @@ export const Challenge = ({
   challenge,
   onTextSubmit,
   onTextChange,
+  showCorrectAnswer,
 }: Props) => {
   const [showHint, setShowHint] = useState(false);
   const [textInput, setTextInput] = useState("");
@@ -97,6 +99,29 @@ export const Challenge = ({
     e.dataTransfer.setData("text/plain", index.toString());
   };
 
+  // Helper function to get correct answer display text
+  const getCorrectAnswerText = () => {
+    if (!showCorrectAnswer) return null;
+    
+    switch (type) {
+      case "TEXT_INPUT":
+      case "SPEECH_INPUT":
+        return challenge.correctAnswer;
+      case "SELECT":
+      case "ASSIST":
+      case "TRUE_FALSE":
+      case "IMAGE_SELECT":
+      case "LISTENING":
+      case "VIDEO":
+        const correctOption = options.find(option => option.correct);
+        return correctOption?.text;
+      case "DRAG_DROP":
+        return "Arrange items in the correct order shown above";
+      default:
+        return null;
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
@@ -159,12 +184,35 @@ export const Challenge = ({
     </div>
   );
 
+  // Correct answer display component
+  const CorrectAnswerDisplay = () => {
+    const correctAnswerText = getCorrectAnswerText();
+    if (!correctAnswerText) return null;
+
+    return (
+      <div className="px-6 mb-4">
+        <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">✓</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-green-800 mb-1">Correct Answer:</p>
+              <p className="text-green-700 font-medium">{correctAnswerText}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Render different UI based on challenge type
   switch (type) {
     case "TEXT_INPUT":
       return (
         <div className="space-y-4">
           <QuestionHeader />
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <SpeechInput
               value={textInput}
@@ -189,6 +237,7 @@ export const Challenge = ({
               </p>
             </div>
           </QuestionHeader>
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <SpeechInput
               value={textInput}
@@ -231,6 +280,7 @@ export const Challenge = ({
               </div>
             )}
           </QuestionHeader>
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
             <div className={cn(
@@ -267,6 +317,7 @@ export const Challenge = ({
               </p>
             </div>
           </QuestionHeader>
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <div className="space-y-3">
               {draggedItems.map((item, index) => {
@@ -436,6 +487,7 @@ export const Challenge = ({
               </div>
             )}
           </QuestionHeader>
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
             <div className={cn(
@@ -466,6 +518,7 @@ export const Challenge = ({
       return (
         <div className="space-y-4">
           <QuestionHeader />
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <div className={cn(
               "grid gap-4",
@@ -495,6 +548,7 @@ export const Challenge = ({
       return (
         <div className="space-y-4">
           <QuestionHeader />
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <div className="grid grid-cols-2 gap-4">
               {options.map((option, i) => (
@@ -522,6 +576,7 @@ export const Challenge = ({
       return (
         <div className="space-y-4">
           <QuestionHeader />
+          <CorrectAnswerDisplay />
           <div className="px-6">
             <div className={cn(
               "grid gap-2",

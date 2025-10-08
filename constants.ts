@@ -1,3 +1,5 @@
+import { CONFIG } from "@/lib/config";
+
 export const POINTS_TO_REFILL = 10;
 
 export const quests = [
@@ -6,7 +8,7 @@ export const quests = [
     value: 20,
   },
   {
-    title: "AWS Explorer: Earn 50 XP",
+    title: "Tech Explorer: Earn 50 XP",
     value: 50,
   },
   {
@@ -22,3 +24,8 @@ export const quests = [
     value: 1000,
   },
 ];
+
+// Platform branding constants
+export const PLATFORM_NAME = CONFIG.PLATFORM_NAME;
+export const PLATFORM_DESCRIPTION = CONFIG.PLATFORM_DESCRIPTION;
+export const FULL_TITLE = CONFIG.FULL_TITLE;

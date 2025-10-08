@@ -45,7 +45,7 @@ export const GET = async (req: Request) => {
       const response = new NextResponse(JSON.stringify(exportData, null, 2), {
         headers: {
           "Content-Type": "application/json",
-          "Content-Disposition": `attachment; filename="aws-learning-platform-export-${new Date().toISOString().split('T')[0]}.json"`,
+          "Content-Disposition": `attachment; filename="techlingo-platform-export-${new Date().toISOString().split('T')[0]}.json"`,
         },
       });
       return response;

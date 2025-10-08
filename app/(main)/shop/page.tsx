@@ -9,6 +9,7 @@ import { getUserProgress, getUserSubscription } from "@/db/queries";
 
 import { Items } from "./items";
 import { Quests } from "@/components/quests";
+import { BRAND_CONFIG } from "@/lib/config";
 
 const ShopPage = async () => {
   const userProgressData = getUserProgress();
@@ -51,7 +52,7 @@ const ShopPage = async () => {
             width={90}
           />
           <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            AWS Academy Shop
+            {BRAND_CONFIG.PLATFORM_NAME} Shop
           </h1>
           <p className="text-muted-foreground text-center text-lg mb-6">
             Use your XP points to purchase hearts and power-ups.

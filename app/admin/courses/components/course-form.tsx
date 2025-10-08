@@ -48,11 +48,11 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
         router.push("/admin/courses");
         router.refresh();
       } else {
-        alert(`Failed to ${mode} certification`);
+        alert(`Failed to ${mode} course`);
       }
     } catch (error) {
       console.error(`Error ${mode}ing course:`, error);
-      alert(`Failed to ${mode} certification`);
+      alert(`Failed to ${mode} course`);
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                Certification Title *
+                Course Title *
               </label>
               <input
                 type="text"

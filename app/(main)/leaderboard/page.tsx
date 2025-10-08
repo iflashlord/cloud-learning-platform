@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Promo } from "@/components/promo";
 import { Quests } from "@/components/quests";
+import { BRAND_CONFIG } from "@/lib/config";
 
 const LearderboardPage = async () => {
   const userProgressData = getUserProgress();
@@ -54,10 +55,10 @@ const LearderboardPage = async () => {
             width={90}
           />
           <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-            AWS Academy Leaderboard
+            {BRAND_CONFIG.PLATFORM_NAME} Leaderboard
           </h1>
           <p className="text-muted-foreground text-center text-lg mb-6">
-            See where you rank among other AWS learners in the community.
+            See where you rank among other technology learners in the community.
           </p>
           <Separator className="mb-4 h-0.5 rounded-full" />
           {leaderboard.map((userProgress, index) => (

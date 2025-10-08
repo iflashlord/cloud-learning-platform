@@ -115,7 +115,7 @@ export const AdminDashboard = () => {
 
   const quickActions = [
     {
-      label: "Add Certification",
+      label: "Add Course",
       href: "/admin/courses/new",
       icon: GraduationCap,
       color: "bg-blue-500 hover:bg-blue-600",

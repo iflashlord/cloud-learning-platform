@@ -7,43 +7,43 @@ export const Footer = () => {
       <div className="max-w-screen-lg mx-auto flex items-center justify-evenly h-full">
         <Button size="lg" variant="ghost" className="w-full">
           <Image 
-            src="/aws-cloud-practitioner.svg" 
-            alt="AWS Cloud Practitioner" 
+            src="/mascot.svg" 
+            alt="Cloud Fundamentals" 
             height={32} 
             width={40}
             className="mr-4 rounded-md"
           />
-          Cloud Practitioner
+          Cloud Fundamentals
         </Button>
         <Button size="lg" variant="ghost" className="w-full">
           <Image 
-            src="/aws-solutions-architect.svg" 
-            alt="Solutions Architect" 
+            src="/mascot.svg" 
+            alt="System Architecture" 
             height={32} 
             width={40}
             className="mr-4 rounded-md"
           />
-          Solutions Architect
+          System Architecture
         </Button>
         <Button size="lg" variant="ghost" className="w-full">
           <Image 
-            src="/aws-developer.svg" 
-            alt="Developer Associate" 
+            src="/mascot.svg" 
+            alt="Software Development" 
             height={32} 
             width={40}
             className="mr-4 rounded-md"
           />
-          Developer
+          Development
         </Button>
         <Button size="lg" variant="ghost" className="w-full">
           <Image 
-            src="/aws-sysops.svg" 
-            alt="SysOps Administrator" 
+            src="/mascot.svg" 
+            alt="DevOps & Operations" 
             height={32} 
             width={40}
             className="mr-4 rounded-md"
           />
-          SysOps Admin
+          DevOps & Ops
         </Button>
       </div>
     </footer>

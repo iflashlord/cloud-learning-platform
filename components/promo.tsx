@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { BRAND_CONFIG } from "@/lib/config";
 
 export const Promo = () => {
   return (
@@ -15,7 +16,7 @@ export const Promo = () => {
             width={26}
           />
           <h3 className="font-bold text-lg">
-            Upgrade to AWS Pro
+            Upgrade to {BRAND_CONFIG.PLATFORM_NAME} Pro
           </h3>
         </div>
         <p className="text-muted-foreground">

@@ -39,7 +39,7 @@ export default function CoursesPage() {
   };
 
   const deleteCourse = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this certification? This will also delete all units, lessons, and questions associated with it.')) {
+    if (!confirm('Are you sure you want to delete this course? This will also delete all units, lessons, and questions associated with it.')) {
       return;
     }
 
@@ -50,13 +50,13 @@ export default function CoursesPage() {
 
       if (response.ok) {
         setCourses(courses.filter(course => course.id !== id));
-        alert('Certification deleted successfully');
+        alert('Course deleted successfully');
       } else {
-        alert('Failed to delete certification');
+        alert('Failed to delete course');
       }
     } catch (error) {
       console.error('Error deleting course:', error);
-      alert('Failed to delete certification');
+      alert('Failed to delete course');
     }
   };
 
@@ -85,9 +85,9 @@ export default function CoursesPage() {
         description="Manage courses and learning content"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Search certifications..."
+        searchPlaceholder="Search courses..."
         addNewHref="/admin/courses/new"
-        addNewLabel="Add Certification"
+        addNewLabel="Add Course"
         addNewIcon={Plus}
       />
 
@@ -98,10 +98,10 @@ export default function CoursesPage() {
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
               <GraduationCap className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-medium mb-2">No certifications yet</h3>
+            <h3 className="text-lg font-medium mb-2">No courses yet</h3>
             <p className="mb-4">Get started by creating your first course.</p>
             <Link href="/admin/courses/new">
-              <Button variant="primary">Add Certification</Button>
+              <Button variant="primary">Add Course</Button>
             </Link>
           </div>
         </Card>
@@ -111,7 +111,7 @@ export default function CoursesPage() {
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
               <GraduationCap className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-medium mb-2">No certifications found</h3>
+            <h3 className="text-lg font-medium mb-2">No courses found</h3>
             <p className="mb-4">Try adjusting your search to find what you&apos;re looking for.</p>
           </div>
         </Card>

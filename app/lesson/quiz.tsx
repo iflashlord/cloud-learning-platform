@@ -78,6 +78,8 @@ export const Quiz = ({
   const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
   const [textInput, setTextInput] = useState("");
+  const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
 
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
@@ -85,6 +87,8 @@ export const Quiz = ({
   const onNext = () => {
     setActiveIndex((current) => current + 1);
     setTextInput("");
+    setWrongAttempts(0);
+    setShowCorrectAnswer(false);
   };
 
   const onSelect = (id: number) => {
@@ -142,6 +146,9 @@ export const Quiz = ({
     }
 
     if (isCorrect) {
+      setWrongAttempts(0);
+      setShowCorrectAnswer(false);
+      
       startTransition(() => {
         upsertChallengeProgress(challenge.id)
           .then((response) => {
@@ -162,6 +169,14 @@ export const Quiz = ({
           .catch(() => toast.error("Something went wrong. Please try again."))
       });
     } else {
+      const newWrongAttempts = wrongAttempts + 1;
+      setWrongAttempts(newWrongAttempts);
+      
+      // Show correct answer after 3 wrong attempts
+      if (newWrongAttempts >= 3) {
+        setShowCorrectAnswer(true);
+      }
+      
       startTransition(() => {
         reduceHearts(challenge.id)
           .then((response) => {
@@ -295,6 +310,7 @@ export const Quiz = ({
                   }
                 }}
                 onTextChange={setTextInput}
+                showCorrectAnswer={showCorrectAnswer}
               />
             </div>
           </div>

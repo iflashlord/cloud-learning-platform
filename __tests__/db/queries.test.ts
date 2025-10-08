@@ -102,7 +102,7 @@ describe("getUserProgress", () => {
       userId: "user_123",
       hearts: 3,
       activeCourseId: 9,
-      activeCourse: { id: 9, title: "AWS Foundations" },
+      activeCourse: { id: 9, title: "Cloud Foundations" },
     };
     userProgressFindFirstMock.mockResolvedValue(progressRecord);
 
@@ -187,7 +187,7 @@ describe("getUnits", () => {
 describe("getCourses", () => {
   it("returns every course without additional processing", async () => {
     const coursesList = [
-      { id: 1, title: "AWS" },
+      { id: 1, title: "Cloud Computing" },
       { id: 2, title: "Azure" },
     ];
     coursesFindManyMock.mockResolvedValue(coursesList);
@@ -203,7 +203,7 @@ describe("getCourseById", () => {
   it("returns the course hierarchy for the requested id", async () => {
     const courseRecord = {
       id: 7,
-      title: "AWS Deep Dive",
+      title: "Cloud Deep Dive",
       units: [{ id: 1, lessons: [{ id: 9 }, { id: 10 }] }],
     };
     coursesFindFirstMock.mockResolvedValue(courseRecord);

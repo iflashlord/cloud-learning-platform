@@ -1,25 +1,35 @@
-# AWS Cloud Academy - Interactive AWS Certification Learning Platform
+# TechLingo - Interactive Technology Learning Platform
 
-![AWS Cloud Academy](https://img.shields.io/badge/AWS-Cloud%20Academy-orange)
+![TechLingo](https://img.shields.io/badge/TechLingo-Learning%20Platform-orange)
 
-🎓 **Learn AWS Certifications through Gamified Learning!**
+🎓 **Learn Technology Skills through Gamified Learning!**
 
-This platform transforms the language learning experience into an engaging AWS certification preparation tool. Master AWS Cloud Practitioner, Solutions Architect, Developer, and SysOps Administrator certifications through interactive quizzes, challenges, and a gamified learning experience.
+This platform transforms the language learning experience into an engaging technology skill development tool. Master cloud computing, system architecture, development, and DevOps through interactive quizzes, challenges, and a gamified learning experience.
 
-Originally based on a Duolingo clone, now fully transformed into an AWS learning platform.
+Originally based on a Duolingo clone, now fully transformed into a comprehensive technology learning platform.
+
+## 🎨 Easy Rebranding System
+
+**Change the platform name in one place and update everywhere!**
+
+- 📝 Edit `/lib/config.ts` to change `PLATFORM_NAME` and other branding
+- 🔄 Run `npm run sync:branding` to update package.json
+- ✅ All components, pages, and metadata update automatically
+
+**[📖 Full Branding Guide](./docs/BRANDING_SYSTEM.md)**
 
 ## 🚀 Key Features
 
-### AWS Learning Content
-- ☁️ **4 AWS Certification Paths**: Cloud Practitioner, Solutions Architect, Developer, SysOps
-- 📚 **Structured Learning**: Units, lessons, and quizzes aligned with AWS exam objectives
-- � **Interactive Quizzes**: Multiple choice and fill-in-the-blank questions
-- � **AWS Cloud Practitioner**: Complete starter content with 4 units and 13 lessons
+### Technology Learning Content
+- ☁️ **4 Technology Learning Paths**: Cloud Fundamentals, System Architecture, Development, DevOps & Operations
+- 📚 **Structured Learning**: Units, lessons, and quizzes covering technology concepts
+- 🎯 **Interactive Quizzes**: Multiple choice and fill-in-the-blank questions
+- 🌟 **Cloud Fundamentals**: Complete starter content with 4 units and 13 lessons
 
 ### Gamification
 - ❤️ **Hearts System**: Lives that make learning engaging
 - ⭐ **XP/Points System**: Earn points for correct answers
-- 🏆 **Leaderboard**: Compete with other AWS learners
+- 🏆 **Leaderboard**: Compete with other technology learners
 - 🎯 **Daily Quests**: Bonus challenges for consistent learning
 - 🛍 **Shop System**: Exchange points for hearts and power-ups
 - 💳 **Pro Tier**: Unlimited hearts via Stripe subscription
@@ -34,9 +44,9 @@ Originally based on a Duolingo clone, now fully transformed into an AWS learning
 - 🚀 **Vercel** ready for deployment
 - 📱 **Mobile responsive** design
 
-## 📚 AWS Content Included
+## 📚 Technology Content Included
 
-### AWS Cloud Practitioner (Foundational)
+### Cloud Fundamentals (Foundational)
 - **Unit 1: Cloud Concepts** - 5 lessons covering fundamentals, benefits, architecture
 - **Unit 2: Security & Compliance** - 3 lessons on shared responsibility, IAM, security
 - **Unit 3: Technology & Services** - 3 lessons covering EC2, S3, RDS
@@ -45,9 +55,9 @@ Originally based on a Duolingo clone, now fully transformed into an AWS learning
 **Total: 13 lessons with 16 interactive quiz questions**
 
 ### Coming Soon
-- AWS Solutions Architect Associate
-- AWS Developer Associate
-- AWS SysOps Administrator Associate
+- System Architecture
+- Software Development
+- DevOps & Operations
 
 ## 🚀 Quick Start
 
@@ -81,7 +91,7 @@ Push the schema to your database:
 npm run db:push
 ```
 
-Seed with AWS content:
+Seed with technology content:
 
 ```shell
 npm run db:seed
@@ -93,7 +103,7 @@ npm run db:seed
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to start learning AWS!
+Visit [http://localhost:3000](http://localhost:3000) to start learning technology skills!
 
 ## 📖 Documentation
 
@@ -164,7 +174,7 @@ Contributions are welcome! Areas to contribute:
 
 ## ⚠️ Disclaimer
 
-This is an unofficial AWS learning tool. Content is based on AWS documentation and is not affiliated with Amazon Web Services. Do not use actual AWS exam questions.
+This is a technology learning platform. Content is based on industry best practices and documentation from various technology providers.
 
 ## 📝 License
 

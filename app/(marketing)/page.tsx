@@ -9,6 +9,7 @@ import {
   SignedOut
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { CONFIG } from "@/lib/config";
 import Link from "next/link";
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center gap-y-8">
         <h1 className="text-xl lg:text-3xl font-bold text-neutral-600 max-w-[480px] text-center">
-          Master AWS Certifications with interactive, gamified learning.
+          Master Technology Skills with {CONFIG.PLATFORM_NAME}&apos;s interactive, gamified learning.
         </h1>
         <div className="flex flex-col items-center gap-y-3 max-w-[330px] w-full">
           <ClerkLoading>

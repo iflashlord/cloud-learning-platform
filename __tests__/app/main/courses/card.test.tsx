@@ -11,13 +11,13 @@ describe("Course Card", () => {
     render(
       <Card
         id={5}
-        title="Advanced AWS"
-        imageSrc="/aws.png"
+        title="Advanced Technology"
+        imageSrc="/tech.png"
         onClick={handleClick}
       />,
     );
 
-    await userEvent.click(screen.getByText("Advanced AWS"));
+    await userEvent.click(screen.getByText("Advanced Technology"));
     expect(handleClick).toHaveBeenCalledWith(5);
   });
 
