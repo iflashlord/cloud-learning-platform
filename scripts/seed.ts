@@ -216,9 +216,9 @@ const main = async () => {
         lessonId: 1,
         type: "LISTENING",
         order: 7,
-        question: 'Listen to the audio and select the correct AWS service mentioned:',
+        question: 'Listen to the audio introduction about AWS compute services. Which service is being described for running virtual machines?',
         audioSrc: '/audio/aws-intro.mp3',
-        hint: 'Listen carefully for the specific AWS service name mentioned in the audio.',
+        hint: 'Pay attention to the description of virtual machines and on-demand compute capacity. The audio mentions the most fundamental AWS compute service.',
       },
       {
         id: 8,
@@ -436,55 +436,60 @@ const main = async () => {
     // Challenge 7: Listening (LISTENING) - AWS Service from Audio
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 20,
+        challengeId: 7,
         correct: false,
-        text: "Amazon S3",
+        text: "Amazon S3 - Simple Storage Service",
       },
       {
-        challengeId: 20,
+        challengeId: 7,
         correct: true,
-        text: "Amazon EC2",
+        text: "Amazon EC2 - Elastic Compute Cloud",
       },
       {
-        challengeId: 20,
+        challengeId: 7,
         correct: false,
-        text: "AWS Lambda",
+        text: "AWS Lambda - Serverless Computing",
+      },
+      {
+        challengeId: 7,
+        correct: false,
+        text: "Amazon RDS - Relational Database Service",
       },
     ]);
 
-    // Challenge 8: Benefits (Lesson 2)
+    // Challenge 9: Benefits (Lesson 2)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 20,
+        challengeId: 9,
         correct: true,
         text: "Pay-as-you-go pricing",
       },
       {
-        challengeId: 20,
+        challengeId: 9,
         correct: false,
         text: "Requires large upfront investment",
       },
       {
-        challengeId: 20,
+        challengeId: 9,
         correct: false,
         text: "Limited scalability",
       },
     ]);
 
-    // Challenge 9: CapEx vs OpEx (Lesson 2)
+    // Challenge 10: CapEx vs OpEx (Lesson 2)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 18,
+        challengeId: 10,
         correct: true,
         text: "Variable operational expense",
       },
       {
-        challengeId: 18,
+        challengeId: 10,
         correct: false,
         text: "Fixed operational expense",
       },
       {
-        challengeId: 18,
+        challengeId: 10,
         correct: false,
         text: "Variable capital expense",
       },

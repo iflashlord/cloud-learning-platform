@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useEffect } from "react";
+import { Volume2 } from "lucide-react";
 
 import { Card } from "./card";
 import { SpeechInput } from "@/components/SpeechInput";
@@ -295,34 +296,60 @@ export const Challenge = ({
 
     case "LISTENING":
       return (
-        <div className="space-y-4">
-          {challenge?.audioSrc && (
-            <div className="flex justify-center">
-              <audio controls className="w-full max-w-md">
-                <source src={challenge.audioSrc} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
+        <div className="space-y-6">
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                <Volume2 className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <h3 className="font-medium text-indigo-900">Audio Question</h3>
+                <p className="text-sm text-indigo-700">Listen carefully and select the correct answer</p>
+              </div>
             </div>
-          )}
-          <div className={cn(
-            "grid gap-2",
-            "grid-cols-1 lg:grid-cols-2"
-          )}>
-            {options.map((option, i) => (
-              <Card
-                key={option.id}
-                id={option.id}
-                text={option.text}
-                imageSrc={option.imageSrc}
-                shortcut={`${i + 1}`}
-                selected={selectedOption === option.id}
-                onClick={() => onSelect(option.id)}
-                status={status}
-                audioSrc={option.audioSrc}
-                disabled={disabled}
-                type={type}
-              />
-            ))}
+            
+            {challenge?.audioSrc && (
+              <div className="bg-white p-4 rounded-lg border border-indigo-100 shadow-sm">
+                <audio 
+                  controls 
+                  className="w-full"
+                  style={{ height: '40px' }}
+                  preload="metadata"
+                >
+                  <source src={challenge.audioSrc} type="audio/mpeg" />
+                  <source src={challenge.audioSrc} type="audio/wav" />
+                  <source src={challenge.audioSrc} type="audio/ogg" />
+                  Your browser does not support the audio element.
+                </audio>
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  🎧 Use headphones for better audio quality
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
+            <div className={cn(
+              "grid gap-3",
+              "grid-cols-1"
+            )}>
+              {options.map((option, i) => (
+                <Card
+                  key={option.id}
+                  id={option.id}
+                  text={option.text}
+                  imageSrc={option.imageSrc}
+                  shortcut={`${i + 1}`}
+                  selected={selectedOption === option.id}
+                  onClick={() => onSelect(option.id)}
+                  status={status}
+                  audioSrc={option.audioSrc}
+                  disabled={disabled}
+                  type={type}
+                />
+              ))}
+            </div>
           </div>
         </div>
       );
