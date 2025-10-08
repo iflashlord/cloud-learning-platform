@@ -51,7 +51,8 @@ export const challengesEnum = pgEnum("type", [
   "TEXT_INPUT",    // Free text input
   "IMAGE_SELECT",  // Select from images
   "LISTENING",     // Audio-based question
-  "SPEECH_INPUT"   // Speech recognition input
+  "SPEECH_INPUT",  // Speech recognition input
+  "VIDEO"          // Video-based question
 ]);
 
 export const challenges = pgTable("challenges", {
@@ -63,6 +64,7 @@ export const challenges = pgTable("challenges", {
   order: integer("order").notNull(),
   audioSrc: text("audio_src"), // For listening comprehension questions
   imageSrc: text("image_src"), // For image-based questions
+  videoSrc: text("video_src"), // For video-based questions
   correctAnswer: text("correct_answer"), // For text input questions
 });
 

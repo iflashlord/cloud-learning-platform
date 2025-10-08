@@ -31,12 +31,13 @@ type ChallengeOption = {
 
 type ChallengeData = {
   question: string;
-  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT" | "VIDEO";
   lessonId: number;
   order: number;
   hint?: string;
   audioSrc?: string;
   imageSrc?: string;
+  videoSrc?: string;
   correctAnswer?: string;
   challengeOptions: ChallengeOption[];
 };
@@ -59,6 +60,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
     order: initialData?.order || 1,
     hint: initialData?.hint || "",
     audioSrc: initialData?.audioSrc || "",
+    videoSrc: initialData?.videoSrc || "",
     imageSrc: initialData?.imageSrc || "",
     correctAnswer: initialData?.correctAnswer || "",
     challengeOptions: initialData?.challengeOptions || [
@@ -200,6 +202,12 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
         return;
       }
 
+      // Validate VIDEO type has video
+      if (formData.type === "VIDEO" && !formData.videoSrc?.trim()) {
+        toast.error("Video questions must have a video source");
+        return;
+      }
+
       const url = challengeId ? `/api/challenges/${challengeId}` : "/api/challenges";
       const method = challengeId ? "PUT" : "POST";
 
@@ -297,6 +305,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
             <option value="IMAGE_SELECT">🖼️ Image Selection - Students choose from images</option>
             <option value="LISTENING">🎵 Listening - Students listen to audio and answer</option>
             <option value="SPEECH_INPUT">🎤 Speech Input - Students answer using voice recognition</option>
+            <option value="VIDEO">🎬 Video Question - Students watch a video and answer</option>
           </select>
           
           {/* Type-specific descriptions */}
@@ -348,6 +357,12 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                 <>
                   <strong>Speech Input:</strong> Students speak their answer using voice recognition technology. 
                   Their speech is transcribed to text and compared with the correct answer. Ideal for pronunciation practice and oral responses.
+                </>
+              )}
+              {formData.type === "VIDEO" && (
+                <>
+                  <strong>Video Question:</strong> Students watch a video and then answer a question based on the content. 
+                  Requires a video file URL. Perfect for visual demonstrations, tutorials, and multimedia-based assessments.
                 </>
               )}
             </p>
@@ -426,6 +441,23 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="https://example.com/audio.mp3"
               required={formData.type === "LISTENING"}
+            />
+          </div>
+        )}
+
+        {formData.type === "VIDEO" && (
+          <div>
+            <label htmlFor="videoSrc" className="block text-sm font-medium text-gray-700 mb-2">
+              Video URL <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="url"
+              id="videoSrc"
+              value={formData.videoSrc}
+              onChange={(e) => setFormData(prev => ({ ...prev, videoSrc: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://example.com/video.mp4"
+              required={formData.type === "VIDEO"}
             />
           </div>
         )}

@@ -327,6 +327,15 @@ const main = async () => {
         order: 2,
         question: 'What is the storage limit for a single S3 object?',
       },
+      {
+        id: 22,
+        lessonId: 1,
+        type: "VIDEO",
+        order: 9,
+        question: 'Watch this video about AWS Global Infrastructure and answer: How many Availability Zones does AWS have?',
+        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        hint: 'Pay attention to the numbers mentioned in the video about AWS data centers and availability zones.',
+      },
     ]);
 
     // Challenge 1: Multiple Choice (SELECT) - What is Cloud Computing?
@@ -745,6 +754,54 @@ const main = async () => {
         correct: false, // Not used for drag-drop
         text: "Cost Optimization",
         order: 4,
+      },
+    ]);
+
+    // Challenge 21: S3 storage limit question
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 21,
+        correct: false,
+        text: "100 GB",
+      },
+      {
+        challengeId: 21,
+        correct: false,
+        text: "1 TB",
+      },
+      {
+        challengeId: 21,
+        correct: true,
+        text: "5 TB",
+      },
+      {
+        challengeId: 21,
+        correct: false,
+        text: "10 TB",
+      },
+    ]);
+
+    // Challenge 22: VIDEO question - AWS Global Infrastructure
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 22,
+        correct: false,
+        text: "50-100",
+      },
+      {
+        challengeId: 22,
+        correct: false,
+        text: "100-150",
+      },
+      {
+        challengeId: 22,
+        correct: true,
+        text: "80+",
+      },
+      {
+        challengeId: 22,
+        correct: false,
+        text: "200+",
       },
     ]);
 

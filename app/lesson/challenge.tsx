@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useEffect } from "react";
-import { Volume2 } from "lucide-react";
+import { Volume2, Play, HelpCircle } from "lucide-react";
 
 import { Card } from "./card";
 import { SpeechInput } from "@/components/SpeechInput";
+import { Character } from "@/components/Character";
 
 type Props = {
   options: typeof challengeOptions.$inferSelect[];
@@ -27,8 +28,16 @@ export const Challenge = ({
   challenge,
   onTextSubmit,
 }: Props) => {
+  const [showHint, setShowHint] = useState(false);
   const [textInput, setTextInput] = useState("");
   const [draggedItems, setDraggedItems] = useState<typeof options>([]);
+
+  // Clear text input when status resets to "none" (retry)
+  useEffect(() => {
+    if (status === "none") {
+      setTextInput("");
+    }
+  }, [status]);
 
   // Initialize drag items for DRAG_DROP when options are available
   useEffect(() => {
@@ -107,34 +116,75 @@ export const Challenge = ({
     }
   };
 
+  // Consistent header for all question types
+  const QuestionHeader = ({ children }: { children?: React.ReactNode }) => (
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-6 shadow-sm">
+      <div className="flex items-start space-x-4">
+        <Character 
+          questionType={type} 
+          challengeId={challenge?.id || 0}
+          state={status === "correct" ? "correct" : status === "wrong" ? "wrong" : "default"}
+        />
+        <div className="flex-1">
+          <div className="bg-white rounded-lg p-4 shadow-sm border">
+            <div className="flex items-start justify-between">
+              <p className="text-gray-800 font-medium leading-relaxed flex-1">
+                {challenge?.question}
+              </p>
+              {challenge?.hint && (
+                <button
+                  onClick={() => setShowHint(!showHint)}
+                  className="ml-3 flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition-colors"
+                  title={showHint ? "Hide hint" : "Show hint"}
+                >
+                  <HelpCircle className="w-5 h-5" />
+                  <span className="text-sm font-medium">Hint</span>
+                </button>
+              )}
+            </div>
+            {challenge?.hint && showHint && (
+              <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200 transition-all duration-300 ease-in-out">
+                <p className="text-sm text-yellow-800">
+                  💡 <strong>Hint:</strong> {challenge.hint}
+                </p>
+              </div>
+            )}
+          </div>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+
   // Render different UI based on challenge type
   switch (type) {
     case "TEXT_INPUT":
       return (
         <div className="space-y-4">
-          <SpeechInput
-            value={textInput}
-            onChange={setTextInput}
-            onSubmit={handleTextInputSubmit}
-            disabled={disabled}
-            placeholder="Type your answer or use speech recognition..."
-          />
+          <QuestionHeader />
+          <div className="px-6">
+            <SpeechInput
+              value={textInput}
+              onChange={setTextInput}
+              onSubmit={handleTextInputSubmit}
+              disabled={disabled}
+              placeholder="Type your answer or use speech recognition..."
+            />
+          </div>
         </div>
       );
 
     case "SPEECH_INPUT":
       return (
         <div className="space-y-4">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                🎤
-              </div>
-              <div>
-                <h3 className="font-medium text-blue-900">Speech Recognition Mode</h3>
-                <p className="text-xs text-blue-700">This question requires voice input</p>
-              </div>
+          <QuestionHeader>
+            <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
+              <p className="text-sm text-red-700 font-medium">
+                🎤 Voice Input Mode - Click the microphone and speak your answer clearly
+              </p>
             </div>
+          </QuestionHeader>
+          <div className="px-6">
             <SpeechInput
               value={textInput}
               onChange={setTextInput}
@@ -146,17 +196,73 @@ export const Challenge = ({
         </div>
       );
 
+    case "VIDEO":
+      return (
+        <div className="space-y-4">
+          <QuestionHeader>
+            {challenge?.videoSrc && (
+              <div className="mt-3 p-3 bg-violet-50 rounded-lg border border-violet-200">
+                <p className="text-sm text-violet-700 font-medium mb-2">
+                  🎬 Watch the video carefully before selecting your answer
+                </p>
+                <div className="bg-white p-3 rounded-lg border border-violet-100 shadow-sm">
+                  <video 
+                    controls 
+                    className="w-full rounded-lg"
+                    preload="metadata"
+                    style={{ maxHeight: '300px' }}
+                  >
+                    <source src={challenge.videoSrc} type="video/mp4" />
+                    <source src={challenge.videoSrc} type="video/webm" />
+                    <source src={challenge.videoSrc} type="video/ogg" />
+                    Your browser does not support the video element.
+                  </video>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    📱 You can pause and rewatch the video as needed
+                  </p>
+                </div>
+              </div>
+            )}
+          </QuestionHeader>
+          <div className="px-6">
+            <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
+            <div className={cn(
+              "grid gap-3",
+              "grid-cols-1"
+            )}>
+              {options.map((option, i) => (
+                <Card
+                  key={option.id}
+                  id={option.id}
+                  text={option.text}
+                  imageSrc={option.imageSrc}
+                  shortcut={`${i + 1}`}
+                  selected={selectedOption === option.id}
+                  onClick={() => onSelect(option.id)}
+                  status={status}
+                  audioSrc={option.audioSrc}
+                  disabled={disabled}
+                  type={type}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+
     case "DRAG_DROP":
       return (
         <div className="space-y-4">
-          <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-            <p className="text-sm text-blue-700">
-              📋 Arrange items in the correct order. You can drag & drop or use the ↑↓ buttons.
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            {draggedItems.map((item, index) => {
+          <QuestionHeader>
+            <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                📋 Arrange items in the correct order. You can drag & drop or use the ↑↓ buttons.
+              </p>
+            </div>
+          </QuestionHeader>
+          <div className="px-6">
+            <div className="space-y-3">
+              {draggedItems.map((item, index) => {
               const isCorrectPosition = item.order === index + 1;
               return (
                 <div
@@ -291,44 +397,39 @@ export const Challenge = ({
               </div>
             </div>
           </div>
+          </div>
         </div>
       );
 
     case "LISTENING":
       return (
-        <div className="space-y-6">
-          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-200">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                <Volume2 className="w-5 h-5 text-indigo-600" />
-              </div>
-              <div>
-                <h3 className="font-medium text-indigo-900">Audio Question</h3>
-                <p className="text-sm text-indigo-700">Listen carefully and select the correct answer</p>
-              </div>
-            </div>
-            
+        <div className="space-y-4">
+          <QuestionHeader>
             {challenge?.audioSrc && (
-              <div className="bg-white p-4 rounded-lg border border-indigo-100 shadow-sm">
-                <audio 
-                  controls 
-                  className="w-full"
-                  style={{ height: '40px' }}
-                  preload="metadata"
-                >
-                  <source src={challenge.audioSrc} type="audio/mpeg" />
-                  <source src={challenge.audioSrc} type="audio/wav" />
-                  <source src={challenge.audioSrc} type="audio/ogg" />
-                  Your browser does not support the audio element.
-                </audio>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  🎧 Use headphones for better audio quality
+              <div className="mt-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                <p className="text-sm text-indigo-700 font-medium mb-2">
+                  🎧 Listen carefully before selecting your answer
                 </p>
+                <div className="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm">
+                  <audio 
+                    controls 
+                    className="w-full"
+                    style={{ height: '40px' }}
+                    preload="metadata"
+                  >
+                    <source src={challenge.audioSrc} type="audio/mpeg" />
+                    <source src={challenge.audioSrc} type="audio/wav" />
+                    <source src={challenge.audioSrc} type="audio/ogg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    🔊 You can replay the audio as needed
+                  </p>
+                </div>
               </div>
             )}
-          </div>
-          
-          <div className="space-y-3">
+          </QuestionHeader>
+          <div className="px-6">
             <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
             <div className={cn(
               "grid gap-3",
@@ -356,72 +457,87 @@ export const Challenge = ({
 
     case "IMAGE_SELECT":
       return (
-        <div className={cn(
-          "grid gap-4",
-          "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        )}>
-          {options.map((option, i) => (
-            <Card
-              key={option.id}
-              id={option.id}
-              text={option.text}
-              imageSrc={option.imageSrc}
-              shortcut={`${i + 1}`}
-              selected={selectedOption === option.id}
-              onClick={() => onSelect(option.id)}
-              status={status}
-              audioSrc={option.audioSrc}
-              disabled={disabled}
-              type={type}
-            />
-          ))}
+        <div className="space-y-4">
+          <QuestionHeader />
+          <div className="px-6">
+            <div className={cn(
+              "grid gap-4",
+              "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            )}>
+              {options.map((option, i) => (
+                <Card
+                  key={option.id}
+                  id={option.id}
+                  text={option.text}
+                  imageSrc={option.imageSrc}
+                  shortcut={`${i + 1}`}
+                  selected={selectedOption === option.id}
+                  onClick={() => onSelect(option.id)}
+                  status={status}
+                  audioSrc={option.audioSrc}
+                  disabled={disabled}
+                  type={type}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       );
 
     case "TRUE_FALSE":
       return (
-        <div className="grid grid-cols-2 gap-4">
-          {options.map((option, i) => (
-            <Card
-              key={option.id}
-              id={option.id}
-              text={option.text}
-              imageSrc={option.imageSrc}
-              shortcut={i === 0 ? "T" : "F"}
-              selected={selectedOption === option.id}
-              onClick={() => onSelect(option.id)}
-              status={status}
-              audioSrc={option.audioSrc}
-              disabled={disabled}
-              type={type}
-            />
-          ))}
+        <div className="space-y-4">
+          <QuestionHeader />
+          <div className="px-6">
+            <div className="grid grid-cols-2 gap-4">
+              {options.map((option, i) => (
+                <Card
+                  key={option.id}
+                  id={option.id}
+                  text={option.text}
+                  imageSrc={option.imageSrc}
+                  shortcut={i === 0 ? "T" : "F"}
+                  selected={selectedOption === option.id}
+                  onClick={() => onSelect(option.id)}
+                  status={status}
+                  audioSrc={option.audioSrc}
+                  disabled={disabled}
+                  type={type}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       );
 
     default:
       // SELECT and ASSIST types (existing behavior)
       return (
-        <div className={cn(
-          "grid gap-2",
-          type === "ASSIST" && "grid-cols-1",
-          type === "SELECT" && "grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]"
-        )}>
-          {options.map((option, i) => (
-            <Card
-              key={option.id}
-              id={option.id}
-              text={option.text}
-              imageSrc={option.imageSrc}
-              shortcut={`${i + 1}`}
-              selected={selectedOption === option.id}
-              onClick={() => onSelect(option.id)}
-              status={status}
-              audioSrc={option.audioSrc}
-              disabled={disabled}
-              type={type}
-            />
-          ))}
+        <div className="space-y-4">
+          <QuestionHeader />
+          <div className="px-6">
+            <div className={cn(
+              "grid gap-2",
+              type === "ASSIST" && "grid-cols-1",
+              type === "SELECT" && "grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]"
+            )}>
+              {options.map((option, i) => (
+                <Card
+                  key={option.id}
+                  id={option.id}
+                  text={option.text}
+                  imageSrc={option.imageSrc}
+                  shortcut={`${i + 1}`}
+                  selected={selectedOption === option.id}
+                  onClick={() => onSelect(option.id)}
+                  status={status}
+                  audioSrc={option.audioSrc}
+                  disabled={disabled}
+                  type={type}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       );
   }

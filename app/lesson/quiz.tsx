@@ -17,7 +17,6 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { Challenge } from "./challenge";
 import { ResultCard } from "./result-card";
-import { QuestionBubble } from "./question-bubble";
 
 type Props ={
   initialPercentage: number;
@@ -241,9 +240,6 @@ export const Quiz = ({
               {title}
             </h1>
             <div>
-              {(challenge.type === "ASSIST" || challenge.type === "TEXT_INPUT" || challenge.type === "LISTENING") && (
-                <QuestionBubble question={challenge.question} hint={challenge.hint || undefined} />
-              )}
               {challenge.imageSrc && challenge.type === "IMAGE_SELECT" && (
                 <div className="mb-4 flex justify-center">
                   <Image 
@@ -270,7 +266,7 @@ export const Quiz = ({
                     setSelectedOption(1); // Dummy selection for correct answer
                   } else {
                     setStatus("wrong");
-                    setSelectedOption(0); // Dummy selection for wrong answer
+                    setSelectedOption(-1); // Use -1 for wrong answer (truthy value)
                   }
                 }}
               />

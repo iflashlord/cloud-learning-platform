@@ -66,6 +66,7 @@ export const POST = async (req: Request) => {
     order: body.order,
     audioSrc: body.audioSrc || null,
     imageSrc: body.imageSrc || null,
+    videoSrc: body.videoSrc || null,
     correctAnswer: body.correctAnswer || null,
   }).returning();
 
