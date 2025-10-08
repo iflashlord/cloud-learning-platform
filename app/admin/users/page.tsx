@@ -142,8 +142,8 @@ export default function UserManagementPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <div className="text-sm font-medium text-gray-600">Total Users</div>
+                <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
               </div>
               <Users className="w-8 h-8 text-blue-600" />
             </div>
@@ -154,8 +154,8 @@ export default function UserManagementPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Users</p>
-                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+                <div className="text-sm font-medium text-gray-600">Active Users</div>
+                <div className="text-2xl font-bold text-green-600">{stats.active}</div>
               </div>
               <Activity className="w-8 h-8 text-green-600" />
             </div>
@@ -166,8 +166,8 @@ export default function UserManagementPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Inactive Users</p>
-                <p className="text-2xl font-bold text-red-600">{stats.inactive}</p>
+                <div className="text-sm font-medium text-gray-600">Inactive Users</div>
+                <div className="text-2xl font-bold text-red-600">{stats.inactive}</div>
               </div>
               <Ban className="w-8 h-8 text-red-600" />
             </div>
@@ -178,8 +178,8 @@ export default function UserManagementPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">New This Month</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.newThisMonth}</p>
+                <div className="text-sm font-medium text-gray-600">New This Month</div>
+                <div className="text-2xl font-bold text-purple-600">{stats.newThisMonth}</div>
               </div>
               <UserPlus className="w-8 h-8 text-purple-600" />
             </div>

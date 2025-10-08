@@ -138,8 +138,8 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
             <div className="flex items-center">
               <BookOpen className="w-8 h-8 text-blue-600 mr-3" />
               <div>
-                <p className="text-2xl font-bold">{course.units.length}</p>
-                <p className="text-sm text-gray-600">Units</p>
+                <div className="text-2xl font-bold">{course.units.length}</div>
+                <div className="text-sm text-gray-600">Units</div>
               </div>
             </div>
           </CardContent>
@@ -149,10 +149,10 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
             <div className="flex items-center">
               <ListChecks className="w-8 h-8 text-green-600 mr-3" />
               <div>
-                <p className="text-2xl font-bold">
+                <div className="text-2xl font-bold">
                   {course.units.reduce((acc, unit) => acc + unit.lessons.length, 0)}
-                </p>
-                <p className="text-sm text-gray-600">Lessons</p>
+                </div>
+                <div className="text-sm text-gray-600">Lessons</div>
               </div>
             </div>
           </CardContent>
@@ -162,14 +162,14 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
             <div className="flex items-center">
               <FileQuestion className="w-8 h-8 text-orange-600 mr-3" />
               <div>
-                <p className="text-2xl font-bold">
+                <div className="text-2xl font-bold">
                   {course.units.reduce((acc, unit) => 
                     acc + unit.lessons.reduce((lessonAcc, lesson) => 
                       lessonAcc + lesson.challenges.length, 0
                     ), 0
                   )}
-                </p>
-                <p className="text-sm text-gray-600">Questions</p>
+                </div>
+                <div className="text-sm text-gray-600">Questions</div>
               </div>
             </div>
           </CardContent>
@@ -181,7 +181,7 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
                 <span className="text-purple-600 font-bold">%</span>
               </div>
               <div>
-                <p className="text-2xl font-bold">
+                <div className="text-2xl font-bold">
                   {course.units.length > 0 ? Math.round((
                     course.units.reduce((acc, unit) => 
                       acc + unit.lessons.reduce((lessonAcc, lesson) => 
@@ -189,8 +189,8 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
                       ), 0
                     ) / course.units.reduce((acc, unit) => acc + unit.lessons.length, 0) || 0
                   ) * 100) : 0}
-                </p>
-                <p className="text-sm text-gray-600">Avg Q/Lesson</p>
+                </div>
+                <div className="text-sm text-gray-600">Avg Q/Lesson</div>
               </div>
             </div>
           </CardContent>

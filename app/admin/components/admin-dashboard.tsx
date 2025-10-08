@@ -61,18 +61,15 @@ export const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch data from existing API endpoints
-        const [coursesRes, unitsRes, lessonsRes, challengesRes, challengeOptionsRes] = await Promise.all([
+        // Fetch data from existing API endpoints and new admin stats endpoint
+        const [coursesRes, unitsRes, lessonsRes, challengesRes, challengeOptionsRes, adminStatsRes] = await Promise.all([
           fetch('/api/courses').then(r => r.json()),
           fetch('/api/units').then(r => r.json()),
           fetch('/api/lessons').then(r => r.json()),
           fetch('/api/challenges').then(r => r.json()),
           fetch('/api/challengeOptions').then(r => r.json()),
+          fetch('/api/admin/stats').then(r => r.json()),
         ]);
-
-        // Calculate completion rate (mock for now - could be based on user progress)
-        const totalContent = (unitsRes.length || 0) + (lessonsRes.length || 0) + (challengesRes.length || 0);
-        const completionRate = totalContent > 0 ? Math.floor(Math.random() * 40 + 60) : 0; // Mock 60-100%
 
         setStats({
           courses: coursesRes.length || 0,
@@ -80,13 +77,34 @@ export const AdminDashboard = () => {
           lessons: lessonsRes.length || 0,
           challenges: challengesRes.length || 0,
           challengeOptions: challengeOptionsRes.length || 0,
-          completionRate,
-          users: Math.floor(Math.random() * 500 + 100), // Mock data for now
-          activeSubscriptions: Math.floor(Math.random() * 50 + 25), // Mock data
-          monthlyRevenue: Math.floor(Math.random() * 5000 + 2500), // Mock data
+          // Use real data from admin stats API
+          users: adminStatsRes.activeUsers || 0,
+          completionRate: adminStatsRes.completionRate || 0,
+          activeSubscriptions: adminStatsRes.activeSubscriptions || 0,
+          monthlyRevenue: adminStatsRes.monthlyRevenue || 0,
         });
       } catch (error) {
         console.error('Failed to fetch stats:', error);
+        // Fallback to basic content stats if admin stats fail
+        const [coursesRes, unitsRes, lessonsRes, challengesRes, challengeOptionsRes] = await Promise.allSettled([
+          fetch('/api/courses').then(r => r.json()),
+          fetch('/api/units').then(r => r.json()),
+          fetch('/api/lessons').then(r => r.json()),
+          fetch('/api/challenges').then(r => r.json()),
+          fetch('/api/challengeOptions').then(r => r.json()),
+        ]);
+
+        setStats({
+          courses: coursesRes.status === 'fulfilled' ? coursesRes.value?.length || 0 : 0,
+          units: unitsRes.status === 'fulfilled' ? unitsRes.value?.length || 0 : 0,
+          lessons: lessonsRes.status === 'fulfilled' ? lessonsRes.value?.length || 0 : 0,
+          challenges: challengesRes.status === 'fulfilled' ? challengesRes.value?.length || 0 : 0,
+          challengeOptions: challengeOptionsRes.status === 'fulfilled' ? challengeOptionsRes.value?.length || 0 : 0,
+          users: 0,
+          completionRate: 0,
+          activeSubscriptions: 0,
+          monthlyRevenue: 0,
+        });
       } finally {
         setLoading(false);
       }
@@ -186,13 +204,13 @@ export const AdminDashboard = () => {
       trendPositive: true,
     },
     {
-      label: "Active Users",
+      label: "Registered Users",
       value: stats.users.toLocaleString(),
       icon: Users,
       color: "text-indigo-600",
       bg: "bg-indigo-50",
       border: "border-indigo-200",
-      trend: "+28%",
+      trend: "Real-time data",
       trendPositive: true,
     },
     {
@@ -202,17 +220,17 @@ export const AdminDashboard = () => {
       color: "text-green-600",
       bg: "bg-green-50",
       border: "border-green-200",
-      trend: "+5%",
+      trend: "Challenge success",
       trendPositive: true,
     },
     {
-      label: "Subscriptions",
-      value: stats.activeSubscriptions,
+      label: "Active Subscriptions",
+      value: stats.activeSubscriptions.toLocaleString(),
       icon: CreditCard,
       color: "text-rose-600",
       bg: "bg-rose-50",
       border: "border-rose-200",
-      trend: "+32%",
+      trend: "Current active",
       trendPositive: true,
     },
     {
@@ -222,7 +240,7 @@ export const AdminDashboard = () => {
       color: "text-emerald-600",
       bg: "bg-emerald-50",
       border: "border-emerald-200",
-      trend: "+15%",
+      trend: "From subscriptions",
       trendPositive: true,
     },
   ];
@@ -315,11 +333,11 @@ export const AdminDashboard = () => {
           <div className="hidden md:flex items-center space-x-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
               <Calendar className="w-6 h-6 mx-auto mb-1" />
-              <p className="text-sm">Today</p>
+              <div className="text-sm">Today</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
               <Clock className="w-6 h-6 mx-auto mb-1" />
-              <p className="text-sm">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              <div className="text-sm">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
           </div>
         </div>
@@ -331,14 +349,14 @@ export const AdminDashboard = () => {
           <Card key={stat.label} className={`p-6 hover:shadow-lg transition-all duration-300 border-2 ${stat.border} ${stat.bg} group cursor-pointer`}>
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                <p className="text-3xl font-bold text-gray-900 mb-2">
+                <div className="text-sm font-medium text-gray-600 mb-1">{stat.label}</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">
                   {loading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
                   ) : (
                     stat.value
                   )}
-                </p>
+                </div>
                 <div className="flex items-center space-x-1">
                   <ArrowUpRight className={`w-4 h-4 ${stat.trendPositive ? 'text-green-500' : 'text-red-500'}`} />
                   <span className={`text-sm font-medium ${stat.trendPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -434,24 +452,24 @@ export const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
             <div className="text-3xl font-bold text-blue-600 mb-2">
-              {loading ? '...' : `${Math.floor(stats.completionRate)}%`}
+              {loading ? '...' : `${stats.completionRate}%`}
             </div>
-            <p className="text-sm text-blue-700 font-medium">Average Completion Rate</p>
-            <p className="text-xs text-blue-600 mt-1">↗️ +5% from last week</p>
+            <div className="text-sm text-blue-700 font-medium">Challenge Completion Rate</div>
+            <div className="text-xs text-blue-600 mt-1">Real-time completion tracking</div>
           </div>
           <div className="text-center p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl">
             <div className="text-3xl font-bold text-emerald-600 mb-2">
-              {loading ? '...' : `${Math.floor(stats.users / 7)}`}
+              {loading ? '...' : `$${stats.monthlyRevenue.toLocaleString()}`}
             </div>
-            <p className="text-sm text-emerald-700 font-medium">Daily Active Users</p>
-            <p className="text-xs text-emerald-600 mt-1">↗️ +12% from yesterday</p>
+            <div className="text-sm text-emerald-700 font-medium">Monthly Revenue</div>
+            <div className="text-xs text-emerald-600 mt-1">From active subscriptions</div>
           </div>
           <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
             <div className="text-3xl font-bold text-purple-600 mb-2">
-              {loading ? '...' : `${Math.floor(stats.challenges / stats.lessons * 100)}%`}
+              {loading ? '...' : `${stats.challenges > 0 && stats.lessons > 0 ? Math.round(stats.challenges / stats.lessons * 100) / 100 : '0'}`}
             </div>
-            <p className="text-sm text-purple-700 font-medium">Challenge Coverage</p>
-            <p className="text-xs text-purple-600 mt-1">↗️ Questions per lesson ratio</p>
+            <div className="text-sm text-purple-700 font-medium">Avg Questions per Lesson</div>
+            <div className="text-xs text-purple-600 mt-1">Content density ratio</div>
           </div>
         </div>
       </Card>
