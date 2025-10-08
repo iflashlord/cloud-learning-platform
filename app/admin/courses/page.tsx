@@ -81,8 +81,8 @@ export default function CoursesPage() {
   return (
     <div className="space-y-6">
       <AdminPageHeader
-        title="AWS Certifications"
-        description="Manage AWS certification courses"
+        title="Courses"
+        description="Manage courses and learning content"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         searchPlaceholder="Search certifications..."
@@ -99,7 +99,7 @@ export default function CoursesPage() {
               <GraduationCap className="w-8 h-8" />
             </div>
             <h3 className="text-lg font-medium mb-2">No certifications yet</h3>
-            <p className="mb-4">Get started by creating your first AWS certification course.</p>
+            <p className="mb-4">Get started by creating your first course.</p>
             <Link href="/admin/courses/new">
               <Button variant="primary">Add Certification</Button>
             </Link>

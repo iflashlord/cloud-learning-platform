@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import { AdminDashboard } from "@/app/admin/components/admin-dashboard";
 
@@ -12,48 +12,57 @@ describe("AdminDashboard", () => {
 
   it("fetches stats and displays the resulting counts", async () => {
     const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ json: async () => [{ id: 1 }, { id: 2 }] }) // courses
+      .mockResolvedValueOnce({ json: async () => [{ id: 10 }] }) // units
+      .mockResolvedValueOnce({ json: async () => [{ id: 20 }, { id: 21 }, { id: 22 }] }) // lessons
+      .mockResolvedValueOnce({ json: async () => [{ id: 30 }, { id: 31 }] }) // challenges
+      .mockResolvedValueOnce({ json: async () => [{ id: 40 }, { id: 41 }, { id: 42 }] }) // challenge options
       .mockResolvedValueOnce({
-        json: async () => [{ id: 1 }, { id: 2 }],
-      })
-      .mockResolvedValueOnce({
-        json: async () => [{ id: 10 }],
-      })
-      .mockResolvedValueOnce({
-        json: async () => [{ id: 20 }, { id: 21 }, { id: 22 }],
-      })
-      .mockResolvedValueOnce({
-        json: async () => [{ id: 30 }, { id: 31 }],
-      });
+        json: async () => ({
+          activeUsers: 1200,
+          completionRate: 67,
+          activeSubscriptions: 45,
+          monthlyRevenue: 3200,
+        }),
+      }); // admin stats
 
     global.fetch = fetchMock as unknown as typeof fetch;
 
     render(<AdminDashboard />);
 
-    expect(screen.getByRole("heading", { name: "Dashboard" })).toBeInTheDocument();
-    expect(screen.getAllByText("...").length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: "Learning Platform" })).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledTimes(4);
+      expect(fetchMock).toHaveBeenCalledTimes(6);
     });
 
     expect(fetchMock).toHaveBeenNthCalledWith(1, "/api/courses");
     expect(fetchMock).toHaveBeenNthCalledWith(2, "/api/units");
     expect(fetchMock).toHaveBeenNthCalledWith(3, "/api/lessons");
     expect(fetchMock).toHaveBeenNthCalledWith(4, "/api/challenges");
+    expect(fetchMock).toHaveBeenNthCalledWith(5, "/api/challengeOptions");
+    expect(fetchMock).toHaveBeenNthCalledWith(6, "/api/admin/stats");
 
     await waitFor(() => {
-      expect(screen.queryByText("...")).not.toBeInTheDocument();
+      const value = getStatValue("Courses");
+      expect(value).toBe("2");
     });
 
-    const certificationsCard = screen.getByText("AWS Certifications").closest("div");
-    expect(certificationsCard).not.toBeNull();
-    expect(within(certificationsCard as HTMLElement).getByText("2")).toBeInTheDocument();
-
-    const unitsCard = screen.getByText("Units").closest("div");
-    expect(unitsCard).not.toBeNull();
-    expect(within(unitsCard as HTMLElement).getByText("1")).toBeInTheDocument();
+    expect(getStatValue("Units")).toBe("1");
+    expect(getStatValue("Answer Options")).toBe("3");
+    expect(getStatValue("Registered Users")).toBe("1,200");
+    expect(getStatValue("Completion Rate")).toBe("67%");
 
     expect(screen.getByText("Quick Actions")).toBeInTheDocument();
     expect(screen.getByText("Add Certification")).toBeInTheDocument();
   });
+
+  const getStatValue = (label: string): string | undefined => {
+    const labelNode = screen.getByText(label);
+    const card = labelNode.closest(".group");
+    expect(card).not.toBeNull();
+    const valueNode = card!.querySelector(".text-3xl");
+    expect(valueNode).not.toBeNull();
+    return valueNode!.textContent?.trim();
+  };
 });

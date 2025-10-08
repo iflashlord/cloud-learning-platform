@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Settings, Database, Users, Shield, Download, Upload } from "lucide-react";
+import { Settings, Database, Download, Upload } from "lucide-react";
 
 export default function SettingsPage() {
   const [importing, setImporting] = useState(false);
@@ -19,7 +19,7 @@ export default function SettingsPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = `aws-learning-platform-export-${new Date().toISOString().split('T')[0]}.${format}`;
+        a.download = `learning-platform-export-${new Date().toISOString().split('T')[0]}.${format}`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -135,30 +135,6 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center space-x-3">
-              <Users className="w-6 h-6 text-green-600" />
-              <CardTitle>User Management</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Manage user accounts and permissions
-            </p>
-            <div className="space-y-2">
-              <Button variant="primaryOutline" className="w-full justify-start">
-                <Users className="w-4 h-4 mr-2" />
-                View All Users
-              </Button>
-              <Button variant="secondaryOutline" className="w-full justify-start">
-                <Shield className="w-4 h-4 mr-2" />
-                Admin Permissions
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-3">
               <Settings className="w-6 h-6 text-orange-600" />
               <CardTitle>System</CardTitle>
             </div>
@@ -176,26 +152,6 @@ export default function SettingsPage() {
                 <span className="font-medium">Uptime:</span>
                 <span className="ml-2">99.9%</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <Shield className="w-6 h-6 text-red-600" />
-              <CardTitle>Security</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Security settings and monitoring
-            </p>
-            <div className="space-y-2">
-              <Button variant="dangerOutline" className="w-full justify-start">
-                <Shield className="w-4 h-4 mr-2" />
-                Security Logs
-              </Button>
             </div>
           </CardContent>
         </Card>

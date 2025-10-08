@@ -7,7 +7,7 @@ describe("AdminHeader", () => {
   it("renders site branding and navigation actions", () => {
     render(<AdminHeader />);
 
-    const homeLink = screen.getByRole("link", { name: "AWS Cloud Academy" });
+    const homeLink = screen.getByRole("link", { name: "Learning Platform" });
     expect(homeLink).toHaveAttribute("href", "/admin");
 
     const viewSiteLink = screen.getByRole("link", { name: "View Site" });

@@ -9,7 +9,7 @@ export const AdminHeader = () => {
     <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
       <div className="flex items-center">
         <Link href="/admin" className="text-xl font-bold text-gray-800">
-          AWS Cloud Academy
+          Learning Platform
         </Link>
         <span className="ml-2 px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded">
           Admin

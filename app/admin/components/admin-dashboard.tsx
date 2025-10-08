@@ -154,7 +154,7 @@ export const AdminDashboard = () => {
 
   const statCards = [
     {
-      label: "AWS Certifications",
+      label: "Courses",
       value: stats.courses,
       icon: GraduationCap,
       color: "text-blue-600",
@@ -251,7 +251,7 @@ export const AdminDashboard = () => {
       id: '1',
       type: 'course',
       action: 'created',
-      title: 'AWS Solutions Architect Professional',
+      title: 'Cloud Solutions Architecture',
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       user: 'Admin User'
     },
@@ -320,7 +320,7 @@ export const AdminDashboard = () => {
       <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 rounded-2xl p-8 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2">AWS Cloud Academy</h1>
+            <h1 className="text-4xl font-bold mb-2">Learning Platform</h1>
             <p className="text-blue-100 text-lg">
               Admin Dashboard - {new Date().toLocaleDateString('en-US', { 
                 weekday: 'long', 

@@ -73,10 +73,10 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {mode === "create" ? "Add" : "Edit"} AWS Certification
+            {mode === "create" ? "Add" : "Edit"} Course
           </h1>
           <p className="text-gray-600">
-            {mode === "create" ? "Create a new" : "Update the"} AWS certification course
+            {mode === "create" ? "Create a new" : "Update the"} course
           </p>
         </div>
       </div>
@@ -97,7 +97,7 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
                 id="title"
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="e.g., AWS Cloud Practitioner"
+                placeholder="e.g., Cloud Computing Fundamentals"
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
               />

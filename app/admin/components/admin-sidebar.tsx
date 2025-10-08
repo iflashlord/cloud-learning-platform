@@ -32,7 +32,7 @@ const sidebarItems: MenuItem[] = [
     icon: BarChart3,
   },
   {
-    label: "AWS Certifications",
+    label: "Learning Content",
     href: "/admin/courses",
     icon: GraduationCap,
     submenu: [
@@ -98,11 +98,11 @@ export const AdminSidebar = () => {
     return submenu.some(item => item.href === pathname);
   }, [pathname]);
 
-  // Auto-expand AWS Certifications menu if any submenu item is active on initial load
+  // Auto-expand Learning Content menu if any submenu item is active on initial load
   useEffect(() => {
-    const awsCertificationsItem = sidebarItems.find(item => item.label === "AWS Certifications");
-    if (awsCertificationsItem?.submenu && isSubmenuActive(awsCertificationsItem.submenu)) {
-      setExpandedMenus(["AWS Certifications"]);
+    const learningContentItem = sidebarItems.find(item => item.label === "Learning Content");
+    if (learningContentItem?.submenu && isSubmenuActive(learningContentItem.submenu)) {
+      setExpandedMenus(["Learning Content"]);
     }
   }, [pathname, isSubmenuActive]);
 
@@ -110,7 +110,7 @@ export const AdminSidebar = () => {
     <div className="w-64 bg-white border-r border-gray-200 h-full">
       <div className="p-6">
         <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
-        <p className="text-sm text-gray-500 mt-1">AWS Cloud Academy</p>
+        <p className="text-sm text-gray-500 mt-1">Learning Platform</p>
       </div>
       
       <nav className="px-4 space-y-1">
