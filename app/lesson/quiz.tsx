@@ -77,12 +77,14 @@ export const Quiz = ({
 
   const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
+  const [textInput, setTextInput] = useState("");
 
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
 
   const onNext = () => {
     setActiveIndex((current) => current + 1);
+    setTextInput("");
   };
 
   const onSelect = (id: number) => {
@@ -92,11 +94,17 @@ export const Quiz = ({
   };
 
   const onContinue = () => {
-    if (!selectedOption) return;
+    // Check if there's input for text/speech types or selectedOption for other types
+    if (challenge.type === "TEXT_INPUT" || challenge.type === "SPEECH_INPUT") {
+      if (!textInput.trim()) return;
+    } else {
+      if (!selectedOption) return;
+    }
 
     if (status === "wrong") {
       setStatus("none");
       setSelectedOption(undefined);
+      setTextInput("");
       return;
     }
 
@@ -104,6 +112,7 @@ export const Quiz = ({
       onNext();
       setStatus("none");
       setSelectedOption(undefined);
+      setTextInput("");
       return;
     }
 
@@ -118,9 +127,11 @@ export const Quiz = ({
         // Fallback to previous method
         isCorrect = selectedOption === 999;
       }
-    } else if (challenge.type === "TEXT_INPUT") {
-      // For text input, selectedOption 1 means correct answer, 0 means wrong
-      isCorrect = selectedOption === 1;
+    } else if (challenge.type === "TEXT_INPUT" || challenge.type === "SPEECH_INPUT") {
+      // For text/speech input, check against correct answer
+      if (challenge.correctAnswer) {
+        isCorrect = textInput.toLowerCase().trim() === challenge.correctAnswer.toLowerCase().trim();
+      }
     } else {
       // For other types (SELECT, ASSIST, TRUE_FALSE, IMAGE_SELECT, LISTENING), find correct option
       const correctOption = options.find((option) => option.correct);
@@ -173,7 +184,7 @@ export const Quiz = ({
 
   if (!challenge) {
     return (
-      <>
+      <div className="flex flex-col h-screen">
         {finishAudio}
         <Confetti
           width={width}
@@ -182,41 +193,49 @@ export const Quiz = ({
           numberOfPieces={500}
           tweenDuration={10000}
         />
-        <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full">
-          <Image
-            src="/finish.svg"
-            alt="Finish"
-            className="hidden lg:block"
-            height={100}
-            width={100}
-          />
-          <Image
-            src="/finish.svg"
-            alt="Finish"
-            className="block lg:hidden"
-            height={50}
-            width={50}
-          />
-          <h1 className="text-xl lg:text-3xl font-bold text-neutral-700">
-            Great job! <br /> You&apos;ve completed the lesson.
-          </h1>
-          <div className="flex items-center gap-x-4 w-full">
-            <ResultCard
-              variant="points"
-              value={challenges.length * 10}
+        
+        {/* Scrollable Content Area for Completion */}
+        <div className="flex-1 overflow-y-auto pb-32 lg:pb-44">
+          <div className="min-h-full flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center p-4">
+            <Image
+              src="/finish.svg"
+              alt="Finish"
+              className="hidden lg:block"
+              height={100}
+              width={100}
             />
-            <ResultCard
-              variant="hearts"
-              value={hearts}
+            <Image
+              src="/finish.svg"
+              alt="Finish"
+              className="block lg:hidden"
+              height={50}
+              width={50}
             />
+            <h1 className="text-xl lg:text-3xl font-bold text-neutral-700">
+              Great job! <br /> You&apos;ve completed the lesson.
+            </h1>
+            <div className="flex items-center gap-x-4 w-full">
+              <ResultCard
+                variant="points"
+                value={challenges.length * 10}
+              />
+              <ResultCard
+                variant="hearts"
+                value={hearts}
+              />
+            </div>
           </div>
         </div>
-        <Footer
-          lessonId={lessonId}
-          status="completed"
-          onCheck={() => router.push("/learn")}
-        />
-      </>
+
+        {/* Fixed Footer for Completion */}
+        <div className="fixed bottom-0 left-0 right-0 z-10 bg-white">
+          <Footer
+            lessonId={lessonId}
+            status="completed"
+            onCheck={() => router.push("/learn")}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -225,21 +244,27 @@ export const Quiz = ({
     : challenge.question;
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       {incorrectAudio}
       {correctAudio}
-      <Header
-        hearts={hearts}
-        percentage={percentage}
-        hasActiveSubscription={!!userSubscription?.isActive}
-      />
-      <div className="flex-1">
-        <div className="h-full flex items-center justify-center">
-          <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
+      
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b">
+        <Header
+          hearts={hearts}
+          percentage={percentage}
+          hasActiveSubscription={!!userSubscription?.isActive}
+        />
+      </div>
+
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto pt-20 pb-32 lg:pb-44">
+        <div className="min-h-full flex items-center justify-center p-4">
+          <div className="lg:min-h-[350px] lg:w-[600px] w-full max-w-4xl flex flex-col gap-y-8 my-8">
             <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
               {title}
             </h1>
-            <div>
+            <div className="space-y-6">
               {challenge.imageSrc && challenge.type === "IMAGE_SELECT" && (
                 <div className="mb-4 flex justify-center">
                   <Image 
@@ -269,16 +294,25 @@ export const Quiz = ({
                     setSelectedOption(-1); // Use -1 for wrong answer (truthy value)
                   }
                 }}
+                onTextChange={setTextInput}
               />
             </div>
           </div>
         </div>
       </div>
-      <Footer
-        disabled={pending || !selectedOption}
-        status={status}
-        onCheck={onContinue}
-      />
-    </>
+
+      {/* Fixed Footer */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-white">
+        <Footer
+          disabled={pending || (
+            (challenge.type === "TEXT_INPUT" || challenge.type === "SPEECH_INPUT")
+              ? !textInput.trim()
+              : !selectedOption
+          )}
+          status={status}
+          onCheck={onContinue}
+        />
+      </div>
+    </div>
   );
 };

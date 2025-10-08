@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 interface SpeechInputProps {
   value: string;
   onChange: (value: string) => void;
-  onSubmit: () => void;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
@@ -18,7 +17,6 @@ interface SpeechInputProps {
 export const SpeechInput = ({
   value,
   onChange,
-  onSubmit,
   disabled = false,
   placeholder = "Type your answer or use speech recognition...",
   className
@@ -62,9 +60,9 @@ export const SpeechInput = ({
   }, [transcript, value, onChange, resetTranscript]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
+    // Allow natural Enter key behavior for textarea
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      onSubmit();
+      // Just allow normal line break behavior
     }
   };
 
@@ -178,19 +176,7 @@ export const SpeechInput = ({
           )}
         </div>
 
-        {/* Submit Button */}
-        <Button
-          onClick={onSubmit}
-          disabled={disabled || !value.trim() || isListening}
-          className={cn(
-            "px-6 py-2 transition-all",
-            value.trim() && !isListening
-              ? "bg-blue-600 hover:bg-blue-700 text-white"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          )}
-        >
-          Submit Answer
-        </Button>
+
       </div>
 
       {/* Instructions */}
@@ -204,7 +190,7 @@ export const SpeechInput = ({
             <li>Click the <Mic className="inline h-3 w-3 mx-1" /> button to start speech recognition</li>
             <li>Speak clearly and pause between sentences</li>
             <li>You can edit the text after speech recognition</li>
-            <li>Press Enter or click Submit to answer</li>
+            <li>Click the Check button below when ready to submit</li>
           </ul>
         </div>
       )}

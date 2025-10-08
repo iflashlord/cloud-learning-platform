@@ -14,8 +14,9 @@ type Props = {
   selectedOption?: number;
   disabled?: boolean;
   type: typeof challenges.$inferSelect["type"];
-  challenge?: typeof challenges.$inferSelect;
+  challenge: typeof challenges.$inferSelect;
   onTextSubmit?: (text: string) => void;
+  onTextChange?: (text: string) => void;
 };
 
 export const Challenge = ({
@@ -27,6 +28,7 @@ export const Challenge = ({
   type,
   challenge,
   onTextSubmit,
+  onTextChange,
 }: Props) => {
   const [showHint, setShowHint] = useState(false);
   const [textInput, setTextInput] = useState("");
@@ -36,8 +38,9 @@ export const Challenge = ({
   useEffect(() => {
     if (status === "none") {
       setTextInput("");
+      onTextChange?.("");
     }
-  }, [status]);
+  }, [status, onTextChange]);
 
   // Initialize drag items for DRAG_DROP when options are available
   useEffect(() => {
@@ -165,8 +168,10 @@ export const Challenge = ({
           <div className="px-6">
             <SpeechInput
               value={textInput}
-              onChange={setTextInput}
-              onSubmit={handleTextInputSubmit}
+              onChange={(text) => {
+                setTextInput(text);
+                onTextChange?.(text);
+              }}
               disabled={disabled}
               placeholder="Type your answer or use speech recognition..."
             />
@@ -187,8 +192,10 @@ export const Challenge = ({
           <div className="px-6">
             <SpeechInput
               value={textInput}
-              onChange={setTextInput}
-              onSubmit={handleTextInputSubmit}
+              onChange={(text) => {
+                setTextInput(text);
+                onTextChange?.(text);
+              }}
               disabled={disabled}
               placeholder="Click the microphone button and speak your answer..."
             />
