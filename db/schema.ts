@@ -50,7 +50,8 @@ export const challengesEnum = pgEnum("type", [
   "DRAG_DROP",     // Drag and drop ordering
   "TEXT_INPUT",    // Free text input
   "IMAGE_SELECT",  // Select from images
-  "LISTENING"      // Audio-based question
+  "LISTENING",     // Audio-based question
+  "SPEECH_INPUT"   // Speech recognition input
 ]);
 
 export const challenges = pgTable("challenges", {

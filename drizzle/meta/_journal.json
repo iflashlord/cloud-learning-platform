@@ -15,6 +15,13 @@
       "when": 1759882728814,
       "tag": "0001_sticky_mindworm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1759912831977,
+      "tag": "0002_third_storm",
+      "breakpoints": true
     }
   ]
 }

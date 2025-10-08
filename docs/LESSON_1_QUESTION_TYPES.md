@@ -58,6 +58,12 @@ Lesson 1 "What is Cloud Computing?" now showcases all 7 different question types
 - ✅ Amazon EC2
 - ❌ AWS Lambda
 
+### Question 8: Speech Recognition Input (SPEECH_INPUT)
+
+**Question:** "Speak the full name of the AWS compute service that provides virtual machines:"
+**Type:** `SPEECH_INPUT`
+**Expected Answer:** "Amazon Elastic Compute Cloud" or "Amazon EC2" (voice transcribed to text, case-insensitive)
+
 ## How to Test
 
 1. **Access the Application:**
@@ -95,8 +101,10 @@ Stored in `challenge_options` table with enhanced fields:
 
 ### Validation Logic
 Each question type has specific validation:
+
 - **SELECT/ASSIST/TRUE_FALSE/IMAGE_SELECT/LISTENING**: Correct option matching
 - **TEXT_INPUT**: Case-insensitive string comparison with expected answer
+- **SPEECH_INPUT**: Speech-to-text transcription with case-insensitive string comparison
 - **DRAG_DROP**: Order sequence validation (items must be in correct positions)
 
 ## Admin Interface

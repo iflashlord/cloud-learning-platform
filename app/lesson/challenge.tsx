@@ -3,6 +3,7 @@ import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useEffect } from "react";
 
 import { Card } from "./card";
+import { SpeechInput } from "@/components/SpeechInput";
 
 type Props = {
   options: typeof challengeOptions.$inferSelect[];
@@ -110,23 +111,36 @@ export const Challenge = ({
     case "TEXT_INPUT":
       return (
         <div className="space-y-4">
-          <div className="flex flex-col space-y-2">
-            <input
-              type="text"
+          <SpeechInput
+            value={textInput}
+            onChange={setTextInput}
+            onSubmit={handleTextInputSubmit}
+            disabled={disabled}
+            placeholder="Type your answer or use speech recognition..."
+          />
+        </div>
+      );
+
+    case "SPEECH_INPUT":
+      return (
+        <div className="space-y-4">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-2 mb-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                🎤
+              </div>
+              <div>
+                <h3 className="font-medium text-blue-900">Speech Recognition Mode</h3>
+                <p className="text-xs text-blue-700">This question requires voice input</p>
+              </div>
+            </div>
+            <SpeechInput
               value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleTextInputSubmit()}
-              className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
-              placeholder="Type your answer here..."
+              onChange={setTextInput}
+              onSubmit={handleTextInputSubmit}
               disabled={disabled}
+              placeholder="Click the microphone button and speak your answer..."
             />
-            <button
-              onClick={handleTextInputSubmit}
-              disabled={disabled || !textInput.trim()}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300"
-            >
-              Submit Answer
-            </button>
           </div>
         </div>
       );

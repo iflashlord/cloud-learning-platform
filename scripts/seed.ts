@@ -220,16 +220,25 @@ const main = async () => {
         audioSrc: '/audio/aws-intro.mp3',
         hint: 'Listen carefully for the specific AWS service name mentioned in the audio.',
       },
-      // Lesson 2: Benefits of AWS Cloud
       {
         id: 8,
+        lessonId: 1,
+        type: "SPEECH_INPUT",
+        order: 8,
+        question: 'Speak the full name of the AWS compute service that provides virtual machines in the cloud:',
+        correctAnswer: 'Amazon Elastic Compute Cloud',
+        hint: 'This service is commonly abbreviated as EC2. Speak clearly into your microphone.',
+      },
+      // Lesson 2: Benefits of AWS Cloud
+      {
+        id: 9,
         lessonId: 2,
         type: "SELECT",
         order: 1,
         question: 'What is a key benefit of AWS Cloud?',
       },
       {
-        id: 9,
+        id: 10,
         lessonId: 2,
         type: "SELECT",
         order: 2,
@@ -237,7 +246,7 @@ const main = async () => {
       },
       // Lesson 3: Cloud Architecture
       {
-        id: 10,
+        id: 11,
         lessonId: 3,
         type: "SELECT",
         order: 1,
@@ -245,14 +254,14 @@ const main = async () => {
       },
       // Lesson 4: AWS Global Infrastructure
       {
-        id: 11,
+        id: 12,
         lessonId: 4,
         type: "SELECT",
         order: 1,
         question: 'What is an AWS Region?',
       },
       {
-        id: 12,
+        id: 13,
         lessonId: 4,
         type: "SELECT",
         order: 2,
@@ -260,14 +269,14 @@ const main = async () => {
       },
       // Lesson 6: Shared Responsibility Model
       {
-        id: 13,
+        id: 14,
         lessonId: 6,
         type: "SELECT",
         order: 1,
         question: 'Who is responsible for patching the guest OS on EC2?',
       },
       {
-        id: 14,
+        id: 15,
         lessonId: 6,
         type: "SELECT",
         order: 2,
@@ -275,14 +284,14 @@ const main = async () => {
       },
       // Lesson 7: IAM Basics
       {
-        id: 15,
+        id: 16,
         lessonId: 7,
         type: "SELECT",
         order: 1,
         question: 'What does IAM stand for?',
       },
       {
-        id: 16,
+        id: 17,
         lessonId: 7,
         type: "SELECT",
         order: 2,
@@ -290,14 +299,14 @@ const main = async () => {
       },
       // Lesson 9: EC2 Fundamentals
       {
-        id: 17,
+        id: 18,
         lessonId: 9,
         type: "SELECT",
         order: 1,
         question: 'What does EC2 stand for?',
       },
       {
-        id: 18,
+        id: 19,
         lessonId: 9,
         type: "SELECT",
         order: 2,
@@ -305,14 +314,14 @@ const main = async () => {
       },
       // Lesson 10: S3 Storage
       {
-        id: 19,
+        id: 20,
         lessonId: 10,
         type: "SELECT",
         order: 1,
         question: 'What does S3 stand for?',
       },
       {
-        id: 20,
+        id: 21,
         lessonId: 10,
         type: "SELECT",
         order: 2,
@@ -427,17 +436,17 @@ const main = async () => {
     // Challenge 7: Listening (LISTENING) - AWS Service from Audio
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "Amazon S3",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: true,
         text: "Amazon EC2",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "AWS Lambda",
       },
@@ -465,17 +474,17 @@ const main = async () => {
     // Challenge 9: CapEx vs OpEx (Lesson 2)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: true,
         text: "Variable operational expense",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "Fixed operational expense",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "Variable capital expense",
       },
@@ -484,17 +493,17 @@ const main = async () => {
     // Challenge 10: Elasticity (Lesson 3)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: true,
         text: "Ability to scale resources up or down based on demand",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "Fixed resource allocation",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "Manual server provisioning",
       },
@@ -503,17 +512,17 @@ const main = async () => {
     // Challenge 11: AWS Region (Lesson 4)
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: true,
         text: "A geographical area with multiple Availability Zones",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "A single data center",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "A subnet within a VPC",
       },
@@ -541,17 +550,17 @@ const main = async () => {
     // Challenge 9: Shared Responsibility - Guest OS
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: true,
         text: "Customer",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "AWS",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "Both AWS and Customer",
       },
@@ -560,17 +569,17 @@ const main = async () => {
     // Challenge 10: AWS Responsibility
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: true,
         text: "Physical security of data centers",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "Customer data encryption",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "Application-level security",
       },
@@ -579,17 +588,17 @@ const main = async () => {
     // Challenge 11: IAM
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: true,
         text: "Identity and Access Management",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "Internet Access Manager",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "Integrated Application Monitor",
       },
@@ -617,17 +626,17 @@ const main = async () => {
     // Challenge 13: EC2
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: true,
         text: "Elastic Compute Cloud",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "Elastic Container Cloud",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "Enterprise Compute Cloud",
       },
@@ -636,17 +645,17 @@ const main = async () => {
     // Challenge 14: EC2 instance
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: true,
         text: "A virtual server in the cloud",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "A physical server",
       },
       {
-        challengeId: 18,
+        challengeId: 19,
         correct: false,
         text: "A storage bucket",
       },
@@ -655,17 +664,17 @@ const main = async () => {
     // Challenge 15: S3
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: true,
         text: "Simple Storage Service",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "Secure Storage Service",
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false,
         text: "Scalable Server Service",
       },
@@ -693,12 +702,12 @@ const main = async () => {
     // Challenge 17: True/False question
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: false,
         text: "True",
       },
       {
-        challengeId: 17,
+        challengeId: 18,
         correct: true,
         text: "False",
       },
@@ -709,25 +718,25 @@ const main = async () => {
     // Challenge 19: Drag & Drop question  
     await db.insert(schema.challengeOptions).values([
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false, // Not used for drag-drop
         text: "Security",
         order: 1,
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false, // Not used for drag-drop
         text: "Reliability", 
         order: 2,
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false, // Not used for drag-drop
         text: "Performance Efficiency",
         order: 3,
       },
       {
-        challengeId: 19,
+        challengeId: 20,
         correct: false, // Not used for drag-drop
         text: "Cost Optimization",
         order: 4,

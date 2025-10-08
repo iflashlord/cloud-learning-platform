@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion, CheckSquare, Type, MousePointer, ImageIcon, Volume2, ArrowUpDown } from "lucide-react";
+import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion, CheckSquare, Type, MousePointer, ImageIcon, Volume2, ArrowUpDown, Mic } from "lucide-react";
 import Image from "next/image";
 
 interface Unit {
@@ -26,7 +26,7 @@ interface Lesson {
 interface Challenge {
   id: number;
   question: string;
-  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT";
   order: number;
   hint?: string;
   audioSrc?: string;
@@ -69,6 +69,8 @@ const getQuestionTypeIcon = (type: Challenge["type"]) => {
       return <ImageIcon className="w-4 h-4" />;
     case "LISTENING":
       return <Volume2 className="w-4 h-4" />;
+    case "SPEECH_INPUT":
+      return <Mic className="w-4 h-4" />;
     default:
       return <FileQuestion className="w-4 h-4" />;
   }
@@ -90,6 +92,8 @@ const getQuestionTypeColor = (type: Challenge["type"]) => {
       return "bg-pink-100 text-pink-800";
     case "LISTENING":
       return "bg-indigo-100 text-indigo-800";
+    case "SPEECH_INPUT":
+      return "bg-red-100 text-red-800";
     default:
       return "bg-gray-100 text-gray-800";
   }

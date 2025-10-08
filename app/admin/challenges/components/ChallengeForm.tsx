@@ -31,7 +31,7 @@ type ChallengeOption = {
 
 type ChallengeData = {
   question: string;
-  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING";
+  type: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT";
   lessonId: number;
   order: number;
   hint?: string;
@@ -150,7 +150,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
 
     try {
       // Type-specific validation
-      if (formData.type === "TEXT_INPUT") {
+      if (formData.type === "TEXT_INPUT" || formData.type === "SPEECH_INPUT") {
         if (!formData.correctAnswer?.trim()) {
           toast.error("Text input questions must have a correct answer");
           return;
@@ -281,7 +281,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                       { text: "True", correct: true, guide: "" },
                       { text: "False", correct: false, guide: "" }
                     ]
-                  : newType === 'TEXT_INPUT'
+                  : (newType === 'TEXT_INPUT' || newType === 'SPEECH_INPUT')
                   ? []
                   : prev.challengeOptions
               }));
@@ -296,6 +296,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
             <option value="TEXT_INPUT">⌨️ Text Input - Students type their answer</option>
             <option value="IMAGE_SELECT">🖼️ Image Selection - Students choose from images</option>
             <option value="LISTENING">🎵 Listening - Students listen to audio and answer</option>
+            <option value="SPEECH_INPUT">🎤 Speech Input - Students answer using voice recognition</option>
           </select>
           
           {/* Type-specific descriptions */}
@@ -325,7 +326,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                   Set the correct order position for each item (1, 2, 3, etc.). Great for sequences and procedures.
                 </>
               )}
-              {formData.type === "TEXT_INPUT" && (
+              {(formData.type === "TEXT_INPUT" || formData.type === "SPEECH_INPUT") && (
                 <>
                   <strong>Text Input:</strong> Students type their answer in a text field. 
                   Set the correct answer below. Perfect for names, definitions, and short answers.
@@ -341,6 +342,12 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                 <>
                   <strong>Listening:</strong> Students listen to audio and answer questions about what they heard. 
                   Requires an audio file URL. Perfect for pronunciation, comprehension, and audio content.
+                </>
+              )}
+              {formData.type === "SPEECH_INPUT" && (
+                <>
+                  <strong>Speech Input:</strong> Students speak their answer using voice recognition technology. 
+                  Their speech is transcribed to text and compared with the correct answer. Ideal for pronunciation practice and oral responses.
                 </>
               )}
             </p>
@@ -423,7 +430,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
           </div>
         )}
 
-        {formData.type === "TEXT_INPUT" && (
+        {(formData.type === "TEXT_INPUT" || formData.type === "SPEECH_INPUT") && (
           <div>
             <label htmlFor="correctAnswer" className="block text-sm font-medium text-gray-700 mb-2">
               Correct Answer <span className="text-red-500">*</span>
@@ -436,12 +443,12 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
               onChange={(e) => setFormData(prev => ({ ...prev, correctAnswer: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter the expected answer"
-              required={formData.type === "TEXT_INPUT"}
+              required={formData.type === "TEXT_INPUT" || formData.type === "SPEECH_INPUT"}
             />
           </div>
         )}
 
-        {!hideOptions && formData.type !== "TEXT_INPUT" && (
+        {!hideOptions && formData.type !== "TEXT_INPUT" && formData.type !== "SPEECH_INPUT" && (
           <div>
             <div className="flex items-center justify-between mb-4">
               <label className="block text-sm font-medium text-gray-700">
