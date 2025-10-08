@@ -54,7 +54,7 @@ describe("AdminDashboard", () => {
     expect(getStatValue("Completion Rate")).toBe("67%");
 
     expect(screen.getByText("Quick Actions")).toBeInTheDocument();
-    expect(screen.getByText("Add Certification")).toBeInTheDocument();
+    expect(screen.getByText("Add Course")).toBeInTheDocument();
   });
 
   const getStatValue = (label: string): string | undefined => {

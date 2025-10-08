@@ -102,7 +102,11 @@ describe("getUserProgress", () => {
       userId: "user_123",
       hearts: 3,
       activeCourseId: 9,
-      activeCourse: { id: 9, title: "Cloud Foundations" },
+      activeCourse: {
+        id: 9,
+        title: "Cloud Foundations",
+        imageSrc: "/cover.png",
+      },
     };
     userProgressFindFirstMock.mockResolvedValue(progressRecord);
 
@@ -111,7 +115,15 @@ describe("getUserProgress", () => {
     expect(result).toEqual(progressRecord);
     expect(userProgressFindFirstMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        with: { activeCourse: true },
+        with: {
+          activeCourse: expect.objectContaining({
+            columns: expect.objectContaining({
+              id: true,
+              title: true,
+              imageSrc: true,
+            }),
+          }),
+        },
       }),
     );
   });
@@ -185,17 +197,83 @@ describe("getUnits", () => {
 });
 
 describe("getCourses", () => {
-  it("returns every course without additional processing", async () => {
+  it("returns courses enriched with user progress when a learner is authenticated", async () => {
     const coursesList = [
-      { id: 1, title: "Cloud Computing" },
-      { id: 2, title: "Azure" },
+      { id: 1, title: "Cloud Computing", imageSrc: "/cloud.png" },
+      { id: 2, title: "Azure", imageSrc: "/azure.png" },
     ];
     coursesFindManyMock.mockResolvedValue(coursesList);
+    userProgressFindFirstMock.mockResolvedValue({ activeCourseId: 2 });
+    unitsFindManyMock
+      .mockResolvedValueOnce([
+        {
+          lessons: [
+            {
+              challenges: [
+                { challengeProgress: [{ completed: true }] },
+                { challengeProgress: [{ completed: true }] },
+              ],
+            },
+          ],
+        },
+      ])
+      .mockResolvedValueOnce([
+        {
+          lessons: [
+            {
+              challenges: [
+                { challengeProgress: [{ completed: true }] },
+                { challengeProgress: [] },
+                { challengeProgress: [{ completed: false }] },
+              ],
+            },
+          ],
+        },
+      ]);
 
     const result = await getCourses();
 
-    expect(result).toEqual(coursesList);
-    expect(coursesFindManyMock).toHaveBeenCalledWith();
+    expect(result).toEqual([
+      {
+        ...coursesList[0],
+        progress: {
+          percentage: 100,
+          totalChallenges: 2,
+          completedChallenges: 2,
+        },
+        isActive: false,
+      },
+      {
+        ...coursesList[1],
+        progress: {
+          percentage: 33,
+          totalChallenges: 3,
+          completedChallenges: 1,
+        },
+        isActive: true,
+      },
+    ]);
+    expect(unitsFindManyMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns basic course data with null progress when unauthenticated", async () => {
+    authMock.mockResolvedValueOnce({ userId: null });
+    coursesFindManyMock.mockResolvedValue([
+      { id: 1, title: "GCP", imageSrc: "/gcp.png" },
+    ]);
+
+    const result = await getCourses();
+
+    expect(result).toEqual([
+      {
+        id: 1,
+        title: "GCP",
+        imageSrc: "/gcp.png",
+        progress: null,
+        isActive: false,
+      },
+    ]);
+    expect(unitsFindManyMock).not.toHaveBeenCalled();
   });
 });
 
