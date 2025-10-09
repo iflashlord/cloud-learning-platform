@@ -41,8 +41,8 @@ export const CourseThemeConfig = ({ courseId, initialThemeConfig, onSave }: Cour
   const [isLoading, setIsLoading] = useState(false);
 
   const presetThemes = [
-    { key: 'default', name: 'Default (Orange)', color: '#f97316' },
-    { key: 'cloud', name: 'Cloud (Orange)', color: '#f97316' },
+    { key: 'default', name: 'Default (Lime)', color: '#58cc02' },
+    { key: 'cloud', name: 'Cloud (Lime)', color: '#58cc02' },
     { key: 'architecture', name: 'Architecture (Blue)', color: '#3b82f6' },
     { key: 'development', name: 'Development (Green)', color: '#22c55e' },
     { key: 'devops', name: 'DevOps (Purple)', color: '#8b5cf6' },

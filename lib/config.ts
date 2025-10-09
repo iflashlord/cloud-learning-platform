@@ -38,30 +38,30 @@ export const BRAND_CONFIG = {
 export const COLOR_THEME = {
   // Primary brand color (main platform color)
   primary: {
-    50: "#fff7ed",
-    100: "#ffedd5",
-    200: "#fed7aa",
-    300: "#fdba74", 
-    400: "#fb923c",
-    500: "#f97316", // Main orange
-    600: "#ea580c",
-    700: "#c2410c",
-    800: "#9a3412",
-    900: "#7c2d12",
+    50: "#f1ffe5",
+    100: "#dcffc2",
+    200: "#baff87",
+    300: "#91ff42", 
+    400: "#6af51a",
+    500: "#58cc02", // Duolingo-inspired lime
+    600: "#44a301",
+    700: "#347d03",
+    800: "#2a5f0a",
+    900: "#234d0e",
   },
   
   // Success color (correct answers, progress)
   success: {
-    50: "#f0fdf4",
-    100: "#dcfce7",
-    200: "#bbf7d0",
-    300: "#86efac",
-    400: "#4ade80",
-    500: "#22c55e", // Main green
-    600: "#16a34a",
-    700: "#15803d",
-    800: "#166534",
-    900: "#14532d",
+    50: "#edfff5",
+    100: "#d2ffe5",
+    200: "#a6fcca",
+    300: "#70f0a6",
+    400: "#37d97b",
+    500: "#17b85c", // Vibrant success
+    600: "#11934a",
+    700: "#0d7139",
+    800: "#0c552c",
+    900: "#093f21",
   },
   
   // Error color (wrong answers, failures)
@@ -94,6 +94,7 @@ export const COLOR_THEME = {
   
   // Neutral colors (text, borders, backgrounds)
   neutral: {
+    0: "#ffffff",
     50: "#fafafa",
     100: "#f5f5f5",
     200: "#e5e5e5", 
@@ -115,12 +116,12 @@ export const COURSE_THEMES = {
     colors: COLOR_THEME,
   },
   
-  // Cloud Computing - Orange theme (current default)
+  // Cloud Computing - Lime brand theme (current default)
   cloud: {
     name: "Cloud Computing",
     colors: {
       ...COLOR_THEME,
-      primary: COLOR_THEME.primary, // Orange
+      primary: COLOR_THEME.primary, // Lime
     },
   },
   

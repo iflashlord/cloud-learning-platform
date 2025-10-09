@@ -6,7 +6,7 @@
  */
 
 import { cn } from "@/lib/utils"
-import { DESIGN_TOKENS, SEMANTIC_COLORS, THEME_STYLES, createComponentStyles } from "@/lib/design-system"
+import { DESIGN_TOKENS, SEMANTIC_COLORS, THEME_STYLES, buttonVariants, cardVariants, createComponentStyles } from "@/lib/design-system"
 
 // ==============================
 // 🎯 UTILITY FUNCTIONS
@@ -16,21 +16,21 @@ import { DESIGN_TOKENS, SEMANTIC_COLORS, THEME_STYLES, createComponentStyles } f
  * Get consistent spacing classes
  */
 export const getSpacing = {
-  xs: () => "p-1 gap-1",
-  sm: () => "p-2 gap-2", 
-  md: () => "p-4 gap-4",
-  lg: () => "p-6 gap-6",
-  xl: () => "p-8 gap-8",
+  xs: () => "p-[var(--ds-space-xs)] gap-[var(--ds-space-xs)]",
+  sm: () => "p-[var(--ds-space-sm)] gap-[var(--ds-space-sm)]", 
+  md: () => "p-[var(--ds-space-md)] gap-[var(--ds-space-md)]",
+  lg: () => "p-[var(--ds-space-lg)] gap-[var(--ds-space-lg)]",
+  xl: () => "p-[var(--ds-space-xl)] gap-[var(--ds-space-xl)]",
 }
 
 /**
  * Get consistent border radius
  */
 export const getBorderRadius = {
-  sm: () => "rounded-sm",
-  md: () => "rounded-md", 
-  lg: () => "rounded-lg",
-  xl: () => "rounded-xl",
+  sm: () => "rounded-[var(--ds-radius-sm)]",
+  md: () => "rounded-[var(--ds-radius-md)]", 
+  lg: () => "rounded-[var(--ds-radius-lg)]",
+  xl: () => "rounded-[var(--ds-radius-xl)]",
   full: () => "rounded-full",
 }
 
@@ -39,10 +39,10 @@ export const getBorderRadius = {
  */
 export const getShadow = {
   none: () => "shadow-none",
-  sm: () => "shadow-sm",
-  md: () => "shadow-md",
-  lg: () => "shadow-lg",
-  xl: () => "shadow-xl",
+  sm: () => "shadow-[var(--ds-shadow-sm)]",
+  md: () => "shadow-[var(--ds-shadow-md)]",
+  lg: () => "shadow-[var(--ds-shadow-lg)]",
+  xl: () => "shadow-[var(--ds-shadow-xl)]",
 }
 
 /**
@@ -50,39 +50,69 @@ export const getShadow = {
  */
 export const statusStyles = {
   success: {
-    bg: "bg-green-100",
-    text: "text-green-800", 
-    border: "border-green-300",
-    icon: "text-green-600",
-    button: "bg-green-500 hover:bg-green-600 text-white",
+    bg: "bg-[hsl(var(--ds-success-50))]",
+    text: "text-[hsl(var(--ds-success-700))]", 
+    border: "border-[hsl(var(--ds-success-200))]",
+    icon: "text-[hsl(var(--ds-success-500))]",
+    button: [
+      "bg-[linear-gradient(135deg,hsl(var(--ds-success-400)),hsl(var(--ds-success-600)))]",
+      "text-[hsl(var(--ds-success-foreground))]",
+      "shadow-[0_18px_30px_rgba(var(--ds-success-rgb),0.25)]",
+      "hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(var(--ds-success-rgb),0.32)]",
+      "transition-all duration-200 ease-out",
+    ].join(" "),
   },
   error: {
-    bg: "bg-red-100",
-    text: "text-red-800",
-    border: "border-red-300", 
-    icon: "text-red-600",
-    button: "bg-red-500 hover:bg-red-600 text-white",
+    bg: "bg-[hsl(var(--ds-error-50))]",
+    text: "text-[hsl(var(--ds-error-700))]",
+    border: "border-[hsl(var(--ds-error-200))]", 
+    icon: "text-[hsl(var(--ds-error-500))]",
+    button: [
+      "bg-[linear-gradient(135deg,hsl(var(--ds-error-400)),hsl(var(--ds-error-600)))]",
+      "text-[hsl(var(--ds-error-foreground))]",
+      "shadow-[0_18px_30px_rgba(var(--ds-error-rgb),0.25)]",
+      "hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(var(--ds-error-rgb),0.32)]",
+      "transition-all duration-200 ease-out",
+    ].join(" "),
   },
   warning: {
-    bg: "bg-yellow-100",
-    text: "text-yellow-800",
-    border: "border-yellow-300",
-    icon: "text-yellow-600", 
-    button: "bg-yellow-500 hover:bg-yellow-600 text-white",
+    bg: "bg-[hsl(var(--ds-warning-50))]",
+    text: "text-[hsl(var(--ds-warning-700))]",
+    border: "border-[hsl(var(--ds-warning-200))]",
+    icon: "text-[hsl(var(--ds-warning-500))]", 
+    button: [
+      "bg-[linear-gradient(135deg,hsl(var(--ds-warning-400)),hsl(var(--ds-warning-600)))]",
+      "text-[hsl(var(--ds-warning-foreground))]",
+      "shadow-[0_18px_30px_rgba(var(--ds-warning-rgb),0.25)]",
+      "hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(var(--ds-warning-rgb),0.32)]",
+      "transition-all duration-200 ease-out",
+    ].join(" "),
   },
   info: {
-    bg: "bg-blue-100",
-    text: "text-blue-800",
-    border: "border-blue-300",
-    icon: "text-blue-600",
-    button: "bg-blue-500 hover:bg-blue-600 text-white",
+    bg: "bg-[hsl(var(--ds-info-50))]",
+    text: "text-[hsl(var(--ds-info-700))]",
+    border: "border-[hsl(var(--ds-info-200))]",
+    icon: "text-[hsl(var(--ds-info-500))]",
+    button: [
+      "bg-[linear-gradient(135deg,hsl(var(--ds-info-400)),hsl(var(--ds-info-600)))]",
+      "text-[hsl(var(--ds-info-foreground))]",
+      "shadow-[0_18px_30px_rgba(var(--ds-info-rgb),0.25)]",
+      "hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(var(--ds-info-rgb),0.32)]",
+      "transition-all duration-200 ease-out",
+    ].join(" "),
   },
   neutral: {
-    bg: "bg-gray-100",
-    text: "text-gray-800", 
-    border: "border-gray-300",
-    icon: "text-gray-600",
-    button: "bg-gray-500 hover:bg-gray-600 text-white",
+    bg: "bg-[hsl(var(--ds-neutral-100))]",
+    text: "text-[hsl(var(--ds-neutral-700))]", 
+    border: "border-[hsl(var(--ds-neutral-200))]",
+    icon: "text-[hsl(var(--ds-neutral-500))]",
+    button: [
+      "bg-[hsl(var(--ds-neutral-700))]",
+      "text-[hsl(var(--ds-neutral-0))]",
+      "shadow-[0_18px_30px_rgba(var(--ds-neutral-rgb),0.18)]",
+      "hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(var(--ds-neutral-rgb),0.24)]",
+      "transition-all duration-200 ease-out",
+    ].join(" "),
   },
 }
 
@@ -90,9 +120,9 @@ export const statusStyles = {
  * Interactive element utilities
  */
 export const interactiveStyles = {
-  clickable: "cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-150",
-  hoverable: "hover:shadow-md hover:border-neutral-300 transition-all duration-200",
-  focusable: "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+  clickable: "cursor-pointer transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0",
+  hoverable: "hover:shadow-[0_20px_36px_rgba(var(--ds-neutral-rgb),0.12)] hover:border-[hsl(var(--ds-neutral-200))] transition-all duration-200",
+  focusable: "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--ds-primary-400))]",
   disabled: "opacity-50 cursor-not-allowed pointer-events-none",
 }
 
@@ -101,31 +131,31 @@ export const interactiveStyles = {
  */
 export const layoutStyles = {
   container: {
-    page: "min-h-screen bg-neutral-50",
-    content: "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
-    section: "py-8 lg:py-12", 
-    card: "bg-white rounded-lg border border-neutral-200 shadow-sm",
+    page: THEME_STYLES.container.page,
+    content: THEME_STYLES.container.content,
+    section: THEME_STYLES.container.section, 
+    card: "bg-[hsl(var(--ds-neutral-0))] rounded-2xl border border-[hsl(var(--ds-neutral-200))] shadow-[0_18px_38px_rgba(var(--ds-neutral-rgb),0.08)]",
   },
   flex: {
     center: "flex items-center justify-center",
     between: "flex items-center justify-between",
     start: "flex items-start justify-start",
     end: "flex items-end justify-end",
-    col: "flex flex-col",
-    row: "flex flex-row",
+    col: "flex flex-col gap-[var(--ds-space-md)]",
+    row: "flex flex-row gap-[var(--ds-space-md)]",
   },
   grid: {
-    responsive: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
-    dense: "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4",
-    list: "grid grid-cols-1 gap-4",
+    responsive: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--ds-space-xl)]",
+    dense: "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-[var(--ds-space-md)]",
+    list: "grid grid-cols-1 gap-[var(--ds-space-md)]",
   },
   spacing: {
-    stack: "space-y-4",
-    stackSm: "space-y-2", 
-    stackLg: "space-y-6",
-    inline: "space-x-4",
-    inlineSm: "space-x-2",
-    inlineLg: "space-x-6",
+    stack: "gap-[var(--ds-space-lg)]",
+    stackSm: "gap-[var(--ds-space-sm)]", 
+    stackLg: "gap-[var(--ds-space-xl)]",
+    inline: "gap-[var(--ds-space-lg)]",
+    inlineSm: "gap-[var(--ds-space-sm)]",
+    inlineLg: "gap-[var(--ds-space-xl)]",
   },
 }
 
@@ -134,26 +164,26 @@ export const layoutStyles = {
  */
 export const typographyStyles = {
   heading: {
-    h1: "text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight",
-    h2: "text-2xl lg:text-3xl font-bold text-neutral-900 tracking-tight",
-    h3: "text-xl lg:text-2xl font-semibold text-neutral-900", 
-    h4: "text-lg lg:text-xl font-semibold text-neutral-900",
-    h5: "text-base lg:text-lg font-medium text-neutral-900",
-    h6: "text-sm lg:text-base font-medium text-neutral-900",
+    h1: THEME_STYLES.text.heading.h1,
+    h2: THEME_STYLES.text.heading.h2,
+    h3: THEME_STYLES.text.heading.h3, 
+    h4: THEME_STYLES.text.heading.h4,
+    h5: "text-[length:var(--ds-text-base)] lg:text-[length:var(--ds-text-lg)] font-medium text-[hsl(var(--ds-neutral-900))]",
+    h6: "text-[length:var(--ds-text-sm)] lg:text-[length:var(--ds-text-base)] font-medium text-[hsl(var(--ds-neutral-900))]",
   },
   body: {
-    large: "text-lg text-neutral-700 leading-relaxed",
-    base: "text-base text-neutral-700 leading-normal", 
-    small: "text-sm text-neutral-600 leading-normal",
-    xs: "text-xs text-neutral-500 leading-normal",
+    large: THEME_STYLES.text.body.large,
+    base: THEME_STYLES.text.body.base, 
+    small: THEME_STYLES.text.body.small,
+    xs: THEME_STYLES.text.body.xs,
   },
   emphasis: {
-    strong: "font-semibold text-neutral-900",
-    muted: "text-neutral-500",
-    accent: "text-blue-600 font-medium",
-    success: "text-green-600 font-medium",
-    error: "text-red-600 font-medium", 
-    warning: "text-yellow-600 font-medium",
+    strong: THEME_STYLES.text.emphasis.strong,
+    muted: THEME_STYLES.text.emphasis.muted,
+    accent: THEME_STYLES.text.emphasis.accent,
+    success: "text-[hsl(var(--ds-success-600))] font-medium",
+    error: "text-[hsl(var(--ds-error-600))] font-medium", 
+    warning: "text-[hsl(var(--ds-warning-600))] font-medium",
   },
 }
 
@@ -172,14 +202,12 @@ export const buildCardStyles = (options: {
   const { variant = 'default', padding = 'md', shadow = true } = options
   
   return cn(
-    "bg-white border border-neutral-200 rounded-lg transition-all duration-200",
-    shadow && getShadow.sm(),
-    variant === 'elevated' && "shadow-md hover:shadow-lg",
-    variant === 'outline' && "border-2 border-neutral-300",
-    variant === 'interactive' && interactiveStyles.clickable,
-    padding === 'sm' && "p-3",
-    padding === 'md' && "p-4", 
-    padding === 'lg' && "p-6"
+    cardVariants({
+      variant: variant === 'interactive' ? 'default' : variant,
+      padding,
+      interactive: variant === 'interactive',
+    }),
+    !shadow && "shadow-none"
   )
 }
 
@@ -194,17 +222,7 @@ export const buildButtonStyles = (options: {
   const { variant = 'primary', size = 'md', fullWidth = false } = options
   
   return cn(
-    "inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200",
-    "focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
-    variant === 'primary' && "bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-500",
-    variant === 'secondary' && "bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 focus:ring-neutral-500",
-    variant === 'success' && statusStyles.success.button + " focus:ring-green-500",
-    variant === 'error' && statusStyles.error.button + " focus:ring-red-500", 
-    variant === 'warning' && statusStyles.warning.button + " focus:ring-yellow-500",
-    variant === 'ghost' && "bg-transparent text-neutral-600 hover:bg-neutral-100 focus:ring-neutral-500",
-    size === 'sm' && "h-8 px-3 text-sm",
-    size === 'md' && "h-10 px-4 text-sm",
-    size === 'lg' && "h-12 px-6 text-base",
+    buttonVariants({ variant, size, fullWidth }),
     fullWidth && "w-full"
   )
 }
@@ -215,10 +233,18 @@ export const buildButtonStyles = (options: {
 export const buildStatusStyles = (status: 'success' | 'error' | 'warning' | 'info' | 'neutral') => {
   const styles = statusStyles[status]
   return {
-    container: cn(styles.bg, styles.border, "border rounded-lg p-3"),
+    container: cn(
+      styles.bg,
+      styles.border,
+      "border rounded-2xl p-[var(--ds-space-md)] shadow-[0_12px_28px_rgba(var(--ds-neutral-rgb),0.06)]"
+    ),
     text: styles.text,
     icon: styles.icon,
-    badge: cn(styles.bg, styles.text, "px-2 py-1 rounded-full text-xs font-medium"),
+    badge: cn(
+      styles.bg,
+      styles.text,
+      "px-[var(--ds-space-sm)] py-[calc(var(--ds-space-xs)*0.8)] rounded-full text-[length:var(--ds-text-xs)] font-semibold tracking-wide"
+    ),
   }
 }
 
@@ -234,19 +260,19 @@ export const buildFormFieldStyles = (options: {
   
   return {
     input: cn(
-      "w-full border rounded-lg px-3 py-2 text-sm transition-colors duration-200",
-      "focus:outline-none focus:ring-2 focus:ring-offset-0",
-      !error && !success && "border-neutral-300 focus:ring-blue-500 focus:border-blue-500",
-      error && "border-red-500 focus:ring-red-500 focus:border-red-500",
-      success && "border-green-500 focus:ring-green-500 focus:border-green-500", 
-      disabled && "bg-neutral-50 cursor-not-allowed opacity-75"
+      "w-full rounded-2xl px-[var(--ds-space-md)] py-[calc(var(--ds-space-sm)*1.2)] text-[length:var(--ds-text-sm)] transition-all duration-200",
+      "border border-[hsl(var(--ds-neutral-300))] bg-[hsl(var(--ds-neutral-0))]",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[hsl(var(--ds-primary-400))] focus-visible:border-transparent",
+      error && "border-[hsl(var(--ds-error-400))] focus-visible:ring-[hsl(var(--ds-error-400))]",
+      success && "border-[hsl(var(--ds-success-400))] focus-visible:ring-[hsl(var(--ds-success-400))]", 
+      disabled && "bg-[hsl(var(--ds-neutral-100))] cursor-not-allowed opacity-70"
     ),
     label: cn(
-      "block text-sm font-medium mb-1",
-      error ? "text-red-700" : success ? "text-green-700" : "text-neutral-900"
+      "block text-[length:var(--ds-text-sm)] font-semibold mb-[calc(var(--ds-space-xs)*1.5)]",
+      error ? "text-[hsl(var(--ds-error-600))]" : success ? "text-[hsl(var(--ds-success-600))]" : "text-[hsl(var(--ds-neutral-900))]"
     ),
-    error: "text-red-600 text-sm mt-1",
-    success: "text-green-600 text-sm mt-1",
+    error: "text-[hsl(var(--ds-error-600))] text-[length:var(--ds-text-sm)] mt-[var(--ds-space-xs)]",
+    success: "text-[hsl(var(--ds-success-600))] text-[length:var(--ds-text-sm)] mt-[var(--ds-space-xs)]",
   }
 }
 
@@ -260,10 +286,10 @@ export const quickStyles = {
   cardInteractive: buildCardStyles({ variant: 'interactive' }),
   cardElevated: buildCardStyles({ variant: 'elevated' }),
   
-  buttonPrimary: buildButtonStyles({}), 
-  buttonSecondary: buildButtonStyles({ variant: 'secondary' }),
-  buttonSuccess: buildButtonStyles({ variant: 'success' }),
-  buttonError: buildButtonStyles({ variant: 'error' }),
+  buttonPrimary: buttonVariants({ variant: 'primary', size: 'md' }) ?? "",
+  buttonSecondary: buttonVariants({ variant: 'secondary', size: 'md' }) ?? "",
+  buttonSuccess: buttonVariants({ variant: 'success', size: 'md' }) ?? "",
+  buttonError: buttonVariants({ variant: 'error', size: 'md' }) ?? "",
   
   // Layout patterns
   pageContainer: layoutStyles.container.page,

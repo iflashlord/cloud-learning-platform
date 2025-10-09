@@ -26,31 +26,27 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     leftIcon,
     rightIcon,
     legacyVariant,
-    children,
     disabled,
+    children,
     ...props 
   }, ref) => {
-    const Comp = asChild ? Slot : "button"
-    
-    // Handle legacy variants for backward compatibility
+    const isDisabled = disabled || loading
+
     const getLegacyVariantClasses = () => {
       switch (legacyVariant) {
         case "locked":
-          return "bg-neutral-200 text-neutral-600 border-neutral-300 border-2 border-b-4 hover:bg-neutral-200 cursor-not-allowed"
+          return "bg-neutral-200 text-neutral-400 border-slate-200 border-2 border-b-4 cursor-not-allowed";
         case "sidebar":
-          return "bg-transparent text-neutral-600 border-2 border-transparent hover:bg-neutral-100 transition-none justify-start"
+          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 hover:bg-slate-50 text-slate-500";
         case "sidebarOutline":
-          return "bg-blue-100 text-blue-600 border-blue-300 border-2 hover:bg-blue-200 transition-none justify-start"
+          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 hover:bg-slate-50 text-blue-500";
         default:
-          return ""
+          return "";
       }
-    }
-    
-    const isDisabled = disabled || loading
-    
-    // When asChild is true, we can't add extra elements (icons, loading spinner)
-    // because Slot expects exactly one child element
+    };
+
     if (asChild) {
+      const Comp = Slot;
       return (
         <Comp
           className={cn(
@@ -60,7 +56,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             className
           )}
           ref={ref}
-          disabled={isDisabled}
           {...props}
         >
           {children}
@@ -69,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <Comp
+      <button
         className={cn(
           legacyVariant 
             ? cn("inline-flex items-center justify-center font-semibold text-sm rounded-lg transition-colors duration-200 h-11 px-4", getLegacyVariantClasses())
@@ -94,7 +89,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
         {children}
         {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
-      </Comp>
+      </button>
     )
   }
 )

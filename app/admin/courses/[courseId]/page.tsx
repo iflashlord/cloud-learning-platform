@@ -159,7 +159,7 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
               <Image
                 src={course.imageSrc}
                 alt={course.title}
-                fill={true}
+                fill
                 className="object-cover"
               />
             </div>

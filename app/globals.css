@@ -11,34 +11,34 @@ body,
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 9%;
  
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 9%;
  
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 94 98% 40%;
+    --primary-foreground: 0 0% 100%;
  
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 214 95% 93%;
+    --secondary-foreground: 224 64% 33%;
  
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
  
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 214 95% 93%;
+    --accent-foreground: 224 64% 33%;
  
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 94 98% 40%;
  
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
  
   .dark {
@@ -85,39 +85,123 @@ body,
      ======================================== */
   
   :root {
-    /* Design System Status Colors (HSL) */
-    --ds-success-50: 142 76% 96%;
-    --ds-success-100: 142 76% 90%;
-    --ds-success-500: 142 76% 45%;
-    --ds-success-600: 142 76% 40%;
-    --ds-success-700: 142 76% 35%;
-    
-    --ds-error-50: 0 86% 96%;
-    --ds-error-100: 0 86% 90%;
-    --ds-error-500: 0 86% 55%;
-    --ds-error-600: 0 86% 50%;
-    --ds-error-700: 0 86% 45%;
-    
-    --ds-warning-50: 48 100% 96%;
-    --ds-warning-100: 48 100% 88%;
-    --ds-warning-500: 48 100% 55%;
-    --ds-warning-600: 48 100% 50%;
-    --ds-warning-700: 48 100% 45%;
-    
-    --ds-info-50: 204 100% 97%;
-    --ds-info-100: 204 100% 90%;
-    --ds-info-500: 204 100% 55%;
-    --ds-info-600: 204 100% 50%;
-    --ds-info-700: 204 100% 45%;
-    
-    /* Design System Neutral Colors */
-    --ds-neutral-50: 210 40% 98%;
-    --ds-neutral-100: 210 40% 96%;
-    --ds-neutral-200: 214 32% 91%;
-    --ds-neutral-300: 213 27% 84%;
-    --ds-neutral-600: 215 19% 35%;
-    --ds-neutral-700: 215 25% 27%;
-    --ds-neutral-900: 222 47% 11%;
+    /* Spacing scale */
+    --ds-space-xs: 0.25rem;
+    --ds-space-sm: 0.5rem;
+    --ds-space-md: 0.75rem;
+    --ds-space-lg: 1rem;
+    --ds-space-xl: 1.5rem;
+    --ds-space-2xl: 2rem;
+    --ds-space-3xl: 3rem;
+    --ds-space-4xl: 4rem;
+
+    /* Radius scale */
+    --ds-radius-sm: 0.125rem;
+    --ds-radius-md: 0.375rem;
+    --ds-radius-lg: 0.5rem;
+    --ds-radius-xl: 0.75rem;
+    --ds-radius-2xl: 1rem;
+
+    /* Typography scale */
+    --ds-text-xs: 0.75rem;
+    --ds-text-sm: 0.875rem;
+    --ds-text-base: 1rem;
+    --ds-text-lg: 1.125rem;
+    --ds-text-xl: 1.25rem;
+    --ds-text-2xl: 1.5rem;
+    --ds-text-3xl: 1.875rem;
+    --ds-text-4xl: 2.25rem;
+
+    /* Shadows */
+    --ds-shadow-sm: 0 8px 16px rgba(15, 23, 42, 0.05);
+    --ds-shadow-md: 0 16px 32px rgba(15, 23, 42, 0.08);
+    --ds-shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.12);
+    --ds-shadow-xl: 0 28px 64px rgba(15, 23, 42, 0.16);
+
+    /* Primary palette */
+    --ds-primary-50: 92 100% 95%;
+    --ds-primary-100: 94 100% 88%;
+    --ds-primary-200: 95 100% 76%;
+    --ds-primary-300: 95 100% 63%;
+    --ds-primary-400: 98 92% 53%;
+    --ds-primary-500: 94 98% 40%;
+    --ds-primary-600: 95 99% 32%;
+    --ds-primary-700: 96 95% 25%;
+    --ds-primary-800: 97 81% 21%;
+    --ds-primary-900: 100 69% 18%;
+    --ds-primary-foreground: 0 0% 100%;
+    --ds-primary-rgb: 88, 204, 2;
+
+    /* Success palette */
+    --ds-success-50: 147 100% 96%;
+    --ds-success-100: 145 100% 91%;
+    --ds-success-200: 145 93% 82%;
+    --ds-success-300: 145 81% 69%;
+    --ds-success-400: 145 68% 53%;
+    --ds-success-500: 146 78% 41%;
+    --ds-success-600: 146 79% 32%;
+    --ds-success-700: 146 79% 25%;
+    --ds-success-800: 146 75% 19%;
+    --ds-success-900: 147 75% 14%;
+    --ds-success-foreground: 0 0% 100%;
+    --ds-success-rgb: 23, 184, 92;
+
+    /* Error palette */
+    --ds-error-50: 0 86% 97%;
+    --ds-error-100: 0 93% 94%;
+    --ds-error-200: 0 96% 89%;
+    --ds-error-300: 0 94% 82%;
+    --ds-error-400: 0 91% 71%;
+    --ds-error-500: 0 84% 60%;
+    --ds-error-600: 0 72% 51%;
+    --ds-error-700: 0 74% 42%;
+    --ds-error-800: 0 70% 35%;
+    --ds-error-900: 0 63% 31%;
+    --ds-error-foreground: 0 0% 100%;
+    --ds-error-rgb: 239, 68, 68;
+
+    /* Warning palette */
+    --ds-warning-50: 55 92% 95%;
+    --ds-warning-100: 55 97% 88%;
+    --ds-warning-200: 53 98% 77%;
+    --ds-warning-300: 50 98% 64%;
+    --ds-warning-400: 48 96% 53%;
+    --ds-warning-500: 45 93% 47%;
+    --ds-warning-600: 41 96% 40%;
+    --ds-warning-700: 35 92% 33%;
+    --ds-warning-800: 32 81% 29%;
+    --ds-warning-900: 28 73% 26%;
+    --ds-warning-foreground: 28 73% 26%;
+    --ds-warning-rgb: 250, 204, 21;
+
+    /* Info palette */
+    --ds-info-50: 214 100% 97%;
+    --ds-info-100: 214 95% 93%;
+    --ds-info-200: 213 97% 87%;
+    --ds-info-300: 212 96% 78%;
+    --ds-info-400: 213 94% 68%;
+    --ds-info-500: 217 91% 60%;
+    --ds-info-600: 221 83% 53%;
+    --ds-info-700: 224 76% 48%;
+    --ds-info-800: 226 71% 40%;
+    --ds-info-900: 224 64% 33%;
+    --ds-info-foreground: 0 0% 100%;
+    --ds-info-rgb: 59, 130, 246;
+
+    /* Neutral palette */
+    --ds-neutral-0: 0 0% 100%;
+    --ds-neutral-50: 0 0% 98%;
+    --ds-neutral-100: 0 0% 96%;
+    --ds-neutral-200: 0 0% 90%;
+    --ds-neutral-300: 0 0% 83%;
+    --ds-neutral-400: 0 0% 64%;
+    --ds-neutral-500: 0 0% 45%;
+    --ds-neutral-600: 0 0% 32%;
+    --ds-neutral-700: 0 0% 25%;
+    --ds-neutral-800: 0 0% 15%;
+    --ds-neutral-900: 0 0% 9%;
+    --ds-neutral-foreground: 0 0% 9%;
+    --ds-neutral-rgb: 115, 115, 115;
   }
 }
 
@@ -128,79 +212,126 @@ body,
   
   /* Status utility classes */
   .ds-success {
-    @apply bg-green-100 text-green-800 border-green-200;
+    background-color: hsl(var(--ds-success-50));
+    color: hsl(var(--ds-success-700));
+    border-color: hsl(var(--ds-success-200));
   }
   
   .ds-error {
-    @apply bg-red-100 text-red-800 border-red-200;
+    background-color: hsl(var(--ds-error-50));
+    color: hsl(var(--ds-error-700));
+    border-color: hsl(var(--ds-error-200));
   }
   
   .ds-warning {
-    @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+    background-color: hsl(var(--ds-warning-50));
+    color: hsl(var(--ds-warning-700));
+    border-color: hsl(var(--ds-warning-200));
   }
   
   .ds-info {
-    @apply bg-blue-100 text-blue-800 border-blue-200;
+    background-color: hsl(var(--ds-info-50));
+    color: hsl(var(--ds-info-700));
+    border-color: hsl(var(--ds-info-200));
   }
   
   .ds-neutral {
-    @apply bg-gray-100 text-gray-800 border-gray-200;
+    background-color: hsl(var(--ds-neutral-100));
+    color: hsl(var(--ds-neutral-700));
+    border-color: hsl(var(--ds-neutral-200));
   }
   
   /* Interactive utilities */
   .ds-interactive {
-    @apply cursor-pointer transition-transform duration-150 hover:scale-105 active:scale-95;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+  }
+
+  .ds-interactive:hover {
+    transform: translateY(-2px);
+  }
+
+  .ds-interactive:active {
+    transform: translateY(0);
   }
   
   /* Focus utilities */
   .ds-focus {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    outline: none;
+  }
+
+  .ds-focus:focus-visible {
+    box-shadow: 0 0 0 2px hsla(var(--ds-primary-500), 0.4);
   }
   
   /* Layout utilities */
   .ds-container {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--ds-space-lg);
+    padding-right: var(--ds-space-lg);
   }
   
   .ds-flex-center {
-    @apply flex items-center justify-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .ds-flex-between {
-    @apply flex items-center justify-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .ds-stack {
-    @apply flex flex-col gap-4;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-lg);
   }
   
   .ds-grid-responsive {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--ds-space-xl);
   }
   
   /* Typography utilities */
   .ds-heading-1 {
-    @apply text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight;
+    font-size: var(--ds-text-3xl);
+    font-weight: 800;
+    color: hsl(var(--ds-neutral-900));
+    letter-spacing: -0.02em;
   }
   
   .ds-heading-2 {
-    @apply text-2xl lg:text-3xl font-bold text-neutral-900 tracking-tight;
+    font-size: var(--ds-text-2xl);
+    font-weight: 700;
+    color: hsl(var(--ds-neutral-900));
+    letter-spacing: -0.015em;
   }
   
   .ds-heading-3 {
-    @apply text-xl lg:text-2xl font-semibold text-neutral-900;
+    font-size: var(--ds-text-xl);
+    font-weight: 600;
+    color: hsl(var(--ds-neutral-900));
   }
   
   .ds-body {
-    @apply text-base text-neutral-700 leading-normal;
+    font-size: var(--ds-text-base);
+    color: hsl(var(--ds-neutral-700));
+    line-height: 1.6;
   }
   
   .ds-body-small {
-    @apply text-sm text-neutral-600 leading-normal;
+    font-size: var(--ds-text-sm);
+    color: hsl(var(--ds-neutral-600));
+    line-height: 1.5;
   }
   
   .ds-text-muted {
-    @apply text-neutral-500;
+    color: hsl(var(--ds-neutral-500));
   }
 }
 
@@ -267,10 +398,22 @@ body,
   
   /* Responsive utilities */
   .ds-hide-mobile {
-    @apply hidden md:block;
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .ds-hide-mobile {
+      display: block;
+    }
   }
   
   .ds-hide-desktop {
-    @apply block md:hidden;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .ds-hide-desktop {
+      display: none;
+    }
   }
 }

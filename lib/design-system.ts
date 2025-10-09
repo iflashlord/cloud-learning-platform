@@ -136,72 +136,77 @@ export const SEMANTIC_COLORS = {
 export const buttonVariants = cva(
   // Base styles - consistent for all buttons
   [
-    "inline-flex items-center justify-center",
-    "font-semibold text-sm leading-tight",
-    "border border-transparent rounded-lg",
-    "transition-all duration-200 ease-in-out",
-    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-    "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+    "inline-flex items-center justify-center rounded-full",
+    "font-semibold tracking-wide transition-all duration-200 ease-out",
+    "px-[var(--ds-space-lg)] py-[calc(var(--ds-space-sm)*1.5)]",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+    "disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0",
   ],
   {
     variants: {
       variant: {
         primary: [
-          "bg-gradient-to-r from-blue-500 to-blue-600",
-          "text-white border-blue-600",
-          "hover:from-blue-600 hover:to-blue-700 hover:shadow-md hover:scale-[1.02]",
-          "focus:ring-blue-500",
-          "active:scale-[0.98]",
+          "bg-[linear-gradient(140deg,hsl(var(--ds-primary-400)),hsl(var(--ds-primary-600)))]",
+          "text-[hsl(var(--ds-primary-foreground))]",
+          "shadow-[0_18px_32px_rgba(var(--ds-primary-rgb),0.28)]",
+          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-primary-rgb),0.35)]",
+          "focus-visible:ring-[hsl(var(--ds-primary-500))]",
         ],
         secondary: [
-          "bg-white border-neutral-200 text-neutral-700",
-          "hover:bg-neutral-50 hover:border-neutral-300 hover:shadow-sm",
-          "focus:ring-neutral-500",
+          "border-2 border-[hsl(var(--ds-primary-200))]",
+          "bg-[hsl(var(--ds-primary-50))]",
+          "text-[hsl(var(--ds-primary-600))]",
+          "hover:-translate-y-0.5 hover:bg-[hsl(var(--ds-primary-100))]",
+          "focus-visible:ring-[hsl(var(--ds-primary-200))]",
         ],
         success: [
-          "bg-gradient-to-r from-green-500 to-green-600",
-          "text-white border-green-600",
-          "hover:from-green-600 hover:to-green-700 hover:shadow-md hover:scale-[1.02]",
-          "focus:ring-green-500",
-          "active:scale-[0.98]",
+          "bg-[linear-gradient(140deg,hsl(var(--ds-success-400)),hsl(var(--ds-success-600)))]",
+          "text-[hsl(var(--ds-success-foreground))]",
+          "shadow-[0_18px_32px_rgba(var(--ds-success-rgb),0.25)]",
+          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-success-rgb),0.32)]",
+          "focus-visible:ring-[hsl(var(--ds-success-500))]",
         ],
         error: [
-          "bg-gradient-to-r from-red-500 to-red-600",
-          "text-white border-red-600",
-          "hover:from-red-600 hover:to-red-700 hover:shadow-md hover:scale-[1.02]",
-          "focus:ring-red-500",
-          "active:scale-[0.98]",
+          "bg-[linear-gradient(140deg,hsl(var(--ds-error-400)),hsl(var(--ds-error-600)))]",
+          "text-[hsl(var(--ds-error-foreground))]",
+          "shadow-[0_18px_32px_rgba(var(--ds-error-rgb),0.25)]",
+          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-error-rgb),0.32)]",
+          "focus-visible:ring-[hsl(var(--ds-error-500))]",
         ],
         warning: [
-          "bg-gradient-to-r from-yellow-500 to-yellow-600",
-          "text-white border-yellow-600",
-          "hover:from-yellow-600 hover:to-yellow-700 hover:shadow-md hover:scale-[1.02]",
-          "focus:ring-yellow-500",
-          "active:scale-[0.98]",
+          "bg-[linear-gradient(140deg,hsl(var(--ds-warning-400)),hsl(var(--ds-warning-600)))]",
+          "text-[hsl(var(--ds-warning-foreground))]",
+          "shadow-[0_18px_32px_rgba(var(--ds-warning-rgb),0.25)]",
+          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-warning-rgb),0.32)]",
+          "focus-visible:ring-[hsl(var(--ds-warning-500))]",
         ],
         ghost: [
-          "bg-transparent text-neutral-600 border-transparent",
-          "hover:bg-neutral-100 hover:text-neutral-700",
-          "focus:ring-neutral-500",
+          "bg-transparent border-transparent",
+          "text-[hsl(var(--ds-neutral-600))]",
+          "hover:bg-[hsl(var(--ds-neutral-100))]",
+          "focus-visible:ring-[hsl(var(--ds-neutral-300))]",
         ],
         outline: [
-          "bg-transparent border-neutral-300 text-neutral-700",
-          "hover:bg-neutral-50 hover:border-neutral-400",
-          "focus:ring-neutral-500",
+          "border-2 border-[hsl(var(--ds-neutral-300))]",
+          "text-[hsl(var(--ds-neutral-700))]",
+          "bg-[hsl(var(--ds-neutral-0))]",
+          "hover:bg-[hsl(var(--ds-neutral-100))]",
+          "focus-visible:ring-[hsl(var(--ds-neutral-400))]",
         ],
         link: [
-          "bg-transparent text-blue-600 border-transparent p-0 h-auto",
-          "hover:text-blue-700 hover:underline",
-          "focus:ring-blue-500",
+          "bg-transparent border-transparent p-0 h-auto",
+          "text-[hsl(var(--ds-info-600))]",
+          "hover:text-[hsl(var(--ds-info-500))] hover:underline",
+          "focus-visible:ring-offset-0 focus-visible:ring-[hsl(var(--ds-info-500))]",
         ],
       },
       size: {
-        xs: "h-7 px-2 text-xs",
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-sm",
-        lg: "h-11 px-6 text-base",
-        xl: "h-12 px-8 text-base",
-        icon: "h-10 w-10 p-0",
+        xs: "h-8 px-[var(--ds-space-sm)] text-[length:var(--ds-text-xs)]",
+        sm: "h-9 px-[var(--ds-space-md)] text-[length:var(--ds-text-sm)]",
+        md: "h-11 px-[var(--ds-space-lg)] text-[length:var(--ds-text-base)]",
+        lg: "h-12 px-[var(--ds-space-xl)] text-[length:var(--ds-text-lg)]",
+        xl: "h-14 px-[var(--ds-space-2xl)] text-[length:var(--ds-text-xl)]",
+        icon: "h-11 w-11 p-0",
       },
       fullWidth: {
         true: "w-full",
@@ -224,26 +229,26 @@ export const buttonVariants = cva(
 // Card component variants
 export const cardVariants = cva(
   [
-    "bg-white border border-neutral-200 rounded-lg",
-    "transition-all duration-200",
+    "bg-[hsl(var(--ds-neutral-50))] border border-[hsl(var(--ds-neutral-200))] rounded-2xl",
+    "transition-all duration-200 ease-out shadow-[0_16px_32px_rgba(var(--ds-neutral-rgb),0.05)]",
   ],
   {
     variants: {
       variant: {
-        default: "shadow-sm",
-        elevated: "shadow-md hover:shadow-lg",
-        outline: "border-2 border-neutral-300",
-        ghost: "border-transparent shadow-none",
+        default: "hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(var(--ds-neutral-rgb),0.08)]",
+        elevated: "shadow-[0_22px_45px_rgba(var(--ds-neutral-rgb),0.12)] hover:-translate-y-1",
+        outline: "border-2 border-[hsl(var(--ds-neutral-300))]",
+        ghost: "border-transparent shadow-none bg-transparent",
       },
       padding: {
         none: "p-0",
-        sm: "p-3",
-        md: "p-4",
-        lg: "p-6",
-        xl: "p-8",
+        sm: "p-[var(--ds-space-sm)]",
+        md: "p-[var(--ds-space-md)]",
+        lg: "p-[var(--ds-space-lg)]",
+        xl: "p-[var(--ds-space-xl)]",
       },
       interactive: {
-        true: "cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+        true: "cursor-pointer hover:-translate-y-1 hover:shadow-[0_26px_48px_rgba(var(--ds-neutral-rgb),0.14)] active:translate-y-0",
         false: "",
       },
     },
@@ -258,23 +263,24 @@ export const cardVariants = cva(
 // Input component variants
 export const inputVariants = cva(
   [
-    "w-full border border-neutral-300 rounded-lg",
-    "px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500",
-    "bg-white transition-colors duration-200",
-    "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-    "disabled:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-75",
+    "w-full border border-[hsl(var(--ds-neutral-300))] rounded-2xl",
+    "px-[var(--ds-space-md)] py-[calc(var(--ds-space-sm)*1.2)] text-[length:var(--ds-text-sm)]",
+    "text-[hsl(var(--ds-neutral-800))] placeholder:text-[hsl(var(--ds-neutral-500))]",
+    "bg-[hsl(var(--ds-neutral-0,var(--ds-neutral-50)))] transition-all duration-200",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ds-primary-400))] focus-visible:border-transparent",
+    "disabled:bg-[hsl(var(--ds-neutral-100))] disabled:cursor-not-allowed disabled:opacity-70",
   ],
   {
     variants: {
       variant: {
         default: "",
-        error: "border-red-500 focus:ring-red-500",
-        success: "border-green-500 focus:ring-green-500",
+        error: "border-[hsl(var(--ds-error-400))] focus-visible:ring-[hsl(var(--ds-error-400))]",
+        success: "border-[hsl(var(--ds-success-400))] focus-visible:ring-[hsl(var(--ds-success-400))]",
       },
       size: {
-        sm: "h-8 px-2 text-xs",
-        md: "h-10 px-3 text-sm",
-        lg: "h-12 px-4 text-base",
+        sm: "h-[2.5rem] text-[length:var(--ds-text-xs)] px-[var(--ds-space-sm)]",
+        md: "h-[2.75rem] text-[length:var(--ds-text-sm)] px-[var(--ds-space-md)]",
+        lg: "h-[3rem] text-[length:var(--ds-text-base)] px-[var(--ds-space-lg)]",
       },
     },
     defaultVariants: {
@@ -288,18 +294,18 @@ export const inputVariants = cva(
 export const badgeVariants = cva(
   [
     "inline-flex items-center justify-center",
-    "px-2.5 py-0.5 text-xs font-medium rounded-full",
-    "border transition-colors duration-200",
+    "px-[var(--ds-space-sm)] py-[calc(var(--ds-space-xs)*0.8)] text-[length:var(--ds-text-xs)] font-semibold rounded-full",
+    "border transition-colors duration-200 capitalize tracking-wide",
   ],
   {
     variants: {
       variant: {
-        default: "bg-neutral-100 text-neutral-800 border-neutral-200",
-        success: "bg-green-100 text-green-800 border-green-200",
-        error: "bg-red-100 text-red-800 border-red-200",
-        warning: "bg-yellow-100 text-yellow-800 border-yellow-200",
-        info: "bg-blue-100 text-blue-800 border-blue-200",
-        primary: "bg-blue-100 text-blue-800 border-blue-200",
+        default: "bg-[hsl(var(--ds-neutral-100))] text-[hsl(var(--ds-neutral-700))] border-[hsl(var(--ds-neutral-200))]",
+        success: "bg-[hsl(var(--ds-success-50))] text-[hsl(var(--ds-success-700))] border-[hsl(var(--ds-success-200))]",
+        error: "bg-[hsl(var(--ds-error-50))] text-[hsl(var(--ds-error-700))] border-[hsl(var(--ds-error-200))]",
+        warning: "bg-[hsl(var(--ds-warning-50))] text-[hsl(var(--ds-warning-700))] border-[hsl(var(--ds-warning-200))]",
+        info: "bg-[hsl(var(--ds-info-50))] text-[hsl(var(--ds-info-700))] border-[hsl(var(--ds-info-200))]",
+        primary: "bg-[hsl(var(--ds-primary-50))] text-[hsl(var(--ds-primary-700))] border-[hsl(var(--ds-primary-200))]",
       },
     },
     defaultVariants: {
@@ -311,8 +317,8 @@ export const badgeVariants = cva(
 // Progress component variants
 export const progressVariants = cva(
   [
-    "w-full bg-neutral-200 rounded-full overflow-hidden",
-    "transition-all duration-300",
+    "w-full bg-[hsl(var(--ds-neutral-200))] rounded-full overflow-hidden",
+    "transition-all duration-300 ease-out",
   ],
   {
     variants: {
@@ -322,11 +328,11 @@ export const progressVariants = cva(
         lg: "h-4",
       },
       variant: {
-        default: "",
-        success: "[&>*]:bg-green-500",
-        error: "[&>*]:bg-red-500",
-        warning: "[&>*]:bg-yellow-500",
-        info: "[&>*]:bg-blue-500",
+        default: "[&>*]:bg-[linear-gradient(135deg,hsl(var(--ds-primary-400)),hsl(var(--ds-primary-600)))]",
+        success: "[&>*]:bg-[linear-gradient(135deg,hsl(var(--ds-success-400)),hsl(var(--ds-success-600)))]",
+        error: "[&>*]:bg-[linear-gradient(135deg,hsl(var(--ds-error-400)),hsl(var(--ds-error-600)))]",
+        warning: "[&>*]:bg-[linear-gradient(135deg,hsl(var(--ds-warning-400)),hsl(var(--ds-warning-600)))]",
+        info: "[&>*]:bg-[linear-gradient(135deg,hsl(var(--ds-info-400)),hsl(var(--ds-info-600)))]",
       },
     },
     defaultVariants: {
@@ -344,11 +350,11 @@ export const createComponentStyles = {
   // Status colors for different UI states
   getStatusColor: (status: 'success' | 'error' | 'warning' | 'info' | 'neutral') => {
     const colorMap = {
-      success: 'text-green-700 bg-green-100 border-green-200',
-      error: 'text-red-700 bg-red-100 border-red-200',
-      warning: 'text-yellow-700 bg-yellow-100 border-yellow-200',
-      info: 'text-blue-700 bg-blue-100 border-blue-200',
-      neutral: 'text-neutral-700 bg-neutral-100 border-neutral-200',
+      success: 'text-[hsl(var(--ds-success-700))] bg-[hsl(var(--ds-success-50))] border-[hsl(var(--ds-success-200))]',
+      error: 'text-[hsl(var(--ds-error-700))] bg-[hsl(var(--ds-error-50))] border-[hsl(var(--ds-error-200))]',
+      warning: 'text-[hsl(var(--ds-warning-700))] bg-[hsl(var(--ds-warning-50))] border-[hsl(var(--ds-warning-200))]',
+      info: 'text-[hsl(var(--ds-info-700))] bg-[hsl(var(--ds-info-50))] border-[hsl(var(--ds-info-200))]',
+      neutral: 'text-[hsl(var(--ds-neutral-700))] bg-[hsl(var(--ds-neutral-100))] border-[hsl(var(--ds-neutral-200))]',
     };
     return colorMap[status];
   },
@@ -356,7 +362,7 @@ export const createComponentStyles = {
   // Interactive element styles
   getInteractiveStyles: (enabled = true) => {
     if (!enabled) return 'opacity-50 cursor-not-allowed';
-    return 'cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-150';
+    return 'cursor-pointer transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0';
   },
 
   // Shadow styles based on elevation
@@ -373,7 +379,13 @@ export const createComponentStyles = {
 
   // Focus styles for accessibility
   getFocusStyles: (color: 'blue' | 'green' | 'red' | 'yellow' = 'blue') => {
-    return `focus:outline-none focus:ring-2 focus:ring-${color}-500 focus:ring-offset-2`;
+    const colorToken = {
+      blue: 'var(--ds-info-500)',
+      green: 'var(--ds-success-500)',
+      red: 'var(--ds-error-500)',
+      yellow: 'var(--ds-warning-500)',
+    }[color];
+    return `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(${colorToken})]`;
   },
 };
 
@@ -384,40 +396,40 @@ export const createComponentStyles = {
 export const THEME_STYLES = {
   // Layout containers
   container: {
-    page: "min-h-screen bg-neutral-50",
-    content: "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
-    section: "py-8 lg:py-12",
+    page: "min-h-screen bg-[hsl(var(--ds-neutral-50))]",
+    content: "mx-auto max-w-7xl px-[var(--ds-space-lg)] sm:px-[var(--ds-space-xl)] lg:px-[var(--ds-space-2xl)]",
+    section: "py-[var(--ds-space-xl)] lg:py-[var(--ds-space-2xl)]",
   },
 
   // Text styles
   text: {
     heading: {
-      h1: "text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight",
-      h2: "text-2xl lg:text-3xl font-bold text-neutral-900 tracking-tight", 
-      h3: "text-xl lg:text-2xl font-semibold text-neutral-900",
-      h4: "text-lg lg:text-xl font-semibold text-neutral-900",
+      h1: "text-[length:var(--ds-text-3xl)] lg:text-[length:var(--ds-text-4xl)] font-extrabold text-[hsl(var(--ds-neutral-900))] tracking-tight",
+      h2: "text-[length:var(--ds-text-2xl)] lg:text-[length:var(--ds-text-3xl)] font-bold text-[hsl(var(--ds-neutral-900))] tracking-tight", 
+      h3: "text-[length:var(--ds-text-xl)] lg:text-[length:var(--ds-text-2xl)] font-semibold text-[hsl(var(--ds-neutral-900))]",
+      h4: "text-[length:var(--ds-text-lg)] lg:text-[length:var(--ds-text-xl)] font-semibold text-[hsl(var(--ds-neutral-900))]",
     },
     body: {
-      large: "text-lg text-neutral-700 leading-relaxed",
-      base: "text-base text-neutral-700 leading-normal",
-      small: "text-sm text-neutral-600 leading-normal",
-      xs: "text-xs text-neutral-500 leading-normal",
+      large: "text-[length:var(--ds-text-lg)] text-[hsl(var(--ds-neutral-700))] leading-relaxed",
+      base: "text-[length:var(--ds-text-base)] text-[hsl(var(--ds-neutral-700))] leading-normal",
+      small: "text-[length:var(--ds-text-sm)] text-[hsl(var(--ds-neutral-600))] leading-normal",
+      xs: "text-[length:var(--ds-text-xs)] text-[hsl(var(--ds-neutral-500))] leading-normal",
     },
     emphasis: {
-      strong: "font-semibold text-neutral-900",
-      muted: "text-neutral-500",
-      accent: "text-blue-600 font-medium",
+      strong: "font-semibold text-[hsl(var(--ds-neutral-900))]",
+      muted: "text-[hsl(var(--ds-neutral-500))]",
+      accent: "text-[hsl(var(--ds-primary-600))] font-medium",
     },
   },
 
   // Layout patterns
   layout: {
-    stack: "space-y-4",
-    stackLg: "space-y-6",
-    stackXl: "space-y-8",
-    grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
-    flexRow: "flex items-center space-x-3",
-    flexCol: "flex flex-col space-y-3",
+    stack: "flex flex-col gap-[var(--ds-space-lg)]",
+    stackLg: "flex flex-col gap-[var(--ds-space-xl)]",
+    stackXl: "flex flex-col gap-[var(--ds-space-2xl)]",
+    grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--ds-space-xl)]",
+    flexRow: "flex items-center gap-[var(--ds-space-md)]",
+    flexCol: "flex flex-col gap-[var(--ds-space-md)]",
     flexBetween: "flex items-center justify-between",
     flexCenter: "flex items-center justify-center",
   },
