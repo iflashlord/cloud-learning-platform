@@ -8,6 +8,7 @@ import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries";
 import { Progress } from "@/components/ui/progress";
 import { Promo } from "@/components/promo";
 import { QuestAchievements } from "./quest-achievements";
+import { QuestProgressTracker } from "./quest-progress-tracker";
 import { quests } from "@/constants";
 import { BRAND_CONFIG } from "@/lib/config";
 import { Trophy, Crown, Star, Zap, Target, Award, CheckCircle, Lock, Gift, TrendingUp } from "lucide-react";
@@ -77,10 +78,10 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
       )}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex items-start justify-between mb-4 gap-3">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border-2 font-bold",
+            "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border-2 font-bold flex-shrink-0",
             isCompleted 
               ? "bg-green-500 border-green-600 text-white" 
               : quest.color === 'gold' 
@@ -92,21 +93,21 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
             {isCompleted ? <CheckCircle className="w-6 h-6" /> : quest.icon}
           </div>
           
-          <div>
+          <div className="flex-1 min-w-0">
             <h3 className={cn(
-              "font-bold text-lg",
+              "font-bold text-lg truncate",
               isCompleted ? "text-green-700" : "text-gray-800"
             )}>
               {quest.title}
             </h3>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className={cn(
-                "px-2 py-1 text-xs font-medium rounded-lg border",
+                "px-2 py-1 text-xs font-medium rounded-lg border whitespace-nowrap",
                 getDifficultyColor(quest.difficulty)
               )}>
                 {quest.difficulty}
               </span>
-              <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg">
+              <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">
                 {quest.category}
               </span>
             </div>
@@ -114,9 +115,9 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
         </div>
 
         {isNext && (
-          <div className="flex items-center gap-1 px-3 py-1 bg-orange-200 text-orange-800 text-sm font-bold rounded-full">
+          <div className="flex items-center gap-1 px-3 py-1 bg-orange-200 text-orange-800 text-sm font-bold rounded-full flex-shrink-0">
             <Zap className="w-4 h-4" />
-            NEXT
+            <span className="hidden sm:inline">NEXT</span>
           </div>
         )}
       </div>
@@ -239,6 +240,11 @@ const QuestsPage = async () => {
           hearts={userProgress.hearts}
           points={userProgress.points}
           hasActiveSubscription={isPro}
+        />
+        <QuestProgressTracker 
+          quests={quests}
+          userPoints={userProgress.points}
+          className="mb-4"
         />
         {!isPro && (
           <Promo />
