@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { quickStyles, layoutStyles, typographyStyles } from "@/lib/style-utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
   GraduationCap,

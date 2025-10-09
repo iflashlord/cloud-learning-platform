@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Check, Clock, BookOpen, Star, Award } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { statusStyles } from "@/lib/style-utils";
 
 type Props = {
   title: string;
@@ -36,10 +37,10 @@ export const Card = ({
 }: Props) => {
   const getLevelColor = (level?: string) => {
     switch (level) {
-      case "Beginner": return "bg-green-100 text-green-800";
-      case "Intermediate": return "bg-yellow-100 text-yellow-800";
-      case "Advanced": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Beginner": return cn(statusStyles.success.bg, statusStyles.success.text);
+      case "Intermediate": return cn(statusStyles.warning.bg, statusStyles.warning.text);
+      case "Advanced": return cn(statusStyles.error.bg, statusStyles.error.text);
+      default: return cn(statusStyles.neutral.bg, statusStyles.neutral.text);
     }
   };
 
@@ -69,7 +70,7 @@ export const Card = ({
         className={cn(
           "h-full border-2 rounded-xl border-b-4 hover:bg-black/5 cursor-pointer active:border-b-2 flex flex-col p-6 transition-all duration-200",
           "min-h-[320px] max-w-[350px] shadow-sm hover:shadow-lg focus:ring-2 focus:ring-orange-500 focus:outline-none",
-          active && "ring-2 ring-green-500 border-green-500",
+          active && "ring-2 ring-primary-500 border-primary-500",
           disabled && "pointer-events-none opacity-50"
         )}
       >
@@ -84,7 +85,7 @@ export const Card = ({
             )}
           </div>
           {active && (
-            <div className="rounded-md bg-green-600 flex items-center justify-center p-1.5">
+            <div className={cn("rounded-md flex items-center justify-center p-1.5", statusStyles.success.button)}>
               <Check className="text-white stroke-[4] h-4 w-4" />
             </div>
           )}
@@ -129,9 +130,9 @@ export const Card = ({
                   <span>Progress</span>
                   <span className="font-medium">{progress.percentage}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-neutral-200 rounded-full h-2">
                   <div 
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                    className={cn("h-2 rounded-full transition-all duration-300", statusStyles.success.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-primary-500')}
                     style={{ width: `${progress.percentage}%` }}
                   />
                 </div>
@@ -144,7 +145,7 @@ export const Card = ({
             {/* Action Button */}
             <div className="mt-4">
               {active ? (
-                <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors">
+                <button className={cn("w-full py-3 px-4 rounded-lg font-medium text-sm transition-colors", statusStyles.success.button, "hover:opacity-90")}>
                   Continue Learning
                 </button>
               ) : (
@@ -175,7 +176,7 @@ export const Card = ({
       className={cn(
         "border-2 rounded-xl hover:bg-black/5 cursor-pointer transition-all duration-200 p-4",
         "shadow-sm hover:shadow-md focus:ring-2 focus:ring-orange-500 focus:outline-none",
-        active && "ring-2 ring-green-500 border-green-500 bg-green-50/30",
+        active && "ring-2 ring-primary-500 border-primary-500 bg-primary-50/30",
         disabled && "pointer-events-none opacity-50"
       )}
     >
@@ -198,7 +199,7 @@ export const Card = ({
               {title}
             </h3>
             {active && (
-              <div className="ml-2 rounded-md bg-green-600 flex items-center justify-center p-1">
+              <div className={cn("ml-2 rounded-md flex items-center justify-center p-1", statusStyles.success.button)}>
                 <Check className="text-white stroke-[4] h-3 w-3" />
               </div>
             )}
@@ -234,9 +235,9 @@ export const Card = ({
                 <span>Progress</span>
                 <span className="font-medium">{progress.percentage}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
+              <div className="w-full bg-neutral-200 rounded-full h-1.5">
                 <div 
-                  className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
+                  className={cn("h-1.5 rounded-full transition-all duration-300", statusStyles.success.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-primary-500')}
                   style={{ width: `${progress.percentage}%` }}
                 />
               </div>
@@ -250,7 +251,7 @@ export const Card = ({
         {/* Action Button */}
         <div className="flex-shrink-0 ml-4">
           {active ? (
-            <button className="bg-green-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors whitespace-nowrap">
+            <button className={cn("py-2 px-4 rounded-lg font-medium text-sm transition-colors whitespace-nowrap", statusStyles.success.button, "hover:opacity-90")}>
               Continue
             </button>
           ) : (

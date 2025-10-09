@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { statusStyles } from "@/lib/style-utils";
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useEffect } from "react";
 import { Volume2, Play, HelpCircle } from "lucide-react";
@@ -146,7 +147,7 @@ export const Challenge = ({
 
   // Consistent header for all question types
   const QuestionHeader = ({ children }: { children?: React.ReactNode }) => (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-6 shadow-sm">
+    <div className={cn("bg-gradient-to-r from-blue-50 to-indigo-50 border rounded-xl p-6 mb-6 shadow-sm", statusStyles.info.border)}>
       <div className="flex items-start space-x-4">
         <Character 
           questionType={type} 
@@ -154,15 +155,15 @@ export const Challenge = ({
           state={status === "correct" ? "correct" : status === "wrong" ? "wrong" : "default"}
         />
         <div className="flex-1">
-          <div className="bg-white rounded-lg p-4 shadow-sm border">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-neutral-200">
             <div className="flex items-start justify-between">
-              <p className="text-gray-800 font-medium leading-relaxed flex-1">
+              <p className="text-neutral-800 font-medium leading-relaxed flex-1">
                 {challenge?.question}
               </p>
               {challenge?.hint && (
                 <button
                   onClick={() => setShowHint(!showHint)}
-                  className="ml-3 flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition-colors"
+                  className={cn("ml-3 flex items-center space-x-1 transition-colors", statusStyles.info.text, "hover:opacity-80")}
                   title={showHint ? "Hide hint" : "Show hint"}
                 >
                   <HelpCircle className="w-5 h-5" />
@@ -171,8 +172,8 @@ export const Challenge = ({
               )}
             </div>
             {challenge?.hint && showHint && (
-              <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200 transition-all duration-300 ease-in-out">
-                <p className="text-sm text-yellow-800">
+              <div className={cn("mt-3 p-3 rounded-lg border transition-all duration-300 ease-in-out", statusStyles.warning.bg, statusStyles.warning.border)}>
+                <p className={cn("text-sm", statusStyles.warning.text)}>
                   💡 <strong>Hint:</strong> {challenge.hint}
                 </p>
               </div>
@@ -191,14 +192,16 @@ export const Challenge = ({
 
     return (
       <div className="px-6 mb-4">
-        <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
+        <div className={cn("border-2 rounded-lg p-4", statusStyles.success.bg, statusStyles.success.border)}>
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+            <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-white", statusStyles.success.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-green-500')}>
               <span className="text-white font-bold text-sm">✓</span>
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-green-800 mb-1">Correct Answer:</p>
-              <p className="text-green-700 font-medium">{correctAnswerText}</p>
+              <p className={cn("text-sm font-semibold mb-1", statusStyles.success.text)}>Correct Answer:</p>
+              <p className={cn("font-medium", statusStyles.success.text)}>
+                {correctAnswerText}
+              </p>
             </div>
           </div>
         </div>
@@ -206,7 +209,29 @@ export const Challenge = ({
     );
   };
 
-  // Render different UI based on challenge type
+  // Incorrect answer display component
+  const IncorrectAnswerDisplay = () => {
+    const correctAnswerText = getCorrectAnswerText();
+    if (!correctAnswerText) return null;
+
+    return (
+      <div className="px-6 mb-4">
+        <div className={cn("border-2 rounded-lg p-4", statusStyles.error.bg, statusStyles.error.border)}>
+          <div className="flex items-center space-x-2">
+            <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-white", statusStyles.error.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-red-500')}>
+              <span className="text-white font-bold text-sm">✗</span>
+            </div>
+            <div className="flex-1">
+              <p className={cn("text-sm font-semibold mb-1", statusStyles.error.text)}>Correct Answer:</p>
+              <p className={cn("font-medium", statusStyles.error.text)}>
+                {correctAnswerText}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };  // Render different UI based on challenge type
   switch (type) {
     case "TEXT_INPUT":
       return (
@@ -231,8 +256,8 @@ export const Challenge = ({
       return (
         <div className="space-y-4">
           <QuestionHeader>
-            <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-              <p className="text-sm text-red-700 font-medium">
+            <div className={cn("mt-3 p-3 rounded-lg border", statusStyles.error.bg, statusStyles.error.border)}>
+              <p className={cn("text-sm font-medium", statusStyles.error.text)}>
                 🎤 Voice Input Mode - Click the microphone and speak your answer clearly
               </p>
             </div>
@@ -273,7 +298,7 @@ export const Challenge = ({
                     <source src={challenge.videoSrc} type="video/ogg" />
                     Your browser does not support the video element.
                   </video>
-                  <p className="text-xs text-gray-500 mt-2 text-center">
+                  <p className="text-xs text-neutral-500 mt-2 text-center">
                     📱 You can pause and rewatch the video as needed
                   </p>
                 </div>
@@ -282,7 +307,7 @@ export const Challenge = ({
           </QuestionHeader>
           <CorrectAnswerDisplay />
           <div className="px-6">
-            <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
+            <p className="text-sm font-medium text-neutral-700 mb-3">Select your answer:</p>
             <div className={cn(
               "grid gap-3",
               "grid-cols-1"
@@ -311,8 +336,8 @@ export const Challenge = ({
       return (
         <div className="space-y-4">
           <QuestionHeader>
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-700">
+            <div className={cn("mt-3 p-3 rounded-lg border", statusStyles.info.bg, statusStyles.info.border)}>
+              <p className={cn("text-sm", statusStyles.info.text)}>
                 📋 Arrange items in the correct order. You can drag & drop or use the ↑↓ buttons.
               </p>
             </div>
@@ -338,23 +363,23 @@ export const Challenge = ({
                     }}
                     onDragOver={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.add('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.add('border-primary-400', 'bg-primary-50');
                     }}
                     onDragLeave={(e) => {
-                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.remove('border-primary-400', 'bg-primary-50');
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.remove('border-primary-400', 'bg-primary-50');
                       handleDrop(e, index);
                     }}
                     className={cn(
                       "p-4 border-2 rounded-lg transition-all duration-200",
-                      !disabled && "cursor-move hover:border-blue-300 hover:shadow-md hover:scale-[1.02]",
+                      !disabled && "cursor-move hover:border-primary-300 hover:shadow-md hover:scale-[1.02]",
                       disabled && "cursor-not-allowed opacity-60",
                       isCorrectPosition 
-                        ? "bg-green-50 border-green-200 shadow-sm" 
-                        : "bg-white border-gray-200 shadow-sm"
+                        ? cn(statusStyles.success.bg, statusStyles.success.border, "shadow-sm")
+                        : "bg-white border-neutral-200 shadow-sm"
                     )}
                   >
                     <div className="flex items-center justify-between">
@@ -362,8 +387,8 @@ export const Challenge = ({
                         <div className={cn(
                           "flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold transition-colors",
                           isCorrectPosition
-                            ? "bg-green-100 text-green-700"
-                            : "bg-blue-100 text-blue-800"
+                            ? cn(statusStyles.success.bg.replace('bg-', 'bg-').replace('-50', '-100'), statusStyles.success.text)
+                            : "bg-primary-100 text-primary-800"
                         )}>
                           {index + 1}
                         </div>
@@ -480,7 +505,7 @@ export const Challenge = ({
                     <source src={challenge.audioSrc} type="audio/ogg" />
                     Your browser does not support the audio element.
                   </audio>
-                  <p className="text-xs text-gray-500 mt-2 text-center">
+                  <p className="text-xs text-neutral-500 mt-2 text-center">
                     🔊 You can replay the audio as needed
                   </p>
                 </div>
@@ -489,7 +514,7 @@ export const Challenge = ({
           </QuestionHeader>
           <CorrectAnswerDisplay />
           <div className="px-6">
-            <p className="text-sm font-medium text-gray-700 mb-3">Select your answer:</p>
+            <p className="text-sm font-medium text-neutral-700 mb-3">Select your answer:</p>
             <div className={cn(
               "grid gap-3",
               "grid-cols-1"

@@ -22,7 +22,7 @@ export const SidebarItem = ({
 
   return (
     <Button
-      variant={active ? "sidebarOutline"  : "sidebar"}
+      legacyVariant={active ? "sidebarOutline"  : "sidebar"}
       className="justify-start h-[52px]"
       asChild
     >

@@ -79,4 +79,198 @@ body,
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* ========================================
+     🎯 DESIGN SYSTEM CSS VARIABLES
+     ======================================== */
+  
+  :root {
+    /* Design System Status Colors (HSL) */
+    --ds-success-50: 142 76% 96%;
+    --ds-success-100: 142 76% 90%;
+    --ds-success-500: 142 76% 45%;
+    --ds-success-600: 142 76% 40%;
+    --ds-success-700: 142 76% 35%;
+    
+    --ds-error-50: 0 86% 96%;
+    --ds-error-100: 0 86% 90%;
+    --ds-error-500: 0 86% 55%;
+    --ds-error-600: 0 86% 50%;
+    --ds-error-700: 0 86% 45%;
+    
+    --ds-warning-50: 48 100% 96%;
+    --ds-warning-100: 48 100% 88%;
+    --ds-warning-500: 48 100% 55%;
+    --ds-warning-600: 48 100% 50%;
+    --ds-warning-700: 48 100% 45%;
+    
+    --ds-info-50: 204 100% 97%;
+    --ds-info-100: 204 100% 90%;
+    --ds-info-500: 204 100% 55%;
+    --ds-info-600: 204 100% 50%;
+    --ds-info-700: 204 100% 45%;
+    
+    /* Design System Neutral Colors */
+    --ds-neutral-50: 210 40% 98%;
+    --ds-neutral-100: 210 40% 96%;
+    --ds-neutral-200: 214 32% 91%;
+    --ds-neutral-300: 213 27% 84%;
+    --ds-neutral-600: 215 19% 35%;
+    --ds-neutral-700: 215 25% 27%;
+    --ds-neutral-900: 222 47% 11%;
+  }
+}
+
+@layer components {
+  /* ========================================
+     🎨 DESIGN SYSTEM COMPONENT STYLES
+     ======================================== */
+  
+  /* Status utility classes */
+  .ds-success {
+    @apply bg-green-100 text-green-800 border-green-200;
+  }
+  
+  .ds-error {
+    @apply bg-red-100 text-red-800 border-red-200;
+  }
+  
+  .ds-warning {
+    @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+  }
+  
+  .ds-info {
+    @apply bg-blue-100 text-blue-800 border-blue-200;
+  }
+  
+  .ds-neutral {
+    @apply bg-gray-100 text-gray-800 border-gray-200;
+  }
+  
+  /* Interactive utilities */
+  .ds-interactive {
+    @apply cursor-pointer transition-transform duration-150 hover:scale-105 active:scale-95;
+  }
+  
+  /* Focus utilities */
+  .ds-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  /* Layout utilities */
+  .ds-container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  
+  .ds-flex-center {
+    @apply flex items-center justify-center;
+  }
+  
+  .ds-flex-between {
+    @apply flex items-center justify-between;
+  }
+  
+  .ds-stack {
+    @apply flex flex-col gap-4;
+  }
+  
+  .ds-grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  
+  /* Typography utilities */
+  .ds-heading-1 {
+    @apply text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight;
+  }
+  
+  .ds-heading-2 {
+    @apply text-2xl lg:text-3xl font-bold text-neutral-900 tracking-tight;
+  }
+  
+  .ds-heading-3 {
+    @apply text-xl lg:text-2xl font-semibold text-neutral-900;
+  }
+  
+  .ds-body {
+    @apply text-base text-neutral-700 leading-normal;
+  }
+  
+  .ds-body-small {
+    @apply text-sm text-neutral-600 leading-normal;
+  }
+  
+  .ds-text-muted {
+    @apply text-neutral-500;
+  }
+}
+
+@layer utilities {
+  /* ========================================
+     🔧 DESIGN SYSTEM UTILITIES
+     ======================================== */
+  
+  /* Consistent color overrides for migration */
+  .bg-orange-400,
+  .bg-orange-500,
+  .bg-orange-600 {
+    background-color: hsl(var(--primary)) !important;
+  }
+  
+  .text-orange-400,
+  .text-orange-500,
+  .text-orange-600 {
+    color: hsl(var(--primary)) !important;
+  }
+  
+  .border-orange-300,
+  .border-orange-400,
+  .border-orange-500 {
+    border-color: hsl(var(--primary)) !important;
+  }
+  
+  /* Ensure consistent status colors */
+  .bg-rose-500 {
+    background-color: hsl(var(--ds-error-500)) !important;
+  }
+  
+  .text-rose-500,
+  .text-rose-600 {
+    color: hsl(var(--ds-error-600)) !important;
+  }
+  
+  .bg-green-500 {
+    background-color: hsl(var(--ds-success-500)) !important;
+  }
+  
+  .text-green-500,
+  .text-green-600 {
+    color: hsl(var(--ds-success-600)) !important;
+  }
+  
+  .bg-blue-500 {
+    background-color: hsl(var(--ds-info-500)) !important;
+  }
+  
+  .text-blue-500,
+  .text-blue-600 {
+    color: hsl(var(--ds-info-600)) !important;
+  }
+  
+  .bg-yellow-500 {
+    background-color: hsl(var(--ds-warning-500)) !important;
+  }
+  
+  .text-yellow-500,
+  .text-yellow-600 {
+    color: hsl(var(--ds-warning-600)) !important;
+  }
+  
+  /* Responsive utilities */
+  .ds-hide-mobile {
+    @apply hidden md:block;
+  }
+  
+  .ds-hide-desktop {
+    @apply block md:hidden;
+  }
 }

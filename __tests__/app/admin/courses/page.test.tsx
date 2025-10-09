@@ -2,7 +2,13 @@ import React from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import CoursesPage from "@/app/admin/courses/page";
+vi.mock("@/components/ui/button", () => ({
+  Button: ({ children, ...props }: React.ComponentProps<"button">) => (
+    <button {...props}>{children}</button>
+  ),
+}));
+
+const { default: CoursesPage } = await import("@/app/admin/courses/page");
 
 describe("Admin CoursesPage", () => {
   const originalFetch = global.fetch;

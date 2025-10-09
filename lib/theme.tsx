@@ -46,45 +46,39 @@ const COURSE_ID_TO_THEME: Record<number, keyof typeof COURSE_THEMES> = {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
+const cloneTheme = (theme: CourseTheme): CourseTheme => ({
+  name: theme.name,
+  colors: {
+    primary: { ...theme.colors.primary },
+    success: { ...theme.colors.success },
+    error: { ...theme.colors.error },
+    info: { ...theme.colors.info },
+    neutral: { ...theme.colors.neutral },
+  },
+});
+
+const DEFAULT_THEME_CONTEXT: ThemeContextType = {
+  currentTheme: cloneTheme(COURSE_THEMES.default),
+  setThemeByCourse: () => {},
+  setThemeByName: () => {},
+  getColorClass: () => "",
+  getColorValue: (color, shade) => COURSE_THEMES.default.colors[color][shade],
+};
+
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentTheme, setCurrentTheme] = useState<CourseTheme>({
-    name: COURSE_THEMES.default.name,
-    colors: {
-      primary: { ...COURSE_THEMES.default.colors.primary },
-      success: { ...COURSE_THEMES.default.colors.success },
-      error: { ...COURSE_THEMES.default.colors.error },
-      info: { ...COURSE_THEMES.default.colors.info },
-      neutral: { ...COURSE_THEMES.default.colors.neutral },
-    }
+    ...cloneTheme(COURSE_THEMES.default),
   });
 
   const setThemeByCourse = useCallback((courseId: number | null) => {
     const themeName = courseId ? COURSE_ID_TO_THEME[courseId] || 'default' : 'default';
     const theme = COURSE_THEMES[themeName];
-    setCurrentTheme({
-      name: theme.name,
-      colors: {
-        primary: { ...theme.colors.primary },
-        success: { ...theme.colors.success },
-        error: { ...theme.colors.error },
-        info: { ...theme.colors.info },
-        neutral: { ...theme.colors.neutral },
-      }
-    });
+    setCurrentTheme(cloneTheme(theme));
   }, []);
 
   const setThemeByName = useCallback((themeName: keyof typeof COURSE_THEMES) => {
     const theme = COURSE_THEMES[themeName];
-    setCurrentTheme({
-      name: theme.name,
-      colors: {
-        primary: { ...theme.colors.primary },
-        success: { ...theme.colors.success },
-        error: { ...theme.colors.error },
-        info: { ...theme.colors.info },
-        neutral: { ...theme.colors.neutral },
-      }
-    });
+    setCurrentTheme(cloneTheme(theme));
   }, []);
 
   const getColorClass = useCallback((
@@ -236,8 +230,5 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-  return context;
+  return context ?? DEFAULT_THEME_CONTEXT;
 };

@@ -17,7 +17,13 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-import { CourseForm } from "@/app/admin/courses/components/course-form";
+vi.mock("@/components/ui/button", () => ({
+  Button: ({ children, ...props }: React.ComponentProps<"button">) => (
+    <button {...props}>{children}</button>
+  ),
+}));
+
+const { CourseForm } = await import("@/app/admin/courses/components/course-form");
 
 describe("CourseForm", () => {
   const originalFetch = global.fetch;
