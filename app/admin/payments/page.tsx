@@ -301,7 +301,7 @@ export default function PaymentManagementPage() {
         <CardContent className="p-6">
           <div className="flex gap-2 mb-4">
             <Button
-              variant={activeTab === "payments" ? "default" : "secondary"}
+              variant={activeTab === "payments" ? "primary" : "secondary"}
               size="sm"
               onClick={() => setActiveTab("payments")}
             >
@@ -309,7 +309,7 @@ export default function PaymentManagementPage() {
               Payments
             </Button>
             <Button
-              variant={activeTab === "subscriptions" ? "default" : "secondary"}
+              variant={activeTab === "subscriptions" ? "primary" : "secondary"}
               size="sm"
               onClick={() => setActiveTab("subscriptions")}
             >
@@ -317,7 +317,7 @@ export default function PaymentManagementPage() {
               Subscriptions
             </Button>
             <Button
-              variant={activeTab === "analytics" ? "default" : "secondary"}
+              variant={activeTab === "analytics" ? "primary" : "secondary"}
               size="sm"
               onClick={() => setActiveTab("analytics")}
             >

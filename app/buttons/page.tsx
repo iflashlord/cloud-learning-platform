@@ -8,11 +8,11 @@ const ButtonsPage = () => {
       <DarkModeToggle />
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-black text-gray-800 mb-4 flex items-center justify-center gap-3">
+          <h1 className="text-4xl font-black text-gray-800 dark:text-gray-100 mb-4 flex items-center justify-center gap-3">
             <Palette className="w-8 h-8 text-purple-500" />
             <span>Duolingo-Style Button System</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             A comprehensive collection of playful, engaging buttons inspired by Duolingo&apos;s design language. 
             Perfect for learning platforms and interactive applications.
           </p>
@@ -20,25 +20,25 @@ const ButtonsPage = () => {
 
         {/* Primary Actions Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            <span className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 text-green-600 font-black">1</span>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
+            <span className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-3 text-green-600 dark:text-green-400 font-black">1</span>
             Primary Actions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Main Action</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Main Action</h3>
               <Button variant="primary" className="w-full">
                 CHECK ANSWER
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Secondary Action</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Secondary Action</h3>
               <Button variant="secondary" className="w-full">
                 SKIP LESSON
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">With Icon</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">With Icon</h3>
               <Button variant="primary" className="w-full" rightIcon={<ArrowRight className="w-5 h-5" />}>
                 CONTINUE
               </Button>
@@ -48,12 +48,12 @@ const ButtonsPage = () => {
 
         {/* Status Actions Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-black">2</span>
             Status & Feedback Actions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-green-700 mb-4 flex items-center">
                 <CheckCircle className="w-5 h-5 mr-2" />
                 Correct
@@ -62,7 +62,7 @@ const ButtonsPage = () => {
                 NEXT LESSON
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-red-700 mb-4 flex items-center">
                 <XCircle className="w-5 h-5 mr-2" />
                 Incorrect
@@ -71,7 +71,7 @@ const ButtonsPage = () => {
                 TRY AGAIN
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-orange-700 mb-4 flex items-center">
                 <Star className="w-5 h-5 mr-2" />
                 Warning
@@ -80,7 +80,7 @@ const ButtonsPage = () => {
                 REVIEW
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-blue-700 mb-4 flex items-center">
                 <Trophy className="w-5 h-5 mr-2" />
                 Info
@@ -94,25 +94,25 @@ const ButtonsPage = () => {
 
         {/* Outline Variants Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 text-purple-600 font-black">3</span>
             Outline Variants
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Primary Outline</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Primary Outline</h3>
               <Button variant="primaryOutline" className="w-full">
                 PRACTICE
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Secondary Outline</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Secondary Outline</h3>
               <Button variant="secondaryOutline" className="w-full">
                 SETTINGS
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Danger Outline</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Danger Outline</h3>
               <Button variant="dangerOutline" className="w-full">
                 DELETE
               </Button>
@@ -122,12 +122,12 @@ const ButtonsPage = () => {
 
         {/* Special Variants Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3 text-yellow-600 font-black">4</span>
             Special Variants
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-orange-700 mb-4 flex items-center">
                 <Trophy className="w-5 h-5 mr-2" />
                 Super
@@ -136,20 +136,20 @@ const ButtonsPage = () => {
                 UPGRADE
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-orange-700 mb-4">Super Outline</h3>
               <Button variant="superOutline" className="w-full">
                 PREMIUM
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Ghost</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Ghost</h3>
               <Button variant="ghost" className="w-full">
                 CANCEL
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Link</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Link</h3>
               <Button variant="link" className="w-full">
                 Learn More
               </Button>
@@ -247,7 +247,7 @@ const ButtonsPage = () => {
           
           {/* Course Theme Buttons */}
           <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-8 shadow-lg">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">AWS Course Themes</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">AWS Course Themes</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-3">
                 <h4 className="font-semibold text-orange-700">Compute Services</h4>
@@ -314,14 +314,14 @@ const ButtonsPage = () => {
 
         {/* Interactive Demo Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-3 text-pink-600 font-black">6</span>
             Interactive Demo - Lesson Footer Simulation
           </h2>
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="space-y-6">
-              <div className="bg-gray-50 rounded-xl p-6">
-                <h3 className="font-semibold text-gray-700 mb-4">Initial State</h3>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Initial State</h3>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ready to check your answer?</span>
                   <Button variant="primary">CHECK</Button>
@@ -366,11 +366,11 @@ const ButtonsPage = () => {
 
         {/* Button Sizes Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-3 text-indigo-600 font-black">6</span>
             Button Sizes
           </h2>
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="flex flex-wrap items-end gap-4">
               <div className="text-center">
                 <Button variant="primary" size="xs">XS</Button>
@@ -398,25 +398,25 @@ const ButtonsPage = () => {
 
         {/* Loading States */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mr-3 text-teal-600 font-black">7</span>
             Loading & Disabled States
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Loading State</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Loading State</h3>
               <Button variant="primary" loading className="w-full">
                 Processing
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Disabled State</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Disabled State</h3>
               <Button variant="primary" disabled className="w-full">
                 SUBMIT
               </Button>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-700 mb-4">Normal State</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Normal State</h3>
               <Button variant="primary" className="w-full">
                 READY
               </Button>

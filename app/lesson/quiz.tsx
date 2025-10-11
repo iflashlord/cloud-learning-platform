@@ -243,7 +243,7 @@ export const Quiz = ({
         </div>
 
         {/* Fixed Footer for Completion */}
-        <div className="fixed bottom-0 left-0 right-0 z-10 bg-white">
+        <div className="fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
           <Footer
             lessonId={lessonId}
             status="completed"
@@ -264,7 +264,7 @@ export const Quiz = ({
       {correctAudio}
       
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b">
+      <div className="fixed top-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         <Header
           hearts={hearts}
           percentage={percentage}
@@ -318,7 +318,7 @@ export const Quiz = ({
       </div>
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-white">
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
         <Footer
           disabled={pending || (
             (challenge.type === "TEXT_INPUT" || challenge.type === "SPEECH_INPUT")

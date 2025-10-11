@@ -266,7 +266,7 @@ export default function UserManagementPage() {
                     </div>
                     
                     <Button
-                      variant={user.isActive ? "danger" : "default"}
+                      variant={user.isActive ? "danger" : "primary"}
                       size="sm"
                       onClick={() => toggleUserStatus(user.id, user.isActive)}
                     >

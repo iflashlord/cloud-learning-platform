@@ -51,7 +51,7 @@ export const Card = ({
           && "border-green-300 bg-green-100 hover:bg-green-100",
         selected && status === "wrong" 
           && "border-rose-300 bg-rose-100 hover:bg-rose-100",
-        disabled && "pointer-events-none hover:bg-white",
+        disabled && "pointer-events-none hover:bg-white dark:hover:bg-gray-800",
         type === "ASSIST" && "lg:p-3 w-full"
       )}
     >

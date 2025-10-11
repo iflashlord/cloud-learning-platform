@@ -284,19 +284,19 @@ export const CourseThemeShowcase: React.FC = () => {
             </div>
 
             {/* Progress Simulation */}
-            <div className="mt-6 p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-white/40">
+            <div className="mt-6 p-4 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg border border-white/40 dark:border-gray-600/40">
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-sm font-semibold text-${selectedTheme.colors.primary.replace('500', '800')}`}>
+                <span className={`text-sm font-semibold text-${selectedTheme.colors.primary.replace('500', '800')} dark:text-${selectedTheme.colors.primary.replace('500', '200')}`}>
                   Course Progress
                 </span>
-                <span className={`text-sm font-bold text-${selectedTheme.colors.primary}`}>
-                  {Math.floor(Math.random() * 40 + 40)}%
+                <span className={`text-sm font-bold text-${selectedTheme.colors.primary} dark:text-${selectedTheme.colors.primary.replace('500', '300')}`}>
+                  73%
                 </span>
               </div>
-              <div className="w-full bg-white/80 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-white/80 dark:bg-gray-700/80 rounded-full h-3 overflow-hidden">
                 <div 
                   className={`bg-gradient-to-r from-${selectedTheme.colors.primary} to-${selectedTheme.colors.secondary} h-3 rounded-full transition-all duration-500`}
-                  style={{ width: `${Math.floor(Math.random() * 40 + 40)}%` }}
+                  style={{ width: '73%' }}
                 />
               </div>
             </div>

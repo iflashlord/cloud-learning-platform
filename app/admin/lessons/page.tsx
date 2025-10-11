@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AdminPageHeader } from "@/components/ui/admin-page-header";
+import { AdminEmptyState } from "@/components/ui/admin-empty-state";
 import { Plus, Edit, Trash2, ListChecks } from "lucide-react";
 
 interface Lesson {
@@ -100,28 +101,21 @@ export default function LessonsPage() {
 
       {/* Lessons List */}
       {lessons.length === 0 ? (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <ListChecks className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-medium mb-2">No lessons yet</h3>
-            <p className="mb-4">Create your first lesson to add learning content.</p>
-            <Link href="/admin/lessons/new">
-              <Button variant="primary">Add Lesson</Button>
-            </Link>
-          </div>
-        </Card>
+        <AdminEmptyState
+          icon={ListChecks}
+          title="No lessons yet"
+          description="Create your first lesson to add learning content."
+          action={{
+            label: "Add Lesson",
+            href: "/admin/lessons/new"
+          }}
+        />
       ) : filteredLessons.length === 0 ? (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <ListChecks className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-medium mb-2">No lessons found</h3>
-            <p className="mb-4">Try adjusting your search to find what you&apos;re looking for.</p>
-          </div>
-        </Card>
+        <AdminEmptyState
+          icon={ListChecks}
+          title="No lessons found"
+          description="Try adjusting your search to find what you're looking for."
+        />
       ) : (
         <div className="space-y-4">
           {filteredLessons.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((lesson) => (
@@ -129,21 +123,21 @@ export default function LessonsPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                       Order {lesson.order}
                     </span>
                     {lesson.unit && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
                         {lesson.unit.title}
                       </span>
                     )}
                     {lesson.unit?.course && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">
                         {lesson.unit.course.title}
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     {lesson.title}
                   </h3>
                 </div>

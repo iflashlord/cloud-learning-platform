@@ -87,8 +87,8 @@ export const LessonButton = ({
               }}
             >
               <Button
-                size="rounded"
-                variant={locked ? "locked" : "secondary"}
+                size="icon"
+                variant={locked ? "outline" : "secondary"}
                 className={`h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-110 ${
                   percentage > 0 
                     ? "bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600" 
@@ -108,8 +108,8 @@ export const LessonButton = ({
           </div>
         ) : (
           <Button
-            size="rounded"
-            variant={locked ? "locked" : "secondary"}
+            size="icon"
+            variant={locked ? "outline" : "secondary"}
             className={cn(
               "h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-105 shadow-lg",
               isCompleted && "bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:shadow-xl",

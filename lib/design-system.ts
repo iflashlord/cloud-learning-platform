@@ -494,19 +494,19 @@ export const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600",
-        success: "bg-green-100 text-green-800 border-green-200 dark:bg-green-800 dark:text-green-100 dark:border-green-600",
-        error: "bg-red-100 text-red-800 border-red-200 dark:bg-red-800 dark:text-red-100 dark:border-red-600",
-        warning: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-700 dark:text-yellow-100 dark:border-yellow-600",
-        info: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
-        primary: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
-        // Course theme variants - Enhanced contrast for dark mode
-        compute: "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-700 dark:text-orange-100 dark:border-orange-600",
-        storage: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
-        security: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600",
-        networking: "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-700 dark:text-teal-100 dark:border-teal-600",
-        management: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-700 dark:text-emerald-100 dark:border-emerald-600",
-        aiml: "bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-700 dark:text-violet-100 dark:border-violet-600",
+        default: "bg-gray-100 text-gray-900 border-gray-300 dark:bg-gray-700 dark:text-white dark:border-gray-500",
+        success: "bg-green-50 text-green-800 border-green-200 dark:bg-green-600 dark:text-white dark:border-green-500",
+        error: "bg-red-50 text-red-800 border-red-200 dark:bg-red-600 dark:text-white dark:border-red-500",
+        warning: "bg-amber-50 text-amber-900 border-amber-200 dark:bg-amber-600 dark:text-white dark:border-amber-500",
+        info: "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-500",
+        primary: "bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-600 dark:text-white dark:border-indigo-500",
+        // Course theme variants - Maximum contrast for readability
+        compute: "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-600 dark:text-white dark:border-orange-500",
+        storage: "bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-600 dark:text-white dark:border-sky-500",
+        security: "bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-600 dark:text-white dark:border-purple-500",
+        networking: "bg-teal-50 text-teal-800 border-teal-200 dark:bg-teal-600 dark:text-white dark:border-teal-500",
+        management: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-600 dark:text-white dark:border-emerald-500",
+        aiml: "bg-violet-50 text-violet-800 border-violet-200 dark:bg-violet-600 dark:text-white dark:border-violet-500",
       },
       size: {
         sm: "px-2 py-1 text-xs min-w-[50px]",

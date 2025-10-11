@@ -11,7 +11,11 @@ import { statusStyles } from "@/lib/style-utils";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  activeCourse: typeof courses.$inferSelect;
+  activeCourse: {
+    id: number;
+    title: string;
+    imageSrc: string;
+  };
   hearts: number;
   points: number;
   hasActiveSubscription: boolean;

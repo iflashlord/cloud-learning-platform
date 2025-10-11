@@ -12,6 +12,7 @@ import { Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CONFIG } from "@/lib/config";
 import { useThemeClasses } from "@/lib/theme-utils";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
 import { SidebarItem } from "./sidebar-item";
 
@@ -63,12 +64,15 @@ export const Sidebar = ({ className }: Props) => {
         />
       </div>
       <div className="px-4 pb-4">
-        <div className="border-t pt-4">
+        <div className="border-t pt-4 space-y-4">
           <SidebarItem 
             label="Upgrade" 
             href="/pro"
             iconSrc="/unlimited.svg"
           />
+          <div className="flex justify-center">
+            <ThemeSwitcher variant="compact" size="sm" />
+          </div>
         </div>
       </div>
       <div className="p-4">

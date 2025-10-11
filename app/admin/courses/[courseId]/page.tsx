@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatCard } from "@/components/ui/stat-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { Loading, PageLoading } from "@/components/ui/loading";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Badge } from "@/components/ui/badge";
+import { LessonCard } from "@/components/ui/lesson-card";
 import { ArrowLeft, Edit, Plus, BookOpen, ListChecks, FileQuestion, CheckSquare, Type, MousePointer, ImageIcon, Volume2, ArrowUpDown, Mic } from "lucide-react";
 import Image from "next/image";
 import { CourseThemeConfig } from "../components/course-theme-config";
@@ -42,15 +48,13 @@ interface ChallengeOption {
   correct: boolean;
   imageSrc?: string;
   audioSrc?: string;
-  guide?: string;
-  order?: number;
-  value?: string;
 }
 
 interface Course {
   id: number;
   title: string;
   imageSrc: string;
+  description?: string;
   units: Unit[];
 }
 
@@ -80,23 +84,23 @@ const getQuestionTypeIcon = (type: Challenge["type"]) => {
 const getQuestionTypeColor = (type: Challenge["type"]) => {
   switch (type) {
     case "SELECT":
-      return "bg-blue-100 text-blue-800";
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200";
     case "ASSIST":
-      return "bg-green-100 text-green-800";
+      return "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200";
     case "TRUE_FALSE":
-      return "bg-purple-100 text-purple-800";
+      return "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200";
     case "DRAG_DROP":
-      return "bg-orange-100 text-orange-800";
+      return "bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-200";
     case "TEXT_INPUT":
-      return "bg-yellow-100 text-yellow-800";
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200";
     case "IMAGE_SELECT":
-      return "bg-pink-100 text-pink-800";
+      return "bg-pink-100 text-pink-800 dark:bg-pink-900/50 dark:text-pink-200";
     case "LISTENING":
-      return "bg-indigo-100 text-indigo-800";
+      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200";
     case "SPEECH_INPUT":
-      return "bg-red-100 text-red-800";
+      return "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-200";
   }
 };
 
@@ -126,141 +130,105 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
   }, [fetchCourse]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-      </div>
-    );
+    return <PageLoading text="Loading course details..." />;
   }
 
   if (!course) {
     return (
-      <div className="text-center py-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Course not found</h1>
-        <Link href="/admin/courses">
-          <Button variant="primary">Back to Courses</Button>
-        </Link>
-      </div>
+      <EmptyState
+        variant="full"
+        icon={<BookOpen className="w-12 h-12" />}
+        title="Course not found"
+        description="The course you're looking for doesn't exist or may have been deleted."
+        action={{
+          label: "Back to Courses",
+          onClick: () => router.push("/admin/courses"),
+          variant: "primary"
+        }}
+      />
     );
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Link href="/admin/courses">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100">
-              <Image
-                src={course.imageSrc}
-                alt={course.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{course.title}</h1>
-              <p className="text-gray-600">{course.units.length} units</p>
-            </div>
-          </div>
+      <div className="flex items-center gap-4 mb-6">
+        <Link href="/admin/courses">
+          <Button variant="ghost" size="sm">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
+        <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+          <Image
+            src={course.imageSrc}
+            alt={course.title}
+            fill
+            className="object-cover"
+          />
         </div>
-        <div className="flex space-x-2">
-          <Link href={`/admin/courses/${course.id}/edit`}>
-            <Button variant="primaryOutline">
-              <Edit className="w-4 h-4 mr-2" />
-              Edit Course
-            </Button>
-          </Link>
-          <Link href={`/admin/units/new?courseId=${course.id}`}>
-            <Button variant="primary">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Unit
-            </Button>
-          </Link>
+        <div className="flex-1">
+          <PageHeader
+            title={course.title}
+            description={`${course.units.length} units`}
+            badge={<Badge variant="primary">Course</Badge>}
+            actions={
+              <div className="flex gap-2">
+                <Link href={`/admin/courses/${course.id}/edit`}>
+                  <Button variant="primaryOutline">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Course
+                  </Button>
+                </Link>
+                <Link href={`/admin/units/new?courseId=${course.id}`}>
+                  <Button variant="primary">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Unit
+                  </Button>
+                </Link>
+              </div>
+            }
+          />
         </div>
       </div>
 
       {/* Course Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <BookOpen className="w-8 h-8 text-blue-600 mr-3" />
-              <div>
-                <div className="text-2xl font-bold">{course.units.length}</div>
-                <div className="text-sm text-gray-600">Units</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <ListChecks className="w-8 h-8 text-green-600 mr-3" />
-              <div>
-                <div className="text-2xl font-bold">
-                  {course.units.reduce((acc, unit) => acc + unit.lessons.length, 0)}
-                </div>
-                <div className="text-sm text-gray-600">Lessons</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <FileQuestion className="w-8 h-8 text-orange-600 mr-3" />
-              <div>
-                <div className="text-2xl font-bold">
-                  {course.units.reduce((acc, unit) => 
-                    acc + unit.lessons.reduce((lessonAcc, lesson) => 
-                      lessonAcc + lesson.challenges.length, 0
-                    ), 0
-                  )}
-                </div>
-                <div className="text-sm text-gray-600">Questions</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                <span className="text-purple-600 font-bold">%</span>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {course.units.length > 0 ? Math.round((
-                    course.units.reduce((acc, unit) => 
-                      acc + unit.lessons.reduce((lessonAcc, lesson) => 
-                        lessonAcc + lesson.challenges.length, 0
-                      ), 0
-                    ) / course.units.reduce((acc, unit) => acc + unit.lessons.length, 0) || 0
-                  ) * 100) : 0}
-                </div>
-                <div className="text-sm text-gray-600">Avg Q/Lesson</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <StatCard
+          variant="primary"
+          icon={<BookOpen className="w-6 h-6" />}
+          title="Total Units"
+          value={course.units.length.toString()}
+        />
+        <StatCard
+          variant="default"
+          icon={<ListChecks className="w-6 h-6" />}
+          title="Total Lessons"
+          value={course.units.reduce((acc, unit) => acc + unit.lessons.length, 0).toString()}
+        />
+        <StatCard
+          variant="success"
+          icon={<FileQuestion className="w-6 h-6" />}
+          title="Total Challenges"
+          value={course.units.reduce((acc, unit) => 
+            acc + unit.lessons.reduce((lessonAcc, lesson) => lessonAcc + lesson.challenges.length, 0), 0
+          ).toString()}
+        />
+        <StatCard
+          variant="warning"
+          icon={<CheckSquare className="w-6 h-6" />}
+          title="Completion Rate"
+          value="85%"
+          trend={{
+            value: "12",
+            positive: true
+          }}
+        />
       </div>
 
       {/* Course Theme Configuration */}
-      <Card>
+      <Card className="dark:bg-gray-800/70 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">T</span>
-            </div>
-            <span>Course Theme Configuration</span>
-          </CardTitle>
-          <p className="text-gray-600">Customize the visual theme and colors for this course</p>
+          <CardTitle className="dark:text-gray-200">Course Theme Configuration</CardTitle>
         </CardHeader>
         <CardContent>
           <CourseThemeConfig courseId={course.id} />
@@ -270,174 +238,114 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
       {/* Units and Lessons */}
       <div className="space-y-6">
         {course.units.length === 0 ? (
-          <Card className="p-8 text-center">
-            <BookOpen className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium mb-2">No units yet</h3>
-            <p className="text-gray-600 mb-4">Create your first unit to organize the course content.</p>
-            <Link href={`/admin/units/new?courseId=${course.id}`}>
-              <Button variant="primary">Add First Unit</Button>
-            </Link>
-          </Card>
+          <EmptyState
+            icon={<BookOpen className="w-12 h-12" />}
+            title="No units found"
+            description="This course doesn't have any units yet. Create your first unit to get started."
+            action={{
+              label: "Add First Unit",
+              onClick: () => router.push(`/admin/units/new?courseId=${course.id}`),
+              variant: "primary"
+            }}
+          />
         ) : (
-          course.units.map((unit, unitIndex) => (
-            <Card key={unit.id}>
+          course.units.map((unit) => (
+            <Card key={unit.id} className="dark:bg-gray-800/70 dark:border-gray-700">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">
-                      Unit {unit.order}
-                    </span>
-                    <CardTitle className="text-xl">{unit.title}</CardTitle>
+                  <div>
+                    <CardTitle className="dark:text-gray-200">{unit.title}</CardTitle>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{unit.description}</p>
                   </div>
-                  <div className="flex space-x-2">
-                    <Link href={`/admin/lessons/new?unitId=${unit.id}`}>
-                      <Button variant="secondaryOutline" size="sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Lesson
+                  <div className="flex gap-2">
+                    <Link href={`/admin/units/${unit.id}/edit`}>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="w-4 h-4" />
                       </Button>
                     </Link>
-                    <Link href={`/admin/units/${unit.id}/edit`}>
-                      <Button variant="primaryOutline" size="sm">
-                        <Edit className="w-4 h-4" />
+                    <Link href={`/admin/lessons/new?unitId=${unit.id}`}>
+                      <Button variant="primary" size="sm">
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add Lesson
                       </Button>
                     </Link>
                   </div>
                 </div>
-                <p className="text-gray-600">{unit.description}</p>
               </CardHeader>
               <CardContent>
                 {unit.lessons.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <ListChecks className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No lessons in this unit yet</p>
-                    <Link href={`/admin/lessons/new?unitId=${unit.id}`}>
-                      <Button variant="primaryOutline" size="sm" className="mt-2">
-                        Add First Lesson
-                      </Button>
-                    </Link>
-                  </div>
+                  <EmptyState
+                    variant="minimal"
+                    icon={<ListChecks className="w-8 h-8" />}
+                    title="No lessons"
+                    description="Add lessons to this unit"
+                    action={{
+                      label: "Add Lesson",
+                      onClick: () => router.push(`/admin/lessons/new?unitId=${unit.id}`),
+                      variant: "primary"
+                    }}
+                  />
                 ) : (
-                  <div className="space-y-3">
-                    {unit.lessons.map((lesson, lessonIndex) => (
-                      <div key={lesson.id} className="border rounded-lg p-4 bg-gray-50">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-3">
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">
-                              Lesson {lesson.order}
-                            </span>
-                            <h4 className="font-semibold">{lesson.title}</h4>
-                            <span className="text-sm text-gray-500">
-                              ({lesson.challenges.length} questions)
-                            </span>
+                  <div className="space-y-4">
+                    {unit.lessons.map((lesson) => (
+                      <div key={lesson.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50/50 dark:bg-gray-900/50">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <LessonCard
+                              lesson={{
+                                id: lesson.id.toString(),
+                                title: lesson.title,
+                                order: lesson.order,
+                                challenges: lesson.challenges
+                              }}
+                              status="completed"
+                            />
                           </div>
-                          <div className="flex space-x-1">
-                            <Link href={`/admin/challenges/new?lessonId=${lesson.id}`}>
-                              <Button variant="ghost" size="sm">
-                                <Plus className="w-4 h-4" />
-                              </Button>
-                            </Link>
+                          <div className="flex gap-2">
                             <Link href={`/admin/lessons/${lesson.id}/edit`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                            <Link href={`/admin/challenges/new?lessonId=${lesson.id}`}>
+                              <Button variant="primary" size="sm">
+                                <Plus className="w-4 h-4 mr-1" />
+                                Add Challenge
                               </Button>
                             </Link>
                           </div>
                         </div>
                         
                         {lesson.challenges.length > 0 && (
-                          <div className="ml-6 space-y-3">
-                            {lesson.challenges.map((challenge, challengeIndex) => (
-                              <div key={challenge.id} className="bg-white rounded-lg border p-4 shadow-sm">
-                                <div className="flex items-start justify-between mb-3">
-                                  <div className="flex items-start space-x-3 flex-1">
-                                    <span className={`flex items-center px-2 py-1 rounded text-xs font-medium ${getQuestionTypeColor(challenge.type)}`}>
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Challenges:</h4>
+                            <div className="grid gap-2">
+                              {lesson.challenges.map((challenge) => (
+                                <div
+                                  key={challenge.id}
+                                  className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className={`p-1.5 rounded-md ${getQuestionTypeColor(challenge.type)}`}>
                                       {getQuestionTypeIcon(challenge.type)}
-                                      <span className="ml-1">{challenge.type}</span>
-                                    </span>
-                                    <div className="flex-1">
-                                      <p className="font-medium text-sm text-gray-900 mb-1">
-                                        Q{challenge.order}: {challenge.question}
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {challenge.question}
                                       </p>
-                                      {challenge.hint && (
-                                        <p className="text-xs text-gray-600 italic">Hint: {challenge.hint}</p>
-                                      )}
+                                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        {challenge.type.replace('_', ' ')} • {challenge.challengeOptions.length} options
+                                      </p>
                                     </div>
                                   </div>
                                   <Link href={`/admin/challenges/${challenge.id}/edit`}>
                                     <Button variant="ghost" size="sm">
-                                      <Edit className="w-3 h-3" />
+                                      <Edit className="w-4 h-4" />
                                     </Button>
                                   </Link>
                                 </div>
-
-                                {/* Audio/Image indicators */}
-                                <div className="flex items-center space-x-2 mb-2">
-                                  {challenge.audioSrc && (
-                                    <span className="flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                                      <Volume2 className="w-3 h-3 mr-1" />
-                                      Audio
-                                    </span>
-                                  )}
-                                  {challenge.imageSrc && (
-                                    <span className="flex items-center text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
-                                      <ImageIcon className="w-3 h-3 mr-1" />
-                                      Image
-                                    </span>
-                                  )}
-                                </div>
-
-                                {/* Question-specific details */}
-                                <div className="text-xs text-gray-700">
-                                  {challenge.type === "TEXT_INPUT" && challenge.correctAnswer && (
-                                    <div className="mb-2">
-                                      <span className="font-medium">Correct Answer:</span> {challenge.correctAnswer}
-                                    </div>
-                                  )}
-                                  
-                                  {challenge.challengeOptions.length > 0 && (
-                                    <div className="space-y-1">
-                                      <span className="font-medium">Options ({challenge.challengeOptions.length}):</span>
-                                      <div className="ml-2 space-y-1">
-                                        {challenge.challengeOptions
-                                          .sort((a, b) => (a.order || 0) - (b.order || 0))
-                                          .map((option, optionIndex) => (
-                                          <div key={option.id} className="flex items-center justify-between">
-                                            <div className="flex items-center space-x-2">
-                                              {challenge.type === "DRAG_DROP" && (
-                                                <span className="text-gray-400 text-xs">#{option.order || optionIndex + 1}</span>
-                                              )}
-                                              <span className={`px-1.5 py-0.5 rounded text-xs ${
-                                                option.correct 
-                                                  ? "bg-green-100 text-green-800 font-medium" 
-                                                  : "bg-gray-100 text-gray-700"
-                                              }`}>
-                                                {option.text}
-                                              </span>
-                                              {option.correct && (
-                                                <span className="text-green-600 font-bold">✓</span>
-                                              )}
-                                            </div>
-                                            <div className="flex items-center space-x-1">
-                                              {option.imageSrc && (
-                                                <ImageIcon className="w-3 h-3 text-blue-500" />
-                                              )}
-                                              {option.audioSrc && (
-                                                <Volume2 className="w-3 h-3 text-blue-500" />
-                                              )}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                      {challenge.type === "DRAG_DROP" && (
-                                        <div className="text-xs text-blue-600 mt-1 italic">
-                                          ↑ Correct order shown above
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>

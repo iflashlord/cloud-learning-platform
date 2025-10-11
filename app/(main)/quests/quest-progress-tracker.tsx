@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle, Clock, Star, Trophy, Target, TrendingUp, Zap, Award, Crown, Medal, Heart } from "lucide-react";
+import { statusStyles } from "@/lib/style-utils";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -57,19 +58,19 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle className="w-5 h-5 text-green-600" />;
-      case "active": return <Clock className="w-5 h-5 text-blue-600" />;
-      case "upcoming": return <Target className="w-5 h-5 text-gray-400" />;
+      case "completed": return <CheckCircle className={cn("w-5 h-5", statusStyles.success.text)} />;
+      case "active": return <Clock className={cn("w-5 h-5", statusStyles.info.text)} />;
+      case "upcoming": return <Target className={cn("w-5 h-5", statusStyles.neutral.text)} />;
       default: return null;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "bg-green-100 text-green-800 border-green-300";
-      case "active": return "bg-blue-100 text-blue-800 border-blue-300";
-      case "upcoming": return "bg-gray-100 text-gray-600 border-gray-300";
-      default: return "bg-gray-100 text-gray-600 border-gray-300";
+      case "completed": return statusStyles.success.bg + " " + statusStyles.success.text + " " + statusStyles.success.border;
+      case "active": return statusStyles.info.bg + " " + statusStyles.info.text + " " + statusStyles.info.border;
+      case "upcoming": return statusStyles.neutral.bg + " " + statusStyles.neutral.text + " " + statusStyles.neutral.border;
+      default: return statusStyles.neutral.bg + " " + statusStyles.neutral.text + " " + statusStyles.neutral.border;
     }
   };
 
@@ -112,7 +113,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-sm font-bold text-blue-600">
+              <div className={cn("text-sm font-bold", statusStyles.info.text)}>
                 {Math.round((completedQuests.length / quests.length) * 100)}%
               </div>
             </div>
@@ -122,28 +123,28 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
 
       {/* Progress Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
-          <CheckCircle className="w-5 h-5 text-green-600 mx-auto mb-1" />
-          <div className="text-lg font-bold text-green-700">{completedQuests.length}</div>
-          <div className="text-xs text-green-600">Completed</div>
+        <div className={cn("text-center p-3 rounded-lg", statusStyles.success.bg, statusStyles.success.border, "border")}>
+          <CheckCircle className={cn("w-5 h-5 mx-auto mb-1", statusStyles.success.text)} />
+          <div className={cn("text-lg font-bold", statusStyles.success.text)}>{completedQuests.length}</div>
+          <div className={cn("text-xs", statusStyles.success.text)}>Completed</div>
         </div>
         
-        <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
-          <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-          <div className="text-lg font-bold text-blue-700">{activeQuests.length}</div>
-          <div className="text-xs text-blue-600">Active</div>
+        <div className={cn("text-center p-3 rounded-lg", statusStyles.info.bg, statusStyles.info.border, "border")}>
+          <Clock className={cn("w-5 h-5 mx-auto mb-1", statusStyles.info.text)} />
+          <div className={cn("text-lg font-bold", statusStyles.info.text)}>{activeQuests.length}</div>
+          <div className={cn("text-xs", statusStyles.info.text)}>Active</div>
         </div>
         
-        <div className="text-center p-3 bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg border border-gray-200">
-          <Target className="w-5 h-5 text-gray-600 mx-auto mb-1" />
-          <div className="text-lg font-bold text-gray-700">{upcomingQuests.length}</div>
-          <div className="text-xs text-gray-600">Upcoming</div>
+        <div className={cn("text-center p-3 rounded-lg", statusStyles.neutral.bg, statusStyles.neutral.border, "border")}>
+          <Target className={cn("w-5 h-5 mx-auto mb-1", statusStyles.neutral.text)} />
+          <div className={cn("text-lg font-bold", statusStyles.neutral.text)}>{upcomingQuests.length}</div>
+          <div className={cn("text-xs", statusStyles.neutral.text)}>Upcoming</div>
         </div>
         
-        <div className="text-center p-3 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg border border-yellow-200">
-          <Star className="w-5 h-5 text-yellow-600 mx-auto mb-1" />
-          <div className="text-lg font-bold text-yellow-700">{userPoints}</div>
-          <div className="text-xs text-yellow-600">Total XP</div>
+        <div className={cn("text-center p-3 rounded-lg", statusStyles.warning.bg, statusStyles.warning.border, "border")}>
+          <Star className={cn("w-5 h-5 mx-auto mb-1", statusStyles.warning.text)} />
+          <div className={cn("text-lg font-bold", statusStyles.warning.text)}>{userPoints}</div>
+          <div className={cn("text-xs", statusStyles.warning.text)}>Total XP</div>
         </div>
       </div>
 
@@ -181,18 +182,18 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
               key={`${quest.title}-${index}`}
               className={cn(
                 "p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md",
-                status === "completed" ? "bg-green-50 border-green-200" :
-                status === "active" ? "bg-blue-50 border-blue-200" :
-                "bg-gray-50 border-gray-200"
+                status === "completed" ? cn(statusStyles.success.bg, statusStyles.success.border) :
+                status === "active" ? cn(statusStyles.info.bg, statusStyles.info.border) :
+                cn(statusStyles.neutral.bg, statusStyles.neutral.border)
               )}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center text-sm",
-                    status === "completed" ? "bg-green-500 text-white" :
-                    status === "active" ? "bg-blue-500 text-white" :
-                    "bg-gray-300 text-gray-600"
+                    status === "completed" ? cn(statusStyles.success.button, "text-white") :
+                    status === "active" ? cn(statusStyles.info.button, "text-white") :
+                    cn(statusStyles.neutral.button, statusStyles.neutral.text)
                   )}>
                     {status === "completed" ? (
                       <Trophy className="w-4 h-4" />
@@ -203,7 +204,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
                   <div className="flex-1">
                     <h4 className={cn(
                       "font-bold text-sm",
-                      status === "completed" ? "text-green-700" : "text-gray-800"
+                      status === "completed" ? statusStyles.success.text : "text-foreground"
                     )}>
                       {quest.title}
                     </h4>
@@ -243,26 +244,26 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
               <div className="mt-2 flex items-center justify-between">
                 <div className="flex items-center gap-3 text-xs">
                   {quest.reward.xp && (
-                    <span className="flex items-center gap-1 text-blue-600">
+                    <span className={cn("flex items-center gap-1", statusStyles.info.text)}>
                       <Zap className="w-3 h-3" />
                       +{quest.reward.xp} XP
                     </span>
                   )}
                   {quest.reward.hearts && (
-                    <span className="flex items-center gap-1 text-red-600">
-                      <Heart className="w-3 h-3 fill-red-600" />
+                    <span className={cn("flex items-center gap-1", statusStyles.error.text)}>
+                      <Heart className={cn("w-3 h-3", statusStyles.error.text)} style={{fill: 'currentColor'}} />
                       +{quest.reward.hearts}
                     </span>
                   )}
                   {quest.reward.badge && (
-                    <span className="flex items-center gap-1 text-purple-600">
+                    <span className={cn("flex items-center gap-1", "text-purple-600 dark:text-purple-400")}>
                       <Medal className="w-3 h-3" />
                       {quest.reward.badge}
                     </span>
                   )}
                 </div>
                 
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   {quest.difficulty} • {quest.category}
                 </div>
               </div>

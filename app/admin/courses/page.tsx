@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AdminPageHeader } from "@/components/ui/admin-page-header";
+import { AdminEmptyState } from "@/components/ui/admin-empty-state";
+import { AdminCard } from "@/components/ui/admin-card";
 import { Plus, Edit, Trash2, Eye, GraduationCap } from "lucide-react";
 import Image from "next/image";
 
@@ -93,67 +95,48 @@ export default function CoursesPage() {
 
       {/* Courses Grid */}
       {courses.length === 0 ? (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <GraduationCap className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-medium mb-2">No courses yet</h3>
-            <p className="mb-4">Get started by creating your first course.</p>
-            <Link href="/admin/courses/new">
-              <Button variant="primary">Add Course</Button>
-            </Link>
-          </div>
-        </Card>
+        <AdminEmptyState
+          icon={GraduationCap}
+          title="No courses yet"
+          description="Get started by creating your first course."
+          action={{
+            label: "Add Course",
+            href: "/admin/courses/new"
+          }}
+        />
       ) : filteredCourses.length === 0 ? (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <GraduationCap className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-medium mb-2">No courses found</h3>
-            <p className="mb-4">Try adjusting your search to find what you&apos;re looking for.</p>
-          </div>
-        </Card>
+        <AdminEmptyState
+          icon={GraduationCap}
+          title="No courses found"
+          description="Try adjusting your search to find what you're looking for."
+        />
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCourses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <div className="aspect-video relative bg-gray-100">
-                  <Image
-                    src={course.imageSrc}
-                    alt={course.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="font-semibold text-lg text-gray-900 mb-4">
-                    {course.title}
-                  </h3>
-                  <div className="flex space-x-2">
-                    <Link href={`/admin/courses/${course.id}`} className="flex-1">
-                      <Button variant="primaryOutline" className="w-full" size="sm">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View
-                      </Button>
-                    </Link>
-                    <Link href={`/admin/courses/${course.id}/edit`}>
-                      <Button variant="secondaryOutline" size="sm">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="dangerOutline"
-                      size="sm"
-                      onClick={() => deleteCourse(course.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <AdminCard
+                key={course.id}
+                title={course.title}
+                image={course.imageSrc}
+                imageAlt={course.title}
+                actions={[
+                  {
+                    label: "View",
+                    href: `/admin/courses/${course.id}`,
+                    variant: "primary"
+                  },
+                  {
+                    label: "Edit", 
+                    href: `/admin/courses/${course.id}/edit`,
+                    variant: "secondary"
+                  },
+                  {
+                    label: "Delete",
+                    onClick: () => deleteCourse(course.id),
+                    variant: "danger"
+                  }
+                ]}
+              />
             ))}
           </div>
 

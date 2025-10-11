@@ -99,7 +99,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
   if (!lesson) {
     return (
       <div className="text-center py-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Lesson not found</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Lesson not found</h1>
         <Link href="/admin/lessons">
           <Button variant="primary">Back to Lessons</Button>
         </Link>
@@ -123,7 +123,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
               <span className="text-sm text-gray-400">→</span>
               <span className="text-sm text-gray-500">{lesson.unit.title}</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">{lesson.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{lesson.title}</h1>
             <p className="text-gray-600">{lesson.challenges.length} questions</p>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
       {/* Questions/Challenges */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Questions</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Questions</h2>
           <span className="text-sm text-gray-500">{lesson.challenges.length} total</span>
         </div>
 
@@ -196,7 +196,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
                         </span>
                       </div>
                       
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                         {challenge.question}
                       </h3>
 
@@ -217,7 +217,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
                                 : "border-gray-300"
                             }`}>
                               {option.correct && (
-                                <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                                <div className="w-full h-full rounded-full bg-white dark:bg-gray-100 scale-50"></div>
                               )}
                             </div>
                             <span className="flex-1">{option.text}</span>

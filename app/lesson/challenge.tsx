@@ -147,7 +147,7 @@ export const Challenge = ({
 
   // Consistent header for all question types
   const QuestionHeader = ({ children }: { children?: React.ReactNode }) => (
-    <div className={cn("bg-gradient-to-r from-blue-50 to-indigo-50 border rounded-xl p-6 mb-6 shadow-sm", statusStyles.info.border)}>
+    <div className={cn("bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border rounded-xl p-6 mb-6 shadow-sm", statusStyles.info.border)}>
       <div className="flex items-start space-x-4">
         <Character 
           questionType={type} 
@@ -155,9 +155,9 @@ export const Challenge = ({
           state={status === "correct" ? "correct" : status === "wrong" ? "wrong" : "default"}
         />
         <div className="flex-1">
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-neutral-200">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-neutral-200 dark:border-gray-600">
             <div className="flex items-start justify-between">
-              <p className="text-neutral-800 font-medium leading-relaxed flex-1">
+              <p className="text-neutral-800 dark:text-gray-100 font-medium leading-relaxed flex-1">
                 {challenge?.question}
               </p>
               {challenge?.hint && (
@@ -286,12 +286,12 @@ export const Challenge = ({
         <div className="space-y-4">
           <QuestionHeader>
             {challenge?.videoSrc && (
-              <div className="mt-3 p-3 bg-violet-50 rounded-lg border border-violet-200">
-                <p className="text-sm text-violet-700 font-medium mb-2 flex items-center gap-2">
+              <div className="mt-3 p-3 bg-violet-50 dark:bg-violet-900/20 rounded-lg border border-violet-200 dark:border-violet-700/50">
+                <p className="text-sm text-violet-700 dark:text-violet-300 font-medium mb-2 flex items-center gap-2">
                   <Clapperboard className="w-4 h-4" />
                   <span>Watch the video carefully before selecting your answer</span>
                 </p>
-                <div className="bg-white p-3 rounded-lg border border-violet-100 shadow-sm">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-violet-100 dark:border-violet-700/30 shadow-sm">
                   <video 
                     controls 
                     className="w-full rounded-lg"
@@ -386,7 +386,7 @@ export const Challenge = ({
                       disabled && "cursor-not-allowed opacity-60",
                       isCorrectPosition 
                         ? cn(statusStyles.success.bg, statusStyles.success.border, "shadow-sm")
-                        : "bg-white border-neutral-200 shadow-sm"
+                        : "bg-white dark:bg-gray-800 border-neutral-200 dark:border-gray-700 shadow-sm"
                     )}
                   >
                     <div className="flex items-center justify-between">
@@ -400,7 +400,7 @@ export const Challenge = ({
                           {index + 1}
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-gray-800 font-medium">{item.text}</span>
+                          <span className="text-gray-800 dark:text-gray-100 font-medium">{item.text}</span>
                           {isCorrectPosition && (
                             <span className="text-xs text-green-600 flex items-center">
                               ✓ Correct position
@@ -433,7 +433,7 @@ export const Challenge = ({
                               disabled={index === 0}
                               className={cn(
                                 "p-1 rounded transition-colors",
-                                "text-blue-500 hover:text-blue-700 hover:bg-blue-100",
+                                statusStyles.info.text + " hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30",
                                 "disabled:text-gray-300 disabled:cursor-not-allowed"
                               )}
                               title="Move up"
@@ -451,7 +451,7 @@ export const Challenge = ({
                               disabled={index === draggedItems.length - 1}
                               className={cn(
                                 "p-1 rounded transition-colors",
-                                "text-blue-500 hover:text-blue-700 hover:bg-blue-100",
+                                statusStyles.info.text + " hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30",
                                 "disabled:text-gray-300 disabled:cursor-not-allowed"
                               )}
                               title="Move down"
@@ -469,9 +469,9 @@ export const Challenge = ({
           </div>
           
           {/* Progress indicator */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">
+              <span className="text-gray-600 dark:text-gray-400">
                 Progress: {draggedItems.filter((item, index) => item.order === index + 1).length} / {draggedItems.length} correct
               </span>
               <div className="flex space-x-1">
@@ -480,7 +480,7 @@ export const Challenge = ({
                     key={item.id}
                     className={cn(
                       "w-3 h-3 rounded-full transition-colors",
-                      item.order === index + 1 ? "bg-green-400" : "bg-gray-300"
+                      item.order === index + 1 ? statusStyles.success.bg : "bg-gray-300 dark:bg-gray-600"
                     )}
                   />
                 ))}
@@ -501,7 +501,7 @@ export const Challenge = ({
                   <Headphones className="w-4 h-4" />
                   <span>Listen carefully before selecting your answer</span>
                 </p>
-                <div className="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-indigo-100 dark:border-indigo-700/30 shadow-sm">
                   <audio 
                     controls 
                     className="w-full"

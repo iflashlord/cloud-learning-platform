@@ -1,14 +1,15 @@
 "use client";
 
 import { toast } from "sonner";
-import Image from "next/image";
 import { useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { POINTS_TO_REFILL } from "@/constants";
 import { refillHearts } from "@/actions/user-progress";
 import { createStripeUrl } from "@/actions/user-subscription";
-import { Heart, Zap, Crown, Check, Settings, Rocket } from "lucide-react";
+import { Heart, Zap, Crown, Check, Settings, Rocket, Coins, Infinity } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { statusStyles } from "@/lib/style-utils";
 
 type Props = {
   hearts: number;
@@ -49,32 +50,26 @@ export const Items = ({
   return (
     <div className="w-full space-y-6">
       {/* Heart Refill Item */}
-      <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl border-2 border-red-200 p-6 transition-all duration-200 hover:shadow-lg hover:border-red-300">
+      <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border-2 border-red-200 dark:border-red-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-red-300 dark:hover:border-red-600">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-            <Image 
-              src="/heart.svg"
-              alt="Heart"
-              height={32}
-              width={32}
-              className="filter brightness-0 invert"
-            />
+            <Heart className="w-8 h-8 text-white fill-current" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
               Refill Hearts
             </h3>
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
               Restore your hearts to continue learning without interruption. Get back in the game!
             </p>
             <div className="flex items-center gap-2">
-              <div className="bg-red-200 px-3 py-1 rounded-full text-sm font-medium text-red-800 flex items-center gap-1">
-                <Heart className="w-4 h-4 text-red-700" fill="currentColor" />
+              <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.error.bg, statusStyles.error.text)}>
+                <Heart className={cn("w-4 h-4", statusStyles.error.text)} fill="currentColor" />
                 <span>{hearts === 5 ? "Hearts Full" : `${hearts}/5 Hearts`}</span>
               </div>
               {hearts < 5 && (
-                <div className="bg-blue-200 px-3 py-1 rounded-full text-sm font-medium text-blue-800 flex items-center gap-1">
-                  <Zap className="w-4 h-4 text-blue-700" />
+                <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.info.bg, statusStyles.info.text)}>
+                  <Zap className={cn("w-4 h-4", statusStyles.info.text)} />
                   <span>Cost: {POINTS_TO_REFILL} XP</span>
                 </div>
               )}
@@ -104,12 +99,7 @@ export const Items = ({
               "Not enough XP"
             ) : (
               <div className="flex items-center gap-2">
-                <Image
-                  src="/points.svg"
-                  alt="Points"
-                  height={20}
-                  width={20}
-                />
+                <Coins className="w-5 h-5 text-yellow-600" />
                 <span>{POINTS_TO_REFILL} XP</span>
               </div>
             )}
@@ -118,45 +108,39 @@ export const Items = ({
       </div>
 
       {/* Pro Membership Item */}
-      <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 rounded-xl border-2 border-yellow-300 p-6 transition-all duration-200 hover:shadow-xl hover:border-yellow-400 relative overflow-hidden">
-        <div className="absolute top-4 right-4 bg-yellow-400 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+      <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-900/20 dark:via-amber-900/20 dark:to-orange-900/20 rounded-xl border-2 border-yellow-300 dark:border-yellow-700/50 p-6 transition-all duration-200 hover:shadow-xl hover:border-yellow-400 dark:hover:border-yellow-600 relative overflow-hidden">
+        <div className={cn("absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide", statusStyles.warning.bg, statusStyles.warning.text)}>
           {hasActiveSubscription ? "Active" : "Popular"}
         </div>
         
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-            <Image
-              src="/unlimited.svg"
-              alt="Unlimited"
-              height={32}
-              width={32}
-              className="filter brightness-0 invert"
-            />
+            <Infinity className="w-8 h-8 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-2">
               Pro Membership
-              <Crown className="w-5 h-5 text-yellow-500" />
+              <Crown className={cn("w-5 h-5", statusStyles.warning.text)} />
             </h3>
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
               Unlock unlimited hearts, remove ads, and get access to exclusive pro features and content.
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">Unlimited Hearts</span>
+                <Check className={cn("w-4 h-4", statusStyles.success.text)} />
+                <span className="text-sm text-muted-foreground">Unlimited Hearts</span>
               </div>
               <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">Ad-free Experience</span>
+                <Check className={cn("w-4 h-4", statusStyles.success.text)} />
+                <span className="text-sm text-muted-foreground">Ad-free Experience</span>
               </div>
               <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">Exclusive Pro Content</span>
+                <Check className={cn("w-4 h-4", statusStyles.success.text)} />
+                <span className="text-sm text-muted-foreground">Exclusive Pro Content</span>
               </div>
               <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">Priority Support</span>
+                <Check className={cn("w-4 h-4", statusStyles.success.text)} />
+                <span className="text-sm text-muted-foreground">Priority Support</span>
               </div>
             </div>
           </div>
@@ -185,13 +169,13 @@ export const Items = ({
       </div>
 
       {/* Coming Soon Items */}
-      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-200 p-6 opacity-75">
+      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-purple-200 dark:border-purple-700/50 p-6 opacity-75">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
             <Rocket className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-700 mb-2">More Items Coming Soon!</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">More Items Coming Soon!</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             We&apos;re working on exciting new power-ups, themes, and learning boosters. Stay tuned!
           </p>
         </div>

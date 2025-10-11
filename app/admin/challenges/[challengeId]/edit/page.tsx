@@ -88,8 +88,14 @@ const AdminChallengeEditPage = async ({
                 initialData={{
                   ...challenge,
                   hint: challenge.hint || undefined,
+                  audioSrc: challenge.audioSrc ?? undefined,
+                  imageSrc: challenge.imageSrc ?? undefined,
+                  videoSrc: challenge.videoSrc ?? undefined,
+                  correctAnswer: challenge.correctAnswer ?? undefined,
                   challengeOptions: challenge.challengeOptions.map(option => ({
                     ...option,
+                    order: option.order ?? undefined,
+                    value: option.value ?? undefined,
                     imageSrc: option.imageSrc || undefined,
                     audioSrc: option.audioSrc || undefined,
                     guide: option.guide || undefined

@@ -72,10 +72,10 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             {mode === "create" ? "Add" : "Edit"} Course
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             {mode === "create" ? "Create a new" : "Update the"} course
           </p>
         </div>

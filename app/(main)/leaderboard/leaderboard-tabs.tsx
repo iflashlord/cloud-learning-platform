@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Crown, Trophy, Medal, Award, TrendingUp, Users, Search, Filter, ChevronDown, Star, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { statusStyles } from "@/lib/style-utils";
 
 type LeaderboardUser = {
   userId: string;
@@ -99,11 +100,11 @@ export const LeaderboardTabs = ({
   const getRankIcon = (position: number) => {
     switch (position) {
       case 1:
-        return <Crown className="w-5 h-5 text-yellow-500" />;
+        return <Crown className={cn("w-5 h-5", statusStyles.warning.text)} />;
       case 2:
-        return <Trophy className="w-5 h-5 text-gray-400" />;
+        return <Trophy className={cn("w-5 h-5", statusStyles.neutral.text)} />;
       case 3:
-        return <Medal className="w-5 h-5 text-orange-500" />;
+        return <Medal className={cn("w-5 h-5", "text-orange-500 dark:text-orange-400")} />;
       default:
         return null;
     }
@@ -113,13 +114,13 @@ export const LeaderboardTabs = ({
   const getRankStyling = (position: number) => {
     switch (position) {
       case 1:
-        return "bg-gradient-to-r from-yellow-100 to-yellow-50 border-yellow-200 shadow-md";
+        return cn("bg-gradient-to-r from-yellow-100 to-yellow-50 dark:from-yellow-900/30 dark:to-yellow-800/20 border-yellow-200 dark:border-yellow-600 shadow-md");
       case 2:
-        return "bg-gradient-to-r from-gray-100 to-gray-50 border-gray-200 shadow-sm";
+        return cn(statusStyles.neutral.bg, statusStyles.neutral.border, "shadow-sm");
       case 3:
-        return "bg-gradient-to-r from-orange-100 to-orange-50 border-orange-200 shadow-sm";
+        return cn("bg-gradient-to-r from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-orange-200 dark:border-orange-600 shadow-sm");
       default:
-        return "hover:bg-gray-50";
+        return "hover:bg-muted";
     }
   };
 
@@ -143,10 +144,10 @@ export const LeaderboardTabs = ({
 
       {leaderboard.length === 0 ? (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Users className="w-8 h-8 text-gray-400" />
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Users className="w-8 h-8 text-gray-400 dark:text-gray-500" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">No learners found</h3>
+          <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">No learners found</h3>
           <p className="text-muted-foreground mb-4">No one has started learning this course yet.</p>
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
             <Trophy className="w-4 h-4 text-yellow-500" />
@@ -179,7 +180,7 @@ export const LeaderboardTabs = ({
                   ) : (
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm",
-                      position <= 10 ? "bg-orange-100 text-orange-700" : "bg-gray-100 text-gray-600"
+                      position <= 10 ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400" : cn(statusStyles.neutral.bg, statusStyles.neutral.text)
                     )}>
                       {position}
                     </div>
@@ -205,7 +206,7 @@ export const LeaderboardTabs = ({
                     <div className={cn(
                       "absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
                       position === 1 ? "bg-yellow-500 text-white" :
-                      position === 2 ? "bg-gray-400 text-white" :
+                      position === 2 ? cn(statusStyles.neutral.button, "text-white") :
                       "bg-orange-500 text-white"
                     )}>
                       {position}
@@ -218,13 +219,13 @@ export const LeaderboardTabs = ({
                   <div className="flex items-center gap-2 mb-1">
                     <h4 className={cn(
                       "font-semibold truncate",
-                      position === 1 ? "text-yellow-800 text-lg" :
-                      position <= 3 ? "text-gray-800" :
-                      "text-neutral-800"
+                      position === 1 ? "text-yellow-800 dark:text-yellow-400 text-lg" :
+                      position <= 3 ? "text-foreground" :
+                      "text-foreground"
                     )}>
                       {userProgress.userName}
                     </h4>
-                    {position === 1 && <Star className="w-4 h-4 text-yellow-500 fill-current" />}
+                    {position === 1 && <Star className={cn("w-4 h-4 fill-current", statusStyles.warning.text)} />}
                   </div>
                   
                   {showCourseInfo && userProgress.activeCourse && (
@@ -248,9 +249,9 @@ export const LeaderboardTabs = ({
                   <div className={cn(
                     "flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold",
                     position === 1 ? "bg-yellow-500 text-white" :
-                    position === 2 ? "bg-gray-400 text-white" :
+                    position === 2 ? cn(statusStyles.neutral.button, "text-white") :
                     position === 3 ? "bg-orange-500 text-white" :
-                    "bg-gray-100 text-gray-700"
+                    cn(statusStyles.neutral.bg, statusStyles.neutral.text)
                   )}>
                     <Award className="w-4 h-4" />
                     <span>{userProgress.points.toLocaleString()}</span>
@@ -263,7 +264,7 @@ export const LeaderboardTabs = ({
           
           {/* Show motivation message for fewer than 10 users */}
           {leaderboard.length < 10 && (
-            <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
+            <div className="text-center py-6 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50">
               <p className="text-sm text-muted-foreground mb-2">
                 {10 - leaderboard.length} more spots available in the top 10!
               </p>
@@ -281,14 +282,14 @@ export const LeaderboardTabs = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Enhanced Tab Navigation */}
-      <div className="flex rounded-xl bg-gray-100 p-1.5 mb-8 shadow-sm">
+      <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1.5 mb-8 shadow-sm">
         <Button
-          variant={activeTab === "general" ? "default" : "ghost"}
+          variant={activeTab === "general" ? "secondary" : "ghost"}
           className={cn(
             "flex-1 h-12 text-sm font-medium transition-all rounded-lg",
             activeTab === "general" 
-              ? "bg-white text-orange-600 shadow-sm border border-orange-200" 
-              : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              ? "bg-white dark:bg-gray-900 text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
           )}
           onClick={() => setActiveTab("general")}
         >
@@ -296,12 +297,12 @@ export const LeaderboardTabs = ({
           Global Ranking
         </Button>
         <Button
-          variant={activeTab === "course" ? "default" : "ghost"}
+          variant={activeTab === "course" ? "secondary" : "ghost"}
           className={cn(
             "flex-1 h-12 text-sm font-medium transition-all rounded-lg",
             activeTab === "course" 
-              ? "bg-white text-orange-600 shadow-sm border border-orange-200" 
-              : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              ? "bg-white dark:bg-gray-900 text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
           )}
           onClick={() => setActiveTab("course")}
         >
@@ -317,7 +318,7 @@ export const LeaderboardTabs = ({
             <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Trophy className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
               Global Hall of Fame
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
@@ -327,23 +328,23 @@ export const LeaderboardTabs = ({
             
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 max-w-2xl mx-auto">
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200">
-                <div className="text-2xl font-bold text-yellow-700">
+              <div className={cn("p-4 rounded-xl border", statusStyles.warning.bg, statusStyles.warning.border)}>
+                <div className={cn("text-2xl font-bold", statusStyles.warning.text)}>
                   {generalLeaderboard.length}
                 </div>
-                <div className="text-sm text-yellow-600">Active Learners</div>
+                <div className={cn("text-sm", statusStyles.warning.text)}>Active Learners</div>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
-                <div className="text-2xl font-bold text-blue-700">
+              <div className={cn("p-4 rounded-xl border", statusStyles.info.bg, statusStyles.info.border)}>
+                <div className={cn("text-2xl font-bold", statusStyles.info.text)}>
                   {courses.length}
                 </div>
-                <div className="text-sm text-blue-600">Available Courses</div>
+                <div className={cn("text-sm", statusStyles.info.text)}>Available Courses</div>
               </div>
-              <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
-                <div className="text-2xl font-bold text-green-700">
+              <div className={cn("p-4 rounded-xl border", statusStyles.success.bg, statusStyles.success.border)}>
+                <div className={cn("text-2xl font-bold", statusStyles.success.text)}>
                   {generalLeaderboard.reduce((sum, user) => sum + user.points, 0).toLocaleString()}
                 </div>
-                <div className="text-sm text-green-600">Total XP Earned</div>
+                <div className={cn("text-sm", statusStyles.success.text)}>Total XP Earned</div>
               </div>
             </div>
           </div>
@@ -358,7 +359,7 @@ export const LeaderboardTabs = ({
             <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Award className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
               Course Championships
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto leading-relaxed mb-6">
@@ -371,7 +372,7 @@ export const LeaderboardTabs = ({
           {selectedCourse ? (
             <>
               {/* Enhanced Selected Course Header */}
-              <div className="bg-white rounded-xl border shadow-sm p-6 mb-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 shadow-sm p-6 mb-6">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center mb-4">
                     <div className="relative">
@@ -387,7 +388,7 @@ export const LeaderboardTabs = ({
                       </div>
                     </div>
                     <div className="ml-4 text-left">
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
                         {selectedCourse.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
@@ -415,9 +416,9 @@ export const LeaderboardTabs = ({
                       </Button>
                       
                       {courseDropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-20 max-h-80 overflow-hidden">
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 max-h-80 overflow-hidden">
                           {/* Search Bar */}
-                          <div className="p-4 border-b">
+                          <div className="p-4 border-b dark:border-gray-700">
                             <div className="relative">
                               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                               <input
@@ -425,7 +426,7 @@ export const LeaderboardTabs = ({
                                 placeholder="Search courses..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+                                className="w-full pl-9 pr-4 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 autoComplete="off"
                               />
                             </div>
@@ -443,8 +444,8 @@ export const LeaderboardTabs = ({
                                   key={course.id}
                                   variant="ghost"
                                   className={cn(
-                                    "w-full justify-start p-3 h-auto mb-1 hover:bg-orange-50",
-                                    course.id === selectedCourse.id && "bg-orange-100 border border-orange-200"
+                                    "w-full justify-start p-3 h-auto mb-1 hover:bg-orange-50 dark:hover:bg-orange-900/20",
+                                    course.id === selectedCourse.id && "bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-600"
                                   )}
                                   onClick={() => handleCourseChange(course.id)}
                                 >
@@ -477,7 +478,7 @@ export const LeaderboardTabs = ({
           ) : (
             /* Course Selection Grid */
             <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">
                 Choose a Course to View Rankings
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
@@ -496,7 +497,7 @@ export const LeaderboardTabs = ({
                       className="rounded-lg mr-4 group-hover:scale-105 transition-transform"
                     />
                     <div className="text-left">
-                      <span className="font-medium text-gray-800 block">
+                      <span className="font-medium text-gray-800 dark:text-gray-100 block">
                         {course.title}
                       </span>
                       <span className="text-sm text-muted-foreground">

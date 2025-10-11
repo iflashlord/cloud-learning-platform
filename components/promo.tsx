@@ -2,11 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { BRAND_CONFIG } from "@/lib/config";
 
 export const Promo = () => {
   return (
-    <div className="border-2 rounded-xl p-4 space-y-4">
+    <Card className="p-4 space-y-4">
       <div className="space-y-2">
         <div className="flex items-center gap-x-2">
           <Image
@@ -33,6 +34,6 @@ export const Promo = () => {
           Upgrade today
         </Link>
       </Button>
-    </div>
+    </Card>
   );
 };

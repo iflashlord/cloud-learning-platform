@@ -160,7 +160,7 @@ const DEFAULT_THEME_CONTEXT: ThemeContextType = {
   setThemeByCourse: () => {},
   setThemeByName: () => {},
   getColorClass: (color, shade, type) => getCssVariableClass(color, shade, type),
-  getColorValue: (color, shade) => COURSE_THEMES.default.colors[color][shade],
+  getColorValue: (color, shade) => (COURSE_THEMES.default.colors[color] as any)[shade] || '',
 };
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
@@ -269,7 +269,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     color: 'primary' | 'success' | 'error' | 'info' | 'neutral',
     shade: keyof ColorShades
   ): string => {
-    return currentTheme.colors[color][shade];
+    return (currentTheme.colors[color] as any)[shade] || '';
   }, [currentTheme]);
 
   const value: ThemeContextType = {

@@ -1,10 +1,5 @@
 import { redirect } from "next/navigation";
-
-import { Promo } from "@/components/promo";
-import { Quests } from "@/components/quests";
-import { FeedWrapper } from "@/components/feed-wrapper";
-import { UserProgress } from "@/components/user-progress";
-import { StickyWrapper } from "@/components/sticky-wrapper";
+import { AppLayout } from "@/components/ui/app-layout";
 import { lessons, units as unitsSchema } from "@/db/schema";
 import { 
   getCourseProgress, 
@@ -14,7 +9,6 @@ import {
   getUserSubscription,
   getCourses
 } from "@/db/queries";
-
 import { Unit } from "./unit";
 import { Header } from "./header";
 
@@ -67,51 +61,39 @@ const LearnPage = async () => {
   );
 
   return (
-    <div className="flex flex-row-reverse gap-[48px] px-6">
-      <StickyWrapper>
-        <UserProgress
-          activeCourse={activeCourseData || {
-            ...userProgress.activeCourse,
-            category: "",
-            description: null,
-            level: null,
-            duration: null,
-            themeConfig: null,
-          }}
-          hearts={userProgress.hearts}
-          points={userProgress.points}
-          hasActiveSubscription={isPro}
-        />
-        {!isPro && (
-          <Promo />
-        )}
-        <Quests points={userProgress.points} />
-      </StickyWrapper>
-      <FeedWrapper>
-        <Header 
-          title={userProgress.activeCourse.title}
-          totalUnits={totalUnits}
-          completedUnits={completedUnits}
-          totalLessons={totalLessons}
-          completedLessons={completedLessons}
-        />
-        {units.map((unit) => (
-          <div key={unit.id} className="mb-10">
-            <Unit
-              id={unit.id}
-              order={unit.order}
-              description={unit.description}
-              title={unit.title}
-              lessons={unit.lessons}
-              activeLesson={courseProgress.activeLesson as typeof lessons.$inferSelect & {
-                unit: typeof unitsSchema.$inferSelect;
-              } | undefined}
-              activeLessonPercentage={lessonPercentage}
-            />
-          </div>
-        ))}
-      </FeedWrapper>
-    </div>
+    <AppLayout
+      activeCourse={activeCourseData ? {
+        id: activeCourseData.id,
+        title: activeCourseData.title,
+        imageSrc: activeCourseData.imageSrc
+      } : userProgress.activeCourse}
+      hearts={userProgress.hearts}
+      points={userProgress.points}
+      hasActiveSubscription={isPro}
+    >
+      <Header 
+        title={userProgress.activeCourse.title}
+        totalUnits={totalUnits}
+        completedUnits={completedUnits}
+        totalLessons={totalLessons}
+        completedLessons={completedLessons}
+      />
+      {units.map((unit) => (
+        <div key={unit.id} className="mb-10">
+          <Unit
+            id={unit.id}
+            order={unit.order}
+            description={unit.description}
+            title={unit.title}
+            lessons={unit.lessons}
+            activeLesson={courseProgress.activeLesson as typeof lessons.$inferSelect & {
+              unit: typeof unitsSchema.$inferSelect;
+            } | undefined}
+            activeLessonPercentage={lessonPercentage}
+          />
+        </div>
+      ))}
+    </AppLayout>
   );
 };
  

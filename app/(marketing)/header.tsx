@@ -31,11 +31,7 @@ export const Header = () => {
             />
           </SignedIn>
           <SignedOut>
-            <SignInButton
-              mode="modal"
-              afterSignInUrl="/learn"
-              afterSignUpUrl="/learn"
-            >
+            <SignInButton mode="modal">
               <Button size="lg" variant="ghost">
                 Login
               </Button>
