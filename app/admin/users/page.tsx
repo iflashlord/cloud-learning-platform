@@ -14,7 +14,9 @@ import {
   Shield,
   Mail,
   Calendar,
-  Activity
+  Activity,
+  Heart,
+  BookOpen
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -238,11 +240,13 @@ export default function UserManagementPage() {
                           {user.points} points
                         </span>
                         <span className="text-sm text-gray-500 flex items-center">
-                          ❤️ {user.hearts} hearts
+                          <Heart className="w-3 h-3 mr-1" fill="currentColor" />
+                          {user.hearts} hearts
                         </span>
                         {user.course && (
                           <span className="text-sm text-gray-500 flex items-center">
-                            📚 {user.course.title}
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            {user.course.title}
                           </span>
                         )}
                       </div>

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trophy, Star, Sparkles, Crown, Medal, Zap } from "lucide-react";
+import { Trophy, Star, Sparkles, Crown, Medal, Zap, Heart, PartyPopper, Rocket, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
   isVisible: boolean;
   questTitle: string;
-  questIcon: string;
+  questIcon: LucideIcon;
   reward: {
     xp: number;
     hearts: number;
@@ -24,6 +24,7 @@ export const QuestCelebration = ({
   onComplete 
 }: Props) => {
   const [showCelebration, setShowCelebration] = useState(false);
+  const QuestIcon = questIcon;
 
   useEffect(() => {
     if (isVisible) {
@@ -99,7 +100,7 @@ export const QuestCelebration = ({
           <div className="relative inline-block mb-6 animate-in zoom-in duration-700 delay-300">
             <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-xl relative overflow-hidden animate-pulse">
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-transparent"></div>
-              <span className="text-4xl relative drop-shadow-lg">{questIcon}</span>
+              <QuestIcon className="w-14 h-14 relative drop-shadow-lg text-white" />
             </div>
             
             <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
@@ -109,8 +110,10 @@ export const QuestCelebration = ({
 
           {/* Success Message */}
           <div className="animate-in slide-in-from-bottom-4 duration-500 delay-500">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 animate-pulse">
-              🎉 QUEST COMPLETE! 🎉
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 animate-pulse flex items-center justify-center gap-3">
+              <PartyPopper className="w-8 h-8 text-purple-500" />
+              <span>Quest Complete!</span>
+              <PartyPopper className="w-8 h-8 text-pink-500 hidden sm:inline" />
             </h1>
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               {questTitle}
@@ -138,7 +141,7 @@ export const QuestCelebration = ({
               {reward.hearts > 0 && (
                 <div className="text-center animate-in zoom-in duration-500 delay-1200">
                   <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-1 shadow-md hover:scale-110 transition-transform">
-                    <span className="text-white text-lg animate-pulse">❤️</span>
+                    <Heart className="w-5 h-5 text-white fill-white animate-pulse" />
                   </div>
                   <div className="text-lg font-bold text-red-700">+{reward.hearts}</div>
                   <div className="text-xs text-red-600">Hearts</div>
@@ -158,8 +161,9 @@ export const QuestCelebration = ({
           </div>
 
           {/* Encouragement */}
-          <p className="text-gray-600 text-sm font-medium animate-in fade-in duration-500 delay-1600">
-            Outstanding work! Keep learning to unlock more achievements! 🚀
+          <p className="text-gray-600 text-sm font-medium animate-in fade-in duration-500 delay-1600 flex items-center justify-center gap-2">
+            <span>Outstanding work! Keep learning to unlock more achievements!</span>
+            <Rocket className="w-5 h-5 text-indigo-500" />
           </p>
         </div>
       </div>

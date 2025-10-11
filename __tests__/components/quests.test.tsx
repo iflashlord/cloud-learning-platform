@@ -9,7 +9,7 @@ const { mockQuests } = vi.hoisted(() => ({
       description: "Earn 10 XP",
       value: 10,
       reward: { xp: 5, hearts: 1, badge: "alpha" },
-      icon: "A",
+      icon: "sprout",
       color: "green",
       difficulty: "Beginner",
       category: "Intro",
@@ -20,7 +20,7 @@ const { mockQuests } = vi.hoisted(() => ({
       description: "Score 25 XP",
       value: 25,
       reward: { xp: 10, hearts: 1, badge: "bravo" },
-      icon: "B",
+      icon: "search",
       color: "blue",
       difficulty: "Beginner",
       category: "Intro",
@@ -31,7 +31,7 @@ const { mockQuests } = vi.hoisted(() => ({
       description: "Reach 50 XP",
       value: 50,
       reward: { xp: 15, hearts: 2, badge: "charlie" },
-      icon: "C",
+      icon: "flame",
       color: "orange",
       difficulty: "Intermediate",
       category: "Growth",
@@ -42,7 +42,7 @@ const { mockQuests } = vi.hoisted(() => ({
       description: "Reach 75 XP",
       value: 75,
       reward: { xp: 20, hearts: 2, badge: "delta" },
-      icon: "D",
+      icon: "zap",
       color: "purple",
       difficulty: "Intermediate",
       category: "Growth",
@@ -51,9 +51,17 @@ const { mockQuests } = vi.hoisted(() => ({
   ],
 }));
 
+const IconStub = () => null;
+
 vi.mock("@/constants", () => ({
   quests: mockQuests,
   POINTS_TO_REFILL: 10,
+  QUEST_ICON_MAP: {
+    sprout: IconStub,
+    search: IconStub,
+    flame: IconStub,
+    zap: IconStub,
+  },
 }));
 
 vi.mock("@/components/ui/button", () => ({

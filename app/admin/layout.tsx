@@ -13,11 +13,11 @@ const AdminLayout = ({ children }: Props) => {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-full bg-white dark:bg-gray-900">
       <AdminHeader />
       <div className="flex h-[calc(100vh-4rem)]">
         <AdminSidebar />
-        <main className="flex-1 overflow-auto p-6 bg-gray-50">
+        <main className="flex-1 overflow-auto p-6 bg-gray-50 dark:bg-gray-900">
           {children}
         </main>
       </div>

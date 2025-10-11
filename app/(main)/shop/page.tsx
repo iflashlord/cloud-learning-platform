@@ -10,6 +10,7 @@ import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries";
 import { Items } from "./items";
 import { Quests } from "@/components/quests";
 import { BRAND_CONFIG } from "@/lib/config";
+import { Coins, Zap, Heart, Crown, Target, Lightbulb } from "lucide-react";
 
 const ShopPage = async () => {
   const userProgressData = getUserProgress();
@@ -72,7 +73,7 @@ const ShopPage = async () => {
                 />
               </div>
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                <span className="text-yellow-800 text-xs font-bold">💰</span>
+                <Coins className="w-4 h-4 text-yellow-800" />
               </div>
             </div>
             
@@ -87,21 +88,25 @@ const ShopPage = async () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
               <div className="bg-gradient-to-br from-blue-100 to-cyan-50 p-4 rounded-xl border border-blue-200 shadow-sm">
                 <div className="flex items-center justify-center mb-2">
-                  <span className="text-2xl">⚡</span>
+                  <Zap className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="text-2xl font-bold text-blue-700">{userProgress.points}</div>
                 <div className="text-sm text-blue-600">XP Points</div>
               </div>
               <div className="bg-gradient-to-br from-red-100 to-pink-50 p-4 rounded-xl border border-red-200 shadow-sm">
                 <div className="flex items-center justify-center mb-2">
-                  <span className="text-2xl">❤️</span>
+                  <Heart className="w-8 h-8 text-red-600" fill="currentColor" />
                 </div>
                 <div className="text-2xl font-bold text-red-700">{userProgress.hearts}</div>
                 <div className="text-sm text-red-600">Hearts</div>
               </div>
               <div className="bg-gradient-to-br from-yellow-100 to-amber-50 p-4 rounded-xl border border-yellow-200 shadow-sm">
                 <div className="flex items-center justify-center mb-2">
-                  <span className="text-2xl">{isPro ? '👑' : '🎯'}</span>
+                  {isPro ? (
+                    <Crown className="w-8 h-8 text-yellow-600" />
+                  ) : (
+                    <Target className="w-8 h-8 text-yellow-600" />
+                  )}
                 </div>
                 <div className="text-lg font-bold text-yellow-700">{isPro ? 'PRO' : 'FREE'}</div>
                 <div className="text-sm text-yellow-600">Status</div>
@@ -113,7 +118,7 @@ const ShopPage = async () => {
           <div className="w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200 mb-8">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-lg">💡</span>
+                <Lightbulb className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="font-bold text-indigo-800 mb-2">Shopping Tips</h3>

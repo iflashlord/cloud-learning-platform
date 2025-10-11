@@ -36,7 +36,7 @@ async function addCourseFields() {
       ADD COLUMN IF NOT EXISTS duration text
     `);
     
-    console.log("✅ Successfully added new course fields!");
+    console.log("[SUCCESS] Successfully added new course fields!");
     
     // Update existing courses with default values
     console.log("Updating existing courses with categories...");
@@ -73,10 +73,10 @@ async function addCourseFields() {
       WHERE category IS NULL OR category = '';
     `);
     
-    console.log("✅ Successfully updated existing courses!");
+    console.log("[SUCCESS] Successfully updated existing courses!");
     
   } catch (error) {
-    console.error("❌ Error:", error);
+    console.error("[ERROR]", error);
   }
 }
 

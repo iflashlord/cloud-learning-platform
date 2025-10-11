@@ -15,6 +15,7 @@ import { Promo } from "@/components/promo";
 import { Quests } from "@/components/quests";
 import { CONFIG } from "@/lib/config";
 import { LeaderboardTabs } from "./leaderboard-tabs";
+import { Trophy } from "lucide-react";
 
 type Props = {
   searchParams: {
@@ -87,7 +88,7 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
                 />
               </div>
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-xs font-bold text-white">🏆</span>
+                <Trophy className="w-5 h-5 text-white" />
               </div>
             </div>
             

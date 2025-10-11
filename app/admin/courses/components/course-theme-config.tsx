@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { COLOR_THEME, COURSE_THEMES } from "@/lib/config";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Palette } from "lucide-react";
 
 interface ThemeConfig {
   themeName: string;
@@ -117,7 +118,8 @@ export const CourseThemeConfig = ({ courseId, initialThemeConfig, onSave }: Cour
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          🎨 Course Theme Configuration
+          <Palette className="w-5 h-5 text-purple-500" />
+          Course Theme Configuration
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">

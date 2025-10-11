@@ -1,5 +1,5 @@
 /**
- * 🎨 Comprehensive Design System for AWS Learning Platform
+ * Comprehensive Design System for AWS Learning Platform
  * 
  * This file defines all design tokens, spacing, typography, and component patterns
  * to ensure consistency across the entire application.
@@ -8,7 +8,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 // ==============================
-// 🎯 DESIGN TOKENS
+// DESIGN TOKENS
 // ==============================
 
 export const DESIGN_TOKENS = {
@@ -78,7 +78,7 @@ export const DESIGN_TOKENS = {
 };
 
 // ==============================
-// 🎨 SEMANTIC COLOR SYSTEM
+// SEMANTIC COLOR SYSTEM
 // ==============================
 
 export const SEMANTIC_COLORS = {
@@ -129,91 +129,283 @@ export const SEMANTIC_COLORS = {
 };
 
 // ==============================
-// 🧩 COMPONENT VARIANTS (CVA)
+// COMPONENT VARIANTS (CVA)
 // ==============================
 
-// Button component variants
+// Button component variants - Duolingo Style
 export const buttonVariants = cva(
-  // Base styles - consistent for all buttons
+  // Base styles - Duolingo-inspired design
   [
-    "inline-flex items-center justify-center rounded-full",
-    "font-semibold tracking-wide transition-all duration-200 ease-out",
-    "px-[var(--ds-space-lg)] py-[calc(var(--ds-space-sm)*1.5)]",
+    "relative inline-flex items-center justify-center rounded-xl",
+    "font-bold tracking-wide transition-all duration-150 ease-out",
+    "px-6 py-3 text-base",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-    "disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0",
+    "disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none",
+    "disabled:hover:transform-none disabled:active:transform-none",
+    "disabled:hover:shadow-none disabled:active:shadow-none",
+    "active:translate-y-1 active:shadow-none",
+    "border-2 border-b-4",
+    "dark:focus-visible:ring-offset-gray-800",
   ],
   {
     variants: {
       variant: {
+        // Primary - Duolingo green for main actions
         primary: [
-          "bg-[linear-gradient(140deg,hsl(var(--ds-primary-400)),hsl(var(--ds-primary-600)))]",
-          "text-[hsl(var(--ds-primary-foreground))]",
-          "shadow-[0_18px_32px_rgba(var(--ds-primary-rgb),0.28)]",
-          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-primary-rgb),0.35)]",
-          "focus-visible:ring-[hsl(var(--ds-primary-500))]",
+          "bg-green-500 border-green-700",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#15803d]",
+          "hover:bg-green-400 hover:border-green-600",
+          "hover:shadow-[0_6px_0_#15803d] hover:-translate-y-0.5",
+          "focus-visible:ring-green-400",
+          "dark:bg-green-600 dark:border-green-800",
+          "dark:shadow-[0_4px_0_#15803d]",
+          "dark:hover:bg-green-500 dark:hover:border-green-700",
         ],
+        // Secondary - Light version for less important actions  
         secondary: [
-          "border-2 border-[hsl(var(--ds-primary-200))]",
-          "bg-[hsl(var(--ds-primary-50))]",
-          "text-[hsl(var(--ds-primary-600))]",
-          "hover:-translate-y-0.5 hover:bg-[hsl(var(--ds-primary-100))]",
-          "focus-visible:ring-[hsl(var(--ds-primary-200))]",
+          "bg-green-50 border-green-200",
+          "text-green-800 font-extrabold",
+          "shadow-[0_4px_0_#bbf7d0]",
+          "hover:bg-green-100 hover:border-green-300",
+          "hover:shadow-[0_6px_0_#86efac] hover:-translate-y-0.5",
+          "focus-visible:ring-green-300",
+          "dark:bg-gray-800 dark:border-gray-600",
+          "dark:text-green-400 dark:shadow-[0_4px_0_#374151]",
+          "dark:hover:bg-gray-700 dark:hover:border-gray-500",
         ],
+        // Success - Bright green for correct answers
         success: [
-          "bg-[linear-gradient(140deg,hsl(var(--ds-success-400)),hsl(var(--ds-success-600)))]",
-          "text-[hsl(var(--ds-success-foreground))]",
-          "shadow-[0_18px_32px_rgba(var(--ds-success-rgb),0.25)]",
-          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-success-rgb),0.32)]",
-          "focus-visible:ring-[hsl(var(--ds-success-500))]",
+          "bg-emerald-500 border-emerald-700",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#047857]",
+          "hover:bg-emerald-400 hover:border-emerald-600",
+          "hover:shadow-[0_6px_0_#047857] hover:-translate-y-0.5",
+          "focus-visible:ring-emerald-400",
+          "dark:bg-emerald-600 dark:border-emerald-800",
+          "dark:shadow-[0_4px_0_#047857]",
+          "dark:hover:bg-emerald-500 dark:hover:border-emerald-700",
         ],
+        // Error/Danger - Red for wrong answers and retry
         error: [
-          "bg-[linear-gradient(140deg,hsl(var(--ds-error-400)),hsl(var(--ds-error-600)))]",
-          "text-[hsl(var(--ds-error-foreground))]",
-          "shadow-[0_18px_32px_rgba(var(--ds-error-rgb),0.25)]",
-          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-error-rgb),0.32)]",
-          "focus-visible:ring-[hsl(var(--ds-error-500))]",
+          "bg-red-500 border-red-700",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#b91c1c]",
+          "hover:bg-red-400 hover:border-red-600",
+          "hover:shadow-[0_6px_0_#b91c1c] hover:-translate-y-0.5",
+          "focus-visible:ring-red-400",
+          "dark:bg-red-600 dark:border-red-800",
+          "dark:shadow-[0_4px_0_#b91c1c]",
+          "dark:hover:bg-red-500 dark:hover:border-red-700",
         ],
+        danger: [
+          "bg-red-500 border-red-700",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#b91c1c]",
+          "hover:bg-red-400 hover:border-red-600",
+          "hover:shadow-[0_6px_0_#b91c1c] hover:-translate-y-0.5",
+          "focus-visible:ring-red-400",
+          "dark:bg-red-600 dark:border-red-800",
+          "dark:shadow-[0_4px_0_#b91c1c]",
+          "dark:hover:bg-red-500 dark:hover:border-red-700",
+        ],
+        // Warning - Orange/yellow for warnings
         warning: [
-          "bg-[linear-gradient(140deg,hsl(var(--ds-warning-400)),hsl(var(--ds-warning-600)))]",
-          "text-[hsl(var(--ds-warning-foreground))]",
-          "shadow-[0_18px_32px_rgba(var(--ds-warning-rgb),0.25)]",
-          "hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(var(--ds-warning-rgb),0.32)]",
-          "focus-visible:ring-[hsl(var(--ds-warning-500))]",
+          "bg-yellow-400 border-yellow-600",
+          "text-yellow-900 font-extrabold",
+          "shadow-[0_4px_0_#ca8a04]",
+          "hover:bg-yellow-300 hover:border-yellow-500",
+          "hover:shadow-[0_6px_0_#ca8a04] hover:-translate-y-0.5",
+          "focus-visible:ring-yellow-400",
+          "dark:bg-yellow-600 dark:border-yellow-800",
+          "dark:text-white dark:shadow-[0_4px_0_#ca8a04]",
+          "dark:hover:bg-yellow-500 dark:hover:border-yellow-700",
         ],
+        // Info - Blue for informational actions
+        info: [
+          "bg-blue-500 border-blue-700",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#1d4ed8]",
+          "hover:bg-blue-400 hover:border-blue-600",
+          "hover:shadow-[0_6px_0_#1d4ed8] hover:-translate-y-0.5",
+          "focus-visible:ring-blue-400",
+          "dark:bg-blue-600 dark:border-blue-800",
+          "dark:shadow-[0_4px_0_#1d4ed8]",
+          "dark:hover:bg-blue-500 dark:hover:border-blue-700",
+        ],
+        // Ghost - Transparent for subtle actions
         ghost: [
-          "bg-transparent border-transparent",
-          "text-[hsl(var(--ds-neutral-600))]",
-          "hover:bg-[hsl(var(--ds-neutral-100))]",
-          "focus-visible:ring-[hsl(var(--ds-neutral-300))]",
+          "bg-transparent border-transparent shadow-none",
+          "text-gray-700 font-bold",
+          "hover:bg-gray-100 hover:text-gray-800",
+          "focus-visible:ring-gray-300",
+          "dark:text-gray-200",
+          "dark:hover:bg-gray-700 dark:hover:text-gray-100",
+          "dark:focus-visible:ring-gray-500",
         ],
+        // Outline variants with Duolingo style
         outline: [
-          "border-2 border-[hsl(var(--ds-neutral-300))]",
-          "text-[hsl(var(--ds-neutral-700))]",
-          "bg-[hsl(var(--ds-neutral-0))]",
-          "hover:bg-[hsl(var(--ds-neutral-100))]",
-          "focus-visible:ring-[hsl(var(--ds-neutral-400))]",
+          "bg-white border-gray-300",
+          "text-gray-800 font-bold",
+          "shadow-[0_4px_0_#d1d5db]",
+          "hover:bg-gray-50 hover:border-gray-400",
+          "hover:shadow-[0_6px_0_#9ca3af] hover:-translate-y-0.5",
+          "focus-visible:ring-gray-400",
+          "dark:bg-gray-800 dark:border-gray-500",
+          "dark:text-gray-100 dark:shadow-[0_4px_0_#4b5563]",
+          "dark:hover:bg-gray-700 dark:hover:border-gray-400",
+          "dark:hover:shadow-[0_6px_0_#6b7280] dark:hover:text-white",
+        ],
+        // Legacy variants for backward compatibility
+        primaryOutline: [
+          "bg-white border-green-400",
+          "text-green-600 font-bold",
+          "shadow-[0_4px_0_#22c55e]",
+          "hover:bg-green-50 hover:border-green-500",
+          "hover:shadow-[0_6px_0_#16a34a] hover:-translate-y-0.5",
+          "focus-visible:ring-green-400",
+        ],
+        secondaryOutline: [
+          "bg-white border-gray-300",
+          "text-gray-600 font-bold",
+          "shadow-[0_4px_0_#d1d5db]",
+          "hover:bg-gray-50 hover:border-gray-400",
+          "hover:shadow-[0_6px_0_#9ca3af] hover:-translate-y-0.5",
+          "focus-visible:ring-gray-400",
+        ],
+        dangerOutline: [
+          "bg-white border-red-400",
+          "text-red-600 font-bold",
+          "shadow-[0_4px_0_#f87171]",
+          "hover:bg-red-50 hover:border-red-500",
+          "hover:shadow-[0_6px_0_#ef4444] hover:-translate-y-0.5",
+          "focus-visible:ring-red-400",
+        ],
+        super: [
+          "bg-gradient-to-b from-yellow-400 to-orange-500 border-orange-600",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#ea580c]",
+          "hover:from-yellow-300 hover:to-orange-400 hover:border-orange-500",
+          "hover:shadow-[0_6px_0_#ea580c] hover:-translate-y-0.5",
+          "focus-visible:ring-orange-400",
+        ],
+        superOutline: [
+          "bg-white border-orange-400",
+          "text-orange-600 font-bold",
+          "shadow-[0_4px_0_#fb923c]",
+          "hover:bg-orange-50 hover:border-orange-500",
+          "hover:shadow-[0_6px_0_#f97316] hover:-translate-y-0.5",
+          "focus-visible:ring-orange-400",
+        ],
+        // Sidebar specific styles (maintain existing behavior)
+        sidebar: [
+          "bg-white border-slate-300 shadow-[0_4px_0_#cbd5e1]",
+          "text-slate-500 font-bold",
+          "hover:bg-slate-50 hover:text-slate-600",
+          "hover:shadow-[0_6px_0_#cbd5e1] hover:-translate-y-0.5",
+          "focus-visible:ring-slate-300",
+        ],
+        sidebarOutline: [
+          "bg-white border-slate-300 shadow-[0_4px_0_#cbd5e1]",
+          "text-blue-500 font-bold",
+          "hover:bg-slate-50 hover:text-blue-600",
+          "hover:shadow-[0_6px_0_#cbd5e1] hover:-translate-y-0.5",
+          "focus-visible:ring-blue-400",
         ],
         link: [
-          "bg-transparent border-transparent p-0 h-auto",
-          "text-[hsl(var(--ds-info-600))]",
-          "hover:text-[hsl(var(--ds-info-500))] hover:underline",
-          "focus-visible:ring-offset-0 focus-visible:ring-[hsl(var(--ds-info-500))]",
+          "bg-transparent border-transparent shadow-none p-0 h-auto",
+          "text-blue-600 font-semibold underline-offset-4",
+          "hover:text-blue-500 hover:underline",
+          "focus-visible:ring-offset-0 focus-visible:ring-blue-500",
+          "dark:text-blue-400 dark:hover:text-blue-300",
+          "dark:focus-visible:ring-blue-400",
+        ],
+        // Course Theme Variants - Enhanced contrast for better readability
+        compute: [
+          "bg-orange-600 border-orange-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#c2410c]",
+          "hover:bg-orange-500 hover:border-orange-700",
+          "hover:shadow-[0_6px_0_#c2410c] hover:-translate-y-0.5",
+          "focus-visible:ring-orange-400",
+          "dark:bg-orange-700 dark:border-orange-900",
+          "dark:shadow-[0_4px_0_#c2410c]",
+          "dark:hover:bg-orange-600 dark:hover:border-orange-800",
+        ],
+        storage: [
+          "bg-blue-600 border-blue-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#1e40af]",
+          "hover:bg-blue-500 hover:border-blue-700",
+          "hover:shadow-[0_6px_0_#1e40af] hover:-translate-y-0.5",
+          "focus-visible:ring-blue-400",
+          "dark:bg-blue-700 dark:border-blue-900",
+          "dark:shadow-[0_4px_0_#1e40af]",
+          "dark:hover:bg-blue-600 dark:hover:border-blue-800",
+        ],
+        security: [
+          "bg-purple-600 border-purple-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#7c3aed]",
+          "hover:bg-purple-500 hover:border-purple-700",
+          "hover:shadow-[0_6px_0_#7c3aed] hover:-translate-y-0.5",
+          "focus-visible:ring-purple-400",
+          "dark:bg-purple-700 dark:border-purple-900",
+          "dark:shadow-[0_4px_0_#7c3aed]",
+          "dark:hover:bg-purple-600 dark:hover:border-purple-800",
+        ],
+        networking: [
+          "bg-teal-600 border-teal-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#0f766e]",
+          "hover:bg-teal-500 hover:border-teal-700",
+          "hover:shadow-[0_6px_0_#0f766e] hover:-translate-y-0.5",
+          "focus-visible:ring-teal-400",
+          "dark:bg-teal-700 dark:border-teal-900",
+          "dark:shadow-[0_4px_0_#0f766e]",
+          "dark:hover:bg-teal-600 dark:hover:border-teal-800",
+        ],
+        management: [
+          "bg-emerald-600 border-emerald-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#047857]",
+          "hover:bg-emerald-500 hover:border-emerald-700",
+          "hover:shadow-[0_6px_0_#047857] hover:-translate-y-0.5",
+          "focus-visible:ring-emerald-400",
+          "dark:bg-emerald-700 dark:border-emerald-900",
+          "dark:shadow-[0_4px_0_#047857]",
+          "dark:hover:bg-emerald-600 dark:hover:border-emerald-800",
+        ],
+        aiml: [
+          "bg-violet-600 border-violet-800",
+          "text-white font-extrabold",
+          "shadow-[0_4px_0_#7c3aed]",
+          "hover:bg-violet-500 hover:border-violet-700",
+          "hover:shadow-[0_6px_0_#7c3aed] hover:-translate-y-0.5",
+          "focus-visible:ring-violet-400",
+          "dark:bg-violet-700 dark:border-violet-900",
+          "dark:shadow-[0_4px_0_#7c3aed]",
+          "dark:hover:bg-violet-600 dark:hover:border-violet-800",
         ],
       },
       size: {
-        xs: "h-8 px-[var(--ds-space-sm)] text-[length:var(--ds-text-xs)]",
-        sm: "h-9 px-[var(--ds-space-md)] text-[length:var(--ds-text-sm)]",
-        md: "h-11 px-[var(--ds-space-lg)] text-[length:var(--ds-text-base)]",
-        lg: "h-12 px-[var(--ds-space-xl)] text-[length:var(--ds-text-lg)]",
-        xl: "h-14 px-[var(--ds-space-2xl)] text-[length:var(--ds-text-xl)]",
-        icon: "h-11 w-11 p-0",
+        xs: "h-8 px-4 text-xs min-w-[80px]",
+        sm: "h-9 px-5 text-sm min-w-[100px]",
+        md: "h-11 px-6 text-base min-w-[120px]",
+        lg: "h-12 px-7 text-lg min-w-[140px]",
+        xl: "h-14 px-8 text-xl min-w-[160px]",
+        icon: "h-11 w-11 p-0 min-w-[44px]",
       },
       fullWidth: {
         true: "w-full",
         false: "",
       },
       loading: {
-        true: "cursor-wait opacity-75",
+        true: "cursor-wait opacity-90 pointer-events-none",
+        false: "",
+      },
+      disabled: {
+        true: "opacity-60 cursor-not-allowed pointer-events-none shadow-none active:transform-none active:shadow-none hover:transform-none hover:shadow-none",
         false: "",
       },
     },
@@ -222,6 +414,7 @@ export const buttonVariants = cva(
       size: "md",
       fullWidth: false,
       loading: false,
+      disabled: false,
     },
   }
 );
@@ -294,22 +487,36 @@ export const inputVariants = cva(
 export const badgeVariants = cva(
   [
     "inline-flex items-center justify-center",
-    "px-[var(--ds-space-sm)] py-[calc(var(--ds-space-xs)*0.8)] text-[length:var(--ds-text-xs)] font-semibold rounded-full",
+    "px-3 py-1.5 text-xs font-semibold rounded-full",
     "border transition-colors duration-200 capitalize tracking-wide",
+    "min-w-[60px] whitespace-nowrap",
   ],
   {
     variants: {
       variant: {
-        default: "bg-[hsl(var(--ds-neutral-100))] text-[hsl(var(--ds-neutral-700))] border-[hsl(var(--ds-neutral-200))]",
-        success: "bg-[hsl(var(--ds-success-50))] text-[hsl(var(--ds-success-700))] border-[hsl(var(--ds-success-200))]",
-        error: "bg-[hsl(var(--ds-error-50))] text-[hsl(var(--ds-error-700))] border-[hsl(var(--ds-error-200))]",
-        warning: "bg-[hsl(var(--ds-warning-50))] text-[hsl(var(--ds-warning-700))] border-[hsl(var(--ds-warning-200))]",
-        info: "bg-[hsl(var(--ds-info-50))] text-[hsl(var(--ds-info-700))] border-[hsl(var(--ds-info-200))]",
-        primary: "bg-[hsl(var(--ds-primary-50))] text-[hsl(var(--ds-primary-700))] border-[hsl(var(--ds-primary-200))]",
+        default: "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600",
+        success: "bg-green-100 text-green-800 border-green-200 dark:bg-green-800 dark:text-green-100 dark:border-green-600",
+        error: "bg-red-100 text-red-800 border-red-200 dark:bg-red-800 dark:text-red-100 dark:border-red-600",
+        warning: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-700 dark:text-yellow-100 dark:border-yellow-600",
+        info: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
+        primary: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
+        // Course theme variants - Enhanced contrast for dark mode
+        compute: "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-700 dark:text-orange-100 dark:border-orange-600",
+        storage: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:border-blue-600",
+        security: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600",
+        networking: "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-700 dark:text-teal-100 dark:border-teal-600",
+        management: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-700 dark:text-emerald-100 dark:border-emerald-600",
+        aiml: "bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-700 dark:text-violet-100 dark:border-violet-600",
+      },
+      size: {
+        sm: "px-2 py-1 text-xs min-w-[50px]",
+        md: "px-3 py-1.5 text-xs min-w-[60px]",
+        lg: "px-4 py-2 text-sm min-w-[80px]",
       },
     },
     defaultVariants: {
       variant: "default",
+      size: "md",
     },
   }
 );
@@ -343,7 +550,7 @@ export const progressVariants = cva(
 );
 
 // ==============================
-// 🎯 COMPONENT STYLES FACTORY
+// COMPONENT STYLES FACTORY
 // ==============================
 
 export const createComponentStyles = {
@@ -390,7 +597,7 @@ export const createComponentStyles = {
 };
 
 // ==============================
-// 🎨 THEME-AWARE STYLES
+// THEME-AWARE STYLES
 // ==============================
 
 export const THEME_STYLES = {

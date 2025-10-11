@@ -6,6 +6,7 @@ html,
 body,
 :root {
   @apply h-full;
+  scroll-behavior: smooth;
 }
  
 @layer base {
@@ -69,6 +70,19 @@ body,
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
+    /* Dark mode design system colors */
+    --ds-neutral-0: 0 0% 0%;
+    --ds-neutral-50: 222.2 84% 4.9%;
+    --ds-neutral-100: 217.2 32.6% 17.5%;
+    --ds-neutral-200: 215 20.2% 25.1%;
+    --ds-neutral-300: 213 27% 35%;
+    --ds-neutral-400: 215 20.2% 45%;
+    --ds-neutral-500: 215 16% 55%;
+    --ds-neutral-600: 215 19% 65%;
+    --ds-neutral-700: 213 27% 75%;
+    --ds-neutral-800: 217.2 32.6% 85.5%;
+    --ds-neutral-900: 210 40% 95%;
   }
 }
  
@@ -81,7 +95,7 @@ body,
   }
   
   /* ========================================
-     🎯 DESIGN SYSTEM CSS VARIABLES
+     DESIGN SYSTEM CSS VARIABLES
      ======================================== */
   
   :root {
@@ -207,7 +221,7 @@ body,
 
 @layer components {
   /* ========================================
-     🎨 DESIGN SYSTEM COMPONENT STYLES
+     DESIGN SYSTEM COMPONENT STYLES
      ======================================== */
   
   /* Status utility classes */
@@ -337,7 +351,7 @@ body,
 
 @layer utilities {
   /* ========================================
-     🔧 DESIGN SYSTEM UTILITIES
+     DESIGN SYSTEM UTILITIES
      ======================================== */
   
   /* Consistent color overrides for migration */
@@ -415,5 +429,127 @@ body,
     .ds-hide-desktop {
       display: none;
     }
+  }
+
+  /* ========================================
+     DUOLINGO-STYLE BUTTON ANIMATIONS
+     ======================================== */
+  
+  /* Subtle bounce animation for success states */
+  @keyframes duolingo-bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-4px);
+    }
+    60% {
+      transform: translateY(-2px);
+    }
+  }
+  
+  /* Shake animation for error states */
+  @keyframes duolingo-shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+    20%, 40%, 60%, 80% { transform: translateX(2px); }
+  }
+  
+  /* Smooth loading dot animation - no blinking */
+  @keyframes loading-dot {
+    0%, 80%, 100% { 
+      transform: scale(0.9);
+      opacity: 0.8;
+    }
+    40% { 
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }
+  
+  /* Success button animation class */
+  .button-success-animate {
+    animation: duolingo-bounce 0.6s ease-out;
+  }
+  
+  /* Error button animation class */
+  .button-error-animate {
+    animation: duolingo-shake 0.5s ease-in-out;
+  }
+  
+  /* Enhanced button press effect */
+  .button-duolingo:active {
+    transform: translateY(1px) scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+  
+  /* Smooth button hover effect */
+  .button-duolingo {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Focus ring with Duolingo styling */
+  .button-duolingo:focus-visible {
+    outline: none;
+    box-shadow: 
+      0 0 0 3px rgba(59, 130, 246, 0.5),
+      0 4px 0 currentColor;
+  }
+  
+  /* Loading spinner styles */
+  .loading-spinner {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    height: 1em;
+  }
+  
+  .loading-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: currentColor;
+    animation: loading-dot 1.2s infinite ease-in-out both;
+  }
+  
+  .loading-dot:nth-child(1) { animation-delay: -0.24s; }
+  .loading-dot:nth-child(2) { animation-delay: -0.12s; }
+  .loading-dot:nth-child(3) { animation-delay: 0s; }
+  
+  /* Disabled button state improvements */
+  .button-duolingo:disabled {
+    transform: none !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .dark .button-duolingo:disabled {
+    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .button-duolingo:disabled:hover {
+    transform: none !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .dark .button-duolingo:disabled:hover {
+    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .button-duolingo:disabled:active {
+    transform: none !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .dark .button-duolingo:disabled:active {
+    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  /* Loading button state */
+  .button-loading {
+    cursor: wait;
+    pointer-events: none;
   }
 }

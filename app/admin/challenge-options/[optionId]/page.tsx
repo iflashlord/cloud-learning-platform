@@ -4,7 +4,7 @@ import { isAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Edit, ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
+import { Trash2, Edit, ArrowLeft, CheckCircle2, XCircle, ImageIcon, Volume2 } from "lucide-react";
 import db from "@/db/drizzle";
 import { challengeOptions } from "@/db/schema";
 
@@ -130,8 +130,9 @@ const AdminChallengeOptionViewPage = async ({
                 <label className="block text-sm font-medium text-gray-700 mb-2">Media Files</label>
                 <div className="space-y-2">
                   {option.imageSrc && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>📷 Image:</span>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <ImageIcon className="w-4 h-4" />
+                      <span>Image:</span>
                       <a 
                         href={option.imageSrc} 
                         target="_blank" 
@@ -143,8 +144,9 @@ const AdminChallengeOptionViewPage = async ({
                     </div>
                   )}
                   {option.audioSrc && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>🔊 Audio:</span>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Volume2 className="w-4 h-4" />
+                      <span>Audio:</span>
                       <a 
                         href={option.audioSrc} 
                         target="_blank" 

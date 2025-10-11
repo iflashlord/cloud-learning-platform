@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { 
   Check, 
@@ -162,24 +163,32 @@ const ProPage = async () => {
               name: "Sarah Johnson",
               role: "AWS Solutions Architect",
               content: "The premium content helped me pass my AWS certification exam. The unlimited practice was a game-changer!",
-              avatar: "👩‍💻"
+              avatarSrc: "/woman.svg"
             },
             {
               name: "Mike Chen",
               role: "DevOps Engineer",
               content: "Offline learning is perfect for my commute. I've completed 3 courses during my daily train rides.",
-              avatar: "👨‍💻"
+              avatarSrc: "/man.svg"
             },
             {
               name: "Emily Davis",
               role: "Full Stack Developer",
               content: "The progress insights helped me identify my weak areas and focus my learning effectively.",
-              avatar: "👩‍🔬"
+              avatarSrc: "/woman.svg"
             }
           ].map((testimonial, index) => (
             <div key={index} className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-100">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">{testimonial.avatar}</div>
+                <div className="mr-3">
+                  <Image
+                    src={testimonial.avatarSrc}
+                    alt={`${testimonial.name} avatar`}
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                </div>
                 <div>
                   <div className="font-semibold text-gray-900">{testimonial.name}</div>
                   <div className="text-sm text-gray-600">{testimonial.role}</div>

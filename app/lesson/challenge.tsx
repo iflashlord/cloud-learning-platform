@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { statusStyles } from "@/lib/style-utils";
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useEffect } from "react";
-import { Volume2, Play, HelpCircle } from "lucide-react";
+import { Volume2, Play, HelpCircle, Lightbulb, Mic, Clapperboard, Smartphone, ClipboardList, Headphones } from "lucide-react";
 
 import { Card } from "./card";
 import { SpeechInput } from "@/components/SpeechInput";
@@ -173,8 +173,11 @@ export const Challenge = ({
             </div>
             {challenge?.hint && showHint && (
               <div className={cn("mt-3 p-3 rounded-lg border transition-all duration-300 ease-in-out", statusStyles.warning.bg, statusStyles.warning.border)}>
-                <p className={cn("text-sm", statusStyles.warning.text)}>
-                  💡 <strong>Hint:</strong> {challenge.hint}
+                <p className={cn("text-sm flex items-start gap-2", statusStyles.warning.text)}>
+                  <Lightbulb className="w-4 h-4 mt-0.5" />
+                  <span>
+                    <strong>Hint:</strong> {challenge.hint}
+                  </span>
                 </p>
               </div>
             )}
@@ -257,8 +260,9 @@ export const Challenge = ({
         <div className="space-y-4">
           <QuestionHeader>
             <div className={cn("mt-3 p-3 rounded-lg border", statusStyles.error.bg, statusStyles.error.border)}>
-              <p className={cn("text-sm font-medium", statusStyles.error.text)}>
-                🎤 Voice Input Mode - Click the microphone and speak your answer clearly
+              <p className={cn("text-sm font-medium flex items-center gap-2", statusStyles.error.text)}>
+                <Mic className="w-4 h-4" />
+                <span>Voice Input Mode - Click the microphone and speak your answer clearly</span>
               </p>
             </div>
           </QuestionHeader>
@@ -283,8 +287,9 @@ export const Challenge = ({
           <QuestionHeader>
             {challenge?.videoSrc && (
               <div className="mt-3 p-3 bg-violet-50 rounded-lg border border-violet-200">
-                <p className="text-sm text-violet-700 font-medium mb-2">
-                  🎬 Watch the video carefully before selecting your answer
+                <p className="text-sm text-violet-700 font-medium mb-2 flex items-center gap-2">
+                  <Clapperboard className="w-4 h-4" />
+                  <span>Watch the video carefully before selecting your answer</span>
                 </p>
                 <div className="bg-white p-3 rounded-lg border border-violet-100 shadow-sm">
                   <video 
@@ -298,8 +303,9 @@ export const Challenge = ({
                     <source src={challenge.videoSrc} type="video/ogg" />
                     Your browser does not support the video element.
                   </video>
-                  <p className="text-xs text-neutral-500 mt-2 text-center">
-                    📱 You can pause and rewatch the video as needed
+                  <p className="text-xs text-neutral-500 mt-2 text-center flex items-center justify-center gap-1">
+                    <Smartphone className="w-3 h-3" />
+                    <span>You can pause and rewatch the video as needed</span>
                   </p>
                 </div>
               </div>
@@ -337,8 +343,9 @@ export const Challenge = ({
         <div className="space-y-4">
           <QuestionHeader>
             <div className={cn("mt-3 p-3 rounded-lg border", statusStyles.info.bg, statusStyles.info.border)}>
-              <p className={cn("text-sm", statusStyles.info.text)}>
-                📋 Arrange items in the correct order. You can drag & drop or use the ↑↓ buttons.
+              <p className={cn("text-sm flex items-center gap-2", statusStyles.info.text)}>
+                <ClipboardList className="w-4 h-4" />
+                <span>Arrange items in the correct order. You can drag &amp; drop or use the ↑↓ buttons.</span>
               </p>
             </div>
           </QuestionHeader>
@@ -490,8 +497,9 @@ export const Challenge = ({
           <QuestionHeader>
             {challenge?.audioSrc && (
               <div className="mt-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                <p className="text-sm text-indigo-700 font-medium mb-2">
-                  🎧 Listen carefully before selecting your answer
+                <p className="text-sm text-indigo-700 font-medium mb-2 flex items-center gap-2">
+                  <Headphones className="w-4 h-4" />
+                  <span>Listen carefully before selecting your answer</span>
                 </p>
                 <div className="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm">
                   <audio 
@@ -505,8 +513,9 @@ export const Challenge = ({
                     <source src={challenge.audioSrc} type="audio/ogg" />
                     Your browser does not support the audio element.
                   </audio>
-                  <p className="text-xs text-neutral-500 mt-2 text-center">
-                    🔊 You can replay the audio as needed
+                  <p className="text-xs text-neutral-500 mt-2 text-center flex items-center justify-center gap-1">
+                    <Volume2 className="w-3 h-3" />
+                    <span>You can replay the audio as needed</span>
                   </p>
                 </div>
               </div>

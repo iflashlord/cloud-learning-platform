@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AdminPageHeader } from "@/components/ui/admin-page-header";
 import Link from "next/link";
-import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle, ImageIcon, Volume2 } from "lucide-react";
 
 interface ChallengeOption {
   id: number;
@@ -170,10 +170,16 @@ const AdminChallengeOptionsPage = () => {
                   )}
                   <div className="flex space-x-4 text-sm text-gray-500">
                     {option.imageSrc && (
-                      <span>📷 Has image</span>
+                      <span className="inline-flex items-center gap-1">
+                        <ImageIcon className="w-4 h-4" />
+                        Has image
+                      </span>
                     )}
                     {option.audioSrc && (
-                      <span>🔊 Has audio</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Volume2 className="w-4 h-4" />
+                        Has audio
+                      </span>
                     )}
                   </div>
                 </div>

@@ -297,15 +297,15 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
           >
-            <option value="SELECT">📝 Multiple Choice - Students pick from several options</option>
-            <option value="ASSIST">✏️ Fill in the Blank - Students complete a sentence</option>
-            <option value="TRUE_FALSE">✅ True/False - Students choose true or false</option>
-            <option value="DRAG_DROP">🔄 Drag & Drop - Students arrange items in order</option>
-            <option value="TEXT_INPUT">⌨️ Text Input - Students type their answer</option>
-            <option value="IMAGE_SELECT">🖼️ Image Selection - Students choose from images</option>
-            <option value="LISTENING">🎵 Listening - Students listen to audio and answer</option>
-            <option value="SPEECH_INPUT">🎤 Speech Input - Students answer using voice recognition</option>
-            <option value="VIDEO">🎬 Video Question - Students watch a video and answer</option>
+            <option value="SELECT">Multiple Choice - Students pick from several options</option>
+            <option value="ASSIST">Fill in the Blank - Students complete a sentence</option>
+            <option value="TRUE_FALSE">True/False - Students choose true or false</option>
+            <option value="DRAG_DROP">Drag &amp; Drop - Students arrange items in order</option>
+            <option value="TEXT_INPUT">Text Input - Students type their answer</option>
+            <option value="IMAGE_SELECT">Image Selection - Students choose from images</option>
+            <option value="LISTENING">Listening - Students listen to audio and answer</option>
+            <option value="SPEECH_INPUT">Speech Input - Students answer using voice recognition</option>
+            <option value="VIDEO">Video Question - Students watch a video and answer</option>
           </select>
           
           {/* Type-specific descriptions */}

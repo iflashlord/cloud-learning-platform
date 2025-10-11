@@ -4,24 +4,26 @@ import { useTheme } from "@/lib/theme";
 import { useThemeClasses } from "@/lib/theme-utils";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Palette } from "lucide-react";
 
 export const ThemeDemo = () => {
   const { currentTheme, setThemeByName } = useTheme();
   const themeClasses = useThemeClasses();
 
   const themes = [
-    { key: "default", name: "Default (Orange)", color: "🧡" },
-    { key: "cloud", name: "Cloud (Orange)", color: "🧡" },
-    { key: "architecture", name: "Architecture (Blue)", color: "🔵" },
-    { key: "development", name: "Development (Green)", color: "🟢" },
-    { key: "devops", name: "DevOps (Purple)", color: "🟣" }
+    { key: "default", name: "Default (Orange)", indicatorClass: "bg-orange-500" },
+    { key: "cloud", name: "Cloud (Orange)", indicatorClass: "bg-orange-400" },
+    { key: "architecture", name: "Architecture (Blue)", indicatorClass: "bg-blue-500" },
+    { key: "development", name: "Development (Green)", indicatorClass: "bg-green-500" },
+    { key: "devops", name: "DevOps (Purple)", indicatorClass: "bg-purple-500" }
   ] as const;
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className={cn("text-3xl font-bold mb-2", themeClasses.primaryText)}>
-          🎨 Dynamic Theme System
+        <h1 className={cn("text-3xl font-bold mb-2 flex items-center gap-2", themeClasses.primaryText)}>
+          <Palette className="w-6 h-6" />
+          <span>Dynamic Theme System</span>
         </h1>
         <p className="text-gray-600 mb-4">
           Current Theme: <strong className={themeClasses.primaryText}>{currentTheme.name}</strong>
@@ -34,9 +36,13 @@ export const ThemeDemo = () => {
               key={theme.key}
               variant={currentTheme.name === theme.name.split(" ")[0] ? "primary" : "ghost"}
               onClick={() => setThemeByName(theme.key)}
-              className="text-sm"
+              className="text-sm flex items-center gap-2"
             >
-              {theme.color} {theme.name}
+              <span
+                className={`w-2.5 h-2.5 rounded-full ${theme.indicatorClass}`}
+                aria-hidden="true"
+              />
+              <span>{theme.name}</span>
             </Button>
           ))}
         </div>

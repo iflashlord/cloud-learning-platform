@@ -3,7 +3,7 @@ import { isAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Edit, ArrowLeft } from "lucide-react";
+import { Trash2, Edit, ArrowLeft, ImageIcon, Volume2 } from "lucide-react";
 
 const AdminChallengeViewPage = async ({
   params
@@ -130,10 +130,16 @@ const AdminChallengeViewPage = async ({
                     {(option.imageSrc || option.audioSrc) && (
                       <div className="flex space-x-4 text-sm text-gray-600">
                         {option.imageSrc && (
-                          <span>📷 Image attached</span>
+                          <span className="inline-flex items-center gap-1">
+                            <ImageIcon className="w-4 h-4" />
+                            Image attached
+                          </span>
                         )}
                         {option.audioSrc && (
-                          <span>🔊 Audio attached</span>
+                          <span className="inline-flex items-center gap-1">
+                            <Volume2 className="w-4 h-4" />
+                            Audio attached
+                          </span>
                         )}
                       </div>
                     )}

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { quests } from "@/constants";
+import { quests, QUEST_ICON_MAP } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Zap, Crown, CheckCircle } from "lucide-react";
+import { Trophy, Star, Zap, Crown, CheckCircle, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -86,6 +86,7 @@ export const Quests = ({ points }: Props) => {
           const progress = Math.min((points / quest.value) * 100, 100);
           const isCompleted = points >= quest.value;
           const isNext = !isCompleted && index === 0 && incompleteQuests[0]?.title === quest.title;
+          const Icon = QUEST_ICON_MAP[quest.icon];
 
           return (
             <div
@@ -113,7 +114,7 @@ export const Quests = ({ points }: Props) => {
                   {isCompleted ? (
                     <CheckCircle className="w-5 h-5" />
                   ) : (
-                    <span>{quest.icon}</span>
+                    <Icon className="w-5 h-5" />
                   )}
                 </div>
 
@@ -175,7 +176,7 @@ export const Quests = ({ points }: Props) => {
                         <span>+{quest.reward.xp} XP</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="text-red-500">❤️</span>
+                        <Heart className="w-3 h-3 text-red-500" fill="currentColor" />
                         <span>+{quest.reward.hearts}</span>
                       </div>
                     </div>

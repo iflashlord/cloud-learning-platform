@@ -1,5 +1,5 @@
 /**
- * 🎨 Design System CSS
+ * Design System CSS
  * 
  * Global styles and CSS custom properties for the AWS Learning Platform design system.
  * This file ensures consistency across all components and provides fallbacks.
@@ -7,7 +7,7 @@
 
 @layer base {
   /* ========================================
-     🎯 DESIGN SYSTEM CSS VARIABLES
+     DESIGN SYSTEM CSS VARIABLES
      ======================================== */
   
   :root {
@@ -89,7 +89,7 @@
   }
   
   /* ========================================
-     🎨 COMPONENT BASE STYLES
+     COMPONENT BASE STYLES
      ======================================== */
   
   /* Consistent focus styles for accessibility */
@@ -120,7 +120,7 @@
   }
   
   /* ========================================
-     🎯 STATUS STYLES
+     STATUS STYLES
      ======================================== */
   
   .ds-status-success {
@@ -148,7 +148,7 @@
   }
   
   /* ========================================
-     📐 LAYOUT UTILITIES
+     LAYOUT UTILITIES
      ======================================== */
   
   .ds-container {
@@ -199,7 +199,7 @@
   }
   
   /* ========================================
-     📝 TYPOGRAPHY STYLES
+     TYPOGRAPHY STYLES
      ======================================== */
   
   .ds-heading-1 {
@@ -262,7 +262,7 @@
 
 @layer components {
   /* ========================================
-     🧩 COMPONENT OVERRIDES
+     COMPONENT OVERRIDES
      ======================================== */
   
   /* Ensure all buttons follow design system */
@@ -302,7 +302,7 @@
   }
   
   /* ========================================
-     🎨 LEGACY OVERRIDES (Migration Support)
+     LEGACY OVERRIDES (Migration Support)
      ======================================== */
   
   /* Override hardcoded colors during migration */
@@ -370,7 +370,7 @@
 
 @layer utilities {
   /* ========================================
-     🔧 UTILITY CLASSES
+     UTILITY CLASSES
      ======================================== */
   
   /* Responsive hiding */
@@ -407,8 +407,8 @@
   }
 }
 
-/* ========================================
-   💡 MIGRATION HELPERS
+  /* ========================================
+     MIGRATION HELPERS
    ======================================== */
 
 /*

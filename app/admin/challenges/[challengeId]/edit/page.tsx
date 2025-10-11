@@ -4,7 +4,7 @@ import { isAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowLeft, Edit, Plus, Trash2, Eye, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Trash2, Eye, AlertTriangle, CheckCircle2, XCircle, ImageIcon, Volume2, Lightbulb } from "lucide-react";
 import db from "@/db/drizzle";
 import { challenges } from "@/db/schema";
 import { ChallengeForm } from "../../components/ChallengeForm";
@@ -160,13 +160,15 @@ const AdminChallengeEditPage = async ({
                             {(option.imageSrc || option.audioSrc) && (
                               <div className="flex space-x-1">
                                 {option.imageSrc && (
-                                  <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                    📷 Image
+                                  <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                    <ImageIcon className="w-3 h-3" />
+                                    Image
                                   </span>
                                 )}
                                 {option.audioSrc && (
-                                  <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
-                                    🔊 Audio
+                                  <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
+                                    <Volume2 className="w-3 h-3" />
+                                    Audio
                                   </span>
                                 )}
                               </div>
@@ -176,8 +178,11 @@ const AdminChallengeEditPage = async ({
                             {option.text}
                           </h4>
                           {option.guide && (
-                            <p className="text-xs text-gray-600 bg-white px-2 py-1 rounded border">
-                              💡 <strong>Explanation:</strong> {option.guide}
+                            <p className="text-xs text-gray-600 bg-white px-2 py-1 rounded border flex items-center gap-1">
+                              <Lightbulb className="w-3 h-3 text-yellow-500" />
+                              <span>
+                                <strong>Explanation:</strong> {option.guide}
+                              </span>
                             </p>
                           )}
                         </div>

@@ -54,15 +54,9 @@ describe("Promo", () => {
     expect(promoContainer).toHaveClass();
   });
 
-  it("displays Pro icon or crown", () => {
-    const { container } = render(<Promo />);
+  it("displays Pro badge imagery", () => {
+    render(<Promo />);
 
-    // Check for crown icon or similar premium indicator
-    expect(
-      container.querySelector('svg[data-lucide="crown"]') ||
-      container.querySelector('[data-testid="crown-icon"]') ||
-      screen.queryByText("👑") ||
-      screen.queryByText("💎")
-    ).toBeTruthy();
+    expect(screen.getByAltText(/Pro/i)).toBeInTheDocument();
   });
 });

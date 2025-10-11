@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { POINTS_TO_REFILL } from "@/constants";
 import { refillHearts } from "@/actions/user-progress";
 import { createStripeUrl } from "@/actions/user-subscription";
+import { Heart, Zap, Crown, Check, Settings, Rocket } from "lucide-react";
 
 type Props = {
   hearts: number;
@@ -67,12 +68,14 @@ export const Items = ({
               Restore your hearts to continue learning without interruption. Get back in the game!
             </p>
             <div className="flex items-center gap-2">
-              <div className="bg-red-200 px-3 py-1 rounded-full text-sm font-medium text-red-800">
-                {hearts === 5 ? "❤️ Hearts Full" : `❤️ ${hearts}/5 Hearts`}
+              <div className="bg-red-200 px-3 py-1 rounded-full text-sm font-medium text-red-800 flex items-center gap-1">
+                <Heart className="w-4 h-4 text-red-700" fill="currentColor" />
+                <span>{hearts === 5 ? "Hearts Full" : `${hearts}/5 Hearts`}</span>
               </div>
               {hearts < 5 && (
-                <div className="bg-blue-200 px-3 py-1 rounded-full text-sm font-medium text-blue-800">
-                  ⚡ Cost: {POINTS_TO_REFILL} XP
+                <div className="bg-blue-200 px-3 py-1 rounded-full text-sm font-medium text-blue-800 flex items-center gap-1">
+                  <Zap className="w-4 h-4 text-blue-700" />
+                  <span>Cost: {POINTS_TO_REFILL} XP</span>
                 </div>
               )}
             </div>
@@ -92,22 +95,24 @@ export const Items = ({
                   : "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             } transition-all duration-200`}
           >
-            {hearts === 5
-              ? "💖 Full"
-              : points < POINTS_TO_REFILL
-                ? "Not enough XP"
-                : (
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/points.svg"
-                      alt="Points"
-                      height={20}
-                      width={20}
-                    />
-                    <span>{POINTS_TO_REFILL} XP</span>
-                  </div>
-                )
-            }
+            {hearts === 5 ? (
+              <div className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-gray-200" fill="currentColor" />
+                <span>Hearts Full</span>
+              </div>
+            ) : points < POINTS_TO_REFILL ? (
+              "Not enough XP"
+            ) : (
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/points.svg"
+                  alt="Points"
+                  height={20}
+                  width={20}
+                />
+                <span>{POINTS_TO_REFILL} XP</span>
+              </div>
+            )}
           </Button>
         </div>
       </div>
@@ -131,26 +136,26 @@ export const Items = ({
           <div className="flex-1 min-w-0">
             <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
               Pro Membership
-              <span className="text-2xl">👑</span>
+              <Crown className="w-5 h-5 text-yellow-500" />
             </h3>
             <p className="text-sm text-gray-600 mb-3">
               Unlock unlimited hearts, remove ads, and get access to exclusive pro features and content.
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-green-600">✅</span>
+                <Check className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-700">Unlimited Hearts</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-600">✅</span>
+                <Check className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-700">Ad-free Experience</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-600">✅</span>
+                <Check className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-700">Exclusive Pro Content</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-600">✅</span>
+                <Check className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-700">Priority Support</span>
               </div>
             </div>
@@ -164,7 +169,17 @@ export const Items = ({
                 : "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
             } shadow-lg hover:shadow-xl transition-all duration-200`}
           >
-            {hasActiveSubscription ? "⚙️ Manage" : "🚀 Upgrade"}
+            {hasActiveSubscription ? (
+              <div className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                <span>Manage</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Rocket className="w-5 h-5" />
+                <span>Upgrade</span>
+              </div>
+            )}
           </Button>
         </div>
       </div>
@@ -173,7 +188,7 @@ export const Items = ({
       <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-200 p-6 opacity-75">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
-            <span className="text-white text-2xl">🚀</span>
+            <Rocket className="w-8 h-8 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-700 mb-2">More Items Coming Soon!</h3>
           <p className="text-sm text-gray-600">

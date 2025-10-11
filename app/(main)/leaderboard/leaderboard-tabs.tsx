@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Crown, Trophy, Medal, Award, TrendingUp, Users, Search, Filter, ChevronDown, Star } from "lucide-react";
+import { Crown, Trophy, Medal, Award, TrendingUp, Users, Search, Filter, ChevronDown, Star, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type LeaderboardUser = {
@@ -148,7 +148,10 @@ export const LeaderboardTabs = ({
           </div>
           <h3 className="text-lg font-semibold text-gray-600 mb-2">No learners found</h3>
           <p className="text-muted-foreground mb-4">No one has started learning this course yet.</p>
-          <p className="text-sm text-muted-foreground">Be the first to join and claim the top spot! 🏆</p>
+          <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
+            <Trophy className="w-4 h-4 text-yellow-500" />
+            <span>Be the first to join and claim the top spot!</span>
+          </p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -264,8 +267,9 @@ export const LeaderboardTabs = ({
               <p className="text-sm text-muted-foreground mb-2">
                 {10 - leaderboard.length} more spots available in the top 10!
               </p>
-              <p className="text-xs text-muted-foreground">
-                Keep learning to climb the rankings 📚
+              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <BookOpen className="w-3 h-3" />
+                <span>Keep learning to climb the rankings</span>
               </p>
             </div>
           )}

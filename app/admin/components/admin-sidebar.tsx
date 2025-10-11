@@ -107,10 +107,10 @@ export const AdminSidebar = () => {
   }, [pathname, isSubmenuActive]);
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-full">
+    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-full">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
-        <p className="text-sm text-gray-500 mt-1">Learning Platform</p>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Admin Panel</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Learning Platform</p>
       </div>
       
       <nav className="px-4 space-y-1">
@@ -132,8 +132,8 @@ export const AdminSidebar = () => {
                     className={cn(
                       "flex items-center justify-between w-full px-3 py-2 rounded-md text-sm font-medium transition-colors",
                       submenuActive || isActive
-                        ? "bg-orange-100 text-orange-900 border-r-2 border-orange-500"
-                        : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                        ? "bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-100 border-r-2 border-orange-500 dark:border-orange-400"
+                        : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     )}
                   >
                     <div className="flex items-center">
@@ -159,8 +159,8 @@ export const AdminSidebar = () => {
                             className={cn(
                               "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
                               subIsActive
-                                ? "bg-orange-50 text-orange-800 border-l-2 border-orange-500"
-                                : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                                ? "bg-orange-50 dark:bg-orange-900/20 text-orange-800 dark:text-orange-200 border-l-2 border-orange-500 dark:border-orange-400"
+                                : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
                             )}
                           >
                             <subItem.icon className="w-4 h-4 mr-3" />
@@ -177,8 +177,8 @@ export const AdminSidebar = () => {
                   className={cn(
                     "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-orange-100 text-orange-900 border-r-2 border-orange-500"
-                      : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                      ? "bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-100 border-r-2 border-orange-500 dark:border-orange-400"
+                      : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                   )}
                 >
                   <item.icon className="w-5 h-5 mr-3" />

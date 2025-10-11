@@ -1,8 +1,47 @@
 import { CONFIG } from "@/lib/config";
+import {
+  Sprout,
+  Search,
+  Flame,
+  Zap,
+  Crown,
+  Trophy,
+  Sparkles,
+  Wind,
+} from "lucide-react";
 
 export const POINTS_TO_REFILL = 10;
 
-export const quests = [
+export const QUEST_ICON_MAP = {
+  sprout: Sprout,
+  search: Search,
+  flame: Flame,
+  zap: Zap,
+  crown: Crown,
+  trophy: Trophy,
+  sparkles: Sparkles,
+  wind: Wind,
+} as const;
+
+export type QuestIconKey = keyof typeof QUEST_ICON_MAP;
+
+type QuestDefinition = {
+  title: string;
+  description: string;
+  value: number;
+  reward: {
+    xp: number;
+    hearts: number;
+    badge: string;
+  };
+  icon: QuestIconKey;
+  color: string;
+  difficulty: string;
+  category: string;
+  type: string;
+};
+
+export const quests: QuestDefinition[] = [
   {
     title: "First Steps",
     description: "Begin your technology journey",
@@ -12,7 +51,7 @@ export const quests = [
       hearts: 1,
       badge: "novice"
     },
-    icon: "🌱",
+    icon: "sprout",
     color: "green",
     difficulty: "Beginner",
     category: "Getting Started",
@@ -27,7 +66,7 @@ export const quests = [
       hearts: 1,
       badge: "explorer"
     },
-    icon: "🔍",
+    icon: "search",
     color: "blue",
     difficulty: "Beginner",
     category: "Learning",
@@ -42,7 +81,7 @@ export const quests = [
       hearts: 2,
       badge: "consistent"
     },
-    icon: "🔥",
+    icon: "flame",
     color: "orange",
     difficulty: "Intermediate",
     category: "Consistency",
@@ -57,7 +96,7 @@ export const quests = [
       hearts: 3,
       badge: "champion"
     },
-    icon: "⚡",
+    icon: "zap",
     color: "purple",
     difficulty: "Intermediate",
     category: "Achievement",
@@ -72,7 +111,7 @@ export const quests = [
       hearts: 5,
       badge: "conqueror"
     },
-    icon: "👑",
+    icon: "crown",
     color: "gold",
     difficulty: "Advanced",
     category: "Mastery",
@@ -87,7 +126,7 @@ export const quests = [
       hearts: 10,
       badge: "master"
     },
-    icon: "🏆",
+    icon: "trophy",
     color: "platinum",
     difficulty: "Expert",
     category: "Mastery",
@@ -102,7 +141,7 @@ export const quests = [
       hearts: 4,
       badge: "perfectionist"
     },
-    icon: "✨",
+    icon: "sparkles",
     color: "rainbow",
     difficulty: "Advanced",
     category: "Consistency",
@@ -117,7 +156,7 @@ export const quests = [
       hearts: 2,
       badge: "speedster"
     },
-    icon: "💨",
+    icon: "wind",
     color: "cyan",
     difficulty: "Intermediate",
     category: "Performance",

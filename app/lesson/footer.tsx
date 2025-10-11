@@ -43,7 +43,7 @@ export const Footer = ({
         )}
         {status === "completed" && (
           <Button
-            variant="default"
+            variant="secondary"
             size={isMobile ? "sm" : "lg"}
             onClick={() => window.location.href = `/lesson/${lessonId}`}
           >
@@ -52,15 +52,20 @@ export const Footer = ({
         )}
         <Button
           disabled={disabled}
-          className="ml-auto"
+          className="ml-auto font-extrabold tracking-wide min-w-[120px]"
           onClick={onCheck}
           size={isMobile ? "sm" : "lg"}
-          variant={status === "wrong" ? "danger" : "secondary"}
+          variant={
+            status === "wrong" ? "danger" :
+            status === "correct" ? "success" : 
+            status === "completed" ? "info" :
+            "primary"
+          }
         >
-          {status === "none" && "Check"}
-          {status === "correct" && "Next"}
-          {status === "wrong" && "Retry"}
-          {status === "completed" && "Continue"}
+          {status === "none" && "CHECK"}
+          {status === "correct" && "NEXT"}
+          {status === "wrong" && "RETRY"}
+          {status === "completed" && "CONTINUE"}
         </Button>
       </div>
     </footer>

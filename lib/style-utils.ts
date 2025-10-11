@@ -1,5 +1,5 @@
 /**
- * 🎨 Style Utilities for Consistent Design
+ * Style Utilities for Consistent Design
  * 
  * This file provides utility functions and classes for maintaining
  * consistent styling across the entire application.
@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { DESIGN_TOKENS, SEMANTIC_COLORS, THEME_STYLES, buttonVariants, cardVariants, createComponentStyles } from "@/lib/design-system"
 
 // ==============================
-// 🎯 UTILITY FUNCTIONS
+// UTILITY FUNCTIONS
 // ==============================
 
 /**
@@ -188,7 +188,7 @@ export const typographyStyles = {
 }
 
 // ==============================
-// 🎨 COMPONENT STYLE BUILDERS
+// COMPONENT STYLE BUILDERS
 // ==============================
 
 /**
@@ -277,7 +277,7 @@ export const buildFormFieldStyles = (options: {
 }
 
 // ==============================
-// 🎯 QUICK ACCESS UTILITIES
+// QUICK ACCESS UTILITIES
 // ==============================
 
 export const quickStyles = {

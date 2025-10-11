@@ -58,11 +58,11 @@ function findHardcodedColors(dir, results = []) {
 
 const results = findHardcodedColors(process.cwd());
 
-console.log('\n🎨 HARDCODED COLORS AUDIT\n');
+console.log('\n[HARDCODED COLORS AUDIT]\n');
 console.log(`Found ${results.length} files with hardcoded colors:\n`);
 
 results.forEach(result => {
-  console.log(`📁 ${result.file}`);
+  console.log(`→ ${result.file}`);
   console.log(`   Colors: ${result.matches.join(', ')}`);
   console.log(`   Count: ${result.count}\n`);
 });

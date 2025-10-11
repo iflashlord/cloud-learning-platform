@@ -36,10 +36,10 @@ try {
   // Write back to package.json
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');
   
-  console.log(`✅ Updated package.json name from "${oldName}" to "${newSlug}"`);
-  console.log('📦 Please run "npm install" to update package-lock.json if needed');
+  console.log(`Updated package.json name from "${oldName}" to "${newSlug}"`);
+  console.log('Please run "npm install" to update package-lock.json if needed');
   
 } catch (error) {
-  console.error('❌ Error updating package.json:', error.message);
+  console.error('Error updating package.json:', error.message);
   process.exit(1);
 }

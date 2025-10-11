@@ -5,7 +5,7 @@ const adminIds = [
 ];
 
 export const isAdmin = async () => {
-  return true; // TEMPORARY BYPASS
+  //return true; // TEMPORARY BYPASS
   const { userId } = await auth();
   if (!userId) {
     return false;

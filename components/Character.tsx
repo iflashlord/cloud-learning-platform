@@ -1,6 +1,37 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Search,
+  Brain,
+  Target,
+  Handshake,
+  Pencil,
+  Puzzle,
+  Wrench,
+  Scale,
+  Binary,
+  ShieldCheck,
+  GripVertical,
+  ListChecks,
+  ArrowUpDown,
+  Keyboard,
+  PenLine,
+  Type,
+  ImageIcon,
+  Eye,
+  Palette,
+  Headphones,
+  Ear,
+  Music,
+  Mic,
+  AudioLines,
+  Clapperboard,
+  Popcorn,
+  Film,
+  Bot,
+} from "lucide-react";
 
 interface CharacterProps {
   questionType: "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT" | "VIDEO";
@@ -9,138 +40,113 @@ interface CharacterProps {
   className?: string;
 }
 
-export const Character = ({ questionType, challengeId = 0, state = "default", className = "" }: CharacterProps) => {
-  // Character variations for each question type
-  const getCharacterOptions = (type: string) => {
-    switch (type) {
-      case "SELECT":
-        return [
-          { emoji: "🤔", name: "Thinker", expression: "pondering the options" },
-          { emoji: "🧠", name: "Brain", expression: "analyzing choices" },
-          { emoji: "🎯", name: "Archer", expression: "aiming for the right answer" },
-          { emoji: "🔍", name: "Detective", expression: "investigating options" },
-        ];
-      case "ASSIST":
-        return [
-          { emoji: "🤝", name: "Helper", expression: "ready to assist" },
-          { emoji: "✏️", name: "Writer", expression: "filling in the blanks" },
-          { emoji: "🧩", name: "Puzzler", expression: "completing the puzzle" },
-          { emoji: "🔧", name: "Fixer", expression: "putting pieces together" },
-        ];
-      case "TRUE_FALSE":
-        return [
-          { emoji: "⚖️", name: "Judge", expression: "weighing the truth" },
-          { emoji: "🕵️", name: "Investigator", expression: "fact-checking" },
-          { emoji: "🎭", name: "Actor", expression: "true or false drama" },
-          { emoji: "🧐", name: "Scholar", expression: "examining facts" },
-        ];
-      case "DRAG_DROP":
-        return [
-          { emoji: "🔄", name: "Organizer", expression: "sorting things out" },
-          { emoji: "📦", name: "Mover", expression: "arranging items" },
-          { emoji: "🧭", name: "Navigator", expression: "finding the right order" },
-          { emoji: "🎪", name: "Juggler", expression: "keeping things in sequence" },
-        ];
-      case "TEXT_INPUT":
-        return [
-          { emoji: "✍️", name: "Scribe", expression: "ready to write" },
-          { emoji: "📝", name: "Note-taker", expression: "capturing thoughts" },
-          { emoji: "🖋️", name: "Author", expression: "crafting words" },
-          { emoji: "📚", name: "Scholar", expression: "sharing knowledge" },
-        ];
-      case "IMAGE_SELECT":
-        return [
-          { emoji: "🎨", name: "Artist", expression: "appreciating visuals" },
-          { emoji: "📸", name: "Photographer", expression: "focusing on details" },
-          { emoji: "👁️", name: "Observer", expression: "seeing clearly" },
-          { emoji: "🖼️", name: "Curator", expression: "selecting the perfect image" },
-        ];
-      case "LISTENING":
-        return [
-          { emoji: "🎵", name: "Musician", expression: "tuned in" },
-          { emoji: "👂", name: "Listener", expression: "all ears" },
-          { emoji: "🎧", name: "Audiophile", expression: "hearing every detail" },
-          { emoji: "🎼", name: "Composer", expression: "catching the rhythm" },
-        ];
-      case "SPEECH_INPUT":
-        return [
-          { emoji: "🎤", name: "Speaker", expression: "ready to talk" },
-          { emoji: "🗣️", name: "Announcer", expression: "speaking up" },
-          { emoji: "📢", name: "Broadcaster", expression: "sharing voice" },
-          { emoji: "🎙️", name: "Host", expression: "on the mic" },
-        ];
-      case "VIDEO":
-        return [
-          { emoji: "🎬", name: "Director", expression: "watching the scene" },
-          { emoji: "📹", name: "Cameraman", expression: "capturing the moment" },
-          { emoji: "🎭", name: "Actor", expression: "in the spotlight" },
-          { emoji: "🍿", name: "Viewer", expression: "enjoying the show" },
-        ];
-      default:
-        return [
-          { emoji: "🤖", name: "Bot", expression: "processing..." },
-        ];
-    }
-  };
+type CharacterType = CharacterProps["questionType"];
 
+type CharacterVariant = {
+  Icon: LucideIcon;
+  name: string;
+  expression: string;
+};
+
+type CharacterWithTone = CharacterVariant & {
+  tone: "neutral" | "success" | "error";
+};
+
+const CHARACTER_VARIANTS: Record<CharacterType, CharacterVariant[]> = {
+  SELECT: [
+    { Icon: Search, name: "Detective", expression: "Investigating options" },
+    { Icon: Brain, name: "Strategist", expression: "Analyzing choices" },
+    { Icon: Target, name: "Sharpshooter", expression: "Aiming for the right answer" },
+  ],
+  ASSIST: [
+    { Icon: Handshake, name: "Helper", expression: "Ready to assist" },
+    { Icon: Pencil, name: "Scribe", expression: "Filling in the blanks" },
+    { Icon: Puzzle, name: "Solver", expression: "Piecing everything together" },
+    { Icon: Wrench, name: "Fixer", expression: "Adjusting every detail" },
+  ],
+  TRUE_FALSE: [
+    { Icon: Scale, name: "Judge", expression: "Weighing the truth" },
+    { Icon: Binary, name: "Analyst", expression: "Checking every fact" },
+    { Icon: ShieldCheck, name: "Guardian", expression: "Protecting accuracy" },
+  ],
+  DRAG_DROP: [
+    { Icon: GripVertical, name: "Organizer", expression: "Sorting everything out" },
+    { Icon: ListChecks, name: "Planner", expression: "Keeping things in order" },
+    { Icon: ArrowUpDown, name: "Navigator", expression: "Arranging the sequence" },
+  ],
+  TEXT_INPUT: [
+    { Icon: Keyboard, name: "Typist", expression: "Ready to write" },
+    { Icon: PenLine, name: "Author", expression: "Crafting the perfect response" },
+    { Icon: Type, name: "Editor", expression: "Fine-tuning every word" },
+  ],
+  IMAGE_SELECT: [
+    { Icon: ImageIcon, name: "Curator", expression: "Selecting the best image" },
+    { Icon: Eye, name: "Observer", expression: "Noticing every detail" },
+    { Icon: Palette, name: "Artist", expression: "Appreciating the visuals" },
+  ],
+  LISTENING: [
+    { Icon: Headphones, name: "Musician", expression: "Hearing every note" },
+    { Icon: Ear, name: "Listener", expression: "All ears" },
+    { Icon: Music, name: "Composer", expression: "Catching the rhythm" },
+  ],
+  SPEECH_INPUT: [
+    { Icon: Mic, name: "Speaker", expression: "Ready to talk" },
+    { Icon: AudioLines, name: "Announcer", expression: "Sharing the message" },
+    { Icon: Headphones, name: "Coach", expression: "Tuning your delivery" },
+  ],
+  VIDEO: [
+    { Icon: Clapperboard, name: "Director", expression: "Capturing the scene" },
+    { Icon: Popcorn, name: "Viewer", expression: "Enjoying the show" },
+    { Icon: Film, name: "Producer", expression: "Cueing the action" },
+  ],
+};
+
+const DEFAULT_VARIANT: CharacterVariant = {
+  Icon: Bot,
+  name: "Guide Bot",
+  expression: "Processing...",
+};
+
+const getCharacterOptions = (type: CharacterType): CharacterVariant[] => {
+  return CHARACTER_VARIANTS[type] ?? [DEFAULT_VARIANT];
+};
+
+export const Character = ({ questionType, challengeId = 0, state = "default", className = "" }: CharacterProps) => {
   // Consistently select a character based on challengeId (stable across renders)
-  const selectedCharacter = useMemo(() => {
+  const selectedCharacter = useMemo<CharacterVariant>(() => {
     const options = getCharacterOptions(questionType);
-    // Use challengeId as seed for consistent character selection
-    const seededIndex = challengeId % options.length;
-    return options[seededIndex];
+    if (options.length === 0) {
+      return DEFAULT_VARIANT;
+    }
+    const seededIndex = Math.abs(challengeId) % options.length;
+    return options[seededIndex] ?? DEFAULT_VARIANT;
   }, [questionType, challengeId]);
 
   // Get emotional state variations
-  const getCharacterWithState = (character: any, currentState: string) => {
-    switch (currentState) {
-      case "correct":
-        return {
-          ...character,
-          emoji: character.emoji === "🤔" ? "😊" : 
-                 character.emoji === "🧠" ? "🤗" :
-                 character.emoji === "🎯" ? "🎉" :
-                 character.emoji === "🔍" ? "😄" :
-                 character.emoji === "🤝" ? "🥳" :
-                 character.emoji === "✏️" ? "😊" :
-                 character.emoji === "🧩" ? "🎊" :
-                 character.emoji === "🔧" ? "✨" :
-                 character.emoji === "⚖️" ? "😌" :
-                 character.emoji === "🕵️" ? "🕵️‍♂️" :
-                 character.emoji === "🎭" ? "😊" :
-                 character.emoji === "🧐" ? "🤓" :
-                 character.emoji === "🔄" ? "🎉" :
-                 character.emoji === "📦" ? "📮" :
-                 character.emoji === "🧭" ? "🗺️" :
-                 character.emoji === "🎪" ? "🎊" :
-                 "😊", // default happy
-          expression: "Great job! That's correct!"
-        };
-      case "wrong":
-        return {
-          ...character,
-          emoji: character.emoji === "🤔" ? "😔" :
-                 character.emoji === "🧠" ? "🤯" :
-                 character.emoji === "🎯" ? "😅" :
-                 character.emoji === "🔍" ? "😰" :
-                 character.emoji === "🤝" ? "😕" :
-                 character.emoji === "✏️" ? "😓" :
-                 character.emoji === "🧩" ? "🤷" :
-                 character.emoji === "🔧" ? "😞" :
-                 character.emoji === "⚖️" ? "😬" :
-                 character.emoji === "🕵️" ? "🤨" :
-                 character.emoji === "🎭" ? "😢" :
-                 character.emoji === "🧐" ? "😟" :
-                 character.emoji === "🔄" ? "😵‍💫" :
-                 character.emoji === "📦" ? "📭" :
-                 character.emoji === "🧭" ? "🗾" :
-                 character.emoji === "🎪" ? "😔" :
-                 "😔", // default sad
-          expression: "Oops! Try again, you can do it!"
-        };
-      default:
-        return character;
+  const getCharacterWithState = (
+    character: CharacterVariant,
+    currentState: CharacterProps["state"],
+  ): CharacterWithTone => {
+    if (currentState === "correct") {
+      return {
+        ...character,
+        expression: "Great job! That's correct!",
+        tone: "success",
+      };
     }
+
+    if (currentState === "wrong") {
+      return {
+        ...character,
+        expression: "Oops! Try again, you can do it!",
+        tone: "error",
+      };
+    }
+
+    return {
+      ...character,
+      tone: "neutral",
+    };
   };
 
   const getTypeColor = (type: string) => {
@@ -175,12 +181,26 @@ export const Character = ({ questionType, challengeId = 0, state = "default", cl
 
   const currentCharacter = getCharacterWithState(selectedCharacter, state);
 
+  const iconToneClass =
+    currentCharacter.tone === "success"
+      ? "text-white drop-shadow-lg"
+      : currentCharacter.tone === "error"
+      ? "text-white opacity-90"
+      : "text-white";
+
+  const expressionColorClass =
+    currentCharacter.tone === "success"
+      ? "text-green-600"
+      : currentCharacter.tone === "error"
+      ? "text-red-600"
+      : "text-gray-600";
+
   return (
     <div className={`flex flex-col items-center space-y-3 ${className}`}>
       {/* Character Avatar */}
       <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br ${getTypeColor(questionType)} flex items-center justify-center shadow-lg transform transition-all duration-300 ${state === "correct" ? "scale-110" : state === "wrong" ? "scale-95" : "hover:scale-105"}`}>
-        <div className={`text-3xl transition-all duration-300 ${state === "correct" ? "animate-bounce" : state === "wrong" ? "animate-pulse" : ""}`}>
-          {currentCharacter.emoji}
+        <div className={`transition-all duration-300 ${state === "correct" ? "animate-bounce" : state === "wrong" ? "animate-pulse" : ""}`}>
+          <currentCharacter.Icon className={`w-10 h-10 ${iconToneClass}`} />
         </div>
         
         {/* Floating type indicator */}
@@ -192,7 +212,7 @@ export const Character = ({ questionType, challengeId = 0, state = "default", cl
       {/* Character Info */}
       <div className="text-center">
         <p className="font-semibold text-gray-800 text-sm">{currentCharacter.name}</p>
-        <p className={`text-xs italic max-w-32 leading-tight transition-colors duration-300 ${state === "correct" ? "text-green-600" : state === "wrong" ? "text-red-600" : "text-gray-600"}`}>
+        <p className={`text-xs italic max-w-32 leading-tight transition-colors duration-300 ${expressionColorClass}`}>
           {currentCharacter.expression}
         </p>
         

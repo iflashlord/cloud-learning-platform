@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Trophy, Award, Star, Crown, Medal, Zap, Target, TrendingUp } from "lucide-react";
+import { Trophy, Award, Star, Crown, Medal, Zap, Target, TrendingUp, Gem, Lock, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +9,7 @@ type Achievement = {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  icon: LucideIcon;
   color: string;
   rarity: "common" | "rare" | "epic" | "legendary";
   unlockedAt?: Date;
@@ -34,7 +34,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       id: "first-quest",
       title: "Quest Starter",
       description: "Complete your first quest",
-      icon: "🌟",
+      icon: Star,
       color: "green",
       rarity: "common",
       unlockedAt: completedQuests >= 1 ? new Date() : undefined,
@@ -43,7 +43,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       id: "quest-enthusiast",
       title: "Quest Enthusiast", 
       description: "Complete 3 quests",
-      icon: "⚡",
+      icon: Zap,
       color: "blue",
       rarity: "common",
       unlockedAt: completedQuests >= 3 ? new Date() : undefined,
@@ -56,7 +56,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       id: "quest-master",
       title: "Quest Master",
       description: "Complete all available quests",
-      icon: "👑",
+      icon: Crown,
       color: "gold",
       rarity: "legendary",
       unlockedAt: completedQuests >= totalQuests ? new Date() : undefined,
@@ -69,7 +69,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       id: "point-collector",
       title: "Point Collector",
       description: "Earn 500 total XP",
-      icon: "💎",
+      icon: Gem,
       color: "purple",
       rarity: "rare",
       unlockedAt: userPoints >= 500 ? new Date() : undefined,
@@ -82,7 +82,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       id: "xp-legend",
       title: "XP Legend",
       description: "Reach 1000 XP milestone",
-      icon: "🏆",
+      icon: Trophy,
       color: "platinum",
       rarity: "epic",
       unlockedAt: userPoints >= 1000 ? new Date() : undefined,
@@ -108,9 +108,11 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
 
   const getAchievementIcon = (achievement: Achievement) => {
     if (achievement.unlockedAt) {
-      return achievement.icon;
+      const Icon = achievement.icon;
+      return <Icon className="w-8 h-8 text-current" aria-hidden />;
     }
-    return "🔒";
+
+    return <Lock className="w-8 h-8 text-gray-400" aria-hidden />;
   };
 
   const unlockedAchievements = achievements.filter(a => a.unlockedAt);
@@ -167,7 +169,9 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="text-3xl">{getAchievementIcon(achievement)}</div>
+                    <div className="flex items-center justify-center w-12 h-12">
+                      {getAchievementIcon(achievement)}
+                    </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-sm">{achievement.title}</h4>
                       <p className="text-xs opacity-75 mb-1">{achievement.description}</p>
@@ -209,7 +213,9 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
                   className="p-4 rounded-xl border-2 border-gray-200 bg-gray-50 transition-all duration-200 hover:bg-gray-100"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="text-3xl grayscale">{getAchievementIcon(achievement)}</div>
+                    <div className="flex items-center justify-center w-12 h-12 grayscale">
+                      {getAchievementIcon(achievement)}
+                    </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-sm text-gray-700">{achievement.title}</h4>
                       <p className="text-xs text-gray-500 mb-2">{achievement.description}</p>
@@ -250,8 +256,9 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       {lockedAchievements.length > 0 && (
         <div className="mt-6 text-center">
           <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-4 border border-purple-200">
-            <p className="text-sm text-purple-700 mb-3 font-medium">
-              Keep completing quests to unlock more achievements! 🎯
+            <p className="text-sm text-purple-700 mb-3 font-medium flex items-center justify-center gap-2">
+              <Target className="w-4 h-4" />
+              <span>Keep completing quests to unlock more achievements!</span>
             </p>
             <Button 
               variant="primary" 

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle, Clock, Star, Trophy, Target, TrendingUp, Zap, Award, Crown, Medal } from "lucide-react";
+import { CheckCircle, Clock, Star, Trophy, Target, TrendingUp, Zap, Award, Crown, Medal, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { QUEST_ICON_MAP, type QuestIconKey } from "@/constants";
 
 type Quest = {
   title: string;
@@ -15,7 +16,7 @@ type Quest = {
     hearts: number;
     badge: string;
   };
-  icon: string;
+  icon: QuestIconKey;
   color: string;
   difficulty: string;
   category: string;
@@ -173,6 +174,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
         {filteredQuests.map((quest, index) => {
           const status = getQuestStatus(quest);
           const progress = getProgressPercentage(quest);
+          const Icon = QUEST_ICON_MAP[quest.icon] ?? Trophy;
           
           return (
             <div
@@ -192,7 +194,11 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
                     status === "active" ? "bg-blue-500 text-white" :
                     "bg-gray-300 text-gray-600"
                   )}>
-                    {status === "completed" ? <Trophy className="w-4 h-4" /> : quest.icon}
+                    {status === "completed" ? (
+                      <Trophy className="w-4 h-4" />
+                    ) : (
+                      <Icon className="w-5 h-5" />
+                    )}
                   </div>
                   <div className="flex-1">
                     <h4 className={cn(
@@ -244,7 +250,8 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
                   )}
                   {quest.reward.hearts && (
                     <span className="flex items-center gap-1 text-red-600">
-                      ❤️ +{quest.reward.hearts}
+                      <Heart className="w-3 h-3 fill-red-600" />
+                      +{quest.reward.hearts}
                     </span>
                   )}
                   {quest.reward.badge && (

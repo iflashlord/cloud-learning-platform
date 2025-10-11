@@ -9,9 +9,9 @@ import { Progress } from "@/components/ui/progress";
 import { Promo } from "@/components/promo";
 import { QuestAchievements } from "./quest-achievements";
 import { QuestProgressTracker } from "./quest-progress-tracker";
-import { quests } from "@/constants";
+import { quests, QUEST_ICON_MAP, type QuestIconKey } from "@/constants";
 import { BRAND_CONFIG } from "@/lib/config";
-import { Trophy, Crown, Star, Zap, Target, Award, CheckCircle, Lock, Gift, TrendingUp } from "lucide-react";
+import { Trophy, Crown, Star, Zap, Target, Award, CheckCircle, Lock, Gift, TrendingUp, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // QuestCard component for individual quest display
@@ -25,7 +25,7 @@ type QuestCardProps = {
       hearts: number;
       badge: string;
     };
-    icon: string;
+    icon: QuestIconKey;
     color: string;
     difficulty: string;
     category: string;
@@ -68,6 +68,8 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
     return difficultyMap[difficulty] || "bg-gray-100 text-gray-800 border-gray-300";
   };
 
+  const Icon = QUEST_ICON_MAP[quest.icon];
+
   return (
     <div
       className={cn(
@@ -79,20 +81,24 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4 gap-3">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border-2 font-bold flex-shrink-0",
-            isCompleted 
-              ? "bg-green-500 border-green-600 text-white" 
-              : quest.color === 'gold' 
-                ? "bg-gradient-to-br from-yellow-400 to-amber-500 border-yellow-500 text-white"
-                : quest.color === 'platinum'
-                  ? "bg-gradient-to-br from-gray-400 to-slate-500 border-gray-500 text-white"
-                  : "bg-white border-gray-200"
-          )}>
-            {isCompleted ? <CheckCircle className="w-6 h-6" /> : quest.icon}
-          </div>
-          
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className={cn(
+                "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border-2 font-bold flex-shrink-0",
+                isCompleted 
+                  ? "bg-green-500 border-green-600 text-white" 
+                  : quest.color === 'gold' 
+                    ? "bg-gradient-to-br from-yellow-400 to-amber-500 border-yellow-500 text-white"
+                    : quest.color === 'platinum'
+                      ? "bg-gradient-to-br from-gray-400 to-slate-500 border-gray-500 text-white"
+                      : "bg-white border-gray-200"
+              )}>
+                {isCompleted ? (
+                  <CheckCircle className="w-6 h-6" />
+                ) : (
+                  <Icon className="w-6 h-6" />
+                )}
+              </div>
+
           <div className="flex-1 min-w-0">
             <h3 className={cn(
               "font-bold text-lg truncate",
@@ -172,7 +178,7 @@ const QuestCard = ({ quest, progress, userPoints, isCompleted, isNext }: QuestCa
             <span className="font-medium">+{quest.reward.xp} XP</span>
           </div>
           <div className="flex items-center gap-1 text-sm">
-            <span className="text-red-500">❤️</span>
+            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
             <span className="font-medium">+{quest.reward.hearts} Hearts</span>
           </div>
           <div className="flex items-center gap-1 text-sm">

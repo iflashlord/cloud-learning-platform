@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/lib/design-system"
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
@@ -14,6 +14,13 @@ export interface ButtonProps
   rightIcon?: React.ReactNode
   // Legacy support for existing app variants
   legacyVariant?: "locked" | "sidebar" | "sidebarOutline"
+  // Animation support for Duolingo-style interactions
+  animateSuccess?: boolean
+  animateError?: boolean
+  // Course theme support
+  courseTheme?: "compute" | "storage" | "security" | "networking" | "management" | "aiml"
+  // Override disabled to allow boolean or undefined
+  disabled?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -27,19 +34,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     rightIcon,
     legacyVariant,
     disabled,
+    animateSuccess = false,
+    animateError = false,
+    courseTheme,
     children,
     ...props 
   }, ref) => {
     const isDisabled = disabled || loading
+    
+    // Use course theme as variant if provided
+    const effectiveVariant = courseTheme || variant
 
     const getLegacyVariantClasses = () => {
       switch (legacyVariant) {
         case "locked":
-          return "bg-neutral-200 text-neutral-400 border-slate-200 border-2 border-b-4 cursor-not-allowed";
+          return "bg-neutral-200 text-neutral-400 border-slate-200 border-2 border-b-4 cursor-not-allowed rounded-xl font-bold";
         case "sidebar":
-          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 hover:bg-slate-50 text-slate-500";
+          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-slate-50 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#cbd5e1] text-slate-500 rounded-xl font-bold shadow-[0_4px_0_#cbd5e1]";
         case "sidebarOutline":
-          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 hover:bg-slate-50 text-blue-500";
+          return "bg-white border-slate-300 border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-slate-50 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#cbd5e1] text-blue-500 rounded-xl font-bold shadow-[0_4px_0_#cbd5e1]";
         default:
           return "";
       }
@@ -51,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Comp
           className={cn(
             legacyVariant 
-              ? cn("inline-flex items-center justify-center font-semibold text-sm rounded-lg transition-colors duration-200 h-11 px-4", getLegacyVariantClasses())
+              ? cn("inline-flex items-center justify-center text-base transition-all duration-150 ease-out h-11 px-6 py-3", getLegacyVariantClasses())
               : buttonVariants({ variant, size, fullWidth: false, loading: false }),
             className
           )}
@@ -67,8 +80,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={cn(
           legacyVariant 
-            ? cn("inline-flex items-center justify-center font-semibold text-sm rounded-lg transition-colors duration-200 h-11 px-4", getLegacyVariantClasses())
-            : buttonVariants({ variant, size, fullWidth: false, loading }),
+            ? cn("inline-flex items-center justify-center text-base transition-all duration-150 ease-out h-11 px-6 py-3", getLegacyVariantClasses())
+            : buttonVariants({ variant: effectiveVariant, size, fullWidth: false, loading, disabled: isDisabled }),
+          "button-duolingo", // Add Duolingo-style base class
+          {
+            "button-success-animate": animateSuccess && !loading && !disabled,
+            "button-error-animate": animateError && !loading && !disabled,
+            "button-loading": loading,
+          },
           className
         )}
         ref={ref}
@@ -76,19 +95,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading && (
-          <svg 
-            className="animate-spin -ml-1 mr-2 h-4 w-4" 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24"
-          >
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
+          <div className="loading-spinner mr-2 flex items-center">
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+          </div>
         )}
-        {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
-        {children}
-        {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
+        {!loading && leftIcon && <span className="mr-2 flex items-center">{leftIcon}</span>}
+        <span className={cn("flex items-center", loading ? "opacity-80" : "")}>{children}</span>
+        {!loading && rightIcon && <span className="ml-2 flex items-center">{rightIcon}</span>}
       </button>
     )
   }

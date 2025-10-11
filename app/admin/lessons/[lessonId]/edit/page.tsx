@@ -4,7 +4,7 @@ import { isAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowLeft, Edit, Plus, Trash2, Eye, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Trash2, Eye, AlertTriangle, Lightbulb } from "lucide-react";
 import db from "@/db/drizzle";
 import { lessons } from "@/db/schema";
 import { LessonForm } from "../../components/lesson-form";
@@ -145,7 +145,8 @@ const AdminLessonEditPage = async ({
                             </span>
                             {challenge.hint && (
                               <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                💡 Has Hint
+                                <Lightbulb className="w-3 h-3 mr-1" />
+                                Has Hint
                               </span>
                             )}
                           </div>

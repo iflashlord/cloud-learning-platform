@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Lightbulb } from "lucide-react";
 
 type Props = {
   question: string;
@@ -40,8 +40,11 @@ export const QuestionBubble = ({ question, hint }: Props) => {
         </div>
         {showHint && hint && (
           <div className="mt-2 pt-2 border-t border-gray-200">
-            <div className="text-xs lg:text-sm text-blue-600 bg-blue-50 p-2 rounded">
-              💡 <strong>Hint:</strong> {hint}
+            <div className="text-xs lg:text-sm text-blue-600 bg-blue-50 p-2 rounded flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 mt-0.5" />
+              <span>
+                <strong>Hint:</strong> {hint}
+              </span>
             </div>
           </div>
         )}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Edit, Plus, Eye, Trash2, FileQuestion } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Eye, Trash2, FileQuestion, ImageIcon, Volume2 } from "lucide-react";
 
 interface Challenge {
   id: number;
@@ -221,8 +221,12 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
                               )}
                             </div>
                             <span className="flex-1">{option.text}</span>
-                            {option.imageSrc && <span className="text-xs text-gray-500">📷</span>}
-                            {option.audioSrc && <span className="text-xs text-gray-500">🔊</span>}
+                            {option.imageSrc && (
+                              <ImageIcon className="w-4 h-4 text-gray-500" />
+                            )}
+                            {option.audioSrc && (
+                              <Volume2 className="w-4 h-4 text-gray-500" />
+                            )}
                           </div>
                         ))}
                         {challenge.challengeOptions.length > 3 && (

@@ -425,13 +425,13 @@ const main = async () => {
       {
         challengeId: 5,
         correct: false, // Not used for drag-drop
-        text: "🌐 Networking Services (VPC, CloudFront)",
+        text: "Networking Services (VPC, CloudFront)",
         order: 3,
       },
       {
         challengeId: 5,
         correct: false, // Not used for drag-drop
-        text: "🔧 Management Services (CloudWatch, CloudFormation)",
+        text: "Management Services (CloudWatch, CloudFormation)",
         order: 4,
       },
     ]);
@@ -829,4 +829,3 @@ const main = async () => {
 };
 
 main();
-

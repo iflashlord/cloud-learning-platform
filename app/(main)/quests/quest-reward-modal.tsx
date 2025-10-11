@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Heart, Medal, Crown, Zap, Gift, Sparkles, CheckCircle } from "lucide-react";
+import { Trophy, Star, Heart, Medal, Crown, Zap, Gift, Sparkles, CheckCircle, PartyPopper, Rocket, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type QuestReward = {
@@ -16,7 +16,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   questTitle: string;
-  questIcon: string;
+  questIcon: LucideIcon;
   reward: QuestReward;
   difficulty: string;
   onClaim?: () => void;
@@ -32,6 +32,7 @@ export const QuestRewardModal = ({
   onClaim
 }: Props) => {
   const [isClaimed, setIsClaimed] = useState(false);
+  const QuestIcon = questIcon;
 
   const handleClaim = () => {
     setIsClaimed(true);
@@ -91,7 +92,10 @@ export const QuestRewardModal = ({
             </div>
             
             <h2 className="text-2xl font-bold text-green-700 mb-2">Rewards Claimed!</h2>
-            <p className="text-green-600 mb-4">Great job completing the quest! Keep up the excellent work! 🎉</p>
+            <p className="text-green-600 mb-4 flex items-center justify-center gap-2">
+              <PartyPopper className="w-4 h-4" />
+              <span>Great job completing the quest! Keep up the excellent work!</span>
+            </p>
             
             <Button 
               onClick={onClose}
@@ -109,8 +113,10 @@ export const QuestRewardModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            🎉 Quest Completed! 🎉
+          <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+            <PartyPopper className="w-6 h-6" />
+            <span>Quest Completed!</span>
+            <PartyPopper className="w-6 h-6 hidden sm:inline" />
           </DialogTitle>
         </DialogHeader>
         
@@ -123,7 +129,7 @@ export const QuestRewardModal = ({
                 `bg-gradient-to-br ${difficultyConfig.color}`
               )}>
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent"></div>
-                <span className="relative drop-shadow-lg">{questIcon}</span>
+                <QuestIcon className="w-12 h-12 relative drop-shadow-lg text-white" />
               </div>
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg animate-bounce">
                 <Crown className="w-4 h-4 text-yellow-800" />
@@ -189,7 +195,10 @@ export const QuestRewardModal = ({
             <div className="flex items-center gap-3">
               <Trophy className="w-8 h-8 text-yellow-600" />
               <div>
-                <h4 className="font-bold text-gray-800 mb-1">Congratulations, Champion! 🏆</h4>
+                <h4 className="font-bold text-gray-800 mb-1 flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-yellow-600" />
+                  <span>Congratulations, Champion!</span>
+                </h4>
                 <p className="text-sm text-gray-600">
                   You&apos;ve demonstrated excellent learning skills by completing this {difficulty.toLowerCase()} quest. 
                   Your dedication to continuous improvement is truly inspiring!
@@ -219,8 +228,9 @@ export const QuestRewardModal = ({
 
           {/* Progress Hint */}
           <div className="text-center">
-            <p className="text-xs text-gray-500">
-              Keep completing quests to unlock more achievements and climb the leaderboard! 🚀
+            <p className="text-xs text-gray-500 flex items-center justify-center gap-2">
+              <span>Keep completing quests to unlock more achievements and climb the leaderboard!</span>
+              <Rocket className="w-4 h-4 text-indigo-500" />
             </p>
           </div>
         </div>

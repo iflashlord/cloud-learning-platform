@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Mic, MicOff, Volume2, RotateCcw } from 'lucide-react';
+import { Mic, MicOff, Volume2, RotateCcw, AlertTriangle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { cn } from '@/lib/utils';
@@ -163,14 +163,14 @@ export const SpeechInput = ({
           
           {error && (
             <div className="text-red-600 flex items-center space-x-1">
-              <span>⚠️</span>
+              <AlertTriangle className="h-4 w-4" />
               <span>Speech error: {error}</span>
             </div>
           )}
 
           {!isSupported && (
             <div className="text-amber-600 flex items-center space-x-1">
-              <span>ℹ️</span>
+              <Info className="h-4 w-4" />
               <span>Speech recognition not supported in this browser</span>
             </div>
           )}
