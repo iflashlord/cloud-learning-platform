@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 type Theme = 'system' | 'light' | 'dark';
 
-interface ThemeSwitcherProps {
+export interface ThemeSwitcherProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'outline' | 'ghost' | 'compact';

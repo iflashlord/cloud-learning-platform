@@ -1,55 +1,95 @@
-import { Badge } from './badge';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Badge } from "./badge";
 
-const meta = {
-  title: 'Components/Badge',
+const meta: Meta<typeof Badge> = {
+  title: "Components/Badge",
   component: Badge,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: { type: 'select' },
-      options: ['default', 'success', 'error', 'warning', 'info', 'primary', 'compute', 'storage', 'security', 'networking', 'management', 'aiml'],
+      control: { type: "select" },
+      options: [
+        "default",
+        "neutral",
+        "success",
+        "error",
+        "warning",
+        "info",
+        "primary",
+        "compute",
+        "storage",
+        "security",
+        "networking",
+        "management",
+        "aiml",
+      ],
     },
     size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      control: { type: "select" },
+      options: ["xs", "sm", "md", "lg"],
+    },
+    emphasis: {
+      control: { type: "select" },
+      options: ["solid", "soft", "outline"],
     },
   },
 };
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default = {
+export const Default: Story = {
   args: {
-    children: 'Default',
-    variant: 'default',
+    children: "Default",
+    variant: "default",
   },
 };
 
-export const Success = {
+export const Success: Story = {
   args: {
-    children: 'Completed',
-    variant: 'success',
+    children: "Completed",
+    variant: "success",
   },
 };
 
-export const Warning = {
+export const Warning: Story = {
   args: {
-    children: '2 Lives Left',
-    variant: 'warning',
+    children: "2 Lives Left",
+    variant: "warning",
   },
 };
 
-export const Error = {
+export const Outline: Story = {
   args: {
-    children: 'Failed',
-    variant: 'error',
+    children: "Read Only",
+    variant: "neutral",
+    emphasis: "outline",
   },
 };
 
-export const CourseThemes = {
+export const SoftBadges: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <Badge variant="success" emphasis="soft">
+        Reinforced
+      </Badge>
+      <Badge variant="error" emphasis="soft">
+        Needs Attention
+      </Badge>
+      <Badge variant="warning" emphasis="soft">
+        Expiring Soon
+      </Badge>
+      <Badge variant="info" emphasis="soft">
+        In Review
+      </Badge>
+    </div>
+  ),
+};
+
+export const CourseThemes: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
       <Badge variant="compute">EC2</Badge>
@@ -62,12 +102,21 @@ export const CourseThemes = {
   ),
 };
 
-export const Sizes = {
+export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Badge variant="success" size="sm">Small</Badge>
-      <Badge variant="success" size="md">Medium</Badge>
-      <Badge variant="success" size="lg">Large</Badge>
+      <Badge variant="success" size="xs">
+        XS
+      </Badge>
+      <Badge variant="success" size="sm">
+        Small
+      </Badge>
+      <Badge variant="success" size="md">
+        Medium
+      </Badge>
+      <Badge variant="success" size="lg">
+        Large
+      </Badge>
     </div>
   ),
 };

@@ -15,19 +15,25 @@ export interface ProgressProps
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   ProgressProps
->(({ className, indicatorClassName, value, size, variant, ...props }, ref) => {
+>(({ className, indicatorClassName, value = 0, size, variant, radius, ...props }, ref) => {
+  const resolvedRadius = radius ?? "full";
+  const indicatorRadius =
+    resolvedRadius === "none" ? "" : resolvedRadius === "sm" ? "rounded" : "rounded-full";
+
   return (
     <ProgressPrimitive.Root
       ref={ref}
-      className={cn(progressVariants({ size, variant }), className)}
+      className={cn(progressVariants({ size, variant, radius: resolvedRadius }), className)}
+      data-variant={variant}
       {...props}
     >
       <ProgressPrimitive.Indicator
         className={cn(
-          "h-full w-full flex-1 transition-all duration-500 ease-out rounded-full",
+          "h-full w-full flex-1 transition-all duration-500 ease-out",
+          indicatorRadius,
           indicatorClassName
         )}
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+        style={{ transform: `translateX(-${100 - value}%)` }}
       />
     </ProgressPrimitive.Root>
   )

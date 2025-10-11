@@ -7,6 +7,18 @@ body,
 :root {
   @apply h-full;
   scroll-behavior: smooth;
+  /* Set overscroll background colors based on theme */
+  overscroll-behavior: auto;
+}
+
+html {
+  /* Light mode overscroll background */
+  background: linear-gradient(to bottom right, #f8fafc, #dbeafe, #faf5ff);
+}
+
+html.dark {
+  /* Dark mode overscroll background */
+  background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
 }
  
 @layer base {

@@ -25,7 +25,7 @@ export const Sidebar = ({ className }: Props) => {
   
   return (
     <div className={cn(
-      "flex h-full lg:w-[256px] lg:fixed left-0 top-0 px-4 border-r-2 flex-col",
+      "flex h-full lg:w-[256px] lg:fixed left-0 top-0 px-4 border-r-2 border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex-col",
       className,
     )}>
       <Link href="/learn">
@@ -64,7 +64,7 @@ export const Sidebar = ({ className }: Props) => {
         />
       </div>
       <div className="px-4 pb-4">
-        <div className="border-t pt-4 space-y-4">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-4">
           <SidebarItem 
             label="Upgrade" 
             href="/pro"

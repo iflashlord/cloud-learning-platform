@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@design-system/*": ["design-system/*"]
     },
     "types": ["vitest/globals"]
   },

@@ -22,7 +22,14 @@ const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex flex-col space-y-2", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn(
+      "flex flex-col space-y-2 text-[hsl(var(--ds-neutral-700))] dark:text-[hsl(var(--ds-neutral-100))]",
+      className
+    )}
+    {...props}
+  />
 ))
 CardHeader.displayName = "CardHeader"
 
@@ -33,7 +40,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-xl font-semibold leading-none tracking-tight text-neutral-900",
+      "text-xl font-semibold leading-none tracking-tight text-neutral-900 dark:text-neutral-100",
       className
     )}
     {...props}
@@ -47,7 +54,10 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-neutral-600 leading-normal", className)}
+    className={cn(
+      "text-sm text-neutral-600 dark:text-neutral-300 leading-normal",
+      className
+    )}
     {...props}
   />
 ))
@@ -57,7 +67,14 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn(
+      "text-[hsl(var(--ds-neutral-700))] dark:text-[hsl(var(--ds-neutral-200))]",
+      className
+    )}
+    {...props}
+  />
 ))
 CardContent.displayName = "CardContent"
 
@@ -67,7 +84,10 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center justify-between pt-4", className)}
+    className={cn(
+      "flex items-center justify-between pt-4 text-[hsl(var(--ds-neutral-700))] dark:text-[hsl(var(--ds-neutral-100))]",
+      className
+    )}
     {...props}
   />
 ))

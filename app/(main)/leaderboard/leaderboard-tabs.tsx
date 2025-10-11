@@ -192,9 +192,9 @@ export const LeaderboardTabs = ({
                   <Avatar className={cn(
                     "border-2 h-14 w-14 mr-4",
                     position === 1 ? "border-yellow-400 shadow-lg" :
-                    position === 2 ? "border-gray-300 shadow-md" :
-                    position === 3 ? "border-orange-300 shadow-md" :
-                    "border-gray-200"
+                    position === 2 ? "border-gray-300 dark:border-gray-600 shadow-md" :
+                    position === 3 ? "border-orange-300 dark:border-orange-600 shadow-md" :
+                    "border-gray-200 dark:border-gray-700"
                   )}>
                     <AvatarImage
                       className="object-cover"

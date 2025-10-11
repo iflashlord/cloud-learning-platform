@@ -10,13 +10,13 @@ export const ProCTA = ({ onStartTrial, onViewPlans }: ProCTAProps) => {
       <p className="text-xl text-orange-100 mb-6">Join thousands of professionals who have advanced their careers with Pro.</p>
       <button 
         onClick={onStartTrial}
-        className="bg-white text-orange-600 py-4 px-8 rounded-xl font-bold text-lg hover:bg-orange-50 transition-colors mr-4"
+        className="bg-white dark:bg-gray-100 text-orange-600 py-4 px-8 rounded-xl font-bold text-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors mr-4"
       >
         Start 7-Day Free Trial
       </button>
       <button 
         onClick={onViewPlans}
-        className="border-2 border-white text-white py-4 px-8 rounded-xl font-bold text-lg hover:bg-white hover:text-orange-600 transition-colors"
+        className="border-2 border-white dark:border-gray-300 text-white dark:text-gray-100 py-4 px-8 rounded-xl font-bold text-lg hover:bg-white dark:hover:bg-gray-100 hover:text-orange-600 transition-colors"
       >
         View All Plans
       </button>

@@ -21,7 +21,7 @@ export const Header = ({
     <header className="py-4 px-10 flex gap-x-7 items-center justify-between max-w-[1140px] mx-auto w-full">
       <X
         onClick={open}
-        className="text-slate-500 hover:opacity-75 transition cursor-pointer"
+        className="text-slate-500 dark:text-slate-400 hover:opacity-75 transition cursor-pointer"
       />
       <Progress value={percentage} />
       <div className="text-rose-500 flex items-center font-bold">

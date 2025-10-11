@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Filter, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/ui/search-input";
-import { CategoryFilter } from "@/components/ui/category-filter";
-import { LevelFilter } from "@/components/ui/level-filter";
+import { CategorySelector } from "@/components/ui/category-selector";
+import { FilterSelector } from "@/components/ui/filter-selector";
 import { ViewModeToggle } from "@/components/ui/view-mode-toggle";
 import { ActiveFilters } from "@/components/ui/active-filters";
 import { LucideIcon } from "lucide-react";
@@ -108,7 +108,7 @@ export const CourseFilters = ({
           )}
         >
           {/* Category Filters */}
-          <CategoryFilter
+          <CategorySelector
             categories={categories}
             selectedCategory={selectedCategory}
             onCategoryChange={onCategoryChange}
@@ -116,7 +116,7 @@ export const CourseFilters = ({
 
           {/* Level Filter & View Mode */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <LevelFilter
+            <FilterSelector
               filters={filters}
               selectedFilter={selectedFilter}
               onFilterChange={onFilterChange}

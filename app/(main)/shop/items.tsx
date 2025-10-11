@@ -2,12 +2,12 @@
 
 import { toast } from "sonner";
 import { useTransition } from "react";
+import { Heart, Zap, Crown, Check, Settings, Rocket, Coins, Infinity } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { POINTS_TO_REFILL } from "@/constants";
 import { refillHearts } from "@/actions/user-progress";
 import { createStripeUrl } from "@/actions/user-subscription";
-import { Heart, Zap, Crown, Check, Settings, Rocket, Coins, Infinity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { POINTS_TO_REFILL } from "@/constants";
 import { cn } from "@/lib/utils";
 import { statusStyles } from "@/lib/style-utils";
 
@@ -84,15 +84,15 @@ export const Items = ({
             }
             className={`px-6 py-3 font-bold text-lg ${
               hearts === 5 
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed" 
+                ? "bg-gray-400 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed" 
                 : points < POINTS_TO_REFILL
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                  ? "bg-gray-400 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed"
                   : "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             } transition-all duration-200`}
           >
             {hearts === 5 ? (
               <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-gray-200" fill="currentColor" />
+                <Heart className="w-5 h-5 text-gray-200 dark:text-gray-500" fill="currentColor" />
                 <span>Hearts Full</span>
               </div>
             ) : points < POINTS_TO_REFILL ? (

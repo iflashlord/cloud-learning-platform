@@ -13,13 +13,13 @@ const spinnerVariants = cva(
         xl: "h-12 w-12",
       },
       variant: {
-        default: "text-primary",
-        secondary: "text-secondary",
-        success: "text-green-600",
-        error: "text-red-600",
-        warning: "text-yellow-600",
-        info: "text-blue-600",
-        muted: "text-muted-foreground",
+        default: "text-[hsl(var(--ds-info-500))] dark:text-[hsl(var(--ds-info-100))]",
+        secondary: "text-[hsl(var(--ds-neutral-500))] dark:text-[hsl(var(--ds-neutral-300))]",
+        success: "text-[hsl(var(--ds-success-500))] dark:text-[hsl(var(--ds-success-100))]",
+        error: "text-[hsl(var(--ds-error-500))] dark:text-[hsl(var(--ds-error-100))]",
+        warning: "text-[hsl(var(--ds-warning-600))] dark:text-[hsl(var(--ds-warning-100))]",
+        info: "text-[hsl(var(--ds-info-500))] dark:text-[hsl(var(--ds-info-100))]",
+        muted: "text-[hsl(var(--ds-neutral-400))] dark:text-[hsl(var(--ds-neutral-500))]",
       }
     },
     defaultVariants: {

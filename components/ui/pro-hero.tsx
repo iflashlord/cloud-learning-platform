@@ -15,7 +15,7 @@ export const ProHero = ({ onStartTrial }: ProHeroProps) => {
           Upgrade to <span className="text-orange-500 dark:text-orange-400">Pro</span>
         </h1>
       </div>
-      <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+      <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
         Unlock unlimited learning potential with advanced features, exclusive content, and priority support.
       </p>
       
@@ -29,7 +29,7 @@ export const ProHero = ({ onStartTrial }: ProHeroProps) => {
         <div className="text-orange-100 mb-6">per month</div>
         <button 
           onClick={onStartTrial}
-          className="w-full bg-white text-orange-600 py-3 px-6 rounded-lg font-bold text-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+          className="w-full bg-white dark:bg-gray-100 text-orange-600 py-3 px-6 rounded-lg font-bold text-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
         >
           Start Free Trial
         </button>

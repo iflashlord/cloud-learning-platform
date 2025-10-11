@@ -1,15 +1,29 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Badge,
+  ThemeSwitcher,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  Spinner,
+  SimpleTooltip,
+  Skeleton,
+  SkeletonText,
+  SkeletonCard,
+  SkeletonAvatar,
+  Input,
+  Progress,
+} from '@design-system/primitives';
 import CourseThemeShowcase from '@/components/course-theme-showcase';
-import { ThemeSwitcher } from '@/components/ui/theme-switcher';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Spinner } from '@/components/ui/spinner';
-import { SimpleTooltip } from '@/components/ui/tooltip';
-import { Skeleton, SkeletonText, SkeletonCard, SkeletonAvatar } from '@/components/ui/skeleton';
 import { StatCard } from '@/components/ui/stat-card';
 import { PageHeader } from '@/components/ui/page-header';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -78,6 +92,12 @@ const DesignSystemPage = () => {
               Cards
             </Button>
           </a>
+          <a href="#inputs" className="scroll-smooth">
+            <Button variant="outline" className="hover:bg-slate-100 dark:hover:bg-slate-800/60 dark:border-gray-600 dark:text-gray-200">
+              <Layers className="w-4 h-4 mr-2" />
+              Inputs
+            </Button>
+          </a>
           <a href="#badges" className="scroll-smooth">
             <Button variant="outline" className="hover:bg-green-50 dark:hover:bg-green-900/30 dark:border-gray-600 dark:text-gray-200">
               <Trophy className="w-4 h-4 mr-2" />
@@ -100,6 +120,12 @@ const DesignSystemPage = () => {
             <Button variant="outline" className="hover:bg-blue-50 dark:hover:bg-blue-900/30 dark:border-gray-600 dark:text-gray-200">
               <Cpu className="w-4 h-4 mr-2" />
               Loading
+            </Button>
+          </a>
+          <a href="#progress" className="scroll-smooth">
+            <Button variant="outline" className="hover:bg-emerald-50 dark:hover:bg-emerald-900/30 dark:border-gray-600 dark:text-gray-200">
+              <ArrowRight className="w-4 h-4 mr-2" />
+              Progress
             </Button>
           </a>
           <a href="#tooltips" className="scroll-smooth">
@@ -199,6 +225,70 @@ const DesignSystemPage = () => {
                     Loading State
                 </Button> 
               </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* Inputs Section */}
+        <section id="inputs" className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-900 dark:text-gray-100 mb-4 flex items-center justify-center gap-3">
+              <Layers className="w-8 h-8 text-slate-600 dark:text-slate-300" />
+              <span>Inputs</span>
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Token-driven form controls with consistent spacing, focus outlines, and semantic colors in light and dark modes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle>Base Styles</CardTitle>
+                <CardDescription>Generous spacing and responsive typography.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input placeholder="Search AWS services" />
+                <Input placeholder="Email address" type="email" size="lg" />
+                <Input placeholder="Compact input" size="sm" />
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle>Semantic Feedback</CardTitle>
+                <CardDescription>Aligns with success, info, and error palettes.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input placeholder="Bucket name" variant="info" defaultValue="aws-learning-platform" />
+                <Input placeholder="Deployment ready" variant="success" defaultValue="All checks passed" />
+                <Input placeholder="Review required" variant="error" defaultValue="Policy violation" />
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle>States &amp; Density</CardTitle>
+                <CardDescription>Disabled and read-only variants remain legible.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input placeholder="Disabled input" disabled state="disabled" />
+                <Input
+                  placeholder="Read only value"
+                  readOnly
+                  value="arn:aws:iam::123456789:role/Dev"
+                  state="readOnly"
+                />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Inline helper text
+                  </label>
+                  <Input placeholder="Enter stack name" />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Use lowercase letters, numbers, and hyphens.
+                  </p>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </section>
@@ -669,6 +759,75 @@ const DesignSystemPage = () => {
             <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
               <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Skeleton Cards</h3>
               <SkeletonCard />
+            </Card>
+          </div>
+        </section>
+
+        {/* Progress Section */}
+        <section id="progress" className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-900 dark:text-gray-100 mb-4 flex items-center justify-center gap-3">
+              <ArrowRight className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              <span>Progress Indicators</span>
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Communicate course completion and quest advancement with animated gradient bars.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Course Progress</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Foundations</span>
+                    <span>62%</span>
+                  </div>
+                  <Progress value={62} variant="default" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Security</span>
+                    <span>88%</span>
+                  </div>
+                  <Progress value={88} variant="success" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Networking</span>
+                    <span>43%</span>
+                  </div>
+                  <Progress value={43} variant="info" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Quests &amp; Labs</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Serverless API Lab</span>
+                    <span>24%</span>
+                  </div>
+                  <Progress value={24} variant="warning" size="sm" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Incident Response</span>
+                    <span>12%</span>
+                  </div>
+                  <Progress value={12} variant="error" size="sm" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <span>Automation Pipeline</span>
+                    <span>100%</span>
+                  </div>
+                  <Progress value={100} variant="success" size="lg" />
+                </div>
+              </div>
             </Card>
           </div>
         </section>

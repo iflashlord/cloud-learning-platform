@@ -119,13 +119,13 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
   const lockedAchievements = achievements.filter(a => !a.unlockedAt);
 
   return (
-    <div className="bg-white rounded-xl border-2 border-purple-200 shadow-lg p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-purple-200 dark:border-purple-700 shadow-lg p-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-sm">
           <Trophy className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-800">Achievement Gallery</h2>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Achievement Gallery</h2>
           <p className="text-sm text-gray-600">Unlock badges by completing quests and milestones</p>
         </div>
       </div>
@@ -155,7 +155,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
         {/* Unlocked Achievements */}
         {unlockedAchievements.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-500" />
               Unlocked Achievements
             </h3>
@@ -202,8 +202,8 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
         {/* Locked Achievements */}
         {lockedAchievements.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <Target className="w-5 h-5 text-gray-500" />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+              <Target className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               Locked Achievements
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

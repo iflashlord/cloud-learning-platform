@@ -136,7 +136,7 @@ export const QuestRewardModal = ({
               </div>
             </div>
             
-            <h2 className="text-xl font-bold text-gray-800 mb-2">{questTitle}</h2>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">{questTitle}</h2>
             <div className={cn(
               "inline-block px-3 py-1 text-sm font-bold rounded-full border",
               difficultyConfig.bgColor,
@@ -195,7 +195,7 @@ export const QuestRewardModal = ({
             <div className="flex items-center gap-3">
               <Trophy className="w-8 h-8 text-yellow-600" />
               <div>
-                <h4 className="font-bold text-gray-800 mb-1 flex items-center gap-2">
+                <h4 className="font-bold text-gray-800 dark:text-gray-100 mb-1 flex items-center gap-2">
                   <Trophy className="w-4 h-4 text-yellow-600" />
                   <span>Congratulations, Champion!</span>
                 </h4>
