@@ -26,7 +26,7 @@ export const Promo = () => {
       </div>
       <Button
         asChild
-        variant="super"
+        variant="primary"
         className="w-full"
         size="lg"
       >

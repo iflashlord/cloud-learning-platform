@@ -75,15 +75,15 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
   };
 
   return (
-    <div className={cn("bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-200 dark:border-blue-700 shadow-lg p-6", className)}>
+    <div className={cn("bg-card rounded-xl border-2 border-blue-200 dark:border-blue-700 shadow-lg p-6", className)}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-sm">
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Quest Progress Tracker</h2>
-            <p className="text-sm text-gray-600">Track your learning journey across all quests</p>
+            <h2 className="text-xl font-bold text-foreground">Quest Progress Tracker</h2>
+            <p className="text-sm text-muted-foreground">Track your learning journey across all quests</p>
           </div>
         </div>
         
@@ -154,7 +154,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
           {categories.map((category) => (
             <Button
               key={category}
-              variant={selectedCategory === category ? "primary" : "primaryOutline"}
+              variant={selectedCategory === category ? "primary" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory(category)}
               className={cn(
@@ -208,7 +208,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
                     )}>
                       {quest.title}
                     </h4>
-                    <p className="text-xs text-gray-600 mb-1">{quest.description}</p>
+                    <p className="text-xs text-muted-foreground mb-1">{quest.description}</p>
                   </div>
                 </div>
                 
@@ -225,7 +225,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
 
               {/* Progress Bar */}
               <div className="space-y-1">
-                <div className="flex justify-between text-xs text-gray-600">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Progress: {Math.min(userPoints, quest.value)} / {quest.value} XP</span>
                   <span className="font-bold">{Math.round(progress)}%</span>
                 </div>
@@ -235,7 +235,7 @@ export const QuestProgressTracker = ({ quests, userPoints, className }: Props) =
                     "h-2",
                     status === "completed" ? "[&>div]:bg-green-500" :
                     status === "active" ? "[&>div]:bg-blue-500" :
-                    "[&>div]:bg-gray-400"
+                    "[&>div]:bg-muted-foreground"
                   )}
                 />
               </div>

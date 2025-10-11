@@ -56,7 +56,7 @@ export const Quests = ({ points }: Props) => {
         <Link href="/quests">
           <Button
             size="sm"
-            variant="primaryOutline"
+            variant="outline"
             className="text-xs hover:bg-orange-100 border-orange-300"
           >
             <Star className="w-3 h-3 mr-1" />
@@ -123,7 +123,7 @@ export const Quests = ({ points }: Props) => {
                   <div className="flex items-center justify-between mb-1">
                     <h4 className={cn(
                       "font-bold text-sm truncate",
-                      isCompleted ? "text-green-700" : "text-gray-700"
+                      isCompleted ? "text-green-700" : "text-foreground"
                     )}>
                       {quest.title}
                     </h4>
@@ -137,7 +137,7 @@ export const Quests = ({ points }: Props) => {
                   
                   <p className={cn(
                     "text-xs mb-2 line-clamp-1",
-                    isCompleted ? "text-green-600" : "text-gray-600"
+                    isCompleted ? "text-green-600" : "text-muted-foreground"
                   )}>
                     {quest.description}
                   </p>
@@ -147,13 +147,13 @@ export const Quests = ({ points }: Props) => {
                     <div className="flex justify-between items-center text-xs">
                       <span className={cn(
                         "font-medium",
-                        isCompleted ? "text-green-600" : "text-gray-600"
+                        isCompleted ? "text-green-600" : "text-muted-foreground"
                       )}>
                         {Math.min(points, quest.value)} / {quest.value} XP
                       </span>
                       <span className={cn(
                         "font-bold",
-                        isCompleted ? "text-green-700" : "text-gray-700"
+                        isCompleted ? "text-green-700" : "text-foreground"
                       )}>
                         {Math.round(progress)}%
                       </span>
@@ -169,7 +169,7 @@ export const Quests = ({ points }: Props) => {
 
                   {/* Rewards Preview */}
                   {!isCompleted && (
-                    <div className="flex items-center gap-2 mt-2 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                       <span className="font-medium">Reward:</span>
                       <div className="flex items-center gap-1">
                         <Star className="w-3 h-3 text-yellow-500" />
@@ -193,8 +193,8 @@ export const Quests = ({ points }: Props) => {
             </div>
           );
         }) : (
-          <div className="text-center py-4 text-gray-500">
-            <Trophy className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+          <div className="text-center py-4 text-muted-foreground">
+            <Trophy className="w-8 h-8 mx-auto mb-2 text-muted-foreground/60" />
             <p className="text-sm">All quests completed!</p>
             <p className="text-xs">Keep learning for more challenges</p>
           </div>

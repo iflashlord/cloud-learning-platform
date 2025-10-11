@@ -48,11 +48,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const getLegacyVariantClasses = () => {
       switch (legacyVariant) {
         case "locked":
-          return "bg-neutral-200 text-neutral-400 border-slate-200 border-2 border-b-4 cursor-not-allowed rounded-xl font-bold";
+          return "bg-muted text-muted-foreground/60 border-border border-2 border-b-4 cursor-not-allowed rounded-xl font-bold";
         case "sidebar":
-          return "bg-white dark:bg-gray-800 border-slate-300 dark:border-gray-600 border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-slate-50 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#cbd5e1] dark:hover:shadow-[0_6px_0_#4b5563] text-slate-500 dark:text-gray-300 rounded-xl font-bold shadow-[0_4px_0_#cbd5e1] dark:shadow-[0_4px_0_#4b5563]";
+          return "bg-card border-border border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-muted hover:-translate-y-0.5 hover:shadow-[0_6px_0_hsl(var(--border))] text-muted-foreground rounded-xl font-bold shadow-[0_4px_0_hsl(var(--border))]";
         case "sidebarOutline":
-          return "bg-white dark:bg-gray-800 border-slate-300 dark:border-blue-600 border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-slate-50 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#cbd5e1] dark:hover:shadow-[0_6px_0_#2563eb] text-blue-500 dark:text-blue-400 rounded-xl font-bold shadow-[0_4px_0_#cbd5e1] dark:shadow-[0_4px_0_#2563eb]";
+          return "bg-card border-border border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-muted hover:-translate-y-0.5 hover:shadow-[0_6px_0_hsl(var(--primary))] text-primary rounded-xl font-bold shadow-[0_4px_0_hsl(var(--primary))]";
         default:
           return "";
       }

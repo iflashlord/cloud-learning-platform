@@ -144,10 +144,10 @@ export const LeaderboardTabs = ({
 
       {leaderboard.length === 0 ? (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Users className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <Users className="w-8 h-8 text-muted-foreground/60" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">No learners found</h3>
+          <h3 className="text-lg font-semibold text-muted-foreground mb-2">No learners found</h3>
           <p className="text-muted-foreground mb-4">No one has started learning this course yet.</p>
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
             <Trophy className="w-4 h-4 text-yellow-500" />
@@ -192,9 +192,9 @@ export const LeaderboardTabs = ({
                   <Avatar className={cn(
                     "border-2 h-14 w-14 mr-4",
                     position === 1 ? "border-yellow-400 shadow-lg" :
-                    position === 2 ? "border-gray-300 dark:border-gray-600 shadow-md" :
+                    position === 2 ? "border-muted-foreground shadow-md" :
                     position === 3 ? "border-orange-300 dark:border-orange-600 shadow-md" :
-                    "border-gray-200 dark:border-gray-700"
+                    "border-border"
                   )}>
                     <AvatarImage
                       className="object-cover"
@@ -264,7 +264,7 @@ export const LeaderboardTabs = ({
           
           {/* Show motivation message for fewer than 10 users */}
           {leaderboard.length < 10 && (
-            <div className="text-center py-6 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50">
+            <div className="text-center py-6 border-2 border-dashed border-border rounded-xl bg-muted/50">
               <p className="text-sm text-muted-foreground mb-2">
                 {10 - leaderboard.length} more spots available in the top 10!
               </p>
@@ -282,13 +282,13 @@ export const LeaderboardTabs = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Enhanced Tab Navigation */}
-      <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1.5 mb-8 shadow-sm">
+      <div className="flex rounded-xl bg-muted p-1.5 mb-8 shadow-sm">
         <Button
           variant={activeTab === "general" ? "secondary" : "ghost"}
           className={cn(
             "flex-1 h-12 text-sm font-medium transition-all rounded-lg",
             activeTab === "general" 
-              ? "bg-white dark:bg-gray-900 text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
+              ? "bg-background text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
               : "text-muted-foreground hover:text-foreground hover:bg-muted"
           )}
           onClick={() => setActiveTab("general")}
@@ -301,7 +301,7 @@ export const LeaderboardTabs = ({
           className={cn(
             "flex-1 h-12 text-sm font-medium transition-all rounded-lg",
             activeTab === "course" 
-              ? "bg-white dark:bg-gray-900 text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
+              ? "bg-background text-orange-600 dark:text-orange-400 shadow-sm border border-orange-200 dark:border-orange-600" 
               : "text-muted-foreground hover:text-foreground hover:bg-muted"
           )}
           onClick={() => setActiveTab("course")}
@@ -318,7 +318,7 @@ export const LeaderboardTabs = ({
             <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Trophy className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               Global Hall of Fame
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
@@ -372,7 +372,7 @@ export const LeaderboardTabs = ({
           {selectedCourse ? (
             <>
               {/* Enhanced Selected Course Header */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 shadow-sm p-6 mb-6">
+              <div className="bg-card rounded-xl border shadow-sm p-6 mb-6">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center mb-4">
                     <div className="relative">
@@ -388,7 +388,7 @@ export const LeaderboardTabs = ({
                       </div>
                     </div>
                     <div className="ml-4 text-left">
-                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+                      <h3 className="text-xl font-bold text-foreground">
                         {selectedCourse.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
@@ -416,17 +416,17 @@ export const LeaderboardTabs = ({
                       </Button>
                       
                       {courseDropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 max-h-80 overflow-hidden">
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-popover border rounded-xl shadow-lg z-20 max-h-80 overflow-hidden">
                           {/* Search Bar */}
-                          <div className="p-4 border-b dark:border-gray-700">
+                          <div className="p-4 border-b border-border">
                             <div className="relative">
-                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/60 w-4 h-4" />
                               <input
                                 type="text"
                                 placeholder="Search courses..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                className="w-full pl-9 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm bg-background text-foreground"
                                 autoComplete="off"
                               />
                             </div>
@@ -478,14 +478,14 @@ export const LeaderboardTabs = ({
           ) : (
             /* Course Selection Grid */
             <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">
+              <h3 className="text-lg font-semibold text-foreground mb-4 text-center">
                 Choose a Course to View Rankings
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
                 {courses.map((course) => (
                   <Button
                     key={course.id}
-                    variant="secondaryOutline"
+                    variant="outline"
                     className="flex items-center p-6 h-auto hover:border-orange-300 hover:bg-orange-50 transition-all group"
                     onClick={() => handleCourseChange(course.id)}
                   >
@@ -497,7 +497,7 @@ export const LeaderboardTabs = ({
                       className="rounded-lg mr-4 group-hover:scale-105 transition-transform"
                     />
                     <div className="text-left">
-                      <span className="font-medium text-gray-800 dark:text-gray-100 block">
+                      <span className="font-medium text-foreground block">
                         {course.title}
                       </span>
                       <span className="text-sm text-muted-foreground">

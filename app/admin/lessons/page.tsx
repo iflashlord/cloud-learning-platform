@@ -143,12 +143,12 @@ export default function LessonsPage() {
                 </div>
                 <div className="flex space-x-2">
                   <Link href={`/admin/lessons/${lesson.id}/edit`}>
-                    <Button variant="secondaryOutline" size="sm">
+                    <Button variant="outline" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Button
-                    variant="dangerOutline"
+                    variant="danger"
                     size="sm"
                     onClick={() => deleteLesson(lesson.id)}
                   >

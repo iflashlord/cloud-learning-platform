@@ -93,7 +93,7 @@ export default function SettingsPage() {
             <div className="space-y-2">
               <div className="space-y-2">
                 <Button 
-                  variant="primaryOutline" 
+                  variant="outline" 
                   className="w-full justify-start"
                   onClick={() => handleExport('json')}
                   disabled={exporting}
@@ -102,7 +102,7 @@ export default function SettingsPage() {
                   {exporting ? 'Exporting...' : 'Export as JSON'}
                 </Button>
                 <Button 
-                  variant="secondaryOutline" 
+                  variant="outline" 
                   className="w-full justify-start"
                   onClick={() => handleExport('csv')}
                   disabled={exporting}
@@ -120,7 +120,7 @@ export default function SettingsPage() {
                   disabled={importing}
                 />
                 <Button 
-                  variant="secondaryOutline" 
+                  variant="outline" 
                   className="w-full justify-start"
                   disabled={importing}
                 >

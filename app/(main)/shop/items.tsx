@@ -56,12 +56,11 @@ export const Items = ({
             <Heart className="w-8 h-8 text-white fill-current" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                        <h3 className="text-xl font-bold text-foreground mb-2">
               Refill Hearts
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-              Restore your hearts to continue learning without interruption. Get back in the game!
-            </p>
+            <p className="text-sm text-muted-foreground mb-3">
+              Get back in the game when you run out of hearts!</p>
             <div className="flex items-center gap-2">
               <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.error.bg, statusStyles.error.text)}>
                 <Heart className={cn("w-4 h-4", statusStyles.error.text)} fill="currentColor" />
@@ -84,15 +83,15 @@ export const Items = ({
             }
             className={`px-6 py-3 font-bold text-lg ${
               hearts === 5 
-                ? "bg-gray-400 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed" 
+                ? "bg-muted text-muted-foreground cursor-not-allowed" 
                 : points < POINTS_TO_REFILL
-                  ? "bg-gray-400 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                  ? "bg-muted text-muted-foreground cursor-not-allowed"
                   : "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             } transition-all duration-200`}
           >
             {hearts === 5 ? (
               <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-gray-200 dark:text-gray-500" fill="currentColor" />
+                <Heart className="w-5 h-5 text-muted-foreground/60" fill="currentColor" />
                 <span>Hearts Full</span>
               </div>
             ) : points < POINTS_TO_REFILL ? (
@@ -118,11 +117,11 @@ export const Items = ({
             <Infinity className="w-8 h-8 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-foreground mb-2 flex items-center gap-2">
               Pro Membership
               <Crown className={cn("w-5 h-5", statusStyles.warning.text)} />
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            <p className="text-sm text-muted-foreground mb-3">
               Unlock unlimited hearts, remove ads, and get access to exclusive pro features and content.
             </p>
             <div className="space-y-2">
@@ -174,8 +173,8 @@ export const Items = ({
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
             <Rocket className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">More Items Coming Soon!</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <h3 className="text-xl font-bold text-foreground mb-2">More Items Coming Soon!</h3>
+          <p className="text-sm text-muted-foreground">
             We&apos;re working on exciting new power-ups, themes, and learning boosters. Stay tuned!
           </p>
         </div>

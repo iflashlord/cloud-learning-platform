@@ -56,7 +56,7 @@ export const ExitModal = () => {
               Keep learning
             </Button>
             <Button
-              variant="dangerOutline" 
+              variant="danger" 
               className="w-full" 
               size="lg" 
               onClick={() => {

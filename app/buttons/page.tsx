@@ -101,19 +101,19 @@ const ButtonsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Primary Outline</h3>
-              <Button variant="primaryOutline" className="w-full">
+              <Button variant="outline" className="w-full">
                 PRACTICE
               </Button>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Secondary Outline</h3>
-              <Button variant="secondaryOutline" className="w-full">
+              <Button variant="outline" className="w-full">
                 SETTINGS
               </Button>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Danger Outline</h3>
-              <Button variant="dangerOutline" className="w-full">
+              <Button variant="danger" className="w-full">
                 DELETE
               </Button>
             </div>
@@ -132,13 +132,13 @@ const ButtonsPage = () => {
                 <Trophy className="w-5 h-5 mr-2" />
                 Super
               </h3>
-              <Button variant="super" className="w-full">
+              <Button variant="primary" className="w-full">
                 UPGRADE
               </Button>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-orange-700 mb-4">Super Outline</h3>
-              <Button variant="superOutline" className="w-full">
+              <Button variant="outline" className="w-full">
                 PREMIUM
               </Button>
             </div>

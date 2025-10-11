@@ -190,11 +190,11 @@ const AdminChallengeOptionsPage = () => {
                     </Button>
                   </Link>
                   <Link href={`/admin/challenge-options/${option.id}/edit`}>
-                    <Button variant="secondaryOutline" size="sm">
+                    <Button variant="outline" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                   </Link>
-                  <Button variant="dangerOutline" size="sm">
+                  <Button variant="danger" size="sm">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

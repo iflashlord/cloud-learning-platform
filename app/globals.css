@@ -84,6 +84,7 @@ html.dark {
     --ring: 212.7 26.8% 83.9%;
     
     /* Dark mode design system colors */
+    /* Dark mode design system colors */
     --ds-neutral-0: 0 0% 0%;
     --ds-neutral-50: 222.2 84% 4.9%;
     --ds-neutral-100: 217.2 32.6% 17.5%;
@@ -95,6 +96,78 @@ html.dark {
     --ds-neutral-700: 213 27% 75%;
     --ds-neutral-800: 217.2 32.6% 85.5%;
     --ds-neutral-900: 210 40% 95%;
+    --ds-neutral-foreground: 210 40% 98%;
+    --ds-neutral-rgb: 115, 115, 115;
+
+    /* Primary palette - Dark mode */
+    --ds-primary-50: 222.2 84% 4.9%;
+    --ds-primary-100: 217.2 32.6% 17.5%;
+    --ds-primary-200: 95 100% 76%;
+    --ds-primary-300: 95 100% 83%;
+    --ds-primary-400: 98 92% 73%;
+    --ds-primary-500: 94 98% 60%;
+    --ds-primary-600: 95 99% 52%;
+    --ds-primary-700: 96 95% 45%;
+    --ds-primary-800: 97 81% 41%;
+    --ds-primary-900: 100 69% 38%;
+    --ds-primary-foreground: 222.2 47.4% 11.2%;
+    --ds-primary-rgb: 88, 204, 2;
+
+    /* Success palette - Dark mode */
+    --ds-success-50: 222.2 84% 4.9%;
+    --ds-success-100: 217.2 32.6% 17.5%;
+    --ds-success-200: 145 93% 32%;
+    --ds-success-300: 145 81% 49%;
+    --ds-success-400: 145 68% 63%;
+    --ds-success-500: 146 78% 61%;
+    --ds-success-600: 146 79% 72%;
+    --ds-success-700: 146 79% 75%;
+    --ds-success-800: 146 75% 79%;
+    --ds-success-900: 147 75% 84%;
+    --ds-success-foreground: 222.2 47.4% 11.2%;
+    --ds-success-rgb: 34, 197, 94;
+
+    /* Error palette - Dark mode */
+    --ds-error-50: 222.2 84% 4.9%;
+    --ds-error-100: 217.2 32.6% 17.5%;
+    --ds-error-200: 0 96% 39%;
+    --ds-error-300: 0 94% 52%;
+    --ds-error-400: 0 91% 61%;
+    --ds-error-500: 0 84% 70%;
+    --ds-error-600: 0 72% 71%;
+    --ds-error-700: 0 74% 72%;
+    --ds-error-800: 0 70% 75%;
+    --ds-error-900: 0 63% 81%;
+    --ds-error-foreground: 222.2 47.4% 11.2%;
+    --ds-error-rgb: 239, 68, 68;
+
+    /* Warning palette - Dark mode */
+    --ds-warning-50: 222.2 84% 4.9%;
+    --ds-warning-100: 217.2 32.6% 17.5%;
+    --ds-warning-200: 53 98% 47%;
+    --ds-warning-300: 50 98% 54%;
+    --ds-warning-400: 48 96% 63%;
+    --ds-warning-500: 45 93% 67%;
+    --ds-warning-600: 41 96% 70%;
+    --ds-warning-700: 35 92% 73%;
+    --ds-warning-800: 32 81% 79%;
+    --ds-warning-900: 28 73% 86%;
+    --ds-warning-foreground: 28 73% 26%;
+    --ds-warning-rgb: 250, 204, 21;
+
+    /* Info palette - Dark mode */
+    --ds-info-50: 222.2 84% 4.9%;
+    --ds-info-100: 217.2 32.6% 17.5%;
+    --ds-info-200: 213 97% 47%;
+    --ds-info-300: 212 96% 58%;
+    --ds-info-400: 213 94% 68%;
+    --ds-info-500: 217 91% 70%;
+    --ds-info-600: 221 83% 73%;
+    --ds-info-700: 224 76% 78%;
+    --ds-info-800: 226 71% 80%;
+    --ds-info-900: 224 64% 83%;
+    --ds-info-foreground: 222.2 47.4% 11.2%;
+    --ds-info-rgb: 59, 130, 246;
   }
 }
  

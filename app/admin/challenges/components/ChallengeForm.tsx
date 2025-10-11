@@ -492,7 +492,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
               <Button
                 type="button"
                 onClick={addOption}
-                variant="secondaryOutline"
+                variant="outline"
                 size="sm"
               >
                 Add Option
@@ -508,7 +508,7 @@ export const ChallengeForm = ({ challengeId, initialData, hideOptions = false, p
                     <Button
                       type="button"
                       onClick={() => removeOption(index)}
-                      variant="dangerOutline"
+                      variant="danger"
                       size="sm"
                     >
                       Remove

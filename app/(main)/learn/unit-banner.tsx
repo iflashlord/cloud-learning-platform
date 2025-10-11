@@ -83,7 +83,7 @@ export const UnitBanner = ({
         <Button
           size="lg"
           variant="secondary"
-          className="hidden xl:flex border-2 border-b-4 active:border-b-2 bg-white text-gray-800 hover:bg-gray-50 font-bold shadow-lg hover:shadow-xl transition-all duration-200 relative z-10"
+          className="hidden xl:flex border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200 relative z-10"
         >
           <NotebookText className="mr-2" />
           {isCompleted ? "Review" : "Continue"}

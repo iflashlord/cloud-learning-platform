@@ -57,7 +57,7 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
               <h1 className={cn(
-                "font-bold text-gray-900 dark:text-gray-100 tracking-tight",
+                "font-bold text-foreground tracking-tight",
                 {
                   "text-xl": size === "sm",
                   "text-2xl md:text-3xl": size === "md",
@@ -71,7 +71,7 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
             
             {description && (
               <p className={cn(
-                "text-gray-600 dark:text-gray-400 max-w-3xl",
+                "text-muted-foreground max-w-3xl",
                 {
                   "text-sm": size === "sm",
                   "text-base": size === "md",

@@ -34,11 +34,11 @@ export const AdminSearchHeader = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-2xl font-bold text-foreground">
             {title}
           </h1>
           {description && (
-            <p className="text-gray-600 dark:text-gray-300 mt-1">
+            <p className="text-muted-foreground mt-1">
               {description}
             </p>
           )}
@@ -58,7 +58,7 @@ export const AdminSearchHeader = ({
       
       {/* Search Bar */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/60 w-4 h-4" />
         <Input
           type="text"
           placeholder={searchPlaceholder}

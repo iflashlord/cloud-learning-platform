@@ -174,7 +174,7 @@ export default function CourseViewPage({ params }: { params: { courseId: string 
             actions={
               <div className="flex gap-2">
                 <Link href={`/admin/courses/${course.id}/edit`}>
-                  <Button variant="primaryOutline">
+                  <Button variant="outline">
                     <Edit className="w-4 h-4 mr-2" />
                     Edit Course
                   </Button>

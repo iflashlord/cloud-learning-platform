@@ -22,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "."),
+      "@design-system": path.resolve(__dirname, "design-system"),
     },
   },
 });

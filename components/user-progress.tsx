@@ -41,8 +41,8 @@ export const UserProgress = ({
             height={32}
           />
           <div className="hidden sm:flex flex-col items-start">
-            <span className="text-xs text-neutral-500">Switch Course</span>
-            <span className="text-sm font-medium text-neutral-700 truncate max-w-[120px]">
+            <span className="text-xs text-muted-foreground">Switch Course</span>
+            <span className="text-sm font-medium text-foreground truncate max-w-[120px]">
               {activeCourse.title}
             </span>
           </div>

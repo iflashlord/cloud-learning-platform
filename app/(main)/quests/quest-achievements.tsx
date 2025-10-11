@@ -94,7 +94,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
   ];
 
   const getRarityColor = (rarity: string, unlocked: boolean) => {
-    if (!unlocked) return "bg-gray-100 text-gray-400 border-gray-200";
+    if (!unlocked) return "bg-muted text-muted-foreground/60 border-border";
     
     const rarityMap: Record<string, string> = {
       common: "bg-green-100 text-green-800 border-green-300",
@@ -103,7 +103,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       legendary: "bg-gradient-to-br from-yellow-100 to-orange-100 text-orange-800 border-orange-300",
     };
     
-    return rarityMap[rarity] || "bg-gray-100 text-gray-600 border-gray-200";
+    return rarityMap[rarity] || "bg-muted text-muted-foreground border-border";
   };
 
   const getAchievementIcon = (achievement: Achievement) => {
@@ -112,21 +112,21 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
       return <Icon className="w-8 h-8 text-current" aria-hidden />;
     }
 
-    return <Lock className="w-8 h-8 text-gray-400" aria-hidden />;
+    return <Lock className="w-8 h-8 text-muted-foreground/60" aria-hidden />;
   };
 
   const unlockedAchievements = achievements.filter(a => a.unlockedAt);
   const lockedAchievements = achievements.filter(a => !a.unlockedAt);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-purple-200 dark:border-purple-700 shadow-lg p-6">
+    <div className="bg-card rounded-xl border-2 border-purple-200 dark:border-purple-700 shadow-lg p-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-sm">
           <Trophy className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Achievement Gallery</h2>
-          <p className="text-sm text-gray-600">Unlock badges by completing quests and milestones</p>
+          <h2 className="text-xl font-bold text-foreground">Achievement Gallery</h2>
+          <p className="text-sm text-muted-foreground">Unlock badges by completing quests and milestones</p>
         </div>
       </div>
 
@@ -136,7 +136,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
           <div className="text-lg font-bold text-purple-700">{unlockedAchievements.length}</div>
           <div className="text-xs text-purple-600">Unlocked</div>
         </div>
-        <div className="text-center p-3 bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg border border-gray-200">
+        <div className="text-center p-3 bg-muted rounded-lg border border-border">
           <div className="text-lg font-bold text-gray-700">{lockedAchievements.length}</div>
           <div className="text-xs text-gray-600">Locked</div>
         </div>
@@ -210,7 +210,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
               {lockedAchievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className="p-4 rounded-xl border-2 border-gray-200 bg-gray-50 transition-all duration-200 hover:bg-gray-100"
+                  className="p-4 rounded-xl border-2 border-border bg-muted transition-all duration-200 hover:bg-muted/80"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-12 h-12 grayscale">
@@ -226,9 +226,9 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
                             <span>Progress</span>
                             <span>{achievement.progress.current} / {achievement.progress.required}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1">
+                          <div className="w-full bg-muted rounded-full h-1">
                             <div 
-                              className="bg-gray-400 h-1 rounded-full transition-all duration-300"
+                              className="bg-muted-foreground h-1 rounded-full transition-all duration-300"
                               style={{ width: `${(achievement.progress.current / achievement.progress.required) * 100}%` }}
                             />
                           </div>
@@ -236,7 +236,7 @@ export const QuestAchievements = ({ userPoints, completedQuests, totalQuests }: 
                       )}
                       
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wide bg-gray-200 text-gray-600">
+                        <span className="px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wide bg-muted text-muted-foreground">
                           {achievement.rarity}
                         </span>
                         <span className="text-xs text-gray-500">

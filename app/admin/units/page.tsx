@@ -145,12 +145,12 @@ export default function UnitsPage() {
                 </div>
                 <div className="flex space-x-2">
                   <Link href={`/admin/units/${unit.id}/edit`}>
-                    <Button variant="secondaryOutline" size="sm">
+                    <Button variant="outline" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Button
-                    variant="dangerOutline"
+                    variant="danger"
                     size="sm"
                     onClick={() => deleteUnit(unit.id)}
                   >

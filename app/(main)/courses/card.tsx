@@ -1,8 +1,11 @@
 import Image from "next/image";
-import { Check, Clock, BookOpen, Star, Award } from "lucide-react";
+import { Check, Clock, BookOpen, Star, Award, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { statusStyles } from "@/lib/style-utils";
+import { CourseProgress } from "@/components/ui/course-progress";
+import { CourseMeta } from "@/components/ui/course-meta";
+import { CourseActions } from "@/components/ui/course-actions";
 
 type Props = {
   title: string;
@@ -68,9 +71,9 @@ export const Card = ({
         role="button"
         aria-label={`${active ? 'Continue' : 'Start'} ${title} course`}
         className={cn(
-          "h-full border-2 rounded-xl border-b-4 hover:bg-black/5 cursor-pointer active:border-b-2 flex flex-col p-6 transition-all duration-200",
-          "min-h-[320px] max-w-[350px] shadow-sm hover:shadow-lg focus:ring-2 focus:ring-orange-500 focus:outline-none",
-          active && "ring-2 ring-primary-500 border-primary-500",
+          "h-full border-2 rounded-xl border-b-4 hover:bg-muted/50 cursor-pointer active:border-b-2 flex flex-col p-6 transition-all duration-200 bg-card",
+          "min-h-[320px] max-w-[350px] shadow-sm hover:shadow-lg focus:ring-2 focus:ring-primary focus:outline-none",
+          active && "ring-2 ring-primary border-primary bg-primary/10",
           disabled && "pointer-events-none opacity-50"
         )}
       >
@@ -104,55 +107,41 @@ export const Card = ({
 
         {/* Course Info */}
         <div className="flex-1 flex flex-col">
-          <h3 className="text-lg font-bold text-neutral-800 text-center mb-3 line-clamp-2">
+          <h3 className="text-lg font-bold text-foreground text-center mb-3 line-clamp-2">
             {title}
           </h3>
           
           {description && (
-            <p className="text-sm text-neutral-600 text-center mb-4 line-clamp-3 flex-1">
+            <p className="text-sm text-muted-foreground text-center mb-4 line-clamp-3 flex-1">
               {description}
             </p>
           )}
 
           {/* Course Meta */}
           <div className="space-y-3">
-            {duration && (
-              <div className="flex items-center justify-center gap-2 text-sm text-neutral-600">
-                <Clock className="w-4 h-4" />
-                <span>{duration}</span>
-              </div>
-            )}
+            <CourseMeta 
+              duration={duration}
+              level={level}
+              getLevelColor={getLevelColor}
+              getLevelIcon={getLevelIcon}
+              variant="vertical"
+              className="items-center"
+            />
 
             {/* Progress Bar */}
             {progress && (
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs text-neutral-600">
-                  <span>Progress</span>
-                  <span className="font-medium">{progress.percentage}%</span>
-                </div>
-                <div className="w-full bg-neutral-200 rounded-full h-2">
-                  <div 
-                    className={cn("h-2 rounded-full transition-all duration-300", statusStyles.success.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-primary-500')}
-                    style={{ width: `${progress.percentage}%` }}
-                  />
-                </div>
-                <div className="text-xs text-neutral-500 text-center">
-                  {progress.completedChallenges} of {progress.totalChallenges} challenges
-                </div>
-              </div>
+              <CourseProgress progress={progress} variant="detailed" />
             )}
 
             {/* Action Button */}
             <div className="mt-4">
-              {active ? (
-                <button className={cn("w-full py-3 px-4 rounded-lg font-medium text-sm transition-colors", statusStyles.success.button, "hover:opacity-90")}>
-                  Continue Learning
-                </button>
-              ) : (
-                <button className="w-full border-2 border-neutral-300 text-neutral-700 py-3 px-4 rounded-lg font-medium text-sm hover:bg-neutral-50 transition-colors">
-                  {progress && progress.percentage > 0 ? "Switch to Course" : "Start Course"}
-                </button>
-              )}
+              <CourseActions
+                isActive={active}
+                hasProgress={!!(progress && progress.percentage > 0)}
+                onAction={() => onClick(id)}
+                disabled={disabled}
+                variant="full"
+              />
             </div>
           </div>
         </div>
@@ -174,9 +163,9 @@ export const Card = ({
       role="button"
       aria-label={`${active ? 'Continue' : 'Start'} ${title} course`}
       className={cn(
-        "border-2 rounded-xl hover:bg-black/5 cursor-pointer transition-all duration-200 p-4",
-        "shadow-sm hover:shadow-md focus:ring-2 focus:ring-orange-500 focus:outline-none",
-        active && "ring-2 ring-primary-500 border-primary-500 bg-primary-50/30",
+        "border-2 rounded-xl hover:bg-muted/50 cursor-pointer transition-all duration-200 p-4 bg-card",
+        "shadow-sm hover:shadow-md focus:ring-2 focus:ring-primary focus:outline-none",
+        active && "ring-2 ring-primary border-primary bg-primary/10",
         disabled && "pointer-events-none opacity-50"
       )}
     >
@@ -195,7 +184,7 @@ export const Card = ({
         {/* Course Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-2">
-            <h3 className="text-lg font-bold text-neutral-800 line-clamp-1 flex-1">
+            <h3 className="text-lg font-bold text-foreground line-clamp-1 flex-1">
               {title}
             </h3>
             {active && (
@@ -206,59 +195,36 @@ export const Card = ({
           </div>
 
           {description && (
-            <p className="text-sm text-neutral-600 mb-3 line-clamp-2">
+            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
               {description}
             </p>
           )}
 
           {/* Meta and Progress */}
-          <div className="flex items-center gap-4 mb-3">
-            {level && (
-              <div className={cn("px-2 py-1 rounded-lg text-xs font-medium flex items-center gap-1", getLevelColor(level))}>
-                {getLevelIcon(level)}
-                <span>{level}</span>
-              </div>
-            )}
-            
-            {duration && (
-              <div className="flex items-center gap-1 text-sm text-neutral-600">
-                <Clock className="w-4 h-4" />
-                <span>{duration}</span>
-              </div>
-            )}
-          </div>
+          <CourseMeta 
+            duration={duration}
+            level={level}
+            getLevelColor={getLevelColor}
+            getLevelIcon={getLevelIcon}
+            variant="horizontal"
+            className="mb-3"
+          />
 
           {/* Progress Bar */}
           {progress && (
-            <div className="mb-3">
-              <div className="flex justify-between items-center text-xs text-neutral-600 mb-1">
-                <span>Progress</span>
-                <span className="font-medium">{progress.percentage}%</span>
-              </div>
-              <div className="w-full bg-neutral-200 rounded-full h-1.5">
-                <div 
-                  className={cn("h-1.5 rounded-full transition-all duration-300", statusStyles.success.button.split(' ').find(c => c.startsWith('bg-')) || 'bg-primary-500')}
-                  style={{ width: `${progress.percentage}%` }}
-                />
-              </div>
-              <div className="text-xs text-neutral-500 mt-1">
-                {progress.completedChallenges} of {progress.totalChallenges} challenges completed
-              </div>
-            </div>
+            <CourseProgress progress={progress} variant="compact" className="mb-3" />
           )}
         </div>
 
         {/* Action Button */}
         <div className="flex-shrink-0 ml-4">
-          {active ? (
-            <button className={cn("py-2 px-4 rounded-lg font-medium text-sm transition-colors whitespace-nowrap", statusStyles.success.button, "hover:opacity-90")}>
-              Continue
-            </button>
-          ) : (
-            <button className="border-2 border-neutral-300 text-neutral-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-neutral-50 transition-colors whitespace-nowrap">
-              {progress && progress.percentage > 0 ? "Switch" : "Start"}
-            </button>
-          )}
+          <CourseActions
+            isActive={active}
+            hasProgress={!!(progress && progress.percentage > 0)}
+            onAction={() => onClick(id)}
+            disabled={disabled}
+            variant="compact"
+          />
         </div>
       </div>
     </div>

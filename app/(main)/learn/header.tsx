@@ -24,19 +24,19 @@ export const Header = ({
   const lessonProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   
   return (
-    <div className="sticky top-0 bg-white dark:bg-gray-900 pb-4 lg:pt-[28px] lg:mt-[-28px] border-b-2 border-gray-200 dark:border-gray-700 mb-6 lg:z-50">
+    <div className="sticky top-0 bg-background pb-4 lg:pt-[28px] lg:mt-[-28px] border-b-2 border-border mb-6 lg:z-50">
       {/* Navigation and Title */}
-      <div className="flex items-center justify-between text-neutral-400 dark:text-gray-500 mb-4">
+      <div className="flex items-center justify-between text-muted-foreground mb-4">
         <Link href="/courses">
           <Button variant="ghost" size="sm" className={cn("transition-colors", "hover:" + statusStyles.info.bg, "hover:" + statusStyles.info.text)}>
             <ArrowLeft className="h-5 w-5 stroke-2" />
           </Button>
         </Link>
         <div className="text-center flex-1 mx-4">
-          <h1 className="font-bold text-xl text-neutral-800 dark:text-gray-100 mb-1">
+          <h1 className="font-bold text-xl text-foreground mb-1">
             {title}
           </h1>
-          <p className="text-sm text-neutral-600 dark:text-gray-300">Continue your learning journey</p>
+          <p className="text-sm text-muted-foreground">Continue your learning journey</p>
         </div>
         <div className="w-10" /> {/* Spacer for symmetry */}
       </div>

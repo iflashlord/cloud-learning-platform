@@ -33,7 +33,7 @@ const Progress = React.forwardRef<
           indicatorRadius,
           indicatorClassName
         )}
-        style={{ transform: `translateX(-${100 - value}%)` }}
+        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>
   )

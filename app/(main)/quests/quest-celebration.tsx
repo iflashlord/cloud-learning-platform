@@ -82,7 +82,7 @@ export const QuestCelebration = ({
       </div>
 
       {/* Main Celebration Card */}
-      <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full mx-4 text-center overflow-hidden animate-in zoom-in duration-500 slide-in-from-bottom-4">
+      <div className="relative bg-card rounded-3xl p-8 shadow-2xl max-w-md w-full mx-4 text-center overflow-hidden animate-in zoom-in duration-500 slide-in-from-bottom-4">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-100/30 via-pink-100/30 to-yellow-100/30"></div>
         

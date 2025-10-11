@@ -193,7 +193,7 @@ export const Character = ({ questionType, challengeId = 0, state = "default", cl
       ? "text-green-600"
       : currentCharacter.tone === "error"
       ? "text-red-600"
-      : "text-gray-600";
+      : "text-muted-foreground";
 
   return (
     <div className={`flex flex-col items-center space-y-3 ${className}`}>
@@ -211,7 +211,7 @@ export const Character = ({ questionType, challengeId = 0, state = "default", cl
 
       {/* Character Info */}
       <div className="text-center">
-        <p className="font-semibold text-gray-800 text-sm">{currentCharacter.name}</p>
+        <p className="font-semibold text-foreground text-sm">{currentCharacter.name}</p>
         <p className={`text-xs italic max-w-32 leading-tight transition-colors duration-300 ${expressionColorClass}`}>
           {currentCharacter.expression}
         </p>

@@ -129,7 +129,7 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
         </div>
         <div className="flex space-x-2">
           <Link href={`/admin/lessons/${lesson.id}/edit`}>
-            <Button variant="primaryOutline">
+            <Button variant="outline">
               <Edit className="w-4 h-4 mr-2" />
               Edit Lesson
             </Button>
@@ -239,12 +239,12 @@ export default function LessonViewPage({ params }: { params: { lessonId: string 
 
                     <div className="flex space-x-2 ml-4">
                       <Link href={`/admin/challenges/${challenge.id}/edit`}>
-                        <Button variant="secondaryOutline" size="sm">
+                        <Button variant="outline" size="sm">
                           <Edit className="w-4 h-4" />
                         </Button>
                       </Link>
                       <Button
-                        variant="dangerOutline"
+                        variant="danger"
                         size="sm"
                         onClick={() => deleteChallenge(challenge.id)}
                       >

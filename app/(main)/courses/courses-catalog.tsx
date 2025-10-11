@@ -53,7 +53,7 @@ export const CoursesCatalog = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   // Filter courses based on criteria
   const filteredCourses = useMemo(() => {
