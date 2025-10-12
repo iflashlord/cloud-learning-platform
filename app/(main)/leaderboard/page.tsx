@@ -8,7 +8,8 @@ import {
   getUserProgress, 
   getUserSubscription 
 } from "@/db/queries";
-import { AppLayout } from "@/components/ui/app-layout";
+import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
+import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
 import { CONFIG } from "@/lib/config";
 import { LeaderboardTabs } from "./leaderboard-tabs";
 import { LeaderboardHeader } from "@/components/ui/leaderboard-header";
@@ -56,35 +57,39 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
   }
 
   return ( 
-    <AppLayout
+    <EnhancedGridAppLayout
       activeCourse={userProgress.activeCourse}
       hearts={userProgress.hearts}
       points={userProgress.points}
       hasActiveSubscription={isPro}
     >
-      <div className="w-full flex flex-col items-center">
-        <LeaderboardHeader
-          title={`${CONFIG.PLATFORM_NAME} Champions`}
-          description="Compete with fellow learners, track your progress, and celebrate achievements in our community of technology enthusiasts. Every challenge completed brings you closer to the top!"
-          icon={
-            <Trophy className="w-10 h-10 text-current" />
-          }
-          stats={[
-            { label: "Live Rankings", color: "green", animated: true },
-            { label: "Real-time Updates", color: "blue" },
-            { label: "Fair Competition", color: "purple" }
-          ]}
-        />
-        
-        <LeaderboardTabs
-          courses={courses}
-          generalLeaderboard={generalLeaderboard}
-          courseLeaderboard={courseLeaderboard}
-          selectedCourse={selectedCourse}
-          selectedCourseId={selectedCourseId}
-        />
-      </div>
-    </AppLayout>
+      <DashboardLayout
+        header={
+          <LeaderboardHeader
+            title={`${CONFIG.PLATFORM_NAME} Champions`}
+            description="Compete with fellow learners, track your progress, and celebrate achievements in our community of technology enthusiasts. Every challenge completed brings you closer to the top!"
+            icon={
+              <Trophy className="w-10 h-10 text-current" />
+            }
+            stats={[
+              { label: "Live Rankings", color: "green", animated: true },
+              { label: "Real-time Updates", color: "blue" },
+              { label: "Fair Competition", color: "purple" }
+            ]}
+          />
+        }
+      >
+        <ContentGrid cols={1} gap="lg" align="center" className="w-full">
+          <LeaderboardTabs
+            courses={courses}
+            generalLeaderboard={generalLeaderboard}
+            courseLeaderboard={courseLeaderboard}
+            selectedCourse={selectedCourse}
+            selectedCourseId={selectedCourseId}
+          />
+        </ContentGrid>
+      </DashboardLayout>
+    </EnhancedGridAppLayout>
   );
 };
  

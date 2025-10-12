@@ -8,6 +8,31 @@ import {
   Trophy,
   Sparkles,
   Wind,
+  Heart,
+  Coins,
+  GraduationCap,
+  Trophy as LeaderboardIcon,
+  Target,
+  ShoppingCart,
+  Infinity,
+  BookOpen,
+  User,
+  Users,
+  Baby,
+  Bot,
+  Skull,
+  CheckCircle,
+  Lightbulb,
+  PartyPopper,
+  Flag,
+  Globe,
+  Building,
+  Code,
+  Wrench,
+  Award,
+  CloudSnow,
+  Smile,
+  Frown,
 } from "lucide-react";
 
 export const POINTS_TO_REFILL = 10;
@@ -24,6 +49,36 @@ export const QUEST_ICON_MAP = {
 } as const;
 
 export type QuestIconKey = keyof typeof QUEST_ICON_MAP;
+
+// SVG to Lucide Icon mappings
+export const ICON_MAP = {
+  heart: Heart,
+  points: Coins,
+  mascot: GraduationCap,
+  learn: BookOpen,
+  leaderboard: LeaderboardIcon,
+  quests: Target,
+  shop: ShoppingCart,
+  unlimited: Infinity,
+  finish: CheckCircle,
+  man: User,
+  woman: Users,
+  boy: Baby,
+  robot: Bot,
+  zombie: Skull,
+  hero: Lightbulb,
+  mascot_bad: Frown,
+  mascot_sad: Frown,
+  "aws-cloud-practitioner": CloudSnow,
+  "aws-solutions-architect": Building,
+  "aws-developer": Code,
+  "aws-sysops": Wrench,
+  es: Globe,
+  hr: Flag,
+  it: Flag,
+} as const;
+
+export type IconKey = keyof typeof ICON_MAP;
 
 type QuestDefinition = {
   title: string;

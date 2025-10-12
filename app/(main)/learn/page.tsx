@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { AppLayout } from "@/components/ui/app-layout";
+import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
+import { ContentGrid } from "@/lib/css-grid-system";
 import { lessons, units as unitsSchema } from "@/db/schema";
 import { 
   getCourseProgress, 
@@ -10,7 +11,7 @@ import {
   getCourses
 } from "@/db/queries";
 import { Unit } from "./unit";
-import { Header } from "./header";
+import { EnhancedLearnHeader } from "@/components/enhanced-learn-header";
 
 const LearnPage = async () => {
   const userProgressData = getUserProgress();
@@ -61,7 +62,7 @@ const LearnPage = async () => {
   );
 
   return (
-    <AppLayout
+    <EnhancedGridAppLayout
       activeCourse={activeCourseData ? {
         id: activeCourseData.id,
         title: activeCourseData.title,
@@ -71,16 +72,20 @@ const LearnPage = async () => {
       points={userProgress.points}
       hasActiveSubscription={isPro}
     >
-      <Header 
+      {/* Page Header */}
+      <EnhancedLearnHeader 
         title={userProgress.activeCourse.title}
         totalUnits={totalUnits}
         completedUnits={completedUnits}
         totalLessons={totalLessons}
         completedLessons={completedLessons}
       />
-      {units.map((unit) => (
-        <div key={unit.id} className="mb-10">
+      
+      {/* Units Content */}
+      <ContentGrid cols={1} gap="lg" className="mt-6">
+        {units.map((unit) => (
           <Unit
+            key={unit.id}
             id={unit.id}
             order={unit.order}
             description={unit.description}
@@ -91,9 +96,9 @@ const LearnPage = async () => {
             } | undefined}
             activeLessonPercentage={lessonPercentage}
           />
-        </div>
-      ))}
-    </AppLayout>
+        ))}
+      </ContentGrid>
+    </EnhancedGridAppLayout>
   );
 };
  

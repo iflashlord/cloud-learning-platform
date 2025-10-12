@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
+import { Heart, Coins } from "lucide-react";
 import { statusStyles } from "@/lib/style-utils";
 import { useThemeClasses } from "@/lib/theme-utils";
 
@@ -11,7 +10,7 @@ type Props = {
 
 export const ResultCard = ({ value, variant }: Props) => {
   const themeClasses = useThemeClasses();
-  const imageSrc = variant === "hearts" ? "/heart.svg" : "/points.svg"; 
+  const Icon = variant === "hearts" ? Heart : Coins;
   
   // Use consistent design system colors
   const variantStyles = {
@@ -45,12 +44,11 @@ export const ResultCard = ({ value, variant }: Props) => {
         "rounded-2xl bg-white dark:bg-gray-800 items-center flex justify-center p-6 font-bold text-lg shadow-inner",
         styles.text
       )}>
-        <Image
-          alt="Icon"
-          src={imageSrc}
-          height={30}
-          width={30}
-          className="mr-1.5"
+        <Icon
+          className={cn(
+            "h-7 w-7 mr-1.5",
+            variant === "hearts" ? "fill-current" : ""
+          )}
         />
         {value}
       </div>

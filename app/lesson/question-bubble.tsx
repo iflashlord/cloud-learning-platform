@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { useState } from "react";
-import { HelpCircle, Lightbulb } from "lucide-react";
+import { HelpCircle, Lightbulb, GraduationCap } from "lucide-react";
 
 type Props = {
   question: string;
@@ -11,20 +10,8 @@ export const QuestionBubble = ({ question, hint }: Props) => {
   const [showHint, setShowHint] = useState(false);
   return (
     <div className="flex items-center gap-x-4 mb-6">
-      <Image
-        src="/mascot.svg"
-        alt="Mascot"
-        height={60}
-        width={60}
-        className="hidden lg:block"
-      />
-      <Image
-        src="/mascot.svg"
-        alt="Mascot"
-        height={40}
-        width={40}
-        className="block lg:hidden"
-      />
+      <GraduationCap className="hidden lg:block h-15 w-15 text-primary" />
+      <GraduationCap className="block lg:hidden h-10 w-10 text-primary" />
       <div className="relative py-2 px-4 border-2 rounded-xl text-sm lg:text-base">
         <div className="flex items-center justify-between">
           <span>{question}</span>

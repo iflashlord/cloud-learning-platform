@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { InfinityIcon } from "lucide-react";
+import { InfinityIcon, Coins, Heart } from "lucide-react";
 
 import { courses } from "@/db/schema";
 import { Button } from "@/components/ui/button";
@@ -50,13 +50,13 @@ export const UserProgress = ({
       </Link>
       <Link href="/shop">
         <Button variant="ghost" className={cn("gap-x-2", themeClasses.primaryText)}>
-          <Image src="/points.svg" height={28} width={28} alt="Points" />
+          <Coins className="h-7 w-7" />
           <span className="font-medium">{points}</span>
         </Button>
       </Link>
       <Link href="/shop">
         <Button variant="ghost" className={cn("gap-x-2", statusStyles.error.text)}>
-          <Image src="/heart.svg" height={22} width={22} alt="Hearts" />
+          <Heart className="h-5 w-5 fill-current" />
           <span className="font-medium">
             {hasActiveSubscription 
               ? <InfinityIcon className="h-4 w-4 stroke-[3]" /> 

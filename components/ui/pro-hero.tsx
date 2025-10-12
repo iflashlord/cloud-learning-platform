@@ -1,3 +1,5 @@
+"use client";
+
 import { Crown, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { statusStyles } from "@/lib/style-utils";

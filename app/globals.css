@@ -7,18 +7,21 @@ body,
 :root {
   @apply h-full;
   scroll-behavior: smooth;
-  /* Set overscroll background colors based on theme */
   overscroll-behavior: auto;
+  /* Improved font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html {
-  /* Light mode overscroll background */
-  background: linear-gradient(to bottom right, #f8fafc, #dbeafe, #faf5ff);
+  /* Light mode overscroll background - subtle and accessible */
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #f1f5f9 50%, #f8fafc 100%);
 }
 
 html.dark {
-  /* Dark mode overscroll background */
-  background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
+  /* Dark mode overscroll background - deeper contrast for better visibility */
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
 }
  
 @layer base {
@@ -636,5 +639,114 @@ html.dark {
   .button-loading {
     cursor: wait;
     pointer-events: none;
+  }
+
+  /* Enhanced contrast for better visibility */
+  .dark {
+    /* Enhanced text contrast for dark mode */
+    --foreground: 210 40% 98%;
+    --muted-foreground: 215 20.2% 75%; /* Increased from 65.1% for better visibility */
+    
+    /* Enhanced border contrast for dark mode */
+    --border: 217.2 32.6% 25%; /* Increased from 17.5% for better visibility */
+    --input: 217.2 32.6% 25%;
+    
+    /* Enhanced card contrast for dark mode */
+    --card: 222.2 84% 6%; /* Slightly lighter for better separation */
+    --card-foreground: 210 40% 98%;
+    
+    /* Enhanced muted background for better contrast */
+    --muted: 217.2 32.6% 20%; /* Slightly lighter for better visibility */
+  }
+}
+
+/* ========================================
+   ENHANCED ACCESSIBILITY & CONTRAST
+   ======================================== */
+
+@layer utilities {
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 0 0% 0%;
+      --border: 0 0% 50%;
+      --muted-foreground: 0 0% 20%;
+    }
+    
+    .dark {
+      --background: 0 0% 0%;
+      --foreground: 0 0% 100%;
+      --border: 0 0% 60%;
+      --muted-foreground: 0 0% 80%;
+    }
+  }
+  
+  /* Focus visible enhancements */
+  .focus-visible-enhanced {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  
+  /* Enhanced text contrast utilities */
+  .text-high-contrast {
+    @apply text-foreground;
+    color: hsl(var(--foreground));
+  }
+  
+  .text-medium-contrast {
+    @apply text-muted-foreground;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  /* Enhanced background utilities for better visibility */
+  .bg-enhanced-card {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .bg-enhanced-muted {
+    background-color: hsl(var(--muted));
+  }
+  
+  /* Responsive text sizing for better accessibility */
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl;
+  }
+  
+  /* Enhanced shadow utilities that work in both modes */
+  .shadow-enhanced {
+    box-shadow: 
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .dark .shadow-enhanced {
+    box-shadow: 
+      0 1px 3px 0 rgba(0, 0, 0, 0.3),
+      0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .shadow-enhanced-lg {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .dark .shadow-enhanced-lg {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.4),
+      0 4px 6px -2px rgba(0, 0, 0, 0.2);
   }
 }

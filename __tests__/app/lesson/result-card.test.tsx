@@ -10,8 +10,8 @@ describe("ResultCard", () => {
     expect(screen.getByText("Total XP")).toBeInTheDocument();
     expect(screen.getByText("120")).toBeInTheDocument();
 
-    const image = container.querySelector("img");
-    expect(image).toHaveAttribute("src", "/points.svg");
+    const icon = container.querySelector("svg");
+    expect(icon).toBeInTheDocument();
   });
 
   it("renders hearts variant correctly", () => {
@@ -20,7 +20,7 @@ describe("ResultCard", () => {
     expect(screen.getByText("Hearts Left")).toBeInTheDocument();
     expect(screen.getByText("4")).toBeInTheDocument();
 
-    const image = container.querySelector("img");
-    expect(image).toHaveAttribute("src", "/heart.svg");
+    const icon = container.querySelector("svg");
+    expect(icon).toBeInTheDocument();
   });
 });

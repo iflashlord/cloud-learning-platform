@@ -1,17 +1,23 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { ProHero } from "@/components/ui/pro-hero";
 import { ProFeatures } from "@/components/ui/pro-features";
 import { ProComparison } from "@/components/ui/pro-comparison";
 import { ProTestimonials } from "@/components/ui/pro-testimonials";
 import { ProCTA } from "@/components/ui/pro-cta";
 
-const ProPage = async () => {
+const ProPage = () => {
+  const router = useRouter();
   // TODO: Add checkSubscription when implemented
   const isPro = false; // await checkSubscription();
 
-  if (isPro) {
-    redirect("/learn");
-  }
+  useEffect(() => {
+    if (isPro) {
+      router.push("/learn");
+    }
+  }, [isPro, router]);
 
   const handleStartTrial = () => {
     // TODO: Implement trial start logic

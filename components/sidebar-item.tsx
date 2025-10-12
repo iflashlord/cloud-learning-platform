@@ -1,20 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 type Props = {
   label: string;
-  iconSrc: string;
+  icon: LucideIcon;
   href: string;
 };
 
 export const SidebarItem = ({
   label,
-  iconSrc,
+  icon: Icon,
   href,
 }: Props) => {
   const pathname = usePathname();
@@ -27,13 +27,7 @@ export const SidebarItem = ({
       asChild
     >
       <Link href={href}>
-        <Image
-          src={iconSrc}
-          alt={label}
-          className="mr-5"
-          height={32}
-          width={32}
-        />
+        <Icon className="h-8 w-8 mr-5" />
         {label}
       </Link>
     </Button>

@@ -1,15 +1,13 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-import { FeedWrapper } from "@/components/feed-wrapper";
-import { UserProgress } from "@/components/user-progress";
-import { StickyWrapper } from "@/components/sticky-wrapper";
+import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
+import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries";
 import { QuestCard } from "@/components/ui/quest-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/ui/stat-card";
-import { Promo } from "@/components/promo";
 import { QuestAchievements } from "./quest-achievements";
 import { QuestProgressTracker } from "./quest-progress-tracker";
 import { QuestPageHeader } from "@/components/ui/quest-page-header";
@@ -48,38 +46,33 @@ const QuestsPage = async () => {
   const totalQuests = quests.length;
 
   return ( 
-    <div className="flex flex-row-reverse gap-[48px] px-6">
-      <StickyWrapper>
-        <UserProgress
-          activeCourse={activeCourseData ? {
-            id: activeCourseData.id,
-            title: activeCourseData.title,
-            imageSrc: activeCourseData.imageSrc
-          } : userProgress.activeCourse}
-          hearts={userProgress.hearts}
-          points={userProgress.points}
-          hasActiveSubscription={isPro}
-        />
+    <EnhancedGridAppLayout
+      activeCourse={activeCourseData ? {
+        id: activeCourseData.id,
+        title: activeCourseData.title,
+        imageSrc: activeCourseData.imageSrc
+      } : userProgress.activeCourse!}
+      hearts={userProgress.hearts}
+      points={userProgress.points}
+      hasActiveSubscription={isPro}
+      showQuests={false}
+      additionalSidebarContent={(
         <QuestProgressTracker 
           quests={quests}
           userPoints={userProgress.points}
           className="mb-4"
         />
-        {!isPro && (
-          <Promo />
-        )}
-      </StickyWrapper>
-      <FeedWrapper>
-        <div className="w-full flex flex-col items-center max-w-4xl mx-auto">
-          {/* Enhanced Header */}
-          <QuestPageHeader />
-
+      )}
+    >
+      <DashboardLayout
+        header={<QuestPageHeader />}
+      >
+        <ContentGrid cols={1} gap="lg" className="max-w-4xl mx-auto">
           {/* Stats Overview */}
           <QuestStats
             completedQuests={completedQuests.length}
             availableQuests={quests.filter(quest => userProgress.points < quest.value).length}
             totalPoints={userProgress.points}
-            className="mb-8"
           />
 
           {/* Quest Achievements */}
@@ -94,9 +87,9 @@ const QuestsPage = async () => {
             quests={quests}
             userPoints={userProgress.points}
           />
-        </div>
-      </FeedWrapper>
-    </div>
+        </ContentGrid>
+      </DashboardLayout>
+    </EnhancedGridAppLayout>
   );
 };
  

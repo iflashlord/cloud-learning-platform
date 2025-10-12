@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Frown } from "lucide-react";
 
 import {
   Dialog,
@@ -31,12 +31,7 @@ export const ExitModal = () => {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center w-full justify-center mb-5">
-            <Image
-              src="/mascot_sad.svg"
-              alt="Mascot"
-              height={80}
-              width={80}
-            />
+            <Frown className="h-20 w-20 text-muted-foreground" />
           </div>
           <DialogTitle className="text-center font-bold text-2xl">
             Wait, don&apos;t go!

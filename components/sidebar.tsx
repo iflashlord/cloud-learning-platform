@@ -7,7 +7,15 @@ import {
   ClerkLoaded,
   UserButton,
 } from "@clerk/nextjs";
-import { Loader } from "lucide-react";
+import { 
+  Loader, 
+  GraduationCap,
+  BookOpen,
+  Trophy,
+  Target,
+  ShoppingCart,
+  Infinity
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { CONFIG } from "@/lib/config";
@@ -30,7 +38,7 @@ export const Sidebar = ({ className }: Props) => {
     )}>
       <Link href="/learn">
         <div className="pt-8 pl-4 pb-7 flex items-center gap-x-3">
-          <Image src="/mascot.svg" height={40} width={40} alt="Mascot" />
+          <GraduationCap className="h-10 w-10 text-primary" />
           <h1 className={cn("text-2xl font-extrabold tracking-wide", themeClasses.primaryText)}>
             {CONFIG.PLATFORM_NAME}
           </h1>
@@ -40,27 +48,27 @@ export const Sidebar = ({ className }: Props) => {
         <SidebarItem 
           label="Learn" 
           href="/learn"
-          iconSrc="/learn.svg"
+          icon={BookOpen}
         />
         <SidebarItem 
           label="Leaderboard" 
           href="/leaderboard"
-          iconSrc="/leaderboard.svg"
+          icon={Trophy}
         />
         <SidebarItem 
           label="Quests" 
           href="/quests"
-          iconSrc="/quests.svg"
+          icon={Target}
         />
         <SidebarItem 
           label="Shop" 
           href="/shop"
-          iconSrc="/shop.svg"
+          icon={ShoppingCart}
         />
         <SidebarItem 
           label="Courses" 
           href="/courses"
-          iconSrc="/learn.svg"
+          icon={BookOpen}
         />
       </div>
       <div className="px-4 pb-4">
@@ -68,7 +76,7 @@ export const Sidebar = ({ className }: Props) => {
           <SidebarItem 
             label="Upgrade" 
             href="/pro"
-            iconSrc="/unlimited.svg"
+            icon={Infinity}
           />
           <div className="flex justify-center">
             <ThemeSwitcher variant="compact" size="sm" />
