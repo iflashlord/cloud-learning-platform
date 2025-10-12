@@ -36,16 +36,16 @@ export const Z_INDEX = {
   STICKY_CONTENT: 45,
   STICKY_HEADER: 50,
   
-  // Navigation Layer (60-79): Navigation elements
-  MOBILE_HEADER: 60,
-  MOBILE_SIDEBAR_BACKDROP: 65,
-  MOBILE_SIDEBAR: 70,
-  MOBILE_BOTTOM_NAV: 75,
+  // Navigation Layer (80-99): Navigation elements (HIGHEST PRIORITY)
+  MOBILE_HEADER: 90,
+  MOBILE_SIDEBAR_BACKDROP: 85,
+  MOBILE_SIDEBAR: 87,
+  MOBILE_BOTTOM_NAV: 95,
   
-  // Sidebar Layer (80-99): Main navigation sidebar
-  SIDEBAR_BACKDROP: 80,
-  SIDEBAR: 100,
-  SIDEBAR_TOGGLE: 110,
+  // Sidebar Layer (60-79): Desktop navigation sidebar
+  SIDEBAR_BACKDROP: 60,
+  SIDEBAR: 70,
+  SIDEBAR_TOGGLE: 75,
   
   // Overlay Layer (200-299): Overlays and temporary content
   DROPDOWN: 200,

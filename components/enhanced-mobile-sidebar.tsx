@@ -27,6 +27,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { CONFIG } from "@/lib/config";
+import { zIndex } from "@/lib/z-index-system";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
 
@@ -126,8 +127,9 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          "fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+          zIndex('MOBILE_SIDEBAR_BACKDROP')
         )}
         onClick={onClose}
         aria-hidden="true"
@@ -136,11 +138,12 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[280px] transform transition-transform duration-300 ease-out lg:hidden",
+          "fixed top-0 left-0 h-full w-[280px] transform transition-transform duration-300 ease-out lg:hidden",
           "bg-background/95 dark:bg-background/95 backdrop-blur-md",
           "border-r border-border/50 shadow-2xl",
           "flex flex-col",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          zIndex('MOBILE_SIDEBAR')
         )}
       >
         {/* Header */}

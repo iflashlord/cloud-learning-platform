@@ -19,6 +19,7 @@ import { BackgroundProvider, useResponsive } from "@/lib/enhanced-layout-system"
 import { SidebarProvider, useSidebar } from "@/lib/sidebar-context";
 import { AppGrid, PageGrid } from "@/lib/css-grid-system";
 import { cn } from "@/lib/utils";
+import { zIndex } from "@/lib/z-index-system";
 
 type Props = {
   children: React.ReactNode;
@@ -43,7 +44,7 @@ const GridLayoutContent = ({ children }: Props) => {
     >
       {/* Mobile Header - Only shown on mobile */}
       {isMobile && (
-        <header className="lg:hidden bg-card/95 backdrop-blur-md border-b border-border/50 z-50">
+        <header className={cn("lg:hidden bg-card/95 backdrop-blur-md border-b border-border/50", zIndex('MOBILE_HEADER'))}>
           <EnhancedMobileHeader />
         </header>
       )}

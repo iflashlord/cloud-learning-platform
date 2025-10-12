@@ -3,7 +3,9 @@ import { ArrowLeft, BookOpen, Target, TrendingUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { statusStyles } from "@/lib/style-utils";
+import { ExitIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
+import { zIndex } from "@/lib/z-index-system";
 
 type Props = {
   title: string;
@@ -24,7 +26,7 @@ export const Header = ({
   const lessonProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   
   return (
-    <div className="sticky top-0 bg-background pb-4 lg:pt-[28px] lg:mt-[-28px] border-b-2 border-border mb-6 lg:z-50">
+    <div className={cn("sticky top-0 bg-background pb-4 lg:pt-[28px] lg:mt-[-28px] border-b-2 border-border mb-6", zIndex('STICKY_HEADER'))}>
       {/* Navigation and Title */}
       <div className="flex items-center justify-between text-muted-foreground mb-4">
         <Link href="/courses">

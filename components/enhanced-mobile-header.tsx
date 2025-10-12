@@ -16,6 +16,7 @@ import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 
 import { cn } from "@/lib/utils";
 import { CONFIG } from "@/lib/config";
+import { zIndex } from "@/lib/z-index-system";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { EnhancedMobileSidebar } from "@/components/enhanced-mobile-sidebar";
@@ -28,8 +29,9 @@ export const EnhancedMobileHeader: React.FC = () => {
       <nav className={cn(
         "lg:hidden px-4 h-[60px] flex items-center justify-between",
         "bg-background/80 dark:bg-background/80 backdrop-blur-md",
-        "border-b border-border/50 fixed top-0 w-full z-50",
-        "shadow-sm"
+        "border-b border-border/50 fixed top-0 w-full",
+        "shadow-sm",
+        zIndex('MOBILE_HEADER')
       )}>
         {/* Left side - Menu and Logo */}
         <div className="flex items-center gap-3">
