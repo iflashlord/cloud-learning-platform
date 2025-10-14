@@ -61,3 +61,13 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+export const ReadOnly: Story = {
+  args: {
+    placeholder: "Read-only input",
+    defaultValue: "Auto-populated value",
+    size: "md",
+    state: "readOnly",
+    readOnly: true,
+  },
+};

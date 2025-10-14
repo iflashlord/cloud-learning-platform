@@ -16,6 +16,10 @@ const meta: Meta<typeof PageHeader> = {
       control: { type: 'select' },
       options: ['default', 'centered', 'gradient'],
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
+    },
   },
 };
 
@@ -26,6 +30,7 @@ export const Default: Story = {
   args: {
     title: 'Dashboard',
     description: 'Welcome to your learning dashboard. Track your progress and explore new courses.',
+    size: 'md',
   },
 };
 
@@ -34,6 +39,7 @@ export const WithBadge: Story = {
     title: 'Course Management',
     description: 'Create and manage your educational content.',
     badge: <Badge variant="success">Pro Feature</Badge>,
+    size: 'sm',
   },
 };
 
@@ -59,6 +65,7 @@ export const WithActions: Story = {
 export const Centered: Story = {
   args: {
     variant: 'centered',
+    size: 'lg',
     title: 'Welcome to Learning Platform',
     description: 'Start your journey with our comprehensive technology courses and certifications.',
     badge: <Badge variant="info">Getting Started</Badge>,
@@ -74,6 +81,7 @@ export const Centered: Story = {
 export const Gradient: Story = {
   args: {
     variant: 'gradient',
+    size: 'lg',
     title: 'Quest Arena',
     description: 'Embark on epic learning adventures and compete with fellow learners.',
     badge: <Badge variant="warning">Adventure Mode</Badge>,
@@ -85,6 +93,7 @@ export const Complete: Story = {
     title: 'Course Catalog',
     description: 'Explore our comprehensive collection of technology courses and certification paths.',
     badge: <Badge variant="primary">Featured</Badge>,
+    size: 'lg',
     actions: (
       <div className="flex gap-2">
         <Button variant="outline" size="sm">

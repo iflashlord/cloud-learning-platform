@@ -10,13 +10,26 @@ const meta: Meta<typeof QuestCard> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['default', 'green', 'blue', 'orange', 'purple', 'gold', 'platinum', 'rainbow', 'cyan', 'completed'],
+    quest: {
+      control: false,
     },
-    state: {
-      control: { type: 'select' },
-      options: ['default', 'active', 'locked'],
+    progress: {
+      control: { type: 'number' },
+      min: 0,
+      max: 100,
+    },
+    userPoints: {
+      control: { type: 'number' },
+      min: 0,
+    },
+    isCompleted: {
+      control: { type: 'boolean' },
+    },
+    isNext: {
+      control: { type: 'boolean' },
+    },
+    isLocked: {
+      control: { type: 'boolean' },
     },
   },
   decorators: [

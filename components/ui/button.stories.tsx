@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button';
-import { CheckCircle, XCircle, Settings, Star, Trophy } from 'lucide-react';
+import {
+  CheckCircle,
+  XCircle,
+  Settings,
+  Star,
+  Trophy,
+  ArrowRight,
+  Play,
+  Upload,
+  ShieldCheck,
+} from 'lucide-react';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -12,11 +22,30 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'success', 'error', 'danger', 'warning', 'info', 'outline', 'ghost', 'link'],
+      options: [
+        'primary',
+        'secondary',
+        'success',
+        'error',
+        'danger',
+        'warning',
+        'info',
+        'ghost',
+        'outline',
+        'subtle',
+        'elevation',
+        'link',
+        'compute',
+        'storage',
+        'security',
+        'networking',
+        'management',
+        'aiml',
+      ],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl', 'icon'],
     },
     courseTheme: {
       control: { type: 'select' },
@@ -27,6 +56,28 @@ const meta: Meta<typeof Button> = {
     },
     disabled: {
       control: { type: 'boolean' },
+    },
+    legacyVariant: {
+      control: { type: 'select' },
+      options: ['none', 'locked', 'sidebar', 'sidebarOutline'],
+      mapping: {
+        none: undefined,
+        locked: 'locked',
+        sidebar: 'sidebar',
+        sidebarOutline: 'sidebarOutline',
+      },
+    },
+    animateSuccess: {
+      control: { type: 'boolean' },
+    },
+    animateError: {
+      control: { type: 'boolean' },
+    },
+    leftIcon: {
+      control: false,
+    },
+    rightIcon: {
+      control: false,
     },
   },
 };
@@ -55,15 +106,19 @@ export const Error: Story = {
   },
 };
 
-export const WithIcon: Story = {
+export const WithLeftIcon: Story = {
   args: {
-    children: (
-      <>
-        <CheckCircle className="w-5 h-5 mr-2" />
-        Continue
-      </>
-    ),
+    children: 'Start Lab',
+    leftIcon: <Play className="w-5 h-5" />,
     variant: 'primary',
+  },
+};
+
+export const WithRightIcon: Story = {
+  args: {
+    children: 'Continue',
+    rightIcon: <ArrowRight className="w-5 h-5" />,
+    variant: 'secondary',
   },
 };
 
@@ -87,15 +142,15 @@ export const CourseThemes: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
       <Button variant="primary" courseTheme="compute">
-        <Settings className="w-4 h-4 mr-2" />
+        <Play className="w-4 h-4 mr-2" />
         EC2 Compute
       </Button>
       <Button variant="primary" courseTheme="storage">
-        <Star className="w-4 h-4 mr-2" />
+        <Upload className="w-4 h-4 mr-2" />
         S3 Storage
       </Button>
       <Button variant="primary" courseTheme="security">
-        <Trophy className="w-4 h-4 mr-2" />
+        <ShieldCheck className="w-4 h-4 mr-2" />
         IAM Security
       </Button>
       <Button variant="primary" courseTheme="networking">
@@ -109,6 +164,39 @@ export const CourseThemes: Story = {
       <Button variant="primary" courseTheme="aiml">
         <XCircle className="w-4 h-4 mr-2" />
         SageMaker
+      </Button>
+    </div>
+  ),
+};
+
+export const IconButton: Story = {
+  args: {
+    variant: 'ghost',
+    size: 'icon',
+    children: <Settings className="w-5 h-5" />,
+  },
+};
+
+export const LegacyVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <Button legacyVariant="locked" disabled>
+        Locked
+      </Button>
+      <Button legacyVariant="sidebar">Sidebar</Button>
+      <Button legacyVariant="sidebarOutline">Outline</Button>
+    </div>
+  ),
+};
+
+export const AnimatedStates: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <Button variant="success" animateSuccess>
+        Success Pulse
+      </Button>
+      <Button variant="error" animateError>
+        Error Pulse
       </Button>
     </div>
   ),

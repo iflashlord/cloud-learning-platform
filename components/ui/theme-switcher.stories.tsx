@@ -1,6 +1,7 @@
+import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeSwitcher } from './theme-switcher';
 
-const meta = {
+const meta: Meta<typeof ThemeSwitcher> = {
   title: 'Components/ThemeSwitcher',
   component: ThemeSwitcher,
   parameters: {
@@ -20,29 +21,37 @@ const meta = {
 };
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default = {
+export const Default: Story = {
   args: {
     variant: 'default',
     size: 'md',
   },
 };
 
-export const Compact = {
+export const Outline: Story = {
+  args: {
+    variant: 'outline',
+    size: 'md',
+  },
+};
+
+export const Compact: Story = {
   args: {
     variant: 'compact',
     size: 'md',
   },
 };
 
-export const Ghost = {
+export const Ghost: Story = {
   args: {
     variant: 'ghost',
     size: 'md',
   },
 };
 
-export const AllSizes = {
+export const AllSizes: Story = {
   render: () => (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
