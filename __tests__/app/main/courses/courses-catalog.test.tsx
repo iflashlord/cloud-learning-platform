@@ -92,25 +92,26 @@ describe("CoursesCatalog", () => {
     });
   });
 
-  it("switches between grid and list view layouts", async () => {
+  it("switches between list and grid view layouts", async () => {
     renderCatalog();
 
     const awsHeading = await screen.findByRole("heading", { name: "AWS" });
     const categoryWrapper = awsHeading.parentElement?.parentElement as HTMLElement;
     const cardsContainer = categoryWrapper.children[1] as HTMLElement;
 
-    expect(cardsContainer.className).toContain("grid");
+    // default view is list
+    expect(cardsContainer.className).toContain("space-y-3");
+
+    await userEvent.click(screen.getByLabelText("Grid view"));
+
+    await waitFor(() => {
+      expect(cardsContainer.className).toContain("grid-cols-1");
+    });
 
     await userEvent.click(screen.getByLabelText("List view"));
 
     await waitFor(() => {
       expect(cardsContainer.className).toContain("space-y-3");
-    });
-
-    await userEvent.click(screen.getByLabelText("Grid view"));
-
-    await waitFor(() => {
-      expect(cardsContainer.className).toContain("grid");
     });
   });
 
@@ -144,7 +145,7 @@ describe("CoursesCatalog", () => {
   it("narrows results to the selected category", async () => {
     renderCatalog();
 
-    await userEvent.click(screen.getByRole("button", { name: /Filter by Architecture category/i }));
+    await userEvent.click(screen.getByRole("button", { name: "Architecture" }));
 
     expect(await screen.findByRole("heading", { name: "Architecture" })).toBeInTheDocument();
     await waitFor(() => {

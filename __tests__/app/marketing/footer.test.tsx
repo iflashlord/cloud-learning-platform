@@ -1,59 +1,34 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 
-vi.mock("next/image", () => ({
-  default: ({ src, alt, ...props }: any) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} {...props} />
-  ),
-}));
-
 describe("Marketing Footer", () => {
-  let Footer: any;
+  let Footer: React.ComponentType;
 
   beforeEach(async () => {
     vi.resetModules();
-    
     const footerModule = await import("@/app/(marketing)/footer");
     Footer = footerModule.Footer;
   });
 
-  it("renders AWS certification badges", () => {
+  it("highlights featured learning tracks", () => {
     render(<Footer />);
 
-    expect(screen.getByText(/Master AWS Certifications/i)).toBeInTheDocument();
-    expect(screen.getByAltText("AWS Cloud Practitioner")).toBeInTheDocument();
-    expect(screen.getByAltText("AWS Solutions Architect")).toBeInTheDocument();
-    expect(screen.getByAltText("AWS Developer")).toBeInTheDocument();
-    expect(screen.getByAltText("AWS SysOps Administrator")).toBeInTheDocument();
+    expect(screen.getByText(/Cloud Fundamentals/i)).toBeInTheDocument();
+    expect(screen.getByText(/System Architecture/i)).toBeInTheDocument();
+    expect(screen.getByText(/Development/i)).toBeInTheDocument();
+    expect(screen.getByText(/DevOps & Ops/i)).toBeInTheDocument();
   });
 
-  it("displays footer links and information", () => {
+  it("renders four call-to-action buttons", () => {
     render(<Footer />);
 
-    expect(screen.getByText(/AWS Cloud Academy/i)).toBeInTheDocument();
-    expect(screen.getByText(/Professional cloud certification training/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(4);
   });
 
-  it("shows contact and legal information", () => {
-    render(<Footer />);
-
-    // Look for common footer links
-    expect(screen.getByText(/Privacy Policy/i) || screen.getByText(/Terms of Service/i)).toBeInTheDocument();
-  });
-
-  it("has proper footer structure", () => {
+  it("applies the marketing footer layout styles", () => {
     const { container } = render(<Footer />);
-    
     const footer = container.querySelector("footer");
-    expect(footer).toBeInTheDocument();
-  });
 
-  it("displays certification badges in a grid layout", () => {
-    const { container } = render(<Footer />);
-    
-    // Check for grid or flex layout containing certification images
-    const images = container.querySelectorAll('img[alt*="AWS"]');
-    expect(images.length).toBeGreaterThanOrEqual(4); // At least 4 AWS certification badges
+    expect(footer).toHaveClass("border-t-2", "p-2");
   });
 });

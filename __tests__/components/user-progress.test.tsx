@@ -60,7 +60,8 @@ describe("User Progress", () => {
       />
     );
 
-    expect(container.querySelector('svg[data-lucide="infinity"]')).toBeInTheDocument();
+    const infinityIcon = container.querySelector(".lucide-infinity");
+    expect(infinityIcon).not.toBeNull();
   });
 
   it("renders active course information", () => {
@@ -87,7 +88,7 @@ describe("User Progress", () => {
       />
     );
 
-    const courseLink = screen.getByRole("link");
+    const courseLink = screen.getByText("Switch Course").closest("a");
     expect(courseLink).toHaveAttribute("href", "/courses");
   });
 

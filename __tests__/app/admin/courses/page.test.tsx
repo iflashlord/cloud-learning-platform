@@ -1,11 +1,14 @@
 import React from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, ...props }: React.ComponentProps<"button">) => (
-    <button {...props}>{children}</button>
-  ),
+  Button: ({ asChild, children, ...props }: any) => {
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children, props);
+    }
+    return <button {...props}>{children}</button>;
+  },
 }));
 
 const { default: CoursesPage } = await import("@/app/admin/courses/page");
@@ -40,6 +43,10 @@ describe("Admin CoursesPage", () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith("/api/courses");
+    expect(screen.getAllByRole("link", { name: /Add Course/i })[0]).toHaveAttribute(
+      "href",
+      "/admin/courses/new"
+    );
   });
 
   it("renders a grid of courses returned from the API", async () => {
@@ -59,7 +66,10 @@ describe("Admin CoursesPage", () => {
       expect(screen.getByText("Solutions Architect")).toBeInTheDocument();
     });
 
-    expect(screen.getAllByRole("link", { name: "Add Course" }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /Add Course/i })).toHaveAttribute(
+      "href",
+      "/admin/courses/new"
+    );
   });
 
   it("deletes a course after confirmation", async () => {
@@ -84,14 +94,7 @@ describe("Admin CoursesPage", () => {
       expect(screen.getByText("Developer Associate")).toBeInTheDocument();
     });
 
-    const courseCard = screen.getByText("Developer Associate").closest("div");
-    expect(courseCard).toBeTruthy();
-
-    const cardButtons = within(courseCard as HTMLElement).getAllByRole("button");
-    const deleteButton = cardButtons[cardButtons.length - 1];
-    expect(deleteButton).toBeTruthy();
-
-    await userEvent.click(deleteButton);
+    await userEvent.click(screen.getByRole("button", { name: /Delete/i }));
 
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith("Course deleted successfully");

@@ -86,7 +86,7 @@ describe("Lesson Footer", () => {
     );
 
     expect(screen.getByText("Nicely done!")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Next" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /NEXT/i })).toBeEnabled();
     expect(mockUseKey).toHaveBeenCalledWith(
       "Enter",
       expect.any(Function),
@@ -109,7 +109,7 @@ describe("Lesson Footer", () => {
     );
 
     expect(screen.getByText("Try again.")).toBeInTheDocument();
-    const retryButton = screen.getByRole("button", { name: "Retry" });
+    const retryButton = screen.getByRole("button", { name: /RETRY/i });
     expect(retryButton).toBeDisabled();
   });
 
@@ -124,10 +124,10 @@ describe("Lesson Footer", () => {
       />,
     );
 
-    expect(screen.getByRole("button", { name: "Practice again" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Practice again" }));
+    expect(screen.getByRole("button", { name: /Practice again/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Practice again/i }));
 
     expect(hrefSetter).toHaveBeenCalledWith("/lesson/42");
-    expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /CONTINUE/i })).toBeEnabled();
   });
 });

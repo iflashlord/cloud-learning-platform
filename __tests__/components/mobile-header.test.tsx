@@ -1,33 +1,17 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-
-const { mockUseMobileSidebar } = vi.hoisted(() => ({
-  mockUseMobileSidebar: vi.fn().mockReturnValue({
-    isOpen: false,
-    open: vi.fn(),
-    close: vi.fn(),
-  }),
-}));
-
-vi.mock("@/store/use-mobile-sidebar", () => ({
-  useMobileSidebar: mockUseMobileSidebar,
-}));
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("@/components/sidebar", () => ({
   Sidebar: () => <div data-testid="sidebar">Sidebar Content</div>,
 }));
 
 describe("Mobile Header", () => {
-  let MobileHeader: any;
+  let MobileHeader: React.ComponentType;
 
   beforeEach(async () => {
     vi.resetModules();
-    mockUseMobileSidebar.mockReturnValue({
-      isOpen: false,
-      open: vi.fn(),
-      close: vi.fn(),
-    });
-    
     const headerModule = await import("@/components/mobile-header");
     MobileHeader = headerModule.MobileHeader;
   });
@@ -39,59 +23,25 @@ describe("Mobile Header", () => {
     expect(menuButton).toBeInTheDocument();
   });
 
-  it("opens sidebar when menu button is clicked", () => {
-    const mockOpen = vi.fn();
-    mockUseMobileSidebar.mockReturnValue({
-      isOpen: false,
-      open: mockOpen,
-      close: vi.fn(),
-    });
-
+  it("reveals the sidebar when the menu button is clicked", async () => {
+    const user = userEvent.setup();
     render(<MobileHeader />);
 
     const menuButton = screen.getByRole("button");
-    fireEvent.click(menuButton);
+    await user.click(menuButton);
 
-    expect(mockOpen).toHaveBeenCalledTimes(1);
+    expect(await screen.findByTestId("sidebar")).toBeInTheDocument();
   });
 
-  it("shows sidebar when isOpen is true", () => {
-    mockUseMobileSidebar.mockReturnValue({
-      isOpen: true,
-      open: vi.fn(),
-      close: vi.fn(),
-    });
-
+  it("closes the sidebar when the close button is pressed", async () => {
+    const user = userEvent.setup();
     render(<MobileHeader />);
 
-    expect(screen.getByTestId("sidebar")).toBeInTheDocument();
-  });
+    await user.click(screen.getByRole("button"));
 
-  it("hides sidebar when isOpen is false", () => {
-    mockUseMobileSidebar.mockReturnValue({
-      isOpen: false,
-      open: vi.fn(),
-      close: vi.fn(),
-    });
-
-    render(<MobileHeader />);
+    const closeButton = await screen.findByRole("button", { name: /close/i });
+    await user.click(closeButton);
 
     expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
-  });
-
-  it("closes sidebar when overlay is clicked", () => {
-    const mockClose = vi.fn();
-    mockUseMobileSidebar.mockReturnValue({
-      isOpen: true,
-      open: vi.fn(),
-      close: mockClose,
-    });
-
-    render(<MobileHeader />);
-
-    const overlay = screen.getByTestId("mobile-sidebar-overlay");
-    fireEvent.click(overlay);
-
-    expect(mockClose).toHaveBeenCalledTimes(1);
   });
 });

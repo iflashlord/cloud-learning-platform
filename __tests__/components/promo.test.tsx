@@ -8,55 +8,37 @@ vi.mock("next/link", () => ({
 }));
 
 describe("Promo", () => {
-  let Promo: any;
+  let Promo: React.ComponentType;
 
   beforeEach(async () => {
     vi.resetModules();
-    
     const promoModule = await import("@/components/promo");
     Promo = promoModule.Promo;
   });
 
-  it("renders upgrade to Pro message", () => {
+  it("highlights the Pro upgrade", () => {
     render(<Promo />);
 
-    expect(screen.getByText(/Upgrade to Pro/i)).toBeInTheDocument();
-    expect(screen.getByText(/Unlimited Hearts/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Upgrade to .* Pro/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Get unlimited hearts and unlock all AWS certification paths!/i)
+    ).toBeInTheDocument();
   });
 
-  it("displays Pro benefits", () => {
+  it("provides a call-to-action link", () => {
     render(<Promo />);
 
-    expect(screen.getByText(/unlimited hearts/i)).toBeInTheDocument();
-    expect(screen.getByText(/No ads/i) || screen.getByText(/Ad-free/i)).toBeInTheDocument();
+    const upgradeLink = screen.getByRole("link", { name: /Upgrade today/i });
+    expect(upgradeLink).toHaveAttribute("href", "/shop");
   });
 
-  it("includes a call-to-action button", () => {
-    render(<Promo />);
-
-    const upgradeButton = screen.getByRole("button") || screen.getByRole("link");
-    expect(upgradeButton).toBeInTheDocument();
-    expect(upgradeButton).toHaveTextContent(/Upgrade/i);
-  });
-
-  it("links to pro page", () => {
-    render(<Promo />);
-
-    const proLink = screen.getByRole("link");
-    expect(proLink).toHaveAttribute("href", "/shop");
-  });
-
-  it("has attractive visual styling", () => {
+  it("applies card styling for visual emphasis", () => {
     const { container } = render(<Promo />);
+    const promoContainer = container.firstChild as HTMLElement;
 
-    // Check for gradient or colorful styling
-    const promoContainer = container.firstChild;
-    expect(promoContainer).toHaveClass();
-  });
-
-  it("displays Pro badge imagery", () => {
-    render(<Promo />);
-
-    expect(screen.getByAltText(/Pro/i)).toBeInTheDocument();
+    expect(promoContainer.className).toContain("p-4");
+    expect(promoContainer.className).toContain("space-y-4");
   });
 });

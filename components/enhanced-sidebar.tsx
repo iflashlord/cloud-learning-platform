@@ -1,24 +1,44 @@
-/**
- * 🧭 Enhanced Sidebar Component
- * 
- * Fully responsive sidebar with:
- * - Perfect contrast in light/dark modes
- * - Smooth animations and interactions
- * - Mobile-first responsive design
- * - Accessibility features
- * - Theme-aware styling
- */
+/**/**
 
-"use client";
+ * 🧭 Enhanced Sidebar Component * 🧭 Enhanced Sidebar Component
 
-import Link from "next/link";
-import Image from "next/image";
+ *  * 
+
+ * Fully responsive sidebar with: * Fully responsive sidebar with:
+
+ * - Perfect contrast in light/dark modes * - Perfect contrast in light/dark modes
+
+ * - Smooth animations and interactions * - Smooth animations and interactions
+
+ * - Mobile-first responsive design * - Mobile-first responsive design
+
+ * - Accessibility features * - Accessibility features
+
+ * - Theme-aware styling * - Theme-aware styling
+
+ */ */
+
+
+
+"use client";"use client";
+
+
+
+import { ModularSidebar } from '@/components/sidebar';import Link from "next/link";
+
+import type { SidebarProps } from '@/components/sidebar';import Image from "next/image";
+
 import { usePathname } from "next/navigation";
-import {
-  ClerkLoading,
-  ClerkLoaded,
+
+export const EnhancedSidebar: React.FC<SidebarProps> = ({ className }) => {import {
+
+  return <ModularSidebar className={className} />;  ClerkLoading,
+
+};  ClerkLoaded,
+
   UserButton,
-} from "@clerk/nextjs";
+
+export default EnhancedSidebar;} from "@clerk/nextjs";
 import { 
   Loader2, 
   GraduationCap,

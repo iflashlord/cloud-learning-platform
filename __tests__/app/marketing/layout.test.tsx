@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 
-vi.mock("./header", () => ({
+vi.mock("@/app/(marketing)/header", () => ({
   Header: () => <header data-testid="marketing-header">Header</header>,
 }));
 
-vi.mock("./footer", () => ({
+vi.mock("@/app/(marketing)/footer", () => ({
   Footer: () => <footer data-testid="marketing-footer">Footer</footer>,
 }));
 

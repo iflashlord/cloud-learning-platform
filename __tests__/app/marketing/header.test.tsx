@@ -61,11 +61,11 @@ describe("Marketing Header", () => {
     Header = headerModule.Header;
   });
 
-  it("renders the platform logo and branding", () => {
-    render(<Header />);
+  it("renders the platform branding", () => {
+    const { container } = render(<Header />);
 
-    expect(screen.getByAltText("Platform Logo")).toBeInTheDocument();
-    expect(screen.getByText(/AWS Cloud Academy/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /CloudLingo/i })).toBeInTheDocument();
+    expect(container.querySelector(".lucide-graduation-cap")).not.toBeNull();
   });
 
   it("shows loading state", () => {

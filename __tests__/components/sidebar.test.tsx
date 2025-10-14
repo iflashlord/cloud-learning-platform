@@ -1,103 +1,62 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
-const {
-  mockGetUserProgress,
-  mockGetCourses,
-  mockGetUserSubscription,
-} = vi.hoisted(() => ({
-  mockGetUserProgress: vi.fn(),
-  mockGetCourses: vi.fn(),
-  mockGetUserSubscription: vi.fn(),
+const { mockUsePathname } = vi.hoisted(() => ({
+  mockUsePathname: vi.fn().mockReturnValue("/learn"),
 }));
 
-vi.mock("@/db/queries", () => ({
-  getUserProgress: mockGetUserProgress,
-  getCourses: mockGetCourses,
-  getUserSubscription: mockGetUserSubscription,
+vi.mock("next/navigation", () => ({
+  usePathname: mockUsePathname,
 }));
 
-vi.mock("@/components/sidebar-item", () => ({
-  SidebarItem: ({ label, href, iconSrc, isActive }: any) => (
-    <div data-testid={`sidebar-item-${label.toLowerCase()}`}>
-      <a href={href} className={isActive ? "active" : ""}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={iconSrc} alt={label} />
-        {label}
-      </a>
-    </div>
-  ),
+vi.mock("@clerk/nextjs", () => ({
+  ClerkLoaded: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ClerkLoading: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  UserButton: () => <div data-testid="user-button" />,
 }));
 
-vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
-  ),
-}));
+beforeAll(() => {
+  window.matchMedia = vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+});
 
 describe("Sidebar", () => {
-  let Sidebar: any;
+  let Sidebar: React.ComponentType;
 
   beforeEach(async () => {
     vi.resetModules();
-    mockGetUserProgress.mockClear();
-    mockGetCourses.mockClear();
-    mockGetUserSubscription.mockClear();
-    
-    const sidebarModule = await import("@/components/sidebar");
-    Sidebar = sidebarModule.Sidebar;
+    mockUsePathname.mockReturnValue("/learn");
+    const module = await import("@/components/sidebar");
+    Sidebar = module.Sidebar;
   });
 
-  it("renders main navigation items", async () => {
-    mockGetUserProgress.mockResolvedValue({
-      activeCourse: { id: 1, title: "AWS Fundamentals" },
-      points: 100,
-      hearts: 5,
-    });
-    mockGetCourses.mockResolvedValue([]);
-    mockGetUserSubscription.mockResolvedValue(null);
+  it("renders primary navigation links", () => {
+    render(<Sidebar />);
 
-    render(await Sidebar());
-
-    expect(screen.getByTestId("sidebar-item-learn")).toBeInTheDocument();
-    expect(screen.getByTestId("sidebar-item-leaderboard")).toBeInTheDocument();
-    expect(screen.getByTestId("sidebar-item-quests")).toBeInTheDocument();
-    expect(screen.getByTestId("sidebar-item-shop")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Learn/i })).toHaveAttribute("href", "/learn");
+    expect(screen.getByRole("link", { name: /Leaderboard/i })).toHaveAttribute(
+      "href",
+      "/leaderboard"
+    );
+    expect(screen.getByRole("link", { name: /Quests/i })).toHaveAttribute("href", "/quests");
+    expect(screen.getByRole("link", { name: /Shop/i })).toHaveAttribute("href", "/shop");
+    expect(screen.getByRole("link", { name: /Courses/i })).toHaveAttribute("href", "/courses");
   });
 
-  it("displays branding section", async () => {
-    mockGetUserProgress.mockResolvedValue(null);
-    mockGetCourses.mockResolvedValue([]);
-    mockGetUserSubscription.mockResolvedValue(null);
+  it("includes branding, upgrade link, theme switcher, and user button", () => {
+    render(<Sidebar />);
 
-    render(await Sidebar());
-
-    expect(screen.getByText(/AWS Cloud Academy/i)).toBeInTheDocument();
-  });
-
-  it("shows course selection when courses are available", async () => {
-    mockGetUserProgress.mockResolvedValue({
-      activeCourse: { id: 1, title: "AWS Fundamentals" },
-    });
-    mockGetCourses.mockResolvedValue([
-      { id: 1, title: "AWS Fundamentals" },
-      { id: 2, title: "AWS Advanced" },
-    ]);
-    mockGetUserSubscription.mockResolvedValue(null);
-
-    render(await Sidebar());
-
-    expect(screen.getByText("AWS Fundamentals")).toBeInTheDocument();
-  });
-
-  it("handles empty user progress gracefully", async () => {
-    mockGetUserProgress.mockResolvedValue(null);
-    mockGetCourses.mockResolvedValue([]);
-    mockGetUserSubscription.mockResolvedValue(null);
-
-    render(await Sidebar());
-
-    expect(screen.getByTestId("sidebar-item-learn")).toBeInTheDocument();
+    expect(screen.getByText(/CloudLingo/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Upgrade/i })).toHaveAttribute("href", "/pro");
+    expect(screen.getByTitle(/Current:/i)).toBeInTheDocument();
+    expect(screen.getByTestId("user-button")).toBeInTheDocument();
   });
 });

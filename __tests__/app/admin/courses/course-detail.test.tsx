@@ -1,21 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-
-const {
-  mockGetAdminCourseById,
-  mockRedirect,
-} = vi.hoisted(() => ({
-  mockGetAdminCourseById: vi.fn(),
-  mockRedirect: vi.fn(),
-}));
-
-vi.mock("@/db/queries", () => ({
-  getAdminCourseById: mockGetAdminCourseById,
-}));
-
-vi.mock("next/navigation", () => ({
-  redirect: mockRedirect,
-}));
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, ...props }: any) => (
@@ -31,15 +15,21 @@ vi.mock("next/link", () => ({
 }));
 
 describe("Admin Course Detail Page", () => {
-  let AdminCoursePage: any;
+  let AdminCoursePage: React.ComponentType<{ params: { courseId: string } }>;
+  let fetchSpy: ReturnType<typeof vi.spyOn>;
+  const mockRouter = (globalThis as any).__mockRouter;
 
   beforeEach(async () => {
     vi.resetModules();
-    mockGetAdminCourseById.mockClear();
-    mockRedirect.mockClear();
-    
+    Object.values(mockRouter).forEach((fn: any) => fn.mockReset?.());
+    fetchSpy = vi.spyOn(global, "fetch");
+
     const pageModule = await import("@/app/admin/courses/[courseId]/page");
     AdminCoursePage = pageModule.default;
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
   });
 
   it("renders course information when course exists", async () => {
@@ -54,20 +44,21 @@ describe("Admin Course Detail Page", () => {
           description: "Introduction",
           order: 1,
           lessons: [
-            { id: 1, title: "Lesson 1", order: 1 },
-            { id: 2, title: "Lesson 2", order: 2 },
+            { id: 1, title: "Lesson 1", order: 1, challenges: [] },
+            { id: 2, title: "Lesson 2", order: 2, challenges: [] },
           ],
         },
       ],
     };
 
-    mockGetAdminCourseById.mockResolvedValue(mockCourse);
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockCourse,
+    } as Response);
 
-    render(await AdminCoursePage({ params: { courseId: "1" } }));
+    render(<AdminCoursePage params={{ courseId: "1" }} />);
 
-    await waitFor(() => {
-      expect(screen.getByText("AWS Fundamentals")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("AWS Fundamentals")).toBeInTheDocument();
 
     expect(screen.getByAltText("AWS Fundamentals")).toBeInTheDocument();
     expect(screen.getByText("Unit 1")).toBeInTheDocument();
@@ -75,12 +66,22 @@ describe("Admin Course Detail Page", () => {
     expect(screen.getByText("Lesson 2")).toBeInTheDocument();
   });
 
-  it("redirects when course is not found", async () => {
-    mockGetAdminCourseById.mockResolvedValue(null);
+  it("shows empty state when course is not found and navigates back", async () => {
+    fetchSpy.mockResolvedValueOnce({
+      ok: false,
+      json: async () => null,
+    } as Response);
 
-    await AdminCoursePage({ params: { courseId: "999" } });
+    render(<AdminCoursePage params={{ courseId: "999" }} />);
 
-    expect(mockRedirect).toHaveBeenCalledWith("/admin/courses");
+    expect(
+      await screen.findByText("Course not found")
+    ).toBeInTheDocument();
+
+    const backButton = screen.getByRole("button", { name: /Back to Courses/i });
+    fireEvent.click(backButton);
+
+    expect(mockRouter.push).toHaveBeenCalledWith("/admin/courses");
   });
 
   it("displays course statistics", async () => {
@@ -93,20 +94,27 @@ describe("Admin Course Detail Page", () => {
           id: 1,
           title: "Unit 1",
           lessons: [
-            { id: 1, title: "Lesson 1" },
-            { id: 2, title: "Lesson 2" },
+            { id: 1, title: "Lesson 1", challenges: [] },
+            { id: 2, title: "Lesson 2", challenges: [] },
           ],
         },
       ],
     };
 
-    mockGetAdminCourseById.mockResolvedValue(mockCourse);
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockCourse,
+    } as Response);
 
-    render(await AdminCoursePage({ params: { courseId: "1" } }));
+    render(<AdminCoursePage params={{ courseId: "1" }} />);
 
     await waitFor(() => {
-      expect(screen.getByText("1 units")).toBeInTheDocument();
+      expect(screen.getByText(/Units/i)).toBeInTheDocument();
     });
+
+    expect(screen.getByText("Units")).toBeInTheDocument();
+    expect(screen.getByText("Lessons")).toBeInTheDocument();
+    expect(screen.getByText("Questions")).toBeInTheDocument();
   });
 
   it("shows edit course button", async () => {
@@ -117,12 +125,15 @@ describe("Admin Course Detail Page", () => {
       units: [],
     };
 
-    mockGetAdminCourseById.mockResolvedValue(mockCourse);
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockCourse,
+    } as Response);
 
-    render(await AdminCoursePage({ params: { courseId: "1" } }));
+    render(<AdminCoursePage params={{ courseId: "1" }} />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Edit Course/i) || screen.getByText(/Manage/i)).toBeInTheDocument();
+      expect(screen.getByText(/Edit Course/i)).toBeInTheDocument();
     });
   });
 
@@ -134,13 +145,17 @@ describe("Admin Course Detail Page", () => {
       units: [],
     };
 
-    mockGetAdminCourseById.mockResolvedValue(mockCourse);
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockCourse,
+    } as Response);
 
-    render(await AdminCoursePage({ params: { courseId: "1" } }));
+    render(<AdminCoursePage params={{ courseId: "1" }} />);
 
     await waitFor(() => {
-      const backLink = screen.getByRole("link");
-      expect(backLink).toHaveAttribute("href", "/admin/courses");
+      const backButton = screen.getByRole("button", { name: /Back to Courses/i });
+      fireEvent.click(backButton);
+      expect(mockRouter.push).toHaveBeenCalledWith("/admin/courses");
     });
   });
 });

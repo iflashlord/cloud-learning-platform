@@ -3,12 +3,15 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, ...props }: React.ComponentProps<"button">) => (
-    <button {...props}>{children}</button>
-  ),
+  Button: ({ asChild, children, ...props }: any) => {
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children, props);
+    }
+    return <button {...props}>{children}</button>;
+  },
 }));
 
-import { QuestProgressTracker } from "@/app/(main)/quests/quest-progress-tracker";
+import { QuestProgressTracker } from "@/components/quests/QuestProgressTracker";
 
 const sampleQuests = [
   {

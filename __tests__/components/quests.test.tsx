@@ -2,8 +2,8 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { mockQuests } = vi.hoisted(() => ({
-  mockQuests: [
+const { testQuests, IconStub } = vi.hoisted(() => ({
+  testQuests: [
     {
       title: "Quest Alpha",
       description: "Earn 10 XP",
@@ -49,12 +49,11 @@ const { mockQuests } = vi.hoisted(() => ({
       type: "milestone",
     },
   ],
+  IconStub: () => <span data-testid="icon" />,
 }));
 
-const IconStub = () => null;
-
 vi.mock("@/constants", () => ({
-  quests: mockQuests,
+  quests: testQuests,
   POINTS_TO_REFILL: 10,
   QUEST_ICON_MAP: {
     sprout: IconStub,
@@ -65,9 +64,12 @@ vi.mock("@/constants", () => ({
 }));
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, ...props }: React.ComponentProps<"button">) => (
-    <button {...props}>{children}</button>
-  ),
+  Button: ({ asChild, children, ...props }: any) => {
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children, props);
+    }
+    return <button {...props}>{children}</button>;
+  },
 }));
 
 import { Quests } from "@/components/quests";
@@ -86,28 +88,30 @@ describe("Quests component", () => {
   it("injects the most recently completed quest when fewer than three are in progress", () => {
     render(<Quests points={60} />);
 
-    // The most recently completed quest is surfaced before the next available quest
-    const displayedTitles = screen.getAllByRole("heading", { level: 4 }).map((node) => node.textContent);
+    const displayedTitles = screen
+      .getAllByRole("heading", { level: 4 })
+      .map((node) => node.textContent);
     expect(displayedTitles).toEqual(["Quest Charlie", "Quest Delta"]);
-
-    expect(screen.getByText("Quest Charlie")).toBeInTheDocument();
-    expect(screen.getByText("Quest Delta")).toBeInTheDocument();
   });
 
-  it("provides a call-to-action when unfinished quests remain", async () => {
+  it("provides a call-to-action and view all link when unfinished quests remain", async () => {
+    const user = userEvent.setup();
     render(<Quests points={20} />);
 
-    const link = screen.getByRole("button", { name: /continue quest journey/i });
-    expect(link).toBeInTheDocument();
+    const continueLink = screen.getByRole("link", { name: /Continue Quest Journey/i });
+    expect(continueLink).toHaveAttribute("href", "/quests");
 
-    await userEvent.click(screen.getByRole("button", { name: /view all/i }));
-    expect(link.closest("a")?.getAttribute("href")).toBe("/quests");
+    await user.click(screen.getByRole("button", { name: /View All/i }));
+    expect(screen.getByRole("button", { name: /View All/i }).closest("a")).toHaveAttribute(
+      "href",
+      "/quests"
+    );
   });
 
-  it("surfaces the final completed quest and hides the CTA when everything is finished", () => {
+  it("hides the CTA when all quests are complete", () => {
     render(<Quests points={100} />);
 
     expect(screen.getAllByRole("heading", { level: 4 })[0]).toHaveTextContent("Quest Delta");
-    expect(screen.queryByRole("button", { name: /continue quest journey/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /Continue Quest Journey/i })).toBeNull();
   });
 });
