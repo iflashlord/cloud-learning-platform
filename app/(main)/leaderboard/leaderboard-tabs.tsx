@@ -12,6 +12,8 @@ import {
   type LeaderboardUser,
   type Course,
 } from "@/components/leaderboard";
+import { LeaderboardTabNavigation } from "@/components/leaderboard/LeaderboardTabNavigation";
+import { CourseDropdown } from "@/components/leaderboard/CourseDropdown";
 
 type Props = {
   courses: Course[];
@@ -30,6 +32,7 @@ export const LeaderboardTabsContainer = ({
 }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [activeTab, setActiveTab] = useState<"general" | "course">("course");
   const [searchQuery, setSearchQuery] = useState("");
   const [courseDropdownOpen, setCourseDropdownOpen] = useState(false);
@@ -50,7 +53,6 @@ export const LeaderboardTabsContainer = ({
         setCourseDropdownOpen(false);
       }
     };
-
     if (courseDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -65,7 +67,6 @@ export const LeaderboardTabsContainer = ({
         setSearchQuery("");
       }
     };
-
     if (courseDropdownOpen) {
       document.addEventListener('keydown', handleEscapeKey);
       return () => document.removeEventListener('keydown', handleEscapeKey);
@@ -75,7 +76,7 @@ export const LeaderboardTabsContainer = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Tab Navigation */}
-      <LeaderboardTabs 
+      <LeaderboardTabNavigation 
         activeTab={activeTab} 
         onTabChange={setActiveTab} 
       />
@@ -88,7 +89,6 @@ export const LeaderboardTabsContainer = ({
             users={generalLeaderboard}
             courses={courses}
           />
-          
           <LeaderboardList 
             users={generalLeaderboard} 
             showCourseInfo={true}
@@ -105,10 +105,9 @@ export const LeaderboardTabsContainer = ({
             users={courseLeaderboard || []}
             courses={courses}
           />
-          
           {selectedCourse ? (
             <>
-              <CourseSelector
+              <CourseDropdown
                 courses={courses}
                 selectedCourse={selectedCourse}
                 onCourseChange={handleCourseChange}
@@ -118,7 +117,6 @@ export const LeaderboardTabsContainer = ({
                 onToggle={() => setCourseDropdownOpen(!courseDropdownOpen)}
                 dropdownRef={dropdownRef}
               />
-
               {courseLeaderboard ? (
                 <LeaderboardList 
                   users={courseLeaderboard}
