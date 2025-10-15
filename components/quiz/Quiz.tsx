@@ -30,6 +30,7 @@ export const Quiz = ({
     lessonId,
     activeIndex,
     selectedOption,
+    textInput,
     status,
     hearts,
     percentage,
@@ -41,6 +42,7 @@ export const Quiz = ({
     setStatus,
     setHearts,
     setSelectedOption,
+    setTextInput,
   } = useQuizState({
     initialChallenges: initialLessonChallenges,
     initialHearts,
@@ -67,6 +69,23 @@ export const Quiz = ({
   });
 
   const onCheck = () => {
+    // Handle text input questions
+    if (challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT") {
+      if (!textInput.trim()) return;
+      
+      const isCorrect = textInput.trim().toLowerCase() === challenge.correctAnswer?.toLowerCase();
+      
+      if (isCorrect) {
+        setStatus("correct");
+        playCorrect();
+      } else {
+        setStatus("wrong");
+        playIncorrect();
+      }
+      return;
+    }
+
+    // Handle option-based questions
     if (!selectedOption) return;
 
     const selectedChallengeOption = options.find(
@@ -114,12 +133,14 @@ export const Quiz = ({
         challenge={challenge}
         options={options}
         selectedOption={selectedOption}
+        textInput={textInput}
         status={status}
         disabled={pending}
         lessonId={lessonId}
         onSelect={onSelect}
         onContinue={onContinue}
         onCheck={status === "none" ? onCheck : onContinue}
+        onTextChange={setTextInput}
       />
     </>
   );

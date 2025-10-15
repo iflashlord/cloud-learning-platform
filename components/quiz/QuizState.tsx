@@ -26,6 +26,7 @@ export const useQuizState = ({
   });
 
   const [selectedOption, setSelectedOption] = useState<number>();
+  const [textInput, setTextInput] = useState("");
   const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
   const [hearts, setHearts] = useState(initialHearts);
   const [percentage, setPercentage] = useState(() => {
@@ -46,11 +47,14 @@ export const useQuizState = ({
   };
 
   const onContinue = () => {
-    if (!selectedOption) return;
+    // For text input challenges, don't check selectedOption
+    const isTextInput = challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT";
+    if (!isTextInput && !selectedOption) return;
 
     if (status === "wrong") {
       setStatus("none");
       setSelectedOption(undefined);
+      setTextInput("");
       return;
     }
 
@@ -58,6 +62,7 @@ export const useQuizState = ({
       onNext();
       setStatus("none");
       setSelectedOption(undefined);
+      setTextInput("");
     }
   };
 
@@ -71,6 +76,7 @@ export const useQuizState = ({
     lessonId,
     activeIndex,
     selectedOption,
+    textInput,
     status,
     hearts,
     percentage,
@@ -83,5 +89,6 @@ export const useQuizState = ({
     setStatus,
     setHearts,
     setSelectedOption,
+    setTextInput,
   };
 };

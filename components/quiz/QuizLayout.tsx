@@ -12,12 +12,14 @@ interface QuizLayoutProps {
   challenge: any;
   options: any[];
   selectedOption: number | undefined;
+  textInput: string;
   status: "correct" | "wrong" | "none";
   disabled: boolean;
   lessonId: number | null;
   onSelect: (id: number) => void;
   onContinue: () => void;
   onCheck: () => void;
+  onTextChange: (text: string) => void;
 }
 
 export const QuizLayout = ({
@@ -27,12 +29,14 @@ export const QuizLayout = ({
   challenge,
   options,
   selectedOption,
+  textInput,
   status,
   disabled,
   lessonId,
   onSelect,
   onContinue,
   onCheck,
+  onTextChange,
 }: QuizLayoutProps) => {
   if (!challenge || !lessonId) {
     return null;
@@ -52,10 +56,6 @@ export const QuizLayout = ({
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto pb-32 lg:pb-44">
         <div className="max-w-4xl mx-auto p-4 lg:p-8">
-          <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-foreground mb-4 lg:mb-8">
-            Which one of these is the &quot;{challenge.question}&quot;?
-          </h1>
-          
           <div className="mb-8">
             <QuestionBubble question={challenge.question} />
           </div>
@@ -68,6 +68,7 @@ export const QuizLayout = ({
             disabled={disabled}
             type={challenge.type}
             challenge={challenge}
+            onTextChange={onTextChange}
           />
         </div>
       </div>
@@ -75,7 +76,7 @@ export const QuizLayout = ({
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
         <Footer
-          disabled={disabled || !selectedOption}
+          disabled={disabled || (!selectedOption && !textInput.trim())}
           status={status}
           onCheck={onCheck}
           lessonId={lessonId}

@@ -8,6 +8,7 @@ import { QuestionHeader } from "./QuestionHeader";
 import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay";
 import { DragDropChallenge } from "./DragDropChallenge";
 import { TextInputChallenge } from "./TextInputChallenge";
+import { SpeechInputChallenge } from "./SpeechInputChallenge";
 import { ListeningChallenge } from "./ListeningChallenge";
 import { SelectChallenge } from "./SelectChallenge";
 import { VideoChallenge } from "./VideoChallenge";
@@ -70,9 +71,18 @@ export const Challenge = ({
 
     switch (type) {
       case "TEXT_INPUT":
-      case "SPEECH_INPUT":
         return (
           <TextInputChallenge
+            status={status}
+            onTextSubmit={onTextSubmit}
+            onTextChange={onTextChange}
+            disabled={disabled}
+          />
+        );
+
+      case "SPEECH_INPUT":
+        return (
+          <SpeechInputChallenge
             status={status}
             onTextSubmit={onTextSubmit}
             onTextChange={onTextChange}

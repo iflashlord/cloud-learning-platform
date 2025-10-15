@@ -189,8 +189,8 @@ export const SpeechInput = ({
           <ul className="list-disc list-inside space-y-0.5 ml-4">
             <li>Click the <Mic className="inline h-3 w-3 mx-1" /> button to start speech recognition</li>
             <li>Speak clearly and pause between sentences</li>
-            <li>You can edit the text after speech recognition</li>
-            <li>Click the Check button below when ready to submit</li>
+            <li>You can edit the text after speech recognition completes</li>
+            <li>Use the clear button <RotateCcw className="inline h-3 w-3 mx-1" /> to reset if needed</li>
           </ul>
         </div>
       )}
