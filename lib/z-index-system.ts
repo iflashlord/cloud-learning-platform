@@ -38,7 +38,7 @@ export const Z_INDEX = {
   
   // Navigation Layer (80-99): Navigation elements (HIGHEST PRIORITY)
   TOP_NAVIGATION: 50,
-  MOBILE_HEADER: 90,
+  MOBILE_HEADER: 100,
   MOBILE_SIDEBAR_BACKDROP: 85,
   MOBILE_SIDEBAR: 87,
   MOBILE_BOTTOM_NAV: 100,
