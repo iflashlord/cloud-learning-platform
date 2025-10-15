@@ -15,6 +15,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BookOpen,
+  Library,
   Trophy,
   Target,
   ShoppingCart,
@@ -32,6 +33,12 @@ const mobileNavItems = [
     href: "/learn", 
     icon: BookOpen,
     activeColor: "text-blue-500 dark:text-blue-400"
+  },
+  { 
+    label: "Courses", 
+    href: "/courses", 
+    icon: Library,
+    activeColor: "text-indigo-500 dark:text-indigo-400"
   },
   { 
     label: "Leaderboard", 
@@ -133,27 +140,6 @@ export const MobileBottomNav = () => {
               isActive={pathname === item.href}
             />
           ))}
-
-          {/* User Profile */}
-          <div className="flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-1">
-            <ClerkLoading>
-              <div className="h-6 w-6 bg-muted rounded-full animate-pulse" />
-            </ClerkLoading>
-            <ClerkLoaded>
-              <UserButton 
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: "h-6 w-6",
-                    userButtonTrigger: "focus:shadow-none focus:outline-none"
-                  }
-                }}
-              />
-            </ClerkLoaded>
-            <span className="text-xs font-medium mt-1 text-muted-foreground">
-              Profile
-            </span>
-          </div>
         </div>
       </nav>
 
