@@ -1,11 +1,12 @@
 /**
- * 📱 Enhanced Mobile Header
+ * 📱 Enhanced Universal Header
  * 
- * Responsive mobile header with:
+ * Universal header for all screen sizes with:
  * - Perfect contrast in light/dark modes
  * - Smooth animations and transitions
  * - Accessibility features
  * - Theme-aware styling
+ * - Unique navigation items (not duplicating bottom nav)
  */
 
 "use client";
@@ -13,28 +14,37 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GraduationCap, BookOpen, Trophy, Target, ShoppingCart } from "lucide-react";
-import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+import { GraduationCap, Crown, Settings, Library } from "lucide-react";
+import { ClerkLoaded, ClerkLoading, UserButton, useUser } from "@clerk/nextjs";
 
 import { cn } from "@/lib/utils";
 import { CONFIG } from "@/lib/config";
 import { zIndex } from "@/lib/z-index-system";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
-// Mobile navigation items
-const mobileNavItems = [
-  { label: "Learn", href: "/learn", icon: BookOpen, activeColor: "text-blue-500 dark:text-blue-400" },
-  { label: "Leaderboard", href: "/leaderboard", icon: Trophy, activeColor: "text-amber-500 dark:text-amber-400" },
-  { label: "Quests", href: "/quests", icon: Target, activeColor: "text-green-500 dark:text-green-400" },
-  { label: "Shop", href: "/shop", icon: ShoppingCart, activeColor: "text-purple-500 dark:text-purple-400" },
+// Admin user IDs (should match server-side config)
+const adminIds = [
+  "user_2swsZKlEAZZ8Xqqt5gtocD95RI4", // Behrouz 
 ];
 
-interface MobileNavItemProps {
-  item: typeof mobileNavItems[0];
+// Header navigation items (different from bottom nav to avoid duplication)
+const getHeaderNavItems = (isAdmin: boolean) => [
+  { label: "Courses", href: "/courses", icon: Library, activeColor: "text-indigo-500 dark:text-indigo-400" },
+  { label: "Pro", href: "/pro", icon: Crown, activeColor: "text-yellow-500 dark:text-yellow-400" },
+  ...(isAdmin ? [{ label: "Admin", href: "/admin", icon: Settings, activeColor: "text-red-500 dark:text-red-400" }] : []),
+];
+
+interface HeaderNavItemProps {
+  item: {
+    label: string;
+    href: string;
+    icon: React.ComponentType<{ className?: string }>;
+    activeColor: string;
+  };
   isActive: boolean;
 }
 
-const MobileNavItem = ({ item, isActive }: MobileNavItemProps) => {
+const HeaderNavItem = ({ item, isActive }: HeaderNavItemProps) => {
   const { label, href, icon: Icon, activeColor } = item;
 
   return (
@@ -70,10 +80,15 @@ const MobileNavItem = ({ item, isActive }: MobileNavItemProps) => {
 
 export const EnhancedMobileHeader: React.FC = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+  
+  // Check if current user is admin
+  const isUserAdmin = user?.id ? adminIds.includes(user.id) : false;
+  const headerNavItems = getHeaderNavItems(isUserAdmin);
 
   return (
     <nav className={cn(
-      "lg:hidden px-4 h-[60px] flex items-center justify-between",
+      "px-4 h-[60px] flex items-center justify-between",
       "bg-background/80 dark:bg-background/80 backdrop-blur-md",
       "border-b border-border/50 fixed top-0 w-full",
       "shadow-sm",
@@ -94,8 +109,8 @@ export const EnhancedMobileHeader: React.FC = () => {
 
       {/* Center - Navigation Icons */}
       <div className="flex items-center justify-center flex-1 mx-4">
-        {mobileNavItems.map((item) => (
-          <MobileNavItem
+        {headerNavItems.map((item) => (
+          <HeaderNavItem
             key={item.href}
             item={item}
             isActive={pathname === item.href}

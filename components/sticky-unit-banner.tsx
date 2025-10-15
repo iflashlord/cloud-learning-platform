@@ -203,7 +203,7 @@ export const StickyUnitBanner = ({
       {isCurrentUnitSticky && (
         <div 
           className={cn(
-            "fixed top-20 left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
+            "fixed top-[80px] left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
             "translate-y-0 opacity-100"
           )}
           style={{ 

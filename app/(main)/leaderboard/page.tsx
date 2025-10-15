@@ -61,7 +61,7 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
   return (
     <div className="w-full min-h-screen">
       {/* Top Navigation */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-[60px] z-50">
         <div className="max-w-[1200px] mx-auto px-4 py-3">
           <UserProgress
             activeCourse={userProgress.activeCourse}

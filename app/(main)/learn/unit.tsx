@@ -31,7 +31,7 @@ export const Unit = ({
   
   return (
     <div data-unit-id={id} className="unit-container scroll-mt-24">
-      <div className="sticky top-[73px] z-30 mb-6">
+      <div className="sticky top-[133px] z-30 mb-6">
         <div className="block lg:hidden">
           {/* Compact Mobile Unit Header - Same style as desktop but smaller */}
           <div className={`w-full rounded-lg p-4 text-white flex items-center justify-between relative overflow-hidden transition-all duration-300 ${
