@@ -13,9 +13,20 @@ import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
 import { useUser } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface SettingsDropdownProps {
   onResetProgress?: () => void
@@ -36,7 +47,9 @@ export const SettingsDropdown = ({
     Array<{ id: number; title: string }>
   >([])
   const [loadingCourses, setLoadingCourses] = React.useState(false)
-  const [showResetSubmenu, setShowResetSubmenu] = React.useState(false)
+  const [showResetDialog, setShowResetDialog] = React.useState(false)
+  const [selectedCourses, setSelectedCourses] = React.useState<number[]>([])
+  const [resetAll, setResetAll] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -47,7 +60,6 @@ export const SettingsDropdown = ({
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
-        setShowResetSubmenu(false)
       }
     }
 
@@ -78,34 +90,62 @@ export const SettingsDropdown = ({
     }
   }
 
-  const handleResetProgress = () => {
-    if (onResetProgress) {
-      onResetProgress()
-    }
+  const handleOpenResetDialog = () => {
+    setShowResetDialog(true)
     setIsOpen(false)
-    setShowResetSubmenu(false)
+    loadCourses()
   }
 
-  const handleResetSpecificCourse = async (courseId: number) => {
+  const handleResetProgress = async () => {
     try {
-      const response = await fetch("/api/progress/reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ courseId }),
-      })
-
-      if (response.ok) {
+      if (resetAll) {
+        // Reset all progress
+        if (onResetProgress) {
+          onResetProgress()
+        } else {
+          const response = await fetch("/api/progress/reset", {
+            method: "POST",
+          })
+          if (response.ok) {
+            toast.success("All progress reset successfully!")
+            window.location.reload()
+          } else {
+            toast.error("Failed to reset progress")
+          }
+        }
+      } else if (selectedCourses.length > 0) {
+        // Reset selected courses
+        for (const courseId of selectedCourses) {
+          const response = await fetch("/api/progress/reset", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ courseId }),
+          })
+          if (!response.ok) {
+            toast.error(`Failed to reset course ${courseId}`)
+            return
+          }
+        }
+        toast.success(`Successfully reset ${selectedCourses.length} course(s)!`)
         window.location.reload()
-      } else {
-        console.error("Failed to reset course progress")
       }
     } catch (error) {
-      console.error("Error resetting course progress:", error)
+      console.error("Error resetting progress:", error)
+      toast.error("Failed to reset progress")
     }
-    setIsOpen(false)
-    setShowResetSubmenu(false)
+    setShowResetDialog(false)
+    setSelectedCourses([])
+    setResetAll(false)
+  }
+
+  const toggleCourseSelection = (courseId: number) => {
+    setSelectedCourses((prev) =>
+      prev.includes(courseId)
+        ? prev.filter((id) => id !== courseId)
+        : [...prev, courseId]
+    )
   }
 
   if (!isLoggedIn) {
@@ -138,63 +178,14 @@ export const SettingsDropdown = ({
             <div className='h-px bg-border my-1' />
 
             {/* Reset Progress */}
-            <div className='relative'>
-              <Button
-                variant='ghost'
-                className='w-full justify-between text-left h-auto py-2 px-2'
-                onClick={() => {
-                  setShowResetSubmenu(!showResetSubmenu)
-                  if (!showResetSubmenu) loadCourses()
-                }}
-              >
-                <div className='flex items-center'>
-                  <RotateCcw className='mr-2 h-4 w-4' />
-                  <span>Reset Progress</span>
-                </div>
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 transition-transform",
-                    showResetSubmenu && "rotate-180"
-                  )}
-                />
-              </Button>
-
-              {showResetSubmenu && (
-                <Card className='absolute left-full top-0 ml-2 w-48 p-2 shadow-lg bg-background/95 backdrop-blur-sm border border-border/50'>
-                  <div className='space-y-1'>
-                    <Button
-                      variant='ghost'
-                      className='w-full justify-start text-left h-auto py-2 px-2'
-                      onClick={handleResetProgress}
-                    >
-                      <BookOpen className='mr-2 h-4 w-4' />
-                      <span>All Courses</span>
-                    </Button>
-
-                    <div className='h-px bg-border my-1' />
-
-                    {loadingCourses ? (
-                      <div className='px-2 py-1 text-xs text-muted-foreground'>
-                        Loading courses...
-                      </div>
-                    ) : (
-                      courses.map((course) => (
-                        <Button
-                          key={course.id}
-                          variant='ghost'
-                          className='w-full justify-start text-left h-auto py-2 px-2'
-                          onClick={() => handleResetSpecificCourse(course.id)}
-                        >
-                          <span className='text-sm truncate'>
-                            {course.title}
-                          </span>
-                        </Button>
-                      ))
-                    )}
-                  </div>
-                </Card>
-              )}
-            </div>
+            <Button
+              variant='ghost'
+              className='w-full justify-start text-left h-auto py-2 px-2'
+              onClick={handleOpenResetDialog}
+            >
+              <RotateCcw className='mr-2 h-4 w-4' />
+              <span>Reset Progress</span>
+            </Button>
 
             {/* Admin-only options */}
             {isAdmin && (
@@ -234,6 +225,105 @@ export const SettingsDropdown = ({
           </div>
         </Card>
       )}
+
+      {/* Reset Progress Dialog */}
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent className='max-w-md'>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Progress</AlertDialogTitle>
+            <AlertDialogDescription>
+              Choose what progress you want to reset. This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className='space-y-4'>
+            {/* Reset All Option */}
+            <div className='flex items-center space-x-2'>
+              <Button
+                variant={resetAll ? "secondary" : "ghost"}
+                size='sm'
+                onClick={() => {
+                  setResetAll(!resetAll)
+                  if (!resetAll) setSelectedCourses([])
+                }}
+                className={cn(
+                  "w-full justify-start",
+                  resetAll && "bg-primary text-primary-foreground"
+                )}
+              >
+                <BookOpen className='mr-2 h-4 w-4' />
+                Reset All Courses
+              </Button>
+            </div>
+
+            {/* Individual Courses */}
+            {!resetAll && (
+              <div className='space-y-2'>
+                <p className='text-sm font-medium'>
+                  Or select specific courses:
+                </p>
+                {loadingCourses ? (
+                  <div className='text-sm text-muted-foreground'>
+                    Loading courses...
+                  </div>
+                ) : (
+                  <div className='space-y-2 max-h-48 overflow-y-auto'>
+                    {courses.map((course) => (
+                      <Button
+                        key={course.id}
+                        variant='ghost'
+                        size='sm'
+                        onClick={() => toggleCourseSelection(course.id)}
+                        className={cn(
+                          "w-full justify-start text-left",
+                          selectedCourses.includes(course.id) &&
+                            "bg-primary text-primary-foreground"
+                        )}
+                      >
+                        <span className='truncate'>{course.title}</span>
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Warning */}
+            {(resetAll || selectedCourses.length > 0) && (
+              <div className='bg-destructive/10 border border-destructive/20 rounded-lg p-3'>
+                <p className='text-sm text-destructive font-medium'>
+                  ⚠️ Warning
+                </p>
+                <p className='text-sm text-destructive/80 mt-1'>
+                  This will permanently delete:
+                </p>
+                <ul className='text-sm text-destructive/80 mt-1 ml-4 list-disc'>
+                  <li>All completed lessons and units</li>
+                  <li>Your current points and hearts</li>
+                  <li>All quest completions</li>
+                  <li>Your leaderboard progress</li>
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetProgress}
+              disabled={!resetAll && selectedCourses.length === 0}
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+            >
+              {resetAll
+                ? "Reset All Progress"
+                : `Reset ${selectedCourses.length} Course${
+                    selectedCourses.length !== 1 ? "s" : ""
+                  }`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
