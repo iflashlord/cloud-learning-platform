@@ -1,15 +1,18 @@
 "use client";
 
 import { toast } from "sonner";
-import { useTransition } from "react";
-import { Heart, Zap, Crown, Check, Settings, Rocket, Coins, Infinity } from "lucide-react";
+import { useTransition, useState } from "react";
+import { Heart, Zap, Crown, Check, Settings, Rocket, Coins, Infinity, Play, Clock } from "lucide-react";
 
 import { refillHearts } from "@/actions/user-progress";
+import { addAdRewardPoints } from "@/actions/ad-rewards";
 import { createStripeUrl } from "@/actions/user-subscription";
 import { Button } from "@/components/ui/button";
 import { POINTS_TO_REFILL } from "@/constants";
 import { cn } from "@/lib/utils";
 import { statusStyles } from "@/lib/style-utils";
+import { AdRewardModal } from "@/components/modals/ad-reward-modal";
+import { useDailyAds } from "@/hooks/use-daily-ads";
 
 type Props = {
   hearts: number;
@@ -23,6 +26,9 @@ export const Items = ({
   hasActiveSubscription,
 }: Props) => {
   const [pending, startTransition] = useTransition();
+  const [showAdModal, setShowAdModal] = useState(false);
+  const dailyAds = useDailyAds(5); // Max 5 ads per day
+  const AD_REWARD_POINTS = 10;
 
   const onRefillHearts = () => {
     if (pending || hearts === 5 || points < POINTS_TO_REFILL) {
@@ -44,6 +50,22 @@ export const Items = ({
           }
         })
         .catch(() => toast.error("Something went wrong"));
+    });
+  };
+
+  const handleAdReward = (earnedPoints: number) => {
+    startTransition(() => {
+      addAdRewardPoints(earnedPoints)
+        .then((result) => {
+          dailyAds.watchAd();
+          toast.success(`You earned ${earnedPoints} XP! Total XP: ${result.newPoints}`, {
+            duration: 4000,
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to add ad reward points:", error);
+          toast.error("Failed to add XP points. Please try again.");
+        });
     });
   };
 
@@ -100,6 +122,54 @@ export const Items = ({
               <div className="flex items-center gap-2">
                 <Coins className="w-5 h-5 text-yellow-600" />
                 <span>{POINTS_TO_REFILL} XP</span>
+              </div>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Video Ads for XP Item */}
+      <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+            <Play className="w-8 h-8 text-white fill-current" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-bold text-foreground mb-2">
+              Watch Ads for XP
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Watch short video ads to earn free XP points! Use XP to buy hearts and other items.
+            </p>
+            <div className="flex items-center gap-2">
+              <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.info.bg, statusStyles.info.text)}>
+                <Coins className={cn("w-4 h-4", statusStyles.info.text)} />
+                <span>+{AD_REWARD_POINTS} XP per ad</span>
+              </div>
+              <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.warning.bg, statusStyles.warning.text)}>
+                <Clock className={cn("w-4 h-4", statusStyles.warning.text)} />
+                <span>{dailyAds.adsWatched}/{dailyAds.maxAds} today</span>
+              </div>
+            </div>
+          </div>
+          <Button
+            onClick={() => setShowAdModal(true)}
+            disabled={!dailyAds.canWatch}
+            className={`px-6 py-3 font-bold text-lg ${
+              !dailyAds.canWatch
+                ? "bg-muted text-muted-foreground cursor-not-allowed" 
+                : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl"
+            } transition-all duration-200`}
+          >
+            {!dailyAds.canWatch ? (
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-muted-foreground/60" />
+                <span>Daily Limit</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Play className="w-5 h-5 text-white" />
+                <span>Watch Ad</span>
               </div>
             )}
           </Button>
@@ -179,6 +249,16 @@ export const Items = ({
           </p>
         </div>
       </div>
+      
+      {/* Ad Reward Modal */}
+      <AdRewardModal
+        isOpen={showAdModal}
+        onClose={() => setShowAdModal(false)}
+        onRewardEarned={handleAdReward}
+        dailyAdsWatched={dailyAds.adsWatched}
+        maxDailyAds={dailyAds.maxAds}
+        rewardPoints={AD_REWARD_POINTS}
+      />
     </div>
   );
 };

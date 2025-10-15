@@ -32,6 +32,8 @@ export const useQuizState = ({
   const [percentage, setPercentage] = useState(() => {
     return initialPercentage === 100 ? 0 : initialPercentage;
   });
+  const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
 
   const challenge = initialChallenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
@@ -55,6 +57,7 @@ export const useQuizState = ({
       setStatus("none");
       setSelectedOption(undefined);
       setTextInput("");
+      setShowCorrectAnswer(false);
       return;
     }
 
@@ -63,6 +66,8 @@ export const useQuizState = ({
       setStatus("none");
       setSelectedOption(undefined);
       setTextInput("");
+      setWrongAttempts(0); // Reset attempts on new question
+      setShowCorrectAnswer(false);
     }
   };
 
@@ -83,6 +88,8 @@ export const useQuizState = ({
     challenge,
     options,
     isCompleted: activeIndex >= initialChallenges.length,
+    wrongAttempts,
+    showCorrectAnswer,
     onNext,
     onSelect,
     onContinue,
@@ -90,5 +97,7 @@ export const useQuizState = ({
     setHearts,
     setSelectedOption,
     setTextInput,
+    setWrongAttempts,
+    setShowCorrectAnswer,
   };
 };

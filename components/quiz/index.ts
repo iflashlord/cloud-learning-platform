@@ -4,6 +4,8 @@
 export { Quiz } from "./Quiz";
 export { QuizLayout } from "./QuizLayout";
 export { QuizCompletion } from "./QuizCompletion";
+export { CorrectAnswerDisplay } from "./CorrectAnswerDisplay";
+export { HeartsDepleteModal } from "./HeartsDepleteModal";
 export { useQuizState } from "./QuizState";
 export { useQuizAudio } from "./QuizAudio";
 export { useQuizValidator } from "./QuizValidator";

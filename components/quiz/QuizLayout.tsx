@@ -4,6 +4,7 @@ import { Header } from "../../app/lesson/header";
 import { QuestionBubble } from "../../app/lesson/question-bubble";
 import { Challenge } from "../../app/lesson/challenge";
 import { Footer } from "../../app/lesson/footer";
+import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay";
 
 interface QuizLayoutProps {
   percentage: number;
@@ -16,6 +17,8 @@ interface QuizLayoutProps {
   status: "correct" | "wrong" | "none";
   disabled: boolean;
   lessonId: number | null;
+  wrongAttempts: number;
+  showCorrectAnswer: boolean;
   onSelect: (id: number) => void;
   onContinue: () => void;
   onCheck: () => void;
@@ -33,6 +36,8 @@ export const QuizLayout = ({
   status,
   disabled,
   lessonId,
+  wrongAttempts,
+  showCorrectAnswer,
   onSelect,
   onContinue,
   onCheck,
@@ -70,13 +75,32 @@ export const QuizLayout = ({
             challenge={challenge}
             onTextChange={onTextChange}
           />
+          
+          {/* Show correct answer after 3 wrong attempts */}
+          {showCorrectAnswer && (
+            <CorrectAnswerDisplay 
+              challenge={challenge}
+              options={options}
+            />
+          )}
         </div>
       </div>
 
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
         <Footer
-          disabled={disabled || (!selectedOption && !textInput.trim())}
+          disabled={disabled || (() => {
+            // For text input questions, check if text is entered
+            if (challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT") {
+              return !textInput.trim();
+            }
+            // For drag and drop questions, always enable (items are already loaded)
+            if (challenge?.type === "DRAG_DROP") {
+              return false;
+            }
+            // For option-based questions, check if option is selected
+            return !selectedOption;
+          })()}
           status={status}
           onCheck={onCheck}
           lessonId={lessonId}

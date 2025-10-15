@@ -1,11 +1,13 @@
 'use client';
 
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import { useQuizState } from "./QuizState";
 import { useQuizAudio } from "./QuizAudio";
 import { useQuizValidator } from "./QuizValidator";
 import { QuizLayout } from "./QuizLayout";
 import { QuizCompletion } from "./QuizCompletion";
+import { HeartsDepleteModal } from "./HeartsDepleteModal";
 import { QuizChallenge, UserSubscription } from "./types";
 
 interface QuizProps {
@@ -25,6 +27,7 @@ export const Quiz = ({
 }: QuizProps) => {
   // Detect if this is a practice lesson (already completed)
   const isPractice = initialPercentage === 100;
+  const [showHeartsModal, setShowHeartsModal] = useState(false);
   
   const {
     lessonId,
@@ -37,12 +40,16 @@ export const Quiz = ({
     challenge,
     options,
     isCompleted,
+    wrongAttempts,
+    showCorrectAnswer,
     onSelect,
     onContinue,
     setStatus,
     setHearts,
     setSelectedOption,
     setTextInput,
+    setWrongAttempts,
+    setShowCorrectAnswer,
   } = useQuizState({
     initialChallenges: initialLessonChallenges,
     initialHearts,
@@ -66,9 +73,64 @@ export const Quiz = ({
     onHeartUpdate: setHearts,
     onIncorrectAudio: playIncorrect,
     onCorrectAudio: playCorrect,
+    onHeartsDeplete: () => setShowHeartsModal(true),
   });
 
+  // Universal heart handler for all question types
+  const handleWrongAnswer = (skipServerAction = false) => {
+    if (isPractice) {
+      // In practice mode, just show visual feedback
+      const visualHearts = Math.max(0, hearts - 1);
+      setHearts(visualHearts);
+      setTimeout(() => {
+        setHearts(hearts); // Restore hearts after visual feedback
+      }, 1500);
+    } else if (!userSubscription?.isActive) {
+      const newHearts = Math.max(0, hearts - 1);
+      setHearts(newHearts);
+      
+      // Show modal when hearts reach 0
+      if (newHearts === 0) {
+        setShowHeartsModal(true);
+      }
+      
+      // Call server action to update database (unless it's already being handled elsewhere)
+      if (!skipServerAction) {
+        import("../../actions/user-progress").then(({ reduceHearts }) => {
+          reduceHearts(challenge?.id ?? 0).catch((error) => {
+            console.error("Failed to reduce hearts:", error);
+          });
+        });
+      }
+    }
+    // For subscription users, unlimited hearts - no action needed
+  };
+
   const onCheck = () => {
+    // Handle drag and drop questions
+    if (challenge?.type === "DRAG_DROP") {
+      // Call the exposed drag drop checker function
+      if (typeof (window as any).checkCurrentDragOrder === 'function') {
+        const isCorrect = (window as any).checkCurrentDragOrder();
+        if (isCorrect) {
+          setStatus("correct");
+          playCorrect();
+        } else {
+          const newAttempts = wrongAttempts + 1;
+          setWrongAttempts(newAttempts);
+          setStatus("wrong");
+          playIncorrect();
+          handleWrongAnswer(); // Handle heart depletion
+          
+          // Show correct answer after 3 wrong attempts
+          if (newAttempts >= 3) {
+            setShowCorrectAnswer(true);
+          }
+        }
+      }
+      return;
+    }
+
     // Handle text input questions
     if (challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT") {
       if (!textInput.trim()) return;
@@ -79,8 +141,16 @@ export const Quiz = ({
         setStatus("correct");
         playCorrect();
       } else {
+        const newAttempts = wrongAttempts + 1;
+        setWrongAttempts(newAttempts);
         setStatus("wrong");
         playIncorrect();
+        handleWrongAnswer(); // Handle heart depletion for text input
+        
+        // Show correct answer after 3 wrong attempts
+        if (newAttempts >= 3) {
+          setShowCorrectAnswer(true);
+        }
       }
       return;
     }
@@ -96,8 +166,18 @@ export const Quiz = ({
 
     if (selectedChallengeOption.correct) {
       setStatus("correct");
+      playCorrect();
     } else {
+      const newAttempts = wrongAttempts + 1;
+      setWrongAttempts(newAttempts);
       setStatus("wrong");
+      playIncorrect();
+      handleWrongAnswer(true); // Handle heart depletion - skip server action since validateAnswer will handle it
+      
+      // Show correct answer after 3 wrong attempts
+      if (newAttempts >= 3) {
+        setShowCorrectAnswer(true);
+      }
     }
 
     validateAnswer(selectedChallengeOption);
@@ -137,10 +217,17 @@ export const Quiz = ({
         status={status}
         disabled={pending}
         lessonId={lessonId}
+        wrongAttempts={wrongAttempts}
+        showCorrectAnswer={showCorrectAnswer}
         onSelect={onSelect}
         onContinue={onContinue}
         onCheck={status === "none" ? onCheck : onContinue}
         onTextChange={setTextInput}
+      />
+      
+      <HeartsDepleteModal
+        isOpen={showHeartsModal}
+        onClose={() => setShowHeartsModal(false)}
       />
     </>
   );
