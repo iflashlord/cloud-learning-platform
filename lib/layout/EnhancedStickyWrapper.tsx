@@ -29,7 +29,7 @@ export const EnhancedStickyWrapper: React.FC<EnhancedStickyWrapperProps> = ({
       case "none":
         return "top-0";
       case "header":
-        return "top-[50px] lg:top-0"; // Account for mobile header
+        return "top-[60px]"; // Always account for mobile header (60px) since we always use mobile layout
       case "custom":
         return customOffset || "top-0";
       default:

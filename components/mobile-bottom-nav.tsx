@@ -119,7 +119,7 @@ export const MobileBottomNav = () => {
     <>
       {/* Bottom Navigation Bar */}
       <nav className={cn(
-        "lg:hidden fixed bottom-0 left-0 right-0",
+        "fixed bottom-0 left-0 right-0",
         "bg-card/95 backdrop-blur-lg border-t border-border/50",
         "safe-area-inset-bottom",
         zIndex('MOBILE_BOTTOM_NAV')
@@ -158,7 +158,7 @@ export const MobileBottomNav = () => {
       </nav>
 
       {/* Bottom Spacer for Content */}
-      <div className="lg:hidden h-16 flex-shrink-0" />
+      <div className="h-16 flex-shrink-0" />
     </>
   );
 };

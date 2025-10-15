@@ -39,7 +39,7 @@ export const EnhancedLearnHeader = ({
   const overallProgress = Math.round((unitProgress + lessonProgress) / 2);
   
   return (
-    <EnhancedStickyWrapper className="space-y-6">
+    <div className="space-y-6">
       {/* Navigation and Title */}
       <div className="flex items-center justify-between">
         <Link href="/courses">
@@ -162,6 +162,6 @@ export const EnhancedLearnHeader = ({
           </EnhancedCard>
         </div>
       )}
-    </EnhancedStickyWrapper>
+    </div>
   );
 };

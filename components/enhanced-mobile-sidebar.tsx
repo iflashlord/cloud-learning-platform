@@ -146,8 +146,8 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
           zIndex('MOBILE_SIDEBAR')
         )}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border/50">
+        {/* Header - Fixed at top */}
+        <div className="flex items-center justify-between p-4 border-b border-border/50 flex-shrink-0">
           <Link href="/learn" onClick={onClose} className="flex items-center gap-3">
             <div className={cn(
               "w-10 h-10 rounded-xl flex items-center justify-center",
@@ -176,8 +176,8 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
           </EnhancedButton>
         </div>
 
-        {/* Navigation Items */}
-        <div className="flex-1 overflow-y-auto py-4">
+        {/* Navigation Items - Scrollable middle section */}
+        <div className="flex-1 overflow-y-auto py-4 min-h-0">
           <div className="flex flex-col gap-y-2 px-4">
             {sidebarItems.map((item) => (
               <MobileSidebarItem
@@ -192,16 +192,16 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-border/50 p-4 space-y-4">
+        {/* Bottom Section - Sticky Footer */}
+        <div className="border-t border-border/50 p-4 space-y-4 flex-shrink-0 bg-background/98 dark:bg-background/98 backdrop-blur-lg shadow-lg">
           {/* Premium Upgrade Card */}
           <EnhancedCard 
             variant="interactive"
             padding="sm"
-            className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200/50 dark:border-amber-800/50"
+            className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200/50 dark:border-amber-800/50 shadow-sm"
           >
-            <Link href="/pro" onClick={onClose} className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
+            <Link href="/pro" onClick={onClose} className="flex items-center gap-3 p-1">
+              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center shadow-md">
                 <Infinity className="w-4 h-4 text-white" />
               </div>
               <div className="flex-1">
@@ -218,7 +218,7 @@ export const EnhancedMobileSidebar: React.FC<EnhancedMobileSidebarProps> = ({
           {/* Settings */}
           <EnhancedButton
             variant="ghost"
-            className="w-full justify-start"
+            className="w-full justify-start shadow-sm"
             asChild
           >
             <Link href="/settings" onClick={onClose}>

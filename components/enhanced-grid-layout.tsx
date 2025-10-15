@@ -30,40 +30,14 @@ const GridLayoutContent = ({ children }: Props) => {
   const { shouldShowSidebar, isMobile, isClient } = useResponsive();
 
   return (
-    <div 
-      className={cn(
-        "min-h-screen bg-transparent",
-        // Desktop: CSS Grid layout with sidebar + content
-        !isMobile && "lg:grid lg:grid-cols-[var(--sidebar-width,280px)_1fr]",
-        // Mobile: Simple block layout
-        isMobile && "block"
-      )}
-      style={{
-        '--sidebar-width': `${sidebarWidth}px`
-      } as React.CSSProperties & { '--sidebar-width': string }}
-    >
-      {/* Mobile Header - Disabled in favor of mobile bottom nav */}
-      {/* {isMobile && (
-        <header className={cn("lg:hidden bg-card/95 backdrop-blur-md border-b border-border/50", zIndex('MOBILE_HEADER'))}>
-          <EnhancedMobileHeader />
-        </header>
-      )} */}
+    <div className="min-h-screen bg-transparent block">
+      {/* Mobile Header with Logo - Always shown */}
+      <header className={cn("bg-card/95 backdrop-blur-md border-b border-border/50 fixed top-0 w-full", zIndex('MOBILE_HEADER'))}>
+        <EnhancedMobileHeader />
+      </header>
 
-      {/* Desktop Sidebar - Only shown on desktop */}
-      {!isMobile && (
-        <aside className="hidden lg:block">
-          <EnhancedSidebar />
-        </aside>
-      )}
-
-      {/* Main Content Area */}
-      <main className={cn(
-        "min-h-screen w-full",
-        // Mobile: spacing for header and bottom nav
-        isMobile && "pt-4 pb-20",
-        // Desktop: padding only (grid handles layout)
-        !isMobile && "pt-6"
-      )}>
+      {/* Main Content Area - Always with mobile spacing */}
+      <main className="min-h-screen w-full pt-16 pb-20">
         <PageGrid 
           template="single"
           container="xl"
@@ -74,8 +48,8 @@ const GridLayoutContent = ({ children }: Props) => {
         </PageGrid>
       </main>
 
-      {/* Mobile Bottom Navigation - Only shown on mobile */}
-      {isMobile && <MobileBottomNav />}
+      {/* Mobile Bottom Navigation - Always shown */}
+      <MobileBottomNav />
     </div>
   );
 };

@@ -20,7 +20,7 @@ export const useResponsive = () => {
     const checkScreenSize = () => {
       if (window.innerWidth < 640) setScreenSize("sm");
       else if (window.innerWidth < 768) setScreenSize("md"); 
-      else if (window.innerWidth < 1024) setScreenSize("lg");
+      else if (window.innerWidth < 1200) setScreenSize("lg");
       else setScreenSize("xl");
     };
 
@@ -29,14 +29,14 @@ export const useResponsive = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const width = isClient && typeof window !== 'undefined' ? window.innerWidth : 1024;
-  const shouldShowSidebar = width >= 1024;
+  const width = isClient && typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const shouldShowSidebar = false; // Always use mobile layout - no sidebar
 
   return {
     screenSize,
-    isMobile: screenSize === "sm",
+    isMobile: true, // Always use mobile layout
     isTablet: screenSize === "md", 
-    isDesktop: screenSize === "lg" || screenSize === "xl",
+    isDesktop: false, // Never use desktop layout - always mobile
     isLarge: screenSize === "xl",
     width,
     shouldShowSidebar,

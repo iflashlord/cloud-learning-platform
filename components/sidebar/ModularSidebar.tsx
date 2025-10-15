@@ -57,25 +57,30 @@ export const ModularSidebar = ({
       {/* Logo and Title */}
       <SidebarLogo isCollapsed={isCollapsed} />
 
-      {/* Navigation Items */}
-      <SidebarNavigation items={items} isCollapsed={isCollapsed} />
+      {/* Navigation Items - Scrollable middle section */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <SidebarNavigation items={items} isCollapsed={isCollapsed} />
+      </div>
 
-      {/* Bottom Section */}
-      <SidebarBottomSection 
-        isCollapsed={isCollapsed}
-        showThemeSwitcher={showThemeSwitcher}
-        showSettings={showSettings}
-      />
+      {/* Sticky Footer Section */}
+      <div className="flex-shrink-0 border-t border-border/30 bg-card/98 backdrop-blur-lg">
+        {/* Pro Upgrade Card */}
+        {showProUpgrade && (
+          <div className="px-4 pt-4 pb-2">
+            <SidebarProUpgrade isCollapsed={isCollapsed} />
+          </div>
+        )}
 
-      {/* Pro Upgrade Card */}
-      {showProUpgrade && (
-        <div className="px-4 pb-4">
-          <SidebarProUpgrade isCollapsed={isCollapsed} />
-        </div>
-      )}
+        {/* Bottom Section */}
+        <SidebarBottomSection 
+          isCollapsed={isCollapsed}
+          showThemeSwitcher={showThemeSwitcher}
+          showSettings={showSettings}
+        />
 
-      {/* User Profile */}
-      <SidebarUserProfile isCollapsed={isCollapsed} />
+        {/* User Profile */}
+        <SidebarUserProfile isCollapsed={isCollapsed} />
+      </div>
     </div>
   );
 };
