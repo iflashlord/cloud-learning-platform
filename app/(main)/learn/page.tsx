@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { ContentGrid } from "@/lib/css-grid-system";
 import { lessons, units as unitsSchema } from "@/db/schema";
 import { UserProgress } from "@/components/user-progress";
-import { Promo } from "@/components/promo";
+import { ProUpgradeCard } from "@/components/pro-upgrade-card";
 import { Quests } from "@/components/quests";
 import { 
   getCourseProgress, 
@@ -114,7 +114,7 @@ const LearnPage = async () => {
 
         {/* Desktop Sidebar */}
         <div className="hidden lg:block w-80 space-y-4">
-          {!isPro && <Promo />}
+          {!isPro && <ProUpgradeCard />}
           <Quests points={userProgress.points} />
         </div>
       </div>

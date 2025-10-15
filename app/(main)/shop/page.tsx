@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
 import { UserProgress } from "@/components/user-progress";
-import { Promo } from "@/components/promo";
+import { ProUpgradeCard } from "@/components/pro-upgrade-card";
 import { Quests } from "@/components/quests";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
@@ -39,7 +39,7 @@ const ShopPage = async () => {
   return (
     <div className="w-full min-h-screen">
       {/* Top Navigation */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 mb-6">
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-[1200px] mx-auto px-4 py-3">
           <UserProgress
             activeCourse={activeCourseData ? {
@@ -119,7 +119,7 @@ const ShopPage = async () => {
 
         {/* Desktop Sidebar */}
         <div className="hidden lg:block w-80 space-y-4">
-          {!isPro && <Promo />}
+          {!isPro && <ProUpgradeCard />}
           <Quests points={userProgress.points} />
         </div>
       </div>

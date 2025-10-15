@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
 import { UserProgress } from "@/components/user-progress";
-import { Promo } from "@/components/promo";
+import { ProUpgradeCard } from "@/components/pro-upgrade-card";
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries";
 import { QuestCard } from "@/components/ui/quest-card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -49,7 +49,7 @@ const QuestsPage = async () => {
   return (
     <div className="w-full min-h-screen">
       {/* Top Navigation */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 mb-6">
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-[1200px] mx-auto px-4 py-3">
           <UserProgress
             activeCourse={activeCourseData ? {
@@ -64,7 +64,7 @@ const QuestsPage = async () => {
         </div>
       </div>
 
-      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8">
+      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8 pt-6">
         {/* Main Content */}
         <div className="flex-1">
           <DashboardLayout
@@ -101,7 +101,7 @@ const QuestsPage = async () => {
             userPoints={userProgress.points}
             className="mb-4"
           />
-          {!isPro && <Promo />}
+          {!isPro && <ProUpgradeCard />}
         </div>
       </div>
     </div>

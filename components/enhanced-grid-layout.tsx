@@ -42,12 +42,12 @@ const GridLayoutContent = ({ children }: Props) => {
         '--sidebar-width': `${sidebarWidth}px`
       } as React.CSSProperties & { '--sidebar-width': string }}
     >
-      {/* Mobile Header - Only shown on mobile */}
-      {isMobile && (
+      {/* Mobile Header - Disabled in favor of mobile bottom nav */}
+      {/* {isMobile && (
         <header className={cn("lg:hidden bg-card/95 backdrop-blur-md border-b border-border/50", zIndex('MOBILE_HEADER'))}>
           <EnhancedMobileHeader />
         </header>
-      )}
+      )} */}
 
       {/* Desktop Sidebar - Only shown on desktop */}
       {!isMobile && (

@@ -28,6 +28,8 @@ export interface LeaderboardHeaderProps
     color: "green" | "blue" | "purple" | "orange";
     animated?: boolean;
   }>;
+  isPro?: boolean;
+  userPoints?: number;
 }
 
 const LeaderboardHeader = React.forwardRef<HTMLDivElement, LeaderboardHeaderProps>(
@@ -38,14 +40,35 @@ const LeaderboardHeader = React.forwardRef<HTMLDivElement, LeaderboardHeaderProp
     description, 
     icon,
     stats,
+    isPro,
+    userPoints,
     ...props 
   }, ref) => {
     return (
       <div
         ref={ref}
-        className={cn(leaderboardHeaderVariants({ variant }), className)}
+        className={cn(leaderboardHeaderVariants({ variant }), "pt-8", className)}
         {...props}
       >
+        {/* Pro/Free Status Badge */}
+        <div className="flex justify-center mb-4">
+          <div className={cn(
+            "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium",
+            isPro 
+              ? "bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+              : "bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+          )}>
+            <div className={cn(
+              "w-2 h-2 rounded-full",
+              isPro ? "bg-purple-500 animate-pulse" : "bg-blue-500"
+            )} />
+            {isPro ? "PRO Member" : "Free Account"}
+            {!isPro && (
+              <span className="text-xs opacity-75">• Upgrade for unlimited features</span>
+            )}
+          </div>
+        </div>
+
         {/* Icon Section */}
         {icon && (
           <div className="relative inline-block mb-6">
@@ -55,6 +78,12 @@ const LeaderboardHeader = React.forwardRef<HTMLDivElement, LeaderboardHeaderProp
             <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 dark:bg-yellow-600 rounded-full flex items-center justify-center shadow-lg">
               <span className="text-white text-sm">🏆</span>
             </div>
+            {/* User Points Badge */}
+            {userPoints !== undefined && (
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 dark:from-green-600 dark:to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                {userPoints} XP
+              </div>
+            )}
           </div>
         )}
         

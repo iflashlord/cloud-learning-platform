@@ -66,7 +66,7 @@ export const LessonButton = ({
       >
         {current ? (
           <div className="h-[102px] w-[102px] relative">
-            <div className="absolute -top-8 left-2.5 px-3 py-2 border-2 font-bold uppercase text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl animate-pulse tracking-wide shadow-lg">
+            <div className="absolute -top-8 left-2.5 px-3 py-2 border-2 font-bold uppercase text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl animate-pulse tracking-wide shadow-lg z-10">
               <span className="flex items-center gap-1">
                 <Star className="w-4 h-4" />
                 {percentage > 0 ? "Continue" : "Start"}
@@ -89,7 +89,7 @@ export const LessonButton = ({
               <Button
                 size="icon"
                 variant={locked ? "outline" : "secondary"}
-                className={`h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-110 ${
+                className={`h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-110 rounded-full ${
                   percentage > 0 
                     ? "bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600" 
                     : "bg-gradient-to-br from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
@@ -111,7 +111,7 @@ export const LessonButton = ({
             size="icon"
             variant={locked ? "outline" : "secondary"}
             className={cn(
-              "h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-105 shadow-lg",
+              "h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-105 shadow-lg rounded-full",
               isCompleted && "bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:shadow-xl",
               isLast && !locked && !isCompleted && "bg-gradient-to-br from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white",
               locked && "opacity-50 cursor-not-allowed"
