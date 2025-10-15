@@ -17,74 +17,56 @@ describe("Lesson Button", () => {
     LessonButton = buttonModule.LessonButton;
   });
 
-  it("renders lesson title and order correctly", () => {
+  it("renders progress card for the current lesson", () => {
     render(
       <LessonButton
         id={1}
         index={0}
         totalCount={5}
-        current={false}
+        current
         locked={false}
         percentage={0}
-        title="Introduction to AWS"
       />
     );
 
-    expect(screen.getByText("1")).toBeInTheDocument(); // Lesson number
-    expect(screen.getByText("Introduction to AWS")).toBeInTheDocument();
+    expect(screen.getByText(/Start/i)).toBeInTheDocument();
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/lesson");
   });
 
-  it("displays completion percentage", () => {
+  it("shows continue state with percentage when progress exists", () => {
     render(
       <LessonButton
         id={1}
         index={0}
         totalCount={5}
-        current={false}
+        current
         locked={false}
-        percentage={75}
-        title="AWS Basics"
+        percentage={42}
       />
     );
 
-    expect(screen.getByText("75%")).toBeInTheDocument();
+    expect(screen.getByText(/Continue/i)).toBeInTheDocument();
+    expect(screen.getByText("42%"));
   });
 
-  it("shows locked state for locked lessons", () => {
+  it("disables navigation for locked lessons", () => {
     render(
       <LessonButton
         id={1}
         index={2}
         totalCount={5}
         current={false}
-        locked={true}
+        locked
         percentage={0}
-        title="Advanced AWS"
       />
     );
 
-    // Should have lock icon or disabled styling
-    expect(screen.getByTestId("lock-icon") || document.querySelector("[data-lucide='lock']")).toBeInTheDocument();
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("aria-disabled", "true");
+    expect(link).toHaveStyle("pointer-events: none");
   });
 
-  it("highlights current lesson", () => {
-    const { container } = render(
-      <LessonButton
-        id={1}
-        index={1}
-        totalCount={5}
-        current={true}
-        locked={false}
-        percentage={50}
-        title="Current Lesson"
-      />
-    );
-
-    const button = container.querySelector("a");
-    expect(button).toHaveClass("border-sky-300");
-  });
-
-  it("creates correct lesson link", () => {
+  it("links to the lesson when completed", () => {
     render(
       <LessonButton
         id={123}
@@ -93,44 +75,39 @@ describe("Lesson Button", () => {
         current={false}
         locked={false}
         percentage={0}
-        title="Test Lesson"
       />
     );
 
-    const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "/lesson/123");
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/lesson/123");
   });
 
-  it("shows completion crown for 100% completed lessons", () => {
+  it("renders crown icon for the final milestone", () => {
+    render(
+      <LessonButton
+        id={5}
+        index={5}
+        totalCount={5}
+        current
+        locked={false}
+        percentage={0}
+      />
+    );
+
+    expect(document.querySelector(".lucide-crown")).not.toBeNull();
+  });
+
+  it("shows check icon for completed lessons", () => {
     render(
       <LessonButton
         id={1}
-        index={0}
+        index={1}
         totalCount={5}
         current={false}
         locked={false}
-        percentage={100}
-        title="Completed Lesson"
-      />
-    );
-
-    expect(screen.getByTestId("crown-icon") || document.querySelector("[data-lucide='crown']")).toBeInTheDocument();
-  });
-
-  it("disables click for locked lessons", () => {
-    const { container } = render(
-      <LessonButton
-        id={1}
-        index={0}
-        totalCount={5}
-        current={false}
-        locked={true}
         percentage={0}
-        title="Locked Lesson"
       />
     );
 
-    const link = container.querySelector("a");
-    expect(link).toHaveClass("pointer-events-none", "opacity-50");
+    expect(document.querySelector(".lucide-check")).not.toBeNull();
   });
 });

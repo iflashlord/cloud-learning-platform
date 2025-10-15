@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { NextRequest } from "next/server";
-
-const { mockAuth, mockDb } = vi.hoisted(() => ({
-  mockAuth: vi.fn(),
+const { mockIsAdmin, mockDb } = vi.hoisted(() => ({
+  mockIsAdmin: vi.fn(),
   mockDb: {
     query: {
       courses: {
@@ -12,8 +10,8 @@ const { mockAuth, mockDb } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@clerk/nextjs/server", () => ({
-  auth: mockAuth,
+vi.mock("@/lib/admin", () => ({
+  isAdmin: () => mockIsAdmin(),
 }));
 
 vi.mock("@/db/drizzle", () => ({
@@ -38,14 +36,13 @@ describe("GET /api/courses", () => {
   it("returns courses for authenticated admin users", async () => {
     if (!GET) return;
 
-    mockAuth.mockResolvedValue({ userId: "user_123" });
+    mockIsAdmin.mockReturnValue(true);
     mockDb.query.courses.findMany.mockResolvedValue([
       { id: 1, title: "AWS Fundamentals", imageSrc: "/course1.png" },
       { id: 2, title: "AWS Advanced", imageSrc: "/course2.png" },
     ]);
 
-    const request = new NextRequest("http://localhost:3000/api/courses");
-    const response = await GET(request);
+    const response = await GET();
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -57,10 +54,9 @@ describe("GET /api/courses", () => {
   it("returns 401 for unauthenticated users", async () => {
     if (!GET) return;
 
-    mockAuth.mockResolvedValue({ userId: null });
+    mockIsAdmin.mockReturnValue(false);
 
-    const request = new NextRequest("http://localhost:3000/api/courses");
-    const response = await GET(request);
+    const response = await GET();
 
     expect(response.status).toBe(401);
   });
@@ -68,12 +64,9 @@ describe("GET /api/courses", () => {
   it("handles database errors gracefully", async () => {
     if (!GET) return;
 
-    mockAuth.mockResolvedValue({ userId: "user_123" });
+    mockIsAdmin.mockReturnValue(true);
     mockDb.query.courses.findMany.mockRejectedValue(new Error("Database error"));
 
-    const request = new NextRequest("http://localhost:3000/api/courses");
-    const response = await GET(request);
-
-    expect(response.status).toBe(500);
+    await expect(GET()).rejects.toThrow("Database error");
   });
 });

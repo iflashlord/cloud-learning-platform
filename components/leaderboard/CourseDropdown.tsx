@@ -24,31 +24,31 @@ export const CourseDropdown = ({
 }: CourseDropdownProps) => (
   <div className="relative w-full max-w-xs" ref={dropdownRef}>
     <button
-      className="w-full px-4 py-2 border rounded-lg bg-white text-gray-900 flex items-center justify-between"
+      className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground flex items-center justify-between hover:bg-muted transition-colors"
       onClick={onToggle}
       type="button"
     >
-      <span>{selectedCourse.name}</span>
+      <span>{selectedCourse.title}</span>
       <svg className={`w-4 h-4 ml-2 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
     </button>
     {isOpen && (
-      <div className="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+      <div className="absolute z-10 mt-2 w-full bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
         <input
           type="text"
-          className="w-full px-3 py-2 border-b outline-none"
+          className="w-full px-3 py-2 border-b border-border outline-none bg-background text-foreground placeholder:text-muted-foreground"
           placeholder="Search courses..."
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
         />
         <ul>
-          {courses.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())).map(course => (
+          {courses.filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase())).map(course => (
             <li key={course.id}>
               <button
-                className={`w-full text-left px-4 py-2 hover:bg-blue-50 ${course.id === selectedCourse.id ? "bg-blue-100 font-semibold" : ""}`}
+                className={`w-full text-left px-4 py-2 text-foreground hover:bg-muted transition-colors ${course.id === selectedCourse.id ? "bg-primary/10 font-semibold text-primary" : ""}`}
                 onClick={() => onCourseChange(course.id)}
                 type="button"
               >
-                {course.name}
+                {course.title}
               </button>
             </li>
           ))}

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Volume2, Headphones } from "lucide-react";
-import { Card } from "../../app/lesson/card";
+import { ChallengeCard } from "./ChallengeCard";
 import { challengeOptions, challenges } from "@/db/schema";
 
 interface ListeningChallengeProps {
@@ -54,7 +54,7 @@ export const ListeningChallenge = ({
         <p className="text-sm font-medium text-neutral-700 mb-3">Select your answer:</p>
         <div className={cn("grid gap-3", "grid-cols-1")}>
           {options.map((option, i) => (
-            <Card
+            <ChallengeCard
               key={option.id}
               id={option.id}
               text={option.text}

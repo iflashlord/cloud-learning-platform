@@ -75,7 +75,7 @@ export const QuizLayout = ({
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
         <Footer
-          disabled={disabled}
+          disabled={disabled || !selectedOption}
           status={status}
           onCheck={onCheck}
           lessonId={lessonId}

@@ -16,7 +16,7 @@ import { ArrowLeft, BookOpen, Target, TrendingUp } from "lucide-react";
 
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { EnhancedCard } from "@/components/ui/enhanced-card";
-import { EnhancedStickyHeader } from "@/lib/enhanced-layout-system";
+import { EnhancedStickyWrapper } from "@/lib/enhanced-layout-system";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -39,7 +39,7 @@ export const EnhancedLearnHeader = ({
   const overallProgress = Math.round((unitProgress + lessonProgress) / 2);
   
   return (
-    <EnhancedStickyHeader className="space-y-6">
+    <EnhancedStickyWrapper className="space-y-6">
       {/* Navigation and Title */}
       <div className="flex items-center justify-between">
         <Link href="/courses">
@@ -162,6 +162,6 @@ export const EnhancedLearnHeader = ({
           </EnhancedCard>
         </div>
       )}
-    </EnhancedStickyHeader>
+    </EnhancedStickyWrapper>
   );
 };

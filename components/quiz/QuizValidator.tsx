@@ -9,6 +9,7 @@ interface QuizValidatorProps {
   challengeId: number;
   hearts: number;
   userSubscription: any;
+  isPractice?: boolean;
   onHeartUpdate: (newHearts: number) => void;
   onIncorrectAudio: () => void;
   onCorrectAudio: () => void;
@@ -18,6 +19,7 @@ export const useQuizValidator = ({
   challengeId,
   hearts,
   userSubscription,
+  isPractice = false,
   onHeartUpdate,
   onIncorrectAudio,
   onCorrectAudio,
@@ -33,7 +35,21 @@ export const useQuizValidator = ({
       });
     } else {
       startTransition(() => {
-        if (!userSubscription?.isActive) {
+        if (isPractice) {
+          // Visual heart animation - temporarily show reduced hearts
+          const visualHearts = Math.max(0, hearts - 1);
+          onHeartUpdate(visualHearts);
+          
+          // After a brief delay, restore hearts to show it was just visual
+          setTimeout(() => {
+            onHeartUpdate(hearts);
+            toast.success("Hearts restored - this is practice!", {
+              duration: 2000,
+              style: { width: '100%', maxWidth: '100%' }
+            });
+          }, 1500);
+          
+        } else if (!userSubscription?.isActive) {
           if (hearts === 1) {
             // Will redirect to hearts page
             reduceHearts(challengeId);

@@ -59,9 +59,7 @@ describe("AdminDashboard", () => {
 
   const getStatValue = (label: string): string | undefined => {
     const labelNode = screen.getByText(label);
-    const card = labelNode.closest(".group");
-    expect(card).not.toBeNull();
-    const valueNode = card!.querySelector(".text-3xl");
+    const valueNode = labelNode.parentElement?.querySelector("p.text-3xl");
     expect(valueNode).not.toBeNull();
     return valueNode!.textContent?.trim();
   };

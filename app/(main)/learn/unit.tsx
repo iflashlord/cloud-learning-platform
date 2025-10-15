@@ -1,5 +1,4 @@
 import { lessons, units } from "@/db/schema"
-
 import { UnitBanner } from "./unit-banner";
 import { LessonButton } from "./lesson-button";
 
@@ -30,15 +29,17 @@ export const Unit = ({
   const isCompleted = completedLessons === lessons.length;
   
   return (
-    <>
-      <UnitBanner 
-        title={title} 
-        description={description}
-        lessonCount={lessons.length}
-        completedLessons={completedLessons}
-        isCompleted={isCompleted}
-      />
-      <div className="flex items-center flex-col relative">
+    <div data-unit-id={id} className="unit-container scroll-mt-24">
+      <div className="sticky top-[73px] z-40 mb-6">
+        <UnitBanner 
+          title={title} 
+          description={description}
+          lessonCount={lessons.length}
+          completedLessons={completedLessons}
+          isCompleted={isCompleted}
+        />
+      </div>
+      <div className="flex items-center flex-col relative mb-16 min-h-[400px]">
         {lessons.map((lesson, index) => {
           const isCurrent = lesson.id === activeLesson?.id;
           const isLocked = !lesson.completed && !isCurrent;
@@ -56,6 +57,6 @@ export const Unit = ({
           );
         })}
       </div>
-    </>
+    </div>
   );
 };

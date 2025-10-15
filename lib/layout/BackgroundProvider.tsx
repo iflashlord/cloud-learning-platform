@@ -28,10 +28,10 @@ export const BackgroundProvider: React.FC<BackgroundProviderProps> = ({
       case "learning":
         return cn(
           baseClasses,
-          // Light mode - subtle learning gradient
-          "bg-gradient-to-br from-blue-50 via-green-50 to-purple-50",
-          // Dark mode - deep learning gradient
-          "dark:bg-gradient-to-br dark:from-gray-950 dark:via-gray-900 dark:to-gray-950",
+          // Light mode - match lesson page gradient
+          "bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50",
+          // Dark mode - match lesson page gradient
+          "dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900",
           className
         );
         

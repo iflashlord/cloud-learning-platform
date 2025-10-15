@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/ui/stat-card";
 import { QuestAchievements } from "./quest-achievements";
-import { QuestProgressTracker } from "./quest-progress-tracker";
+import { QuestProgressTrackerComponent } from "./quest-progress-tracker";
 import { QuestPageHeader } from "@/components/ui/quest-page-header";
 import { QuestStats } from "@/components/ui/quest-stats";
 import { QuestListing } from "@/components/ui/quest-listing";
@@ -57,7 +57,7 @@ const QuestsPage = async () => {
       hasActiveSubscription={isPro}
       showQuests={false}
       additionalSidebarContent={(
-        <QuestProgressTracker 
+        <QuestProgressTrackerComponent 
           quests={quests}
           userPoints={userProgress.points}
           className="mb-4"

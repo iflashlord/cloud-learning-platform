@@ -2,6 +2,7 @@
 export { Challenge } from "./Challenge";
 
 // Individual challenge type components
+export { ChallengeCard } from "./ChallengeCard";
 export { QuestionHeader } from "./QuestionHeader";
 export { CorrectAnswerDisplay } from "./CorrectAnswerDisplay";
 export { DragDropChallenge } from "./DragDropChallenge";

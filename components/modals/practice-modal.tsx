@@ -35,7 +35,7 @@ export const PracticeModal = () => {
             Practice lesson
           </DialogTitle>
           <DialogDescription className="text-center text-base">
-            Use practice lessons to regain hearts and points. You cannot loose hearts or points in practice lessons.
+            Use practice lessons to regain hearts and points. You&apos;ll see visual feedback when you get wrong answers, but your hearts and points are safe in practice mode.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mb-4">

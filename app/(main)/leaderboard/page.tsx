@@ -11,7 +11,7 @@ import {
 import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
 import { CONFIG } from "@/lib/config";
-import { LeaderboardTabs } from "./leaderboard-tabs";
+import { LeaderboardTabsContainer } from "./leaderboard-tabs";
 import { LeaderboardHeader } from "@/components/ui/leaderboard-header";
 
 type Props = {
@@ -80,7 +80,7 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
         }
       >
         <ContentGrid cols={1} gap="lg" align="center" className="w-full">
-          <LeaderboardTabs
+          <LeaderboardTabsContainer
             courses={courses}
             generalLeaderboard={generalLeaderboard}
             courseLeaderboard={courseLeaderboard}

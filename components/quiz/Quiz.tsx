@@ -23,6 +23,9 @@ export const Quiz = ({
   initialPercentage,
   userSubscription,
 }: QuizProps) => {
+  // Detect if this is a practice lesson (already completed)
+  const isPractice = initialPercentage === 100;
+  
   const {
     lessonId,
     activeIndex,
@@ -57,6 +60,7 @@ export const Quiz = ({
     challengeId: challenge?.id ?? 0,
     hearts,
     userSubscription,
+    isPractice,
     onHeartUpdate: setHearts,
     onIncorrectAudio: playIncorrect,
     onCorrectAudio: playCorrect,
@@ -111,7 +115,7 @@ export const Quiz = ({
         options={options}
         selectedOption={selectedOption}
         status={status}
-        disabled={pending || !selectedOption}
+        disabled={pending}
         lessonId={lessonId}
         onSelect={onSelect}
         onContinue={onContinue}

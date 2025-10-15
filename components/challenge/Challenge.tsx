@@ -56,12 +56,15 @@ export const Challenge = ({
 
   // Render challenge based on type
   const renderChallenge = () => {
+    // Options should be disabled only during validation or when showing results
+    const optionsDisabled = disabled && status !== "none";
+    
     const baseProps = {
       options,
       selectedOption,
       onSelect,
       status,
-      disabled,
+      disabled: optionsDisabled,
       challenge
     };
 

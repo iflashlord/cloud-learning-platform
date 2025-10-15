@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Card } from "../../app/lesson/card";
+import { ChallengeCard } from "./ChallengeCard";
 import { challengeOptions, challenges } from "@/db/schema";
 
 interface SelectChallengeProps {
@@ -40,7 +40,7 @@ export const SelectChallenge = ({
     <div className="px-6">
       <div className={cn("grid gap-3", getGridClasses())}>
         {options.map((option, i) => (
-          <Card
+          <ChallengeCard
             key={option.id}
             id={option.id}
             text={option.text}
