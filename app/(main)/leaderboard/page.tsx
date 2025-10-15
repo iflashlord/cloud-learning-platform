@@ -8,8 +8,10 @@ import {
   getUserProgress, 
   getUserSubscription 
 } from "@/db/queries";
-import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
+import { UserProgress } from "@/components/user-progress";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
 import { CONFIG } from "@/lib/config";
 import { LeaderboardTabsContainer } from "./leaderboard-tabs";
 import { LeaderboardHeader } from "@/components/ui/leaderboard-header";
@@ -56,40 +58,58 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
     selectedCourse = courses.find(course => course.id === selectedCourseId) || null;
   }
 
-  return ( 
-    <EnhancedGridAppLayout
-      activeCourse={userProgress.activeCourse}
-      hearts={userProgress.hearts}
-      points={userProgress.points}
-      hasActiveSubscription={isPro}
-    >
-      <DashboardLayout
-        header={
-          <LeaderboardHeader
-            title={`${CONFIG.PLATFORM_NAME} Champions`}
-            description="Compete with fellow learners, track your progress, and celebrate achievements in our community of technology enthusiasts. Every challenge completed brings you closer to the top!"
-            icon={
-              <Trophy className="w-10 h-10 text-current" />
+  return (
+    <div className="w-full min-h-screen">
+      {/* Top Navigation */}
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 mb-6">
+        <div className="max-w-[1200px] mx-auto px-4 py-3">
+          <UserProgress
+            activeCourse={userProgress.activeCourse}
+            hearts={userProgress.hearts}
+            points={userProgress.points}
+            hasActiveSubscription={isPro}
+          />
+        </div>
+      </div>
+
+      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8">
+        {/* Main Content */}
+        <div className="flex-1">
+          <DashboardLayout
+            header={
+              <LeaderboardHeader
+                title={`${CONFIG.PLATFORM_NAME} Champions`}
+                description="Compete with fellow learners, track your progress, and celebrate achievements in our community of technology enthusiasts. Every challenge completed brings you closer to the top!"
+                icon={
+                  <Trophy className="w-10 h-10 text-current" />
+                }
+                stats={[
+                  { label: "Live Rankings", color: "green", animated: true },
+                  { label: "Real-time Updates", color: "blue" },
+                  { label: "Fair Competition", color: "purple" }
+                ]}
+              />
             }
-            stats={[
-              { label: "Live Rankings", color: "green", animated: true },
-              { label: "Real-time Updates", color: "blue" },
-              { label: "Fair Competition", color: "purple" }
-            ]}
-          />
-        }
-      >
-        <ContentGrid cols={1} gap="lg" align="center" className="w-full">
-          <LeaderboardTabsContainer
-            courses={courses}
-            generalLeaderboard={generalLeaderboard}
-            courseLeaderboard={courseLeaderboard}
-            selectedCourse={selectedCourse}
-            selectedCourseId={selectedCourseId}
-          />
-        </ContentGrid>
-      </DashboardLayout>
-    </EnhancedGridAppLayout>
+          >
+            <ContentGrid cols={1} gap="lg" align="center" className="w-full">
+              <LeaderboardTabsContainer
+                courses={courses}
+                generalLeaderboard={generalLeaderboard}
+                courseLeaderboard={courseLeaderboard}
+                selectedCourse={selectedCourse}
+                selectedCourseId={selectedCourseId}
+              />
+            </ContentGrid>
+          </DashboardLayout>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block w-80 space-y-4">
+          {!isPro && <Promo />}
+          <Quests points={userProgress.points} />
+        </div>
+      </div>
+    </div>
   );
 };
  

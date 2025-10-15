@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
-import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
+import { UserProgress } from "@/components/user-progress";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -34,76 +36,94 @@ const ShopPage = async () => {
   // Find the complete course data
   const activeCourseData = courses.find(course => course.id === userProgress.activeCourse?.id);
 
-  return ( 
-    <EnhancedGridAppLayout
-      activeCourse={activeCourseData ? {
-        id: activeCourseData.id,
-        title: activeCourseData.title,
-        imageSrc: activeCourseData.imageSrc
-      } : userProgress.activeCourse}
-      hearts={userProgress.hearts}
-      points={userProgress.points}
-      hasActiveSubscription={isPro}
-    >
-      <DashboardLayout
-        header={
-          <PageHeader
-            variant="gradient"
-            title={`${BRAND_CONFIG.PLATFORM_NAME} Marketplace`}
-            description="Spend your hard-earned XP points on useful items and power-ups to enhance your learning journey."
-            badge={<Badge variant={isPro ? "success" : "warning"}>{isPro ? "PRO Member" : "Free Account"}</Badge>}
-          />
-        }
-      >
-        <ContentGrid cols={1} gap="lg" className="max-w-4xl mx-auto">
-          {/* User Stats Overview */}
-          <ContentGrid cols={3} gap="md" className="w-full">
-            <StatCard
-              variant="info"
-              icon={<Zap className="w-6 h-6" />}
-              title="XP Points"
-              value={userProgress.points.toString()}
-              subtitle="Available to spend"
-            />
-            <StatCard
-              variant="danger"
-              icon={<Heart className="w-6 h-6" />}
-              title="Hearts"
-              value={userProgress.hearts.toString()}
-              subtitle="Health remaining"
-            />
-            <StatCard
-              variant={isPro ? "success" : "warning"}
-              icon={isPro ? <Crown className="w-6 h-6" /> : <Target className="w-6 h-6" />}
-              title="Status"
-              value={isPro ? 'PRO' : 'FREE'}
-              subtitle={isPro ? "Premium member" : "Basic account"}
-            />
-          </ContentGrid>
-
-          {/* Shopping Tips */}
-          <Alert className="w-full">
-            <Lightbulb className="h-4 w-4" />
-            <AlertDescription>
-              <div className="space-y-1">
-                <div className="font-semibold">Shopping Tips:</div>
-                <div>• Earn XP by completing lessons and quests</div>
-                <div>• Hearts are used when you make mistakes during lessons</div>
-                <div>• Pro membership gives you unlimited hearts and exclusive features</div>
-                <div>• Check back regularly for new items and special offers!</div>
-              </div>
-            </AlertDescription>
-          </Alert>
-
-          {/* Shop Items */}
-          <Items
+  return (
+    <div className="w-full min-h-screen">
+      {/* Top Navigation */}
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 mb-6">
+        <div className="max-w-[1200px] mx-auto px-4 py-3">
+          <UserProgress
+            activeCourse={activeCourseData ? {
+              id: activeCourseData.id,
+              title: activeCourseData.title,
+              imageSrc: activeCourseData.imageSrc
+            } : userProgress.activeCourse}
             hearts={userProgress.hearts}
             points={userProgress.points}
             hasActiveSubscription={isPro}
           />
-        </ContentGrid>
-      </DashboardLayout>
-    </EnhancedGridAppLayout>
+        </div>
+      </div>
+
+      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8">
+        {/* Main Content */}
+        <div className="flex-1">
+          <DashboardLayout
+            header={
+              <PageHeader
+                variant="gradient"
+                title={`${BRAND_CONFIG.PLATFORM_NAME} Marketplace`}
+                description="Spend your hard-earned XP points on useful items and power-ups to enhance your learning journey."
+                badge={<Badge variant={isPro ? "success" : "warning"}>{isPro ? "PRO Member" : "Free Account"}</Badge>}
+              />
+            }
+          >
+            <ContentGrid cols={1} gap="lg" className="max-w-4xl mx-auto">
+              {/* User Stats Overview */}
+              <ContentGrid cols={3} gap="md" className="w-full">
+                <StatCard
+                  variant="info"
+                  icon={<Zap className="w-6 h-6" />}
+                  title="XP Points"
+                  value={userProgress.points.toString()}
+                  subtitle="Available to spend"
+                />
+                <StatCard
+                  variant="danger"
+                  icon={<Heart className="w-6 h-6" />}
+                  title="Hearts"
+                  value={userProgress.hearts.toString()}
+                  subtitle="Health remaining"
+                />
+                <StatCard
+                  variant={isPro ? "success" : "warning"}
+                  icon={isPro ? <Crown className="w-6 h-6" /> : <Target className="w-6 h-6" />}
+                  title="Status"
+                  value={isPro ? 'PRO' : 'FREE'}
+                  subtitle={isPro ? "Premium member" : "Basic account"}
+                />
+              </ContentGrid>
+
+              {/* Shopping Tips */}
+              <Alert className="w-full">
+                <Lightbulb className="h-4 w-4" />
+                <AlertDescription>
+                  <div className="space-y-1">
+                    <div className="font-semibold">Shopping Tips:</div>
+                    <div>• Earn XP by completing lessons and quests</div>
+                    <div>• Hearts are used when you make mistakes during lessons</div>
+                    <div>• Pro membership gives you unlimited hearts and exclusive features</div>
+                    <div>• Check back regularly for new items and special offers!</div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+
+              {/* Shop Items */}
+              <Items
+                hearts={userProgress.hearts}
+                points={userProgress.points}
+                hasActiveSubscription={isPro}
+              />
+            </ContentGrid>
+          </DashboardLayout>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block w-80 space-y-4">
+          {!isPro && <Promo />}
+          <Quests points={userProgress.points} />
+        </div>
+      </div>
+    </div>
   );
 };
  
