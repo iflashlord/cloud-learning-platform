@@ -37,10 +37,11 @@ export const Z_INDEX = {
   STICKY_HEADER: 50,
   
   // Navigation Layer (80-99): Navigation elements (HIGHEST PRIORITY)
+  TOP_NAVIGATION: 50,
   MOBILE_HEADER: 90,
   MOBILE_SIDEBAR_BACKDROP: 85,
   MOBILE_SIDEBAR: 87,
-  MOBILE_BOTTOM_NAV: 95,
+  MOBILE_BOTTOM_NAV: 100,
   
   // Sidebar Layer (60-79): Desktop navigation sidebar
   SIDEBAR_BACKDROP: 60,

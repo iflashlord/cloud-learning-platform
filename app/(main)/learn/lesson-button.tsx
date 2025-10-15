@@ -66,7 +66,7 @@ export const LessonButton = ({
       >
         {current ? (
           <div className="h-[102px] w-[102px] relative">
-            <div className="absolute -top-8 left-2.5 px-3 py-2 border-2 font-bold uppercase text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl animate-pulse tracking-wide z-10 shadow-lg">
+            <div className="absolute -top-8 left-2.5 px-3 py-2 border-2 font-bold uppercase text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl animate-pulse tracking-wide shadow-lg">
               <span className="flex items-center gap-1">
                 <Star className="w-4 h-4" />
                 {percentage > 0 ? "Continue" : "Start"}

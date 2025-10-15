@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
-import { EnhancedGridAppLayout } from "@/components/enhanced-grid-app-layout";
 import { ContentGrid } from "@/lib/css-grid-system";
 import { lessons, units as unitsSchema } from "@/db/schema";
+import { UserProgress } from "@/components/user-progress";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
 import { 
   getCourseProgress, 
   getLessonPercentage, 
@@ -62,43 +64,61 @@ const LearnPage = async () => {
   );
 
   return (
-    <EnhancedGridAppLayout
-      activeCourse={activeCourseData ? {
-        id: activeCourseData.id,
-        title: activeCourseData.title,
-        imageSrc: activeCourseData.imageSrc
-      } : userProgress.activeCourse}
-      hearts={userProgress.hearts}
-      points={userProgress.points}
-      hasActiveSubscription={isPro}
-    >
-      {/* Page Header */}
-      <EnhancedLearnHeader 
-        title={userProgress.activeCourse.title}
-        totalUnits={totalUnits}
-        completedUnits={completedUnits}
-        totalLessons={totalLessons}
-        completedLessons={completedLessons}
-      />
-      
-      {/* Units Content */}
-      <ContentGrid cols={1} gap="lg" className="mt-6">
-        {units.map((unit) => (
-          <Unit
-            key={unit.id}
-            id={unit.id}
-            order={unit.order}
-            description={unit.description}
-            title={unit.title}
-            lessons={unit.lessons}
-            activeLesson={courseProgress.activeLesson as typeof lessons.$inferSelect & {
-              unit: typeof unitsSchema.$inferSelect;
-            } | undefined}
-            activeLessonPercentage={lessonPercentage}
+    <div className="w-full min-h-screen">
+      {/* Top Navigation - Simple and Clean */}
+      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 mb-6">
+        <div className="max-w-[1200px] mx-auto px-4 py-3">
+          <UserProgress
+            activeCourse={activeCourseData ? {
+              id: activeCourseData.id,
+              title: activeCourseData.title,
+              imageSrc: activeCourseData.imageSrc
+            } : userProgress.activeCourse}
+            hearts={userProgress.hearts}
+            points={userProgress.points}
+            hasActiveSubscription={isPro}
           />
-        ))}
-      </ContentGrid>
-    </EnhancedGridAppLayout>
+        </div>
+      </div>
+
+      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8">
+        {/* Main Content */}
+        <div className="flex-1">
+          {/* Page Header */}
+          <EnhancedLearnHeader 
+            title={userProgress.activeCourse.title}
+            totalUnits={totalUnits}
+            completedUnits={completedUnits}
+            totalLessons={totalLessons}
+            completedLessons={completedLessons}
+          />
+          
+          {/* Units Content */}
+          <ContentGrid cols={1} gap="lg" className="mt-6">
+            {units.map((unit) => (
+              <Unit
+                key={unit.id}
+                id={unit.id}
+                order={unit.order}
+                description={unit.description}
+                title={unit.title}
+                lessons={unit.lessons}
+                activeLesson={courseProgress.activeLesson as typeof lessons.$inferSelect & {
+                  unit: typeof unitsSchema.$inferSelect;
+                } | undefined}
+                activeLessonPercentage={lessonPercentage}
+              />
+            ))}
+          </ContentGrid>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block w-80 space-y-4">
+          {!isPro && <Promo />}
+          <Quests points={userProgress.points} />
+        </div>
+      </div>
+    </div>
   );
 };
  

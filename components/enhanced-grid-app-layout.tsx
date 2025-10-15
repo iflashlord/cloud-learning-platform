@@ -16,6 +16,7 @@ import { Promo } from "@/components/promo";
 import { Quests } from "@/components/quests";
 import { SidebarLayout, ContentGrid } from "@/lib/css-grid-system";
 import { cn } from "@/lib/utils";
+import { zIndex } from "@/lib/z-index-system";
 
 type Course = {
   id: number;
@@ -61,7 +62,7 @@ export const EnhancedGridAppLayout = ({
   return (
     <div className={cn("w-full h-full", className)}>
       {/* Top Navigation Bar - Switch Course and Shop Links */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 mb-6">
+      <div className={`w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 mb-6 ${zIndex('TOP_NAVIGATION')}`}>
         <div className="max-w-[1200px] mx-auto px-4 py-3">
           <UserProgress
             activeCourse={activeCourse}
@@ -79,7 +80,7 @@ export const EnhancedGridAppLayout = ({
         className="h-full"
       >
         {/* Main Content Area */}
-        <div className="w-full space-y-6">
+        <div className="w-full space-y-6 pb-20 lg:pb-6">
           {children}
         </div>
       </SidebarLayout>
