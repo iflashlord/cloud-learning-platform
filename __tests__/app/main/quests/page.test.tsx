@@ -59,6 +59,10 @@ vi.mock("@/app/(main)/quests/quest-progress-tracker", () => ({
     trackerCalls.push(props);
     return <div data-testid="quest-progress-tracker" />;
   },
+  QuestProgressTrackerComponent: (props: any) => {
+    trackerCalls.push(props);
+    return <div data-testid="quest-progress-tracker" />;
+  },
 }));
 
 vi.mock("@/app/(main)/quests/quest-achievements", () => ({

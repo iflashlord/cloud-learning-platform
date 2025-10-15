@@ -223,10 +223,10 @@ export const buttonVariants = cva(
         ],
       },
       size: {
-        xs: "h-8 px-4 text-xs min-w-[80px]",
-        sm: "h-9 px-5 text-sm min-w-[100px]",
+        xs: "h-8 px-2 text-xs min-w-[80px]",
+        sm: "h-9 px-4 text-sm min-w-[100px]",
         md: "h-11 px-6 text-base min-w-[120px]",
-        lg: "h-12 px-7 text-lg min-w-[140px]",
+        lg: "h-12 px-8 text-lg min-w-[140px]",
         xl: "h-14 px-8 text-xl min-w-[160px]",
         icon: "h-11 w-11 p-0 min-w-[44px]",
       },

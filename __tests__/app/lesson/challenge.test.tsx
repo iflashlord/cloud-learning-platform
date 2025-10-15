@@ -6,8 +6,8 @@ const { mockCard } = vi.hoisted(() => ({
   mockCard: vi.fn(),
 }));
 
-vi.mock("@/app/lesson/card", () => ({
-  Card: (props: any) => {
+vi.mock("@/components/challenge/ChallengeCard", () => ({
+  ChallengeCard: (props: any) => {
     mockCard(props);
     return (
       <button
@@ -21,12 +21,33 @@ vi.mock("@/app/lesson/card", () => ({
   },
 }));
 
+vi.mock("@/components/Character", () => ({
+  Character: () => <div data-testid="character" />,
+}));
+
 import { Challenge } from "@/app/lesson/challenge";
 
 const baseOption = {
+  challengeId: 1,
   imageSrc: null,
   audioSrc: null,
   correct: false,
+  order: 0,
+  guide: null,
+  value: null,
+};
+
+const baseChallenge = {
+  id: 1,
+  lessonId: 1,
+  type: "SELECT" as const,
+  question: "What service fits?",
+  hint: null,
+  order: 1,
+  audioSrc: null,
+  imageSrc: null,
+  videoSrc: null,
+  correctAnswer: null,
 };
 
 describe("Challenge component", () => {
@@ -40,6 +61,7 @@ describe("Challenge component", () => {
         type="ASSIST"
         status="none"
         onSelect={vi.fn()}
+        challenge={{ ...baseChallenge, type: "ASSIST", question: "Assist question" }}
         options={[
           { ...baseOption, id: 1, text: "Option A" },
         ]}
@@ -64,6 +86,7 @@ describe("Challenge component", () => {
         type="SELECT"
         status="none"
         onSelect={onSelect}
+        challenge={{ ...baseChallenge, type: "SELECT", question: "Select question" }}
         options={[
           { ...baseOption, id: 1, text: "Compute" },
           { ...baseOption, id: 2, text: "Storage" },

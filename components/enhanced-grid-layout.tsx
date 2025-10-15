@@ -41,7 +41,7 @@ const GridLayoutContent = ({ children }: Props) => {
         <PageGrid 
           template="single"
           container="xl"
-          padding="md"
+          padding="sm"
           className="h-full"
         >
           {children}

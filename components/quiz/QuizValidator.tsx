@@ -43,10 +43,10 @@ export const useQuizValidator = ({
           // After a brief delay, restore hearts to show it was just visual
           setTimeout(() => {
             onHeartUpdate(hearts);
-            toast.success("Hearts restored - this is practice!", {
-              duration: 2000,
-              style: { width: '100%', maxWidth: '100%' }
-            });
+            // toast.success("Hearts restored - this is practice!", {
+            //   duration: 2000,
+            //   style: { width: '100%', maxWidth: '100%' }
+            // });
           }, 1500);
           
         } else if (!userSubscription?.isActive) {

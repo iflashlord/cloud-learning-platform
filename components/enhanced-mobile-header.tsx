@@ -89,7 +89,7 @@ export const EnhancedMobileHeader: React.FC = () => {
   return (
     <nav className={cn(
       "px-4 h-[60px] flex items-center justify-between",
-      "bg-background/80 dark:bg-background/80 backdrop-blur-md",
+      "bg-background dark:bg-background backdrop-blur-md",
       "border-b border-border/50 fixed top-0 w-full",
       "shadow-sm",
       zIndex('MOBILE_HEADER')

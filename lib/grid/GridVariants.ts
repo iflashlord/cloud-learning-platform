@@ -105,8 +105,8 @@ export const pageGridVariants = cva("grid w-full h-full", {
     },
     padding: {
       none: "p-0",
-      sm: "p-4",
-      md: "p-6", 
+      sm: "p-2",
+      md: "p-4", 
       lg: "p-8",
     }
   },

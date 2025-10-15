@@ -9,6 +9,17 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     coverage: {
       reporter: ["text", "lcov"],
+      include: [
+        "components/enhanced-learn-header.tsx",
+        "components/lesson/**/*.{ts,tsx}",
+        "components/admin/users/useUserManagement.tsx",
+        "app/(main)/quests/page.tsx",
+      ],
+      exclude: [
+        "**/*.d.ts",
+        "**/__tests__/**",
+        "app/(marketing)/**/page.tsx", // server components indirectly covered
+      ],
     },
     exclude: [
       "node_modules",
