@@ -1,219 +1,142 @@
-import Link from "next/link";
-import Image from "next/image";
-
-import { quests, QUEST_ICON_MAP } from "@/constants";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Zap, Crown, CheckCircle, Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
+import Link from "next/link"
+import { quests, QUEST_ICON_MAP } from "@/constants"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Trophy, Star, CheckCircle, ArrowRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type Props = {
-  points: number;
-};
+  points: number
+}
 
 export const Quests = ({ points }: Props) => {
-  // Get color classes based on quest color with dark mode support
-  const getColorClasses = (color: string, isCompleted: boolean = false) => {
-    if (isCompleted) {
-      return "bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300";
-    }
-    
-    const colorMap: Record<string, string> = {
-      green: "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/10 border-green-200 dark:border-green-800",
-      blue: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/10 border-blue-200 dark:border-blue-800",
-      orange: "bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/10 border-orange-200 dark:border-orange-800",
-      purple: "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/10 border-purple-200 dark:border-purple-800",
-      gold: "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/10 border-yellow-300 dark:border-yellow-800",
-      platinum: "bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-800/20 dark:to-slate-800/10 border-gray-300 dark:border-gray-700",
-      rainbow: "bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 dark:from-pink-900/20 dark:via-purple-900/15 dark:to-blue-900/10 border-pink-200 dark:border-pink-800",
-      cyan: "bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/10 border-cyan-200 dark:border-cyan-800",
-    };
-    
-    return colorMap[color] || "bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-800/20 dark:to-slate-800/10 border-gray-200 dark:border-gray-700";
-  };
+  // Filter and prioritize quests for display
+  const incompleteQuests = quests.filter((quest) => points < quest.value)
+  const completedQuests = quests.filter((quest) => points >= quest.value)
 
-  // Show only next 3 incomplete quests to avoid clutter
-  const incompleteQuests = quests.filter(quest => points < quest.value);
-  const completedQuests = quests.filter(quest => points >= quest.value);
-  const displayQuests = [...incompleteQuests.slice(0, 3)];
-  
-  // Add one completed quest if available
-  if (completedQuests.length > 0 && displayQuests.length < 3) {
-    displayQuests.unshift(completedQuests[completedQuests.length - 1]);
-  }
+  // Show next 2 incomplete quests for better UX
+  const displayQuests = incompleteQuests.slice(0, 2)
+
+  // Progress calculation
+  const totalProgress = (completedQuests.length / quests.length) * 100
 
   return (
-    <div className="border-2 rounded-xl bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/10 border-orange-200 dark:border-orange-800 p-4 space-y-4 shadow-sm">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-lg flex items-center justify-center shadow-sm">
-            <Trophy className="w-4 h-4 text-white" />
+    <div className='border rounded-lg bg-card p-3 sm:p-4 space-y-3 shadow-sm'>
+      {/* Header - Responsive */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <div className='w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-md flex items-center justify-center'>
+            <Trophy className='w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground' />
           </div>
-          <h3 className="font-bold text-lg text-orange-800 dark:text-orange-300">
-            Daily Quests
-          </h3>
+          <h3 className='font-semibold text-sm sm:text-base'>Daily Quests</h3>
         </div>
-        <Link href="/quests">
-          <Button
-            size="sm"
-            variant="outline"
-            className="text-xs hover:bg-orange-100 dark:hover:bg-orange-900/30 border-orange-300 dark:border-orange-700 text-orange-800 dark:text-orange-300"
-          >
-            <Star className="w-3 h-3 mr-1" />
-            View All
+        <Link href='/quests'>
+          <Button size='sm' variant='ghost' className='text-xs p-1 sm:p-2'>
+            <span className='hidden sm:inline mr-1'>View All</span>
+            <ArrowRight className='w-3 h-3' />
           </Button>
         </Link>
       </div>
 
-      {/* Progress Summary */}
-      <div className="bg-white/70 dark:bg-gray-800/50 rounded-lg p-3 border border-orange-200/50 dark:border-orange-800/50">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-orange-700 dark:text-orange-300 font-medium">
-            {completedQuests.length} of {quests.length} completed
+      {/* Progress Summary - Compact */}
+      <div className='bg-muted/50 rounded-md p-2 sm:p-3'>
+        <div className='flex items-center justify-between text-xs sm:text-sm mb-2'>
+          <span className='font-medium'>
+            {completedQuests.length}/{quests.length} Complete
           </span>
-          <span className="text-orange-600 dark:text-orange-400 font-bold">
-            {points} XP
-          </span>
+          <span className='font-bold text-primary'>{points} XP</span>
         </div>
-        <Progress 
-          value={(completedQuests.length / quests.length) * 100} 
-          className="h-2 mt-2 bg-orange-100 dark:bg-orange-900/30"
-        />
+        <Progress value={totalProgress} className='h-1.5 sm:h-2' />
       </div>
-      
-      <div className="space-y-3">
-        {displayQuests.length > 0 ? displayQuests.map((quest, index) => {
-          const progress = Math.min((points / quest.value) * 100, 100);
-          const isCompleted = points >= quest.value;
-          const isNext = !isCompleted && index === 0 && incompleteQuests[0]?.title === quest.title;
-          const Icon = QUEST_ICON_MAP[quest.icon];
 
-          return (
-            <div
-              className={cn(
-                "relative rounded-xl border-2 p-3 transition-all duration-200 text-foreground",
-                getColorClasses(quest.color, isCompleted),
-                isNext && "ring-2 ring-orange-300 dark:ring-orange-600 ring-offset-1",
-                isCompleted ? "opacity-90" : "hover:shadow-sm"
-              )}
-              key={quest.title}
-            >
-              {/* Quest Content */}
-              <div className="flex items-start gap-3">
-                {/* Quest Icon */}
-                <div className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold shadow-sm border-2",
-                  isCompleted 
-                    ? "bg-green-500 border-green-600 text-white" 
-                    : quest.color === 'gold' 
-                      ? "bg-gradient-to-br from-yellow-400 to-amber-500 border-yellow-500 text-white"
-                      : quest.color === 'platinum'
-                        ? "bg-gradient-to-br from-gray-400 to-slate-500 border-gray-500 text-white"
-                        : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-foreground"
-                )}>
-                  {isCompleted ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    <Icon className="w-5 h-5" />
-                  )}
-                </div>
+      {/* Quest List - Simplified */}
+      <div className='space-y-2'>
+        {displayQuests.length > 0 ? (
+          displayQuests.map((quest) => {
+            const progress = Math.min((points / quest.value) * 100, 100)
+            const isCompleted = points >= quest.value
+            const Icon = QUEST_ICON_MAP[quest.icon]
 
-                {/* Quest Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h4 className={cn(
-                      "font-bold text-sm truncate",
-                      isCompleted ? "text-green-700 dark:text-green-300" : "text-foreground"
-                    )}>
-                      {quest.title}
-                    </h4>
-                    {isNext && (
-                      <div className="flex items-center gap-1 px-2 py-1 bg-orange-200 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 text-xs font-bold rounded-full">
-                        <Zap className="w-3 h-3" />
-                        NEXT
-                      </div>
+            return (
+              <div
+                className={cn(
+                  "rounded-md border p-2 sm:p-3 transition-colors",
+                  isCompleted
+                    ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800"
+                    : "bg-muted/30 hover:bg-muted/50"
+                )}
+                key={quest.title}
+              >
+                <div className='flex items-start gap-2 sm:gap-3'>
+                  {/* Icon - Compact */}
+                  <div
+                    className={cn(
+                      "w-6 h-6 sm:w-8 sm:h-8 rounded-md flex items-center justify-center flex-shrink-0",
+                      isCompleted
+                        ? "bg-green-500 text-white"
+                        : "bg-background text-foreground"
+                    )}
+                  >
+                    {isCompleted ? (
+                      <CheckCircle className='w-3 h-3 sm:w-4 sm:h-4' />
+                    ) : (
+                      <Icon className='w-3 h-3 sm:w-4 sm:h-4' />
                     )}
                   </div>
-                  
-                  <p className={cn(
-                    "text-xs mb-2 line-clamp-1",
-                    isCompleted ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
-                  )}>
-                    {quest.description}
-                  </p>
 
-                  {/* Progress Bar */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className={cn(
-                        "font-medium",
-                        isCompleted ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
-                      )}>
-                        {Math.min(points, quest.value)} / {quest.value} XP
+                  {/* Quest Info - Streamlined */}
+                  <div className='flex-1 min-w-0'>
+                    <h4
+                      className={cn(
+                        "font-medium text-xs sm:text-sm truncate mb-1",
+                        isCompleted && "text-green-700 dark:text-green-300"
+                      )}
+                    >
+                      {quest.title}
+                    </h4>
+
+                    <div className='flex items-center justify-between text-xs mb-1'>
+                      <span className='text-muted-foreground'>
+                        {Math.min(points, quest.value)}/{quest.value} XP
                       </span>
-                      <span className={cn(
-                        "font-bold",
-                        isCompleted ? "text-green-700 dark:text-green-300" : "text-foreground"
-                      )}>
+                      <span className='font-medium'>
                         {Math.round(progress)}%
                       </span>
                     </div>
-                    <Progress 
-                      value={progress} 
-                      className={cn(
-                        "h-2",
-                        isCompleted ? "bg-green-100 dark:bg-green-900/30" : "bg-white/50 dark:bg-gray-800/50"
-                      )}
-                    />
-                  </div>
 
-                  {/* Rewards Preview */}
-                  {!isCompleted && (
-                    <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                      <span className="font-medium">Reward:</span>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3 h-3 text-yellow-500" />
+                    <Progress value={progress} className='h-1 sm:h-1.5' />
+
+                    {/* Reward - Compact */}
+                    {!isCompleted && (
+                      <div className='flex items-center gap-2 mt-1 text-xs text-muted-foreground'>
+                        <Star className='w-3 h-3 text-yellow-500' />
                         <span>+{quest.reward.xp} XP</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-red-500" fill="currentColor" />
-                        <span>+{quest.reward.hearts}</span>
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
-
-              {/* Completion Badge */}
-              {isCompleted && (
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-sm">
-                  <CheckCircle className="w-4 h-4 text-white" />
-                </div>
-              )}
-            </div>
-          );
-        }) : (
-          <div className="text-center py-4 text-muted-foreground">
-            <Trophy className="w-8 h-8 mx-auto mb-2 text-muted-foreground/60" />
-            <p className="text-sm">All quests completed!</p>
-            <p className="text-xs">Keep learning for more challenges</p>
+            )
+          })
+        ) : (
+          <div className='text-center py-6 text-muted-foreground'>
+            <Trophy className='w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2' />
+            <p className='text-xs sm:text-sm font-medium'>
+              All quests completed!
+            </p>
           </div>
         )}
       </div>
-      
-      {/* Quick Action */}
+
+      {/* Action Button - Responsive */}
       {incompleteQuests.length > 0 && (
-        <Link href="/quests" className="block">
-          <Button 
-            variant="primary" 
-            className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 border-0 shadow-sm"
-            size="sm"
-          >
-            <Crown className="w-4 h-4 mr-2" />
-            Continue Quest Journey
+        <Link href='/quests' className='block'>
+          <Button variant='primary' className='w-full' size='sm'>
+            <span className='text-xs sm:text-sm'>Continue Quests</span>
+            <ArrowRight className='w-3 h-3 sm:w-4 sm:h-4 ml-1' />
           </Button>
         </Link>
       )}
     </div>
-  );
-};
+  )
+}

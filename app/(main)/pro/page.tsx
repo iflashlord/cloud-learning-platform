@@ -1,43 +1,67 @@
-"use client";
+import { redirect } from "next/navigation"
+import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system"
+import { UserProgress } from "@/components/user-progress"
+import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries"
+import { ProUpgradeMain } from "./pro-upgrade-main"
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { ProHero } from "@/components/ui/pro-hero";
-import { ProFeatures } from "@/components/ui/pro-features";
-import { ProComparison } from "@/components/ui/pro-comparison";
-import { ProTestimonials } from "@/components/ui/pro-testimonials";
-import { ProCTA } from "@/components/ui/pro-cta";
+const ProPage = async () => {
+  const userProgressData = getUserProgress()
+  const userSubscriptionData = getUserSubscription()
+  const coursesData = getCourses()
 
-const ProPage = () => {
-  const router = useRouter();
-  // TODO: Add checkSubscription when implemented
-  const isPro = false; // await checkSubscription();
+  const [userProgress, userSubscription, courses] = await Promise.all([
+    userProgressData,
+    userSubscriptionData,
+    coursesData,
+  ])
 
-  useEffect(() => {
-    if (isPro) {
-      router.push("/learn");
-    }
-  }, [isPro, router]);
+  if (!userProgress || !userProgress.activeCourse) {
+    redirect("/courses")
+  }
 
-  const handleStartTrial = () => {
-    // TODO: Implement trial start logic
-    console.log("Starting free trial...");
-  };
+  const isPro = !!userSubscription?.isActive
 
-  const handleViewPlans = () => {
-    // TODO: Implement view plans logic
-    console.log("Viewing all plans...");
-  };
+  // If already pro, redirect to learn page
+  if (isPro) {
+    redirect("/learn")
+  }
+
+  // Find the complete course data
+  const activeCourseData = courses.find(
+    (course) => course.id === userProgress.activeCourse?.id
+  )
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <ProHero onStartTrial={handleStartTrial} />
-      <ProFeatures />
-      <ProComparison />
-      <ProTestimonials />
-      <ProCTA onStartTrial={handleStartTrial} onViewPlans={handleViewPlans} />
-    </div>
-  );
-};
+    <div className='w-full min-h-screen'>
+      {/* Top Navigation */}
+      <div className='w-full border-b border-border bg-background/95 backdrop-blur sticky top-[60px] z-50'>
+        <div className='max-w-[1200px] mx-auto px-4 py-3'>
+          <UserProgress
+            activeCourse={
+              activeCourseData
+                ? {
+                    id: activeCourseData.id,
+                    title: activeCourseData.title,
+                    imageSrc: activeCourseData.imageSrc,
+                  }
+                : userProgress.activeCourse
+            }
+            hearts={userProgress.hearts}
+            points={userProgress.points}
+            hasActiveSubscription={isPro}
+          />
+        </div>
+      </div>
 
-export default ProPage;
+      <div className='w-full max-w-[1200px] mx-auto px-4'>
+        <DashboardLayout>
+          <ContentGrid cols={1} gap='xl' className='max-w-5xl mx-auto py-8'>
+            <ProUpgradeMain userProgress={userProgress} isProActive={isPro} />
+          </ContentGrid>
+        </DashboardLayout>
+      </div>
+    </div>
+  )
+}
+
+export default ProPage

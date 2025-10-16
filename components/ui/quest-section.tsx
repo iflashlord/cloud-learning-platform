@@ -1,36 +1,42 @@
-"use client";
+"use client"
 
-import { LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type Props = {
-  title: string;
-  icon: LucideIcon;
-  iconBgClass: string;
-  children: React.ReactNode;
-  className?: string;
-};
+  title: string
+  icon: LucideIcon
+  iconBgClass: string
+  children: React.ReactNode
+  className?: string
+}
 
 export const QuestSection = ({
   title,
   icon: Icon,
   iconBgClass,
   children,
-  className
+  className,
 }: Props) => {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="flex items-center gap-3 mb-6">
-        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", iconBgClass)}>
-          <Icon className="w-5 h-5 text-white" />
+      <div className='flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6'>
+        <div
+          className={cn(
+            "w-6 h-6 sm:w-8 sm:h-8 rounded-md flex items-center justify-center bg-primary"
+          )}
+        >
+          <Icon className='w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground' />
         </div>
-        <h2 className="text-2xl font-bold text-foreground">{title}</h2>
-        <div className="flex-1 h-0.5 bg-gradient-to-r from-primary/30 to-transparent"></div>
+        <h2 className='text-lg sm:text-xl font-semibold text-foreground'>
+          {title}
+        </h2>
+        <div className='flex-1 h-px bg-border'></div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div className='grid grid-cols-1 lg:grid-cols-1 gap-4 sm:gap-6'>
         {children}
       </div>
     </div>
-  );
-};
+  )
+}
