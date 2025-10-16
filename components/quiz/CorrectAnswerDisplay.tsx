@@ -23,7 +23,8 @@ export const CorrectAnswerDisplay = ({
       case "ASSIST":
       case "TRUE_FALSE":
       case "IMAGE_SELECT":
-      case "LISTENING": {
+      case "LISTENING":
+      case "VIDEO": {
         const correctOption = options.find(option => option.correct);
         return correctOption ? (
           <div className="space-y-2">

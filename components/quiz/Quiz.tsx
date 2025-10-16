@@ -1,7 +1,8 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { toast } from "sonner"
 import { useQuizState } from "./QuizState"
 import { useQuizAudio } from "./QuizAudio"
 import { useQuizValidator } from "./QuizValidator"
@@ -78,6 +79,17 @@ export const Quiz = ({
     onCorrectAudio: playCorrect,
     onHeartsDeplete: () => setShowHeartsModal(true),
   })
+
+  // Show toast notification when correct answer is revealed
+  useEffect(() => {
+    if (showCorrectAnswer) {
+      toast.success("💡 Correct answer revealed to help you learn!", {
+        duration: 4000,
+        position: "bottom-left",
+        icon: "👁️",
+      })
+    }
+  }, [showCorrectAnswer])
 
   // Universal heart handler for all question types
   const handleWrongAnswer = (skipServerAction = false) => {
