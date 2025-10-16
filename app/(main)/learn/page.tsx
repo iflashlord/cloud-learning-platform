@@ -69,7 +69,6 @@ const LearnPage = async () => {
 
   return (
     <div className='w-full min-h-screen'>
-
       <div className='flex w-full max-w-[1200px] mx-auto px-4 gap-8 pt-6'>
         <div className='flex-1'>
           <EnhancedLearnHeader

@@ -26,16 +26,19 @@ const SubscriptionPage = async () => {
 
   return (
     <div className='w-full min-h-screen'>
-
       <div className='w-full max-w-[1200px] mx-auto px-4 pt-6'>
         <DashboardLayout>
           <ContentGrid cols={1} gap='xl' className='max-w-5xl mx-auto py-8'>
             <SubscriptionManager
               userProgress={userProgress}
-              subscription={userSubscription ? {
-                ...userSubscription,
-                id: userSubscription.id.toString()
-              } : null}
+              subscription={
+                userSubscription
+                  ? {
+                      ...userSubscription,
+                      id: userSubscription.id.toString(),
+                    }
+                  : null
+              }
               isPro={isPro}
             />
           </ContentGrid>
