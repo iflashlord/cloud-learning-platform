@@ -1,7 +1,7 @@
 "use client"
 
 import Confetti from "react-confetti"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, PartyPopper } from "lucide-react"
 import { useWindowSize } from "react-use"
 import { ResultCard } from "../../app/lesson/result-card"
 import { Button } from "@/components/ui/button"
@@ -58,8 +58,9 @@ export const QuizCompletion = ({
 
           {/* Show Pro bonus if applicable */}
           {userSubscription?.isActive && bonusXP > 0 && (
-            <div className='mt-2 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-medium'>
-              🎉 Pro Bonus: +{bonusXP} XP
+            <div className='mt-2 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-bold align-middle'>
+              <PartyPopper className='inline align-middle' /> Pro Bonus: +
+              {bonusXP} XP
             </div>
           )}
         </div>

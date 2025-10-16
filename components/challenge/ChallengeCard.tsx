@@ -89,7 +89,7 @@ export const ChallengeCard = ({
         </p>
         <div
           className={cn(
-            "lg:w-[30px] lg:h-[30px] w-[20px] h-[20px] border-2 flex items-center justify-center rounded-lg text-muted-foreground lg:text-[15px] text-xs font-semibold transition-colors",
+            "uppercase lg:w-[30px] lg:h-[30px] w-[20px] h-[20px] border-2 flex items-center justify-center rounded-lg text-muted-foreground lg:text-[15px] text-xs font-semibold transition-colors",
             selected &&
               "border-sky-300 text-sky-500 dark:border-sky-600 dark:text-sky-400",
             selected &&

@@ -1,94 +1,109 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { statusStyles } from "@/lib/style-utils";
-import { Keyboard, Mic } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { SpeechInput } from "@/components/SpeechInput";
+import { cn } from "@/lib/utils"
+import { statusStyles } from "@/lib/style-utils"
+import { Keyboard, Mic } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { SpeechInput } from "@/components/SpeechInput"
 
 interface TextInputChallengeProps {
-  status: "correct" | "wrong" | "none";
-  onTextSubmit?: (text: string) => void;
-  onTextChange?: (text: string) => void;
-  disabled?: boolean;
+  status: "correct" | "wrong" | "none"
+  onTextSubmit?: (text: string) => void
+  onTextChange?: (text: string) => void
+  disabled?: boolean
 }
 
 export const TextInputChallenge = ({
   status,
   onTextSubmit,
   onTextChange,
-  disabled
+  disabled,
 }: TextInputChallengeProps) => {
-  const [textInput, setTextInput] = useState("");
-  const [showSpeechInput, setShowSpeechInput] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [textInput, setTextInput] = useState("")
+  const [showSpeechInput, setShowSpeechInput] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Auto-focus the input when component mounts
   useEffect(() => {
     if (inputRef.current && status === "none") {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [status]);
+  }, [status])
 
   // Clear text input when status resets to "none" (retry)
   useEffect(() => {
     if (status === "none") {
-      setTextInput("");
-      onTextChange?.("");
+      setTextInput("")
+      onTextChange?.("")
     }
-  }, [status, onTextChange]);
+  }, [status, onTextChange])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setTextInput(value);
-    onTextChange?.(value);
-  };
+    const value = e.target.value
+    setTextInput(value)
+    onTextChange?.(value)
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && textInput.trim() && !disabled) {
-      onTextSubmit?.(textInput.trim());
+    if (e.key === "Enter" && textInput.trim() && !disabled) {
+      onTextSubmit?.(textInput.trim())
     }
-  };
+  }
 
   const handleSpeechChange = (speechText: string) => {
-    setTextInput(speechText);
-    onTextChange?.(speechText);
-  };
+    setTextInput(speechText)
+    onTextChange?.(speechText)
+  }
 
   return (
-    <div className="space-y-4">
-      <div className={cn("mt-3 p-3 rounded-lg border", statusStyles.info.bg, statusStyles.info.border)}>
-        <p className={cn("text-sm flex items-center gap-2", statusStyles.info.text)}>
-          <Keyboard className="w-4 h-4" />
-          <span>Type your answer or use speech recognition. Use the CHECK button below to submit.</span>
+    <div className='space-y-4'>
+      <div
+        className={cn(
+          "mt-3 p-3 rounded-lg border",
+          statusStyles.info.bg,
+          statusStyles.info.border
+        )}
+      >
+        <p
+          className={cn(
+            "text-sm flex items-center gap-2",
+            statusStyles.info.text
+          )}
+        >
+          <Keyboard className='w-4 h-4' />
+          <span>
+            Type your answer or use speech recognition. Use the CHECK button
+            below to submit.
+          </span>
         </p>
       </div>
-      
-      <div className="px-6">
+
+      <div className='px-6'>
         {showSpeechInput ? (
-          <div className="space-y-3">
+          <div className='space-y-3'>
             <SpeechInput
               value={textInput}
               onChange={handleSpeechChange}
+              onSubmit={onTextSubmit}
               disabled={disabled}
-              placeholder="Click the microphone and speak your answer..."
+              placeholder='Click the microphone and speak your answer...'
             />
             <button
               onClick={() => setShowSpeechInput(false)}
-              className="text-sm text-blue-600 hover:text-blue-700 underline"
+              className='text-sm text-blue-600 hover:text-blue-700 underline'
             >
               Switch to text input
             </button>
           </div>
         ) : (
-          <div className="relative">
+          <div className='relative'>
             <input
               ref={inputRef}
-              type="text"
+              type='text'
               value={textInput}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
-              placeholder="Type your answer here..."
+              placeholder='Type your answer here...'
               disabled={disabled}
               autoFocus
               className={cn(
@@ -98,14 +113,16 @@ export const TextInputChallenge = ({
                 "border-neutral-300 dark:border-gray-600",
                 "placeholder:text-gray-500 dark:placeholder:text-gray-400",
                 disabled && "opacity-60 cursor-not-allowed",
-                status === "correct" && cn(statusStyles.success.border, statusStyles.success.bg),
-                status === "wrong" && cn(statusStyles.error.border, statusStyles.error.bg)
+                status === "correct" &&
+                  cn(statusStyles.success.border, statusStyles.success.bg),
+                status === "wrong" &&
+                  cn(statusStyles.error.border, statusStyles.error.bg)
               )}
             />
-            
+
             {/* Speech input toggle button */}
             <button
-              type="button"
+              type='button'
               onClick={() => setShowSpeechInput(true)}
               disabled={disabled}
               className={cn(
@@ -114,19 +131,19 @@ export const TextInputChallenge = ({
                 "hover:bg-gray-100 dark:hover:bg-gray-700",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
-              title="Use speech input"
+              title='Use speech input'
             >
-              <Mic className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <Mic className='w-4 h-4 text-gray-500 dark:text-gray-400' />
             </button>
           </div>
         )}
-        
+
         {textInput && (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
             Answer: {textInput}
           </p>
         )}
       </div>
     </div>
-  );
-};
+  )
+}

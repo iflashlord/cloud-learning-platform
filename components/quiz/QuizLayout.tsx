@@ -69,6 +69,7 @@ export const QuizLayout = ({
             type={challenge.type}
             challenge={challenge}
             onTextChange={onTextChange}
+            showCorrectAnswer={showCorrectAnswer}
           />
 
           {/* Show correct answer after 3 wrong attempts */}

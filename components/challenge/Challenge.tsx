@@ -136,13 +136,6 @@ export const Challenge = ({
         {type === "LISTENING" && <ListeningChallenge {...baseProps} />}
       </QuestionHeader>
 
-      <CorrectAnswerDisplay
-        showCorrectAnswer={showCorrectAnswer}
-        status={status}
-        options={options}
-        correctAnswerText={getCorrectAnswerText()}
-      />
-
       {renderChallenge()}
     </div>
   )

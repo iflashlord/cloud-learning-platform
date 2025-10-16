@@ -1,88 +1,91 @@
-'use client';
+"use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react"
 
 interface QuizStateProps {
-  initialChallenges: any[];
-  initialHearts: number;
-  initialPercentage: number;
+  initialChallenges: any[]
+  initialHearts: number
+  initialPercentage: number
 }
 
-export const useQuizState = ({ 
-  initialChallenges, 
-  initialHearts, 
-  initialPercentage 
+export const useQuizState = ({
+  initialChallenges,
+  initialHearts,
+  initialPercentage,
 }: QuizStateProps) => {
   const [lessonId] = useState(() => {
     if (initialChallenges.length === 0) {
-      return null;
+      return null
     }
-    return initialChallenges[0].lessonId;
-  });
+    return initialChallenges[0].lessonId
+  })
 
   const [activeIndex, setActiveIndex] = useState(() => {
-    const uncompletedIndex = initialChallenges.findIndex((challenge) => !challenge.completed);
-    return uncompletedIndex === -1 ? 0 : uncompletedIndex;
-  });
+    const uncompletedIndex = initialChallenges.findIndex(
+      (challenge) => !challenge.completed
+    )
+    return uncompletedIndex === -1 ? 0 : uncompletedIndex
+  })
 
-  const [selectedOption, setSelectedOption] = useState<number>();
-  const [textInput, setTextInput] = useState("");
-  const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
-  const [hearts, setHearts] = useState(initialHearts);
+  const [selectedOption, setSelectedOption] = useState<number>()
+  const [textInput, setTextInput] = useState("")
+  const [status, setStatus] = useState<"correct" | "wrong" | "none">("none")
+  const [hearts, setHearts] = useState(initialHearts)
   const [percentage, setPercentage] = useState(() => {
-    return initialPercentage === 100 ? 0 : initialPercentage;
-  });
-  const [wrongAttempts, setWrongAttempts] = useState(0);
-  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+    return initialPercentage === 100 ? 0 : initialPercentage
+  })
+  const [wrongAttempts, setWrongAttempts] = useState(0)
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
 
-  const challenge = initialChallenges[activeIndex];
-  const options = challenge?.challengeOptions ?? [];
+  const challenge = initialChallenges[activeIndex]
+  const options = challenge?.challengeOptions ?? []
 
   const onNext = () => {
-    setActiveIndex((current) => current + 1);
-  };
+    setActiveIndex((current) => current + 1)
+  }
 
   const onSelect = (id: number) => {
-    if (status !== "none") return;
-    
-    setSelectedOption(id);
-  };
+    if (status !== "none") return
+
+    setSelectedOption(id)
+  }
 
   const onContinue = () => {
     // For text input challenges, don't check selectedOption
-    const isTextInput = challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT";
-    const isDragDrop = challenge?.type === "DRAG_DROP";
-    if (!isTextInput && !isDragDrop && !selectedOption) return;
+    const isTextInput =
+      challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT"
+    const isDragDrop = challenge?.type === "DRAG_DROP"
+    if (!isTextInput && !isDragDrop && !selectedOption) return
 
     if (status === "wrong") {
-      setStatus("none");
+      setStatus("none")
       // Don't reset selectedOption for drag/drop challenges to preserve order
       if (!isDragDrop) {
-        setSelectedOption(undefined);
+        setSelectedOption(undefined)
       }
       // Only reset text input for text-based challenges
       if (isTextInput) {
-        setTextInput("");
+        setTextInput("")
       }
-      setShowCorrectAnswer(false);
-      return;
+      setShowCorrectAnswer(false)
+      return
     }
 
     if (status === "correct") {
-      onNext();
-      setStatus("none");
-      setSelectedOption(undefined);
-      setTextInput("");
-      setWrongAttempts(0); // Reset attempts on new question
-      setShowCorrectAnswer(false);
+      onNext()
+      setStatus("none")
+      setSelectedOption(undefined)
+      setTextInput("")
+      setWrongAttempts(0) // Reset attempts on new question
+      setShowCorrectAnswer(false)
     }
-  };
+  }
 
   // Update percentage based on active index
   useEffect(() => {
-    const newPercentage = ((activeIndex) / initialChallenges.length) * 100;
-    setPercentage(newPercentage);
-  }, [activeIndex, initialChallenges.length]);
+    const newPercentage = (activeIndex / initialChallenges.length) * 100
+    setPercentage(newPercentage)
+  }, [activeIndex, initialChallenges.length])
 
   return {
     lessonId,
@@ -106,5 +109,5 @@ export const useQuizState = ({
     setTextInput,
     setWrongAttempts,
     setShowCorrectAnswer,
-  };
-};
+  }
+}

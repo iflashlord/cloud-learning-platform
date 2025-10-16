@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import {
   Mic,
   MicOff,
@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"
 interface SpeechInputProps {
   value: string
   onChange: (value: string) => void
+  onSubmit?: (value: string) => void
   disabled?: boolean
   placeholder?: string
   className?: string
@@ -24,11 +25,13 @@ interface SpeechInputProps {
 export const SpeechInput = ({
   value,
   onChange,
+  onSubmit,
   disabled = false,
   placeholder = "Type your answer or use speech recognition...",
   className,
 }: SpeechInputProps) => {
   const [inputMode, setInputMode] = useState<"text" | "speech">("text")
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const {
     isSupported,
@@ -66,10 +69,17 @@ export const SpeechInput = ({
     }
   }, [transcript, value, onChange, resetTranscript])
 
+  // Auto-focus the input when component mounts and not disabled
+  useEffect(() => {
+    if (inputRef.current && !disabled) {
+      inputRef.current.focus()
+    }
+  }, [disabled])
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    // Allow natural Enter key behavior for textarea
-    if (e.key === "Enter" && !e.shiftKey) {
-      // Just allow normal line break behavior
+    if (e.key === "Enter" && !e.shiftKey && value.trim() && onSubmit) {
+      e.preventDefault()
+      onSubmit(value.trim())
     }
   }
 
@@ -101,12 +111,14 @@ export const SpeechInput = ({
     <div className={cn("space-y-3", className)}>
       {/* Input Field */}
       <div className='relative'>
-        <textarea
+        <input
+          ref={inputRef}
+          type='text'
           value={displayValue}
           onChange={(e) => onChange(e.target.value)}
           onKeyPress={handleKeyPress}
           className={cn(
-            "w-full p-4 pr-32 border-2 rounded-lg resize-none min-h-[60px] transition-all focus:outline-none text-black",
+            "w-full p-4 pr-32 border-2 rounded-lg transition-all focus:outline-none text-black",
             isListening
               ? "border-red-400 bg-red-50 focus:border-red-500"
               : "border-gray-200 bg-white focus:border-blue-500",
@@ -115,7 +127,6 @@ export const SpeechInput = ({
           )}
           placeholder={isListening ? "Listening... Speak now!" : placeholder}
           disabled={disabled || isListening}
-          rows={2}
         />
 
         {/* Speech Controls */}

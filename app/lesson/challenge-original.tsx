@@ -1,5 +1,6 @@
 import { challengeOptions, challenges } from "@/db/schema";
 import { Challenge as ChallengeComponent } from "@/components/challenge";
+import { useEffect, useState } from "react";
 
 type Props = {
   options: typeof challengeOptions.$inferSelect[];
@@ -599,7 +600,7 @@ export const Challenge = ({
                   id={option.id}
                   text={option.text}
                   imageSrc={option.imageSrc}
-                  shortcut={i === 0 ? "T" : "F"}
+                  shortcut={i === 0 ? "t" : "f"}
                   selected={selectedOption === option.id}
                   onClick={() => onSelect(option.id)}
                   status={status}
