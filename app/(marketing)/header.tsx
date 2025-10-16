@@ -25,7 +25,7 @@ export const Header = () => {
         </ClerkLoading>
         <ClerkLoaded>
           <SignedIn>
-            <UserButton afterSignOutUrl='/' />
+            <UserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode='modal'>

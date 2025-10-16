@@ -9,7 +9,6 @@ import {
   getUserSubscription 
 } from "@/db/queries";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
-import { UserProgress } from "@/components/user-progress";
 import { ProUpgradeCard } from "@/components/pro-upgrade-card";
 import { Quests } from "@/components/quests";
 import { CONFIG } from "@/lib/config";
@@ -46,11 +45,9 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
 
   const isPro = !!userSubscription?.isActive;
   
-  // Use active course by default, allow URL override
   const defaultCourseId = userProgress.activeCourse?.id || null;
   const selectedCourseId = searchParams.course ? parseInt(searchParams.course) : defaultCourseId;
 
-  // Get course-specific leaderboard for active course by default
   let courseLeaderboard = null;
   let selectedCourse = null;
   if (selectedCourseId) {
@@ -60,20 +57,8 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
 
   return (
     <div className="w-full min-h-screen">
-      {/* Top Navigation */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-[60px] z-50">
-        <div className="max-w-[1200px] mx-auto px-4 py-3">
-          <UserProgress
-            activeCourse={userProgress.activeCourse}
-            hearts={userProgress.hearts}
-            points={userProgress.points}
-            hasActiveSubscription={isPro}
-          />
-        </div>
-      </div>
 
       <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8 pt-6">
-        {/* Main Content */}
         <div className="flex-1">
           <DashboardLayout
             header={
@@ -105,7 +90,6 @@ const LeaderboardPage = async ({ searchParams }: Props) => {
           </DashboardLayout>
         </div>
 
-        {/* Desktop Sidebar */}
         <div className="hidden lg:block w-80 space-y-4">
           {!isPro && <ProUpgradeCard />}
           <Quests points={userProgress.points} />

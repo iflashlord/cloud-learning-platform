@@ -31,10 +31,8 @@ export const UnitBanner = ({
           : "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500"
       }`}
     >
-      {/* Background Pattern */}
       <div className='absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent'></div>
 
-      {/* Decorative Elements */}
       <div className='absolute top-2 right-2 opacity-20'>
         {isCompleted ? (
           <Award className='w-5 h-5' />
@@ -58,7 +56,9 @@ export const UnitBanner = ({
               {isPro && (
                 <div className='flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 rounded-md border border-yellow-400/30'>
                   <Crown className='w-3 h-3 text-yellow-200' />
-                  <span className='text-xs font-medium text-yellow-200'>PRO ACCESS</span>
+                  <span className='text-xs font-medium text-yellow-200'>
+                    PRO ACCESS
+                  </span>
                 </div>
               )}
             </div>
@@ -80,7 +80,6 @@ export const UnitBanner = ({
           )}
         </p>
 
-        {/* Progress Info */}
         {lessonCount > 0 && (
           <div className='flex items-center gap-2 mt-1'>
             <div className='bg-white/20 rounded px-1.5 py-0.5 backdrop-blur-sm'>

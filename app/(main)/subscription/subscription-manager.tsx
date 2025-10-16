@@ -141,7 +141,6 @@ export const SubscriptionManager = ({
 
   return (
     <div className='space-y-8'>
-      {/* Header */}
       <div className='text-center space-y-4'>
         <div className='flex items-center justify-center gap-3 mb-4'>
           <div className='w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center'>
@@ -161,9 +160,7 @@ export const SubscriptionManager = ({
       </div>
 
       {isPro ? (
-        // Pro User Section
         <div className='space-y-6'>
-          {/* Current Subscription Status */}
           <Card className='bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='flex items-center gap-3'>
@@ -271,7 +268,6 @@ export const SubscriptionManager = ({
             </CardContent>
           </Card>
 
-          {/* Pro Features Reminder */}
           <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
@@ -302,9 +298,7 @@ export const SubscriptionManager = ({
           </Card>
         </div>
       ) : (
-        // Free User Section
         <div className='space-y-6'>
-          {/* Current Status */}
           <Card className='bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800'>
             <CardHeader>
               <CardTitle className='flex items-center gap-3'>
@@ -358,7 +352,6 @@ export const SubscriptionManager = ({
             </CardContent>
           </Card>
 
-          {/* What You'll Get */}
           <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='text-center'>
@@ -387,7 +380,6 @@ export const SubscriptionManager = ({
             </CardContent>
           </Card>
 
-          {/* Pricing */}
           <Card className='bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700/50 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardContent className='p-8 text-center'>
               <div className='space-y-6'>
@@ -430,9 +422,7 @@ export const SubscriptionManager = ({
         </div>
       )}
 
-      {/* Enhanced Help & Support Section */}
       <div className='space-y-6'>
-        {/* Quick Stats for Pro Users */}
         {isPro && (
           <Card className='bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardContent className='p-6'>
@@ -472,7 +462,6 @@ export const SubscriptionManager = ({
           </Card>
         )}
 
-        {/* Enhanced Help Section */}
         <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
           <CardHeader>
             <CardTitle className='text-center flex items-center justify-center gap-2'>

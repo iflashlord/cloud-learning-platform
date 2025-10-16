@@ -29,7 +29,6 @@ export const QuizCompletion = ({
 }: QuizCompletionProps) => {
   const { width, height } = useWindowSize()
 
-  // Calculate XP with Pro user bonus
   const baseXP = challenges.length * 10
   const bonusXP = userSubscription?.isActive ? Math.round(baseXP * 0.5) : 0
   const totalXP = baseXP + bonusXP
@@ -45,7 +44,6 @@ export const QuizCompletion = ({
         tweenDuration={10000}
       />
 
-      {/* Scrollable Content Area for Completion */}
       <div className='flex-1 overflow-y-auto pb-32 lg:pb-44'>
         <div className='min-h-full flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center p-4'>
           <CheckCircle className='hidden lg:block h-24 w-24 text-green-500' />
@@ -58,7 +56,6 @@ export const QuizCompletion = ({
             <ResultCard variant='hearts' value={hearts} />
           </div>
 
-          {/* Show Pro bonus if applicable */}
           {userSubscription?.isActive && bonusXP > 0 && (
             <div className='mt-2 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-bold align-middle'>
               <PartyPopper className='inline align-middle' /> Pro Bonus: +
@@ -68,7 +65,6 @@ export const QuizCompletion = ({
         </div>
       </div>
 
-      {/* Fixed Footer for Completion */}
       <div className='fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700 p-4'>
         <div className='max-w-4xl mx-auto flex justify-center gap-4'>
           <Button

@@ -29,7 +29,6 @@ export const Quiz = ({
 }: QuizProps) => {
   const router = useRouter()
 
-  // Detect if this is a practice lesson (already completed)
   const isPractice = initialPercentage === 100
   const [showHeartsModal, setShowHeartsModal] = useState(false)
 
@@ -80,7 +79,6 @@ export const Quiz = ({
     onHeartsDeplete: () => setShowHeartsModal(true),
   })
 
-  // Show toast notification when correct answer is revealed
   useEffect(() => {
     if (showCorrectAnswer) {
       toast.success("💡 Correct answer revealed to help you learn!", {
@@ -91,26 +89,22 @@ export const Quiz = ({
     }
   }, [showCorrectAnswer])
 
-  // Universal heart handler for all question types
-  const handleWrongAnswer = (skipServerAction = false) => {
+  const handleWrongAnswer = (skipServerUpdate = false) => {
     if (isPractice) {
-      // In practice mode, just show visual feedback
       const visualHearts = Math.max(0, hearts - 1)
       setHearts(visualHearts)
       setTimeout(() => {
-        setHearts(hearts) // Restore hearts after visual feedback
+        setHearts(hearts)
       }, 1500)
     } else if (!userSubscription?.isActive) {
       const newHearts = Math.max(0, hearts - 1)
       setHearts(newHearts)
 
-      // Show modal when hearts reach 0
       if (newHearts === 0) {
         setShowHeartsModal(true)
       }
 
-      // Call server action to update database (unless it's already being handled elsewhere)
-      if (!skipServerAction) {
+      if (!skipServerUpdate) {
         import("../../actions/user-progress").then(({ reduceHearts }) => {
           reduceHearts(challenge?.id ?? 0).catch((error) => {
             console.error("Failed to reduce hearts:", error)
@@ -118,13 +112,10 @@ export const Quiz = ({
         })
       }
     }
-    // For subscription users, unlimited hearts - no action needed
   }
 
   const onCheck = () => {
-    // Handle drag and drop questions
     if (challenge?.type === "DRAG_DROP") {
-      // Call the exposed drag drop checker function
       if (typeof (window as any).checkCurrentDragOrder === "function") {
         const isCorrect = (window as any).checkCurrentDragOrder()
         if (isCorrect) {
@@ -136,9 +127,8 @@ export const Quiz = ({
           setWrongAttempts(newAttempts)
           setStatus("wrong")
           playIncorrect()
-          handleWrongAnswer() // Handle heart depletion
+          handleWrongAnswer()
 
-          // Show correct answer after 3 wrong attempts
           if (newAttempts >= 3) {
             setShowCorrectAnswer(true)
           }
@@ -147,7 +137,6 @@ export const Quiz = ({
       return
     }
 
-    // Handle text input questions
     if (
       challenge?.type === "TEXT_INPUT" ||
       challenge?.type === "SPEECH_INPUT"
@@ -167,9 +156,8 @@ export const Quiz = ({
         setWrongAttempts(newAttempts)
         setStatus("wrong")
         playIncorrect()
-        handleWrongAnswer() // Handle heart depletion for text input
+        handleWrongAnswer()
 
-        // Show correct answer after 3 wrong attempts
         if (newAttempts >= 3) {
           setShowCorrectAnswer(true)
         }
@@ -177,7 +165,6 @@ export const Quiz = ({
       return
     }
 
-    // Handle option-based questions
     if (!selectedOption) return
 
     const selectedChallengeOption = options.find(
@@ -195,9 +182,8 @@ export const Quiz = ({
       setWrongAttempts(newAttempts)
       setStatus("wrong")
       playIncorrect()
-      handleWrongAnswer(true) // Handle heart depletion - skip server action since validateAnswer will handle it
+      handleWrongAnswer(true)
 
-      // Show correct answer after 3 wrong attempts
       if (newAttempts >= 3) {
         setShowCorrectAnswer(true)
       }
@@ -211,7 +197,6 @@ export const Quiz = ({
   }
 
   const handleRedo = () => {
-    // Reset the quiz to the beginning
     router.refresh()
   }
 
@@ -223,7 +208,6 @@ export const Quiz = ({
     }
   }
 
-  // Show completion screen if quiz is completed
   if (isCompleted) {
     return (
       <QuizCompletion
@@ -238,7 +222,6 @@ export const Quiz = ({
     )
   }
 
-  // Main quiz interface
   return (
     <>
       {correctAudio}

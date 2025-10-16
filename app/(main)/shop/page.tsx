@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system";
-import { UserProgress } from "@/components/user-progress";
 import { ProUpgradeCard } from "@/components/pro-upgrade-card";
 import { Quests } from "@/components/quests";
 import { PageHeader } from "@/components/ui/page-header";
@@ -33,29 +32,12 @@ const ShopPage = async () => {
 
   const isPro = !!userSubscription?.isActive;
 
-  // Find the complete course data
   const activeCourseData = courses.find(course => course.id === userProgress.activeCourse?.id);
 
   return (
     <div className="w-full min-h-screen">
-      {/* Top Navigation */}
-      <div className="w-full border-b border-border bg-background/95 backdrop-blur sticky top-[60px] z-50">
-        <div className="max-w-[1200px] mx-auto px-4 py-3">
-          <UserProgress
-            activeCourse={activeCourseData ? {
-              id: activeCourseData.id,
-              title: activeCourseData.title,
-              imageSrc: activeCourseData.imageSrc
-            } : userProgress.activeCourse}
-            hearts={userProgress.hearts}
-            points={userProgress.points}
-            hasActiveSubscription={isPro}
-          />
-        </div>
-      </div>
 
-      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8">
-        {/* Main Content */}
+      <div className="flex w-full max-w-[1200px] mx-auto px-4 gap-8 pt-6">
         <div className="flex-1">
           <DashboardLayout
             header={
@@ -68,7 +50,6 @@ const ShopPage = async () => {
             }
           >
             <ContentGrid cols={1} gap="lg" className="max-w-4xl mx-auto">
-              {/* User Stats Overview */}
               <ContentGrid cols={3} gap="md" className="w-full">
                 <StatCard
                   variant="info"
@@ -93,7 +74,6 @@ const ShopPage = async () => {
                 />
               </ContentGrid>
 
-              {/* Shopping Tips */}
               <Alert className="w-full">
                 <Lightbulb className="h-4 w-4" />
                 <AlertDescription>
@@ -107,7 +87,6 @@ const ShopPage = async () => {
                 </AlertDescription>
               </Alert>
 
-              {/* Shop Items */}
               <Items
                 hearts={userProgress.hearts}
                 points={userProgress.points}
@@ -117,7 +96,6 @@ const ShopPage = async () => {
           </DashboardLayout>
         </div>
 
-        {/* Desktop Sidebar */}
         <div className="hidden lg:block w-80 space-y-4">
           {!isPro && <ProUpgradeCard />}
           <Quests points={userProgress.points} />

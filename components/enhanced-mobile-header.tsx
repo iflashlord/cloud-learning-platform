@@ -1,20 +1,10 @@
-/**
- * 📱 Enhanced Universal Header
- *
- * Universal header for all screen sizes with:
- * - Perfect contrast in light/dark modes
- * - Smooth animations and transitions
- * - Accessibility features
- * - Theme-aware styling
- * - Unique navigation items (not duplicating bottom nav)
- */
-
 "use client"
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { GraduationCap, Crown } from "lucide-react"
+import { GraduationCap, Crown, InfinityIcon, Coins, Heart } from "lucide-react"
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs"
 import { toast } from "sonner"
 
@@ -24,6 +14,9 @@ import { zIndex } from "@/lib/z-index-system"
 import { ThemeSwitcher } from "@/components/ui/theme-switcher"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
 import { SettingsDropdown } from "@/components/settings-dropdown"
+import { Button } from "@/components/ui/button"
+import { useThemeClasses } from "@/lib/theme-utils"
+import { statusStyles } from "@/lib/style-utils"
 import {
   toggleManualProMode,
   getManualProModeStatus,
@@ -39,14 +32,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-// Header navigation items (simplified - settings moved to dropdown)
 const getHeaderNavItems = (isPro = false) => {
   const items = []
 
-  // Only show Pro link for non-pro users
   if (!isPro) {
     items.push({
-      label: "Pro",
+      label: "",
       href: "/pro",
       icon: Crown,
       activeColor: "text-yellow-500 dark:text-yellow-400",
@@ -106,29 +97,44 @@ export const EnhancedMobileHeader: React.FC = () => {
   const [showResetDialog, setShowResetDialog] = React.useState(false)
   const [isProMode, setIsProMode] = React.useState(false)
   const [isPro, setIsPro] = React.useState(false)
+  const [userProgress, setUserProgress] = React.useState<{
+    activeCourse: {
+      id: number
+      title: string
+      imageSrc: string
+    }
+    hearts: number
+    points: number
+  } | null>(null)
 
-  // Check subscription status
+  const themeClasses = useThemeClasses()
+
   React.useEffect(() => {
-    const checkSubscription = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await fetch("/api/user/subscription")
-        if (response.ok) {
-          const data = await response.json()
-          setIsPro(!!data.isActive)
+        const subscriptionResponse = await fetch("/api/user/subscription")
+        if (subscriptionResponse.ok) {
+          const subscriptionData = await subscriptionResponse.json()
+          setIsPro(!!subscriptionData.isActive)
+        }
+
+        const progressResponse = await fetch("/api/user/progress")
+        if (progressResponse.ok) {
+          const progressData = await progressResponse.json()
+          setUserProgress(progressData)
         }
       } catch (error) {
-        console.error("Failed to check subscription:", error)
+        console.error("Failed to fetch user data:", error)
       }
     }
 
     if (isLoggedIn) {
-      checkSubscription()
+      fetchUserData()
     }
   }, [isLoggedIn])
 
   const headerNavItems = getHeaderNavItems(isPro)
 
-  // Load pro mode status for admins
   React.useEffect(() => {
     if (isAdmin && isLoggedIn) {
       getManualProModeStatus()
@@ -174,41 +180,91 @@ export const EnhancedMobileHeader: React.FC = () => {
   return (
     <nav
       className={cn(
-        "px-4 h-[60px] flex items-center justify-between",
+        "px-2 sm:px-4 h-[60px] flex items-center justify-between",
         "bg-background dark:bg-background backdrop-blur-md",
         "border-b border-border/50 fixed top-0 w-full",
         "shadow-sm",
         zIndex("MOBILE_HEADER")
       )}
     >
-      {/* Left side - Logo */}
-      <Link href='/learn' className='flex items-center gap-2'>
+      <Link href='/learn' className='flex items-center gap-1 sm:gap-2 min-w-0'>
         <div
           className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center",
-            "bg-gradient-to-br from-primary to-primary/80"
+            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center",
+            "bg-gradient-to-br from-primary to-primary/80 flex-shrink-0"
           )}
         >
-          <GraduationCap className='h-5 w-5 text-white dark:text-gray-700' />
+          <GraduationCap className='h-4 w-4 sm:h-5 sm:w-5 text-white dark:text-gray-700' />
         </div>
-        <h1 className='text-lg font-bold text-foreground'>
+        <h1 className='text-sm sm:text-lg font-bold text-foreground truncate hidden sm:block'>
           {CONFIG.PLATFORM_NAME}
         </h1>
       </Link>
 
-      {/* Center - Navigation Icons */}
-      <div className='flex items-center justify-center flex-1 mx-4'>
-        {headerNavItems.map((item) => (
-          <HeaderNavItem
-            key={item.href + item.label}
-            item={item}
-            isActive={pathname === item.href}
-          />
-        ))}
-      </div>
+      {userProgress && (
+        <div className='flex items-center gap-1 sm:gap-2 flex-1 justify-center mx-2'>
+          <Link href='/courses'>
+            <Button
+              variant='ghost'
+              size='sm'
+              className='flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-8'
+            >
+              <Image
+                src={userProgress.activeCourse.imageSrc}
+                alt={userProgress.activeCourse.title}
+                className='rounded border border-neutral-200 flex-shrink-0'
+                width={24}
+                height={24}
+              />
+              <span className='text-xs font-medium text-foreground truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline'>
+                {userProgress.activeCourse.title}
+              </span>
+            </Button>
+          </Link>
 
-      {/* Right side - Settings, Theme and User */}
-      <div className='flex items-center gap-2'>
+          <Link href='/shop'>
+            <Button
+              variant='ghost'
+              size='sm'
+              className={cn("gap-1 px-2 h-8", themeClasses.primaryText)}
+            >
+              <Coins className='h-4 w-4 sm:h-5 sm:w-5' />
+              <span className='font-bold text-xs sm:text-sm'>
+                {userProgress.points}
+              </span>
+            </Button>
+          </Link>
+
+          <Link href='/shop'>
+            <Button
+              variant='ghost'
+              size='sm'
+              className={cn("gap-1 px-2 h-8", statusStyles.error.text)}
+            >
+              <Heart className='h-4 w-4 sm:h-5 sm:w-5 fill-current' />
+              <span className='font-medium text-xs sm:text-sm'>
+                {isPro ? (
+                  <InfinityIcon className='h-3 w-3 sm:h-4 sm:w-4 stroke-[3]' />
+                ) : (
+                  userProgress.hearts
+                )}
+              </span>
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      <div className='flex items-center gap-1 sm:gap-2'>
+        <div className='hidden sm:flex items-center'>
+          {headerNavItems.map((item) => (
+            <HeaderNavItem
+              key={item.href + item.label}
+              item={item}
+              isActive={pathname === item.href}
+            />
+          ))}
+        </div>
+
         <SettingsDropdown
           onResetProgress={() => setShowResetDialog(true)}
           onToggleProMode={handleToggleProMode}
@@ -223,7 +279,6 @@ export const EnhancedMobileHeader: React.FC = () => {
           </ClerkLoading>
           <ClerkLoaded>
             <UserButton
-              afterSignOutUrl='/'
               appearance={{
                 elements: {
                   avatarBox: "w-7 h-7",
@@ -234,7 +289,6 @@ export const EnhancedMobileHeader: React.FC = () => {
         </div>
       </div>
 
-      {/* Reset Progress Dialog */}
       <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

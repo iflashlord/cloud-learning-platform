@@ -50,19 +50,15 @@ export const StickyUnitBanner = ({
   const isCurrentUnitSticky = activeUnitId === unitId;
 
   useEffect(() => {
-    // Register for sticky state updates
     const unregister = registerStickyCallback(setActiveUnitId);
     
-    // Set up intersection observers
     const bannerObserver = new IntersectionObserver(
       ([entry]) => {
         setIsUnitVisible(entry.isIntersecting);
         
-        // If this banner is not visible and no other unit is sticky, make this one sticky
         if (!entry.isIntersecting && currentActiveUnit === null) {
           updateActiveUnit(unitId);
         }
-        // If this banner becomes visible and it's currently sticky, remove stickiness
         else if (entry.isIntersecting && currentActiveUnit === unitId) {
           updateActiveUnit(null);
         }
@@ -73,11 +69,9 @@ export const StickyUnitBanner = ({
       }
     );
 
-    // Observer for the unit container to determine when to switch sticky units
     const unitObserver = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-          // This unit is prominently visible, make it the sticky one if needed
           if (!isUnitVisible) {
             updateActiveUnit(unitId);
           }
@@ -194,16 +188,14 @@ export const StickyUnitBanner = ({
 
   return (
     <div ref={unitContainerRef}>
-      {/* Original Banner */}
       <div ref={originalBannerRef}>
         <BannerContent />
       </div>
 
-      {/* Sticky Banner */}
       {isCurrentUnitSticky && (
         <div 
           className={cn(
-            "fixed top-[80px] left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
+            "fixed top-[60px] left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
             "translate-y-0 opacity-100"
           )}
           style={{ 

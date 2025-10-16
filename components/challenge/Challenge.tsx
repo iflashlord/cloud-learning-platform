@@ -3,7 +3,6 @@
 import { challengeOptions, challenges } from "@/db/schema"
 import { useState, useEffect } from "react"
 
-// Import all challenge components
 import { QuestionHeader } from "./QuestionHeader"
 import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay"
 import { DragDropChallenge } from "./DragDropChallenge"
@@ -40,7 +39,6 @@ export const Challenge = ({
 }: Props) => {
   const [textInput, setTextInput] = useState("")
 
-  // Clear text input when status resets to "none" (retry)
   useEffect(() => {
     if (status === "none") {
       setTextInput("")
@@ -48,16 +46,13 @@ export const Challenge = ({
     }
   }, [status, onTextChange])
 
-  // Get correct answer text for display
   const getCorrectAnswerText = () => {
     if (challenge?.correctAnswer) return challenge.correctAnswer
     const correctOption = options.find((option) => option.correct)
     return correctOption?.text
   }
 
-  // Render challenge based on type
   const renderChallenge = () => {
-    // Options should be disabled only during validation or when showing results
     const optionsDisabled = disabled && status !== "none"
 
     const baseProps = {
@@ -100,9 +95,6 @@ export const Challenge = ({
             onSelect={onSelect}
           />
         )
-
-      // case "LISTENING":
-      //   return <ListeningChallenge {...baseProps} />
 
       case "VIDEO":
       case "LISTENING":
