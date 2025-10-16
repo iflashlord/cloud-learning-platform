@@ -9,6 +9,7 @@ import { QuizLayout } from "./QuizLayout"
 import { QuizCompletion } from "./QuizCompletion"
 import { HeartsDepleteModal } from "./HeartsDepleteModal"
 import { QuizChallenge, UserSubscription } from "./types"
+import { upsertChallengeProgress } from "@/actions/challenge-progress"
 
 interface QuizProps {
   initialLessonId: number
@@ -117,6 +118,7 @@ export const Quiz = ({
         if (isCorrect) {
           setStatus("correct")
           playCorrect()
+          handleChallengeComplete(challenge?.id ?? 0)
         } else {
           const newAttempts = wrongAttempts + 1
           setWrongAttempts(newAttempts)
@@ -147,6 +149,7 @@ export const Quiz = ({
       if (isCorrect) {
         setStatus("correct")
         playCorrect()
+        handleChallengeComplete(challenge?.id ?? 0)
       } else {
         const newAttempts = wrongAttempts + 1
         setWrongAttempts(newAttempts)
@@ -174,6 +177,7 @@ export const Quiz = ({
     if (selectedChallengeOption.correct) {
       setStatus("correct")
       playCorrect()
+      handleChallengeComplete(challenge?.id ?? 0)
     } else {
       const newAttempts = wrongAttempts + 1
       setWrongAttempts(newAttempts)
@@ -197,6 +201,14 @@ export const Quiz = ({
   const handleRedo = () => {
     // Reset the quiz to the beginning
     router.refresh()
+  }
+
+  const handleChallengeComplete = async (challengeId: number) => {
+    try {
+      await upsertChallengeProgress(challengeId)
+    } catch (error) {
+      console.error("Failed to update challenge progress:", error)
+    }
   }
 
   // Show completion screen if quiz is completed

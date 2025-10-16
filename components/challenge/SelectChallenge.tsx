@@ -11,6 +11,7 @@ interface SelectChallengeProps {
   status: "correct" | "wrong" | "none"
   disabled?: boolean
   type: (typeof challenges.$inferSelect)["type"]
+  showCorrectAnswer?: boolean
 }
 
 export const SelectChallenge = ({
@@ -20,6 +21,7 @@ export const SelectChallenge = ({
   status,
   disabled,
   type,
+  showCorrectAnswer,
 }: SelectChallengeProps) => {
   const getGridClasses = () => {
     switch (type) {

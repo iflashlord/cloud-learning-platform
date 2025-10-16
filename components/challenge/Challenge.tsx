@@ -67,6 +67,7 @@ export const Challenge = ({
       status,
       disabled: optionsDisabled,
       challenge,
+      showCorrectAnswer,
     }
 
     switch (type) {

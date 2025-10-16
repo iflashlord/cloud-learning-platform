@@ -23,7 +23,7 @@ export const UnitBanner = ({
 
   return (
     <div
-      className={`w-full rounded-xl p-4 text-white flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:shadow-lg ${
+      className={`w-full rounded-xl p-3 text-white flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:shadow-lg ${
         isCompleted
           ? "bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500"
           : "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500"
@@ -33,25 +33,25 @@ export const UnitBanner = ({
       <div className='absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent'></div>
 
       {/* Decorative Elements */}
-      <div className='absolute top-4 right-4 opacity-20'>
+      <div className='absolute top-3 right-3 opacity-20'>
         {isCompleted ? (
-          <Award className='w-8 h-8' />
+          <Award className='w-6 h-6' />
         ) : (
-          <Target className='w-8 h-8' />
+          <Target className='w-6 h-6' />
         )}
       </div>
 
-      <div className='space-y-3 flex-1 relative z-10'>
+      <div className='space-y-2 flex-1 relative z-10'>
         <div className='flex items-center gap-3'>
           <div
-            className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
               isCompleted ? "bg-green-600" : "bg-blue-600"
             }`}
           >
-            <BookOpen className='w-6 h-6' />
+            <BookOpen className='w-5 h-5' />
           </div>
           <div>
-            <h3 className='text-2xl font-bold mb-1'>{title}</h3>
+            <h3 className='text-xl font-bold mb-1'>{title}</h3>
             {isCompleted && (
               <div className='flex items-center gap-2 text-green-200'>
                 <Award className='w-4 h-4' />
@@ -61,24 +61,24 @@ export const UnitBanner = ({
           </div>
         </div>
 
-        <p className='text-lg opacity-90 leading-relaxed'>{description}</p>
+        <p className='text-base opacity-90 leading-relaxed'>{description}</p>
 
         {/* Progress Info */}
         {lessonCount > 0 && (
-          <div className='flex items-center gap-4 mt-4'>
-            <div className='bg-white/20 rounded-lg px-3 py-2 backdrop-blur-sm'>
-              <div className='text-sm font-medium'>Progress</div>
-              <div className='text-lg font-bold'>{progress}%</div>
+          <div className='flex items-center gap-3 mt-3'>
+            <div className='bg-white/20 rounded-lg px-2 py-1 backdrop-blur-sm'>
+              <div className='text-xs font-medium'>Progress</div>
+              <div className='text-base font-bold'>{progress}%</div>
             </div>
-            <div className='bg-white/20 rounded-lg px-3 py-2 backdrop-blur-sm'>
-              <div className='text-sm font-medium'>Lessons</div>
-              <div className='text-lg font-bold'>
+            <div className='bg-white/20 rounded-lg px-2 py-1 backdrop-blur-sm'>
+              <div className='text-xs font-medium'>Lessons</div>
+              <div className='text-base font-bold'>
                 {completedLessons}/{lessonCount}
               </div>
             </div>
-            <div className='flex-1 bg-white/20 rounded-full h-2 backdrop-blur-sm'>
+            <div className='flex-1 bg-white/20 rounded-full h-1.5 backdrop-blur-sm'>
               <div
-                className='bg-white h-2 rounded-full transition-all duration-500'
+                className='bg-white h-1.5 rounded-full transition-all duration-500'
                 style={{ width: `${progress}%` }}
               />
             </div>

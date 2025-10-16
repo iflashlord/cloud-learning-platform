@@ -52,7 +52,7 @@ export const CorrectAnswerDisplay = ({
           </div>
           <div>
             <p className='text-sm font-medium text-green-800 dark:text-green-200'>
-              XCorrect Answer:
+              Correct Answer:
             </p>
             <p className='text-green-700 dark:text-green-300 font-medium'>
               {answerText}
