@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Play, X, Coins, Trophy, CheckCircle, Clock } from "lucide-react";
-import { toast } from "sonner";
+import { useState, useEffect } from "react"
+import { Play, X, Coins, Trophy, CheckCircle, Clock } from "lucide-react"
+import { toast } from "sonner"
 
 import {
   Dialog,
@@ -11,157 +11,158 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 
 interface AdRewardModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onRewardEarned: (points: number) => void;
-  dailyAdsWatched: number;
-  maxDailyAds: number;
-  rewardPoints: number;
+  isOpen: boolean
+  onClose: () => void
+  onRewardEarned: (points: number) => void
+  dailyAdsWatched: number
+  maxDailyAds: number
+  rewardPoints: number
 }
 
-export const AdRewardModal = ({ 
-  isOpen, 
+export const AdRewardModal = ({
+  isOpen,
   onClose,
   onRewardEarned,
   dailyAdsWatched,
   maxDailyAds,
-  rewardPoints 
+  rewardPoints,
 }: AdRewardModalProps) => {
-  const [adState, setAdState] = useState<'ready' | 'playing' | 'completed'>('ready');
-  const [adProgress, setAdProgress] = useState(0);
-  const [isClient, setIsClient] = useState(false);
+  const [adState, setAdState] = useState<"ready" | "playing" | "completed">(
+    "ready"
+  )
+  const [adProgress, setAdProgress] = useState(0)
+  const [isClient, setIsClient] = useState(false)
 
-  useEffect(() => setIsClient(true), []);
+  useEffect(() => setIsClient(true), [])
 
-  const canWatchMoreAds = dailyAdsWatched < maxDailyAds;
-  
+  const canWatchMoreAds = dailyAdsWatched < maxDailyAds
+
   const watchAd = () => {
     if (!canWatchMoreAds) {
-      toast.error("You've reached your daily ad limit. Come back tomorrow!");
-      return;
+      toast.error("You've reached your daily ad limit. Come back tomorrow!")
+      return
     }
 
-    setAdState('playing');
-    setAdProgress(0);
-    
+    setAdState("playing")
+    setAdProgress(0)
+
     // Simulate 15-second ad with progress
-    const duration = 15000; // 15 seconds
-    const interval = 100; // Update every 100ms
-    const increment = (interval / duration) * 100;
-    
+    const duration = 15000 // 15 seconds
+    const interval = 100 // Update every 100ms
+    const increment = (interval / duration) * 100
+
     const progressTimer = setInterval(() => {
       setAdProgress((prev) => {
-        const newProgress = prev + increment;
+        const newProgress = prev + increment
         if (newProgress >= 100) {
-          clearInterval(progressTimer);
-          setAdState('completed');
-          return 100;
+          clearInterval(progressTimer)
+          setAdState("completed")
+          return 100
         }
-        return newProgress;
-      });
-    }, interval);
-  };
+        return newProgress
+      })
+    }, interval)
+  }
 
   const claimReward = () => {
-    onRewardEarned(rewardPoints);
-    setAdState('ready');
-    setAdProgress(0);
-    onClose();
+    onRewardEarned(rewardPoints)
+    setAdState("ready")
+    setAdProgress(0)
+    onClose()
     toast.success(`+${rewardPoints} XP earned! Great job!`, {
       duration: 3000,
-    });
-  };
+    })
+  }
 
   const handleClose = () => {
-    setAdState('ready');
-    setAdProgress(0);
-    onClose();
-  };
+    setAdState("ready")
+    setAdProgress(0)
+    onClose()
+  }
 
   if (!isClient) {
-    return null;
+    return null
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className='max-w-md'>
         <DialogHeader>
-          <div className="flex items-center w-full justify-center mb-5">
-            {adState === 'ready' && (
-              <div className="relative">
-                <Play className="h-24 w-24 text-blue-500 fill-current" />
-                <div className="absolute -bottom-2 -right-2 bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
-                  <Coins className="w-4 h-4" />
+          <div className='flex items-center w-full justify-center mb-5'>
+            {adState === "ready" && (
+              <div className='relative'>
+                <Play className='h-24 w-24 text-blue-500 fill-current' />
+                <div className='absolute -bottom-2 -right-2 bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold'>
+                  <Coins className='w-4 h-4' />
                 </div>
               </div>
             )}
-            {adState === 'playing' && (
-              <div className="relative">
-                <div className="w-24 h-24 bg-gray-800 rounded-xl flex items-center justify-center">
-                  <div className="text-white text-lg font-bold">AD</div>
+            {adState === "playing" && (
+              <div className='relative'>
+                <div className='w-24 h-24 bg-gray-800 rounded-xl flex items-center justify-center'>
+                  <div className='text-white text-lg font-bold'>AD</div>
                 </div>
               </div>
             )}
-            {adState === 'completed' && (
-              <div className="relative">
-                <Trophy className="h-24 w-24 text-yellow-500 fill-current" />
-                <CheckCircle className="absolute -top-2 -right-2 h-8 w-8 text-green-500 fill-current" />
+            {adState === "completed" && (
+              <div className='relative'>
+                <Trophy className='h-24 w-24 text-yellow-500 fill-current' />
+                <CheckCircle className='absolute -top-2 -right-2 h-8 w-8 text-green-500' />
               </div>
             )}
           </div>
-          
-          <DialogTitle className="text-center font-bold text-2xl">
-            {adState === 'ready' && "Watch Ad & Earn XP!"}
-            {adState === 'playing' && "Ad Playing..."}
-            {adState === 'completed' && "Reward Earned!"}
+
+          <DialogTitle className='text-center font-bold text-2xl'>
+            {adState === "ready" && "Watch Ad & Earn XP!"}
+            {adState === "playing" && "Ad Playing..."}
+            {adState === "completed" && "Reward Earned!"}
           </DialogTitle>
-          
-          <DialogDescription className="text-center text-base">
-            {adState === 'ready' && (
+
+          <DialogDescription className='text-center text-base'>
+            {adState === "ready" && (
               <>
-                Watch a short 15-second video ad to earn <strong>{rewardPoints} XP</strong>!<br/>
-                <span className="text-sm text-muted-foreground mt-2 block">
+                Watch a short 15-second video ad to earn{" "}
+                <strong>{rewardPoints} XP</strong>!<br />
+                <span className='text-sm text-muted-foreground mt-2 block'>
                   Daily limit: {dailyAdsWatched}/{maxDailyAds} ads watched
                 </span>
               </>
             )}
-            {adState === 'playing' && (
-              <>
-                Please wait while the ad plays. Don't close this window!
-              </>
+            {adState === "playing" && (
+              <>Please wait while the ad plays. Don't close this window!</>
             )}
-            {adState === 'completed' && (
+            {adState === "completed" && (
               <>
-                Great job! You've earned <strong>{rewardPoints} XP</strong>. 
-                You can use these points to buy hearts and other items.
+                Great job! You've earned <strong>{rewardPoints} XP</strong>. You
+                can use these points to buy hearts and other items.
               </>
             )}
           </DialogDescription>
         </DialogHeader>
-        
-        {adState === 'playing' && (
-          <div className="space-y-4">
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
-              <div className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+
+        {adState === "playing" && (
+          <div className='space-y-4'>
+            <div className='bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center'>
+              <div className='text-lg font-bold text-gray-800 dark:text-gray-200 mb-2'>
                 Dummy Advertisement
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <div className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
                 🎮 Play Amazing Games! 🎮
               </div>
-              <div className="text-xs text-gray-500">
+              <div className='text-xs text-gray-500'>
                 This is a placeholder for future Google AdSense integration
               </div>
             </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between text-sm'>
+                <span className='flex items-center gap-1'>
+                  <Clock className='w-4 h-4' />
                   Progress
                 </span>
                 <span>{Math.round(adProgress)}%</span>
@@ -171,52 +172,49 @@ export const AdRewardModal = ({
           </div>
         )}
 
-        <DialogFooter className="mb-4">
-          <div className="flex flex-col gap-y-3 w-full">
-            {adState === 'ready' && (
+        <DialogFooter className='mb-4'>
+          <div className='flex flex-col gap-y-3 w-full'>
+            {adState === "ready" && (
               <>
-                <Button 
-                  variant="primary" 
-                  className="w-full flex items-center gap-2" 
-                  size="lg" 
+                <Button
+                  variant='primary'
+                  className='w-full flex items-center gap-2'
+                  size='lg'
                   onClick={watchAd}
                   disabled={!canWatchMoreAds}
                 >
-                  <Play className="w-5 h-5" />
-                  {canWatchMoreAds ? `Watch Ad (+${rewardPoints} XP)` : 'Daily Limit Reached'}
+                  <Play className='w-5 h-5' />
+                  {canWatchMoreAds
+                    ? `Watch Ad (+${rewardPoints} XP)`
+                    : "Daily Limit Reached"}
                 </Button>
                 <Button
-                  variant="outline" 
-                  className="w-full flex items-center gap-2" 
-                  size="lg" 
+                  variant='outline'
+                  className='w-full flex items-center gap-2'
+                  size='lg'
                   onClick={handleClose}
                 >
-                  <X className="w-5 h-5" />
+                  <X className='w-5 h-5' />
                   Cancel
                 </Button>
               </>
             )}
-            
-            {adState === 'playing' && (
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                size="lg" 
-                disabled
-              >
+
+            {adState === "playing" && (
+              <Button variant='outline' className='w-full' size='lg' disabled>
                 Please wait... ({Math.ceil((100 - adProgress) / 6.67)}s)
               </Button>
             )}
-            
-            {adState === 'completed' && (
+
+            {adState === "completed" && (
               <>
-                <Button 
-                  variant="primary" 
-                  className="w-full flex items-center gap-2" 
-                  size="lg" 
+                <Button
+                  variant='primary'
+                  className='w-full flex items-center gap-2'
+                  size='lg'
                   onClick={claimReward}
                 >
-                  <Trophy className="w-5 h-5" />
+                  <Trophy className='w-5 h-5' />
                   Claim {rewardPoints} XP
                 </Button>
               </>
@@ -225,5 +223,5 @@ export const AdRewardModal = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

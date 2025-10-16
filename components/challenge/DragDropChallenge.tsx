@@ -20,10 +20,11 @@ export const DragDropChallenge = ({
   onSelect 
 }: DragDropChallengeProps) => {
   const [draggedItems, setDraggedItems] = useState<typeof options>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize drag items when options are available
+  // Initialize drag items when options are available (only once)
   useEffect(() => {
-    if (options.length > 0) {
+    if (options.length > 0 && !isInitialized) {
       // Create shuffled array that is guaranteed to be different from correct order
       let shuffled = [...options];
       do {
@@ -31,10 +32,11 @@ export const DragDropChallenge = ({
       } while (shuffled.every((item, index) => item.order === index + 1) && shuffled.length > 1);
       
       setDraggedItems(shuffled);
+      setIsInitialized(true);
       // Select first item as placeholder - will be overridden when user checks
       onSelect(shuffled[0]?.id || 1);
     }
-  }, [options, onSelect]);
+  }, [options, onSelect, isInitialized]);
 
   // Expose drag drop checker function for quiz component
   useEffect(() => {

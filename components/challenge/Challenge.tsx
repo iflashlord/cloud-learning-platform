@@ -100,10 +100,11 @@ export const Challenge = ({
           />
         )
 
-      case "LISTENING":
-        return <ListeningChallenge {...baseProps} />
+      // case "LISTENING":
+      //   return <ListeningChallenge {...baseProps} />
 
       case "VIDEO":
+      case "LISTENING":
         return (
           <div className='space-y-4'>
             <SelectChallenge {...baseProps} type={type} />
@@ -119,10 +120,20 @@ export const Challenge = ({
     }
   }
 
+  const optionsDisabled = disabled && status !== "none"
+  const baseProps = {
+    options,
+    selectedOption,
+    onSelect,
+    status,
+    disabled: optionsDisabled,
+    challenge,
+  }
   return (
     <div className='space-y-4'>
       <QuestionHeader challenge={challenge} questionType={type} status={status}>
         {type === "VIDEO" && <VideoChallenge challenge={challenge} />}
+        {type === "LISTENING" && <ListeningChallenge {...baseProps} />}
       </QuestionHeader>
 
       <CorrectAnswerDisplay

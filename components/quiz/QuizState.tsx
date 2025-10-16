@@ -51,12 +51,19 @@ export const useQuizState = ({
   const onContinue = () => {
     // For text input challenges, don't check selectedOption
     const isTextInput = challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT";
-    if (!isTextInput && !selectedOption) return;
+    const isDragDrop = challenge?.type === "DRAG_DROP";
+    if (!isTextInput && !isDragDrop && !selectedOption) return;
 
     if (status === "wrong") {
       setStatus("none");
-      setSelectedOption(undefined);
-      setTextInput("");
+      // Don't reset selectedOption for drag/drop challenges to preserve order
+      if (!isDragDrop) {
+        setSelectedOption(undefined);
+      }
+      // Only reset text input for text-based challenges
+      if (isTextInput) {
+        setTextInput("");
+      }
       setShowCorrectAnswer(false);
       return;
     }

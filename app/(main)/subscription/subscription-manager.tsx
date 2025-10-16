@@ -164,7 +164,7 @@ export const SubscriptionManager = ({
         // Pro User Section
         <div className='space-y-6'>
           {/* Current Subscription Status */}
-          <Card className='bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800'>
+          <Card className='bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='flex items-center gap-3'>
                 <div className='w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center'>
@@ -185,7 +185,7 @@ export const SubscriptionManager = ({
             </CardHeader>
             <CardContent>
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                <div className='flex items-center gap-3 p-4 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <Calendar className='w-5 h-5 text-blue-500' />
                   <div>
                     <div className='font-medium text-sm'>Next Billing</div>
@@ -194,7 +194,7 @@ export const SubscriptionManager = ({
                     </div>
                   </div>
                 </div>
-                <div className='flex items-center gap-3 p-4 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <CreditCard className='w-5 h-5 text-purple-500' />
                   <div>
                     <div className='font-medium text-sm'>Plan</div>
@@ -203,7 +203,7 @@ export const SubscriptionManager = ({
                     </div>
                   </div>
                 </div>
-                <div className='flex items-center gap-3 p-4 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <Star className='w-5 h-5 text-yellow-500' />
                   <div>
                     <div className='font-medium text-sm'>Status</div>
@@ -272,7 +272,7 @@ export const SubscriptionManager = ({
           </Card>
 
           {/* Pro Features Reminder */}
-          <Card>
+          <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
                 <Crown className='w-5 h-5 text-yellow-500' />
@@ -284,7 +284,7 @@ export const SubscriptionManager = ({
                 {proFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className='flex items-start gap-3 p-3 bg-muted/30 rounded-lg'
+                    className='flex items-start gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'
                   >
                     <div className='w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0 text-white'>
                       {feature.icon}
@@ -359,7 +359,7 @@ export const SubscriptionManager = ({
           </Card>
 
           {/* What You'll Get */}
-          <Card>
+          <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='text-center'>
                 What You&apos;ll Get with Pro
@@ -370,7 +370,7 @@ export const SubscriptionManager = ({
                 {proFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className='flex items-start gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/50'
+                    className='flex items-start gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border-2 border-yellow-200 dark:border-yellow-800/50 shadow-sm hover:shadow-md transition-shadow duration-200'
                   >
                     <div className='w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0 text-white'>
                       {feature.icon}
@@ -388,7 +388,7 @@ export const SubscriptionManager = ({
           </Card>
 
           {/* Pricing */}
-          <Card className='bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300 dark:border-yellow-700/50'>
+          <Card className='bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-700/50 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardContent className='p-8 text-center'>
               <div className='space-y-6'>
                 <div>
@@ -434,14 +434,14 @@ export const SubscriptionManager = ({
       <div className='space-y-6'>
         {/* Quick Stats for Pro Users */}
         {isPro && (
-          <Card className='bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-green-200 dark:border-green-800'>
+          <Card className='bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardContent className='p-6'>
               <h3 className='text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
                 <Star className='w-5 h-5 text-yellow-500' />
                 Your Pro Journey
               </h3>
               <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                <div className='text-center p-3 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <div className='text-2xl font-bold text-green-600 dark:text-green-400'>
                     ∞
                   </div>
@@ -449,19 +449,19 @@ export const SubscriptionManager = ({
                     Hearts Used
                   </div>
                 </div>
-                <div className='text-center p-3 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
                     {userProgress.points}
                   </div>
                   <div className='text-xs text-muted-foreground'>XP Earned</div>
                 </div>
-                <div className='text-center p-3 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <div className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
                     +50%
                   </div>
                   <div className='text-xs text-muted-foreground'>XP Bonus</div>
                 </div>
-                <div className='text-center p-3 bg-white/60 dark:bg-black/20 rounded-lg'>
+                <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <div className='text-2xl font-bold text-yellow-600 dark:text-yellow-400'>
                     0
                   </div>
@@ -473,7 +473,7 @@ export const SubscriptionManager = ({
         )}
 
         {/* Enhanced Help Section */}
-        <Card className='border-muted'>
+        <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
           <CardHeader>
             <CardTitle className='text-center flex items-center justify-center gap-2'>
               <MessageSquare className='w-5 h-5 text-blue-500' />
@@ -488,12 +488,12 @@ export const SubscriptionManager = ({
               </p>
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                <div className='p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800'>
+                <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600'>
                   <MessageSquare className='w-8 h-8 text-blue-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-gray-900 dark:text-white mb-2'>
+                  <h4 className='font-medium text-foreground mb-2'>
                     Email Support
                   </h4>
-                  <p className='text-sm text-gray-600 dark:text-gray-400 mb-3'>
+                  <p className='text-sm text-muted-foreground mb-3'>
                     Get personalized help via email
                   </p>
                   <Button size='sm' asChild>
@@ -504,12 +504,12 @@ export const SubscriptionManager = ({
                   </Button>
                 </div>
 
-                <div className='p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800'>
+                <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-green-300 dark:hover:border-green-600'>
                   <HelpCircle className='w-8 h-8 text-green-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-gray-900 dark:text-white mb-2'>
+                  <h4 className='font-medium text-foreground mb-2'>
                     Help Center
                   </h4>
-                  <p className='text-sm text-gray-600 dark:text-gray-400 mb-3'>
+                  <p className='text-sm text-muted-foreground mb-3'>
                     Browse our comprehensive FAQ
                   </p>
                   <Button size='sm' variant='outline' asChild>
@@ -517,12 +517,12 @@ export const SubscriptionManager = ({
                   </Button>
                 </div>
 
-                <div className='p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800'>
+                <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-purple-300 dark:hover:border-purple-600'>
                   <Crown className='w-8 h-8 text-purple-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-gray-900 dark:text-white mb-2'>
+                  <h4 className='font-medium text-foreground mb-2'>
                     Subscription FAQ
                   </h4>
-                  <p className='text-sm text-gray-600 dark:text-gray-400 mb-3'>
+                  <p className='text-sm text-muted-foreground mb-3'>
                     Specific billing & Pro questions
                   </p>
                   <Button size='sm' variant='outline' asChild>
