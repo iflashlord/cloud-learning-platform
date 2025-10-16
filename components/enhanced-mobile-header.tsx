@@ -40,14 +40,21 @@ import {
 } from "@/components/ui/alert-dialog"
 
 // Header navigation items (simplified - settings moved to dropdown)
-const getHeaderNavItems = () => [
-  {
-    label: "Pro",
-    href: "/pro",
-    icon: Crown,
-    activeColor: "text-yellow-500 dark:text-yellow-400",
-  },
-]
+const getHeaderNavItems = (isPro = false) => {
+  const items = []
+
+  // Only show Pro link for non-pro users
+  if (!isPro) {
+    items.push({
+      label: "Pro",
+      href: "/pro",
+      icon: Crown,
+      activeColor: "text-yellow-500 dark:text-yellow-400",
+    })
+  }
+
+  return items
+}
 
 interface HeaderNavItemProps {
   item: {
@@ -98,8 +105,28 @@ export const EnhancedMobileHeader: React.FC = () => {
   const { isAdmin, isLoggedIn } = useIsAdmin()
   const [showResetDialog, setShowResetDialog] = React.useState(false)
   const [isProMode, setIsProMode] = React.useState(false)
+  const [isPro, setIsPro] = React.useState(false)
 
-  const headerNavItems = getHeaderNavItems()
+  // Check subscription status
+  React.useEffect(() => {
+    const checkSubscription = async () => {
+      try {
+        const response = await fetch("/api/user/subscription")
+        if (response.ok) {
+          const data = await response.json()
+          setIsPro(!!data.isActive)
+        }
+      } catch (error) {
+        console.error("Failed to check subscription:", error)
+      }
+    }
+
+    if (isLoggedIn) {
+      checkSubscription()
+    }
+  }, [isLoggedIn])
+
+  const headerNavItems = getHeaderNavItems(isPro)
 
   // Load pro mode status for admins
   React.useEffect(() => {
@@ -162,7 +189,7 @@ export const EnhancedMobileHeader: React.FC = () => {
             "bg-gradient-to-br from-primary to-primary/80"
           )}
         >
-          <GraduationCap className='h-5 w-5 text-white' />
+          <GraduationCap className='h-5 w-5 text-white dark:text-gray-700' />
         </div>
         <h1 className='text-lg font-bold text-foreground'>
           {CONFIG.PLATFORM_NAME}

@@ -71,8 +71,9 @@ export const Items = ({
 
   return (
     <div className="w-full space-y-6">
-      {/* Heart Refill Item */}
-      <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border-2 border-red-200 dark:border-red-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-red-300 dark:hover:border-red-600">
+      {/* Heart Refill Item - Only show for free users */}
+      {!hasActiveSubscription && (
+        <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border-2 border-red-200 dark:border-red-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-red-300 dark:hover:border-red-600">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
             <Heart className="w-8 h-8 text-white fill-current" />
@@ -127,54 +128,57 @@ export const Items = ({
           </Button>
         </div>
       </div>
+      )}
 
-      {/* Video Ads for XP Item */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-            <Play className="w-8 h-8 text-white fill-current" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-foreground mb-2">
-              Watch Ads for XP
-            </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Watch short video ads to earn free XP points! Use XP to buy hearts and other items.
-            </p>
-            <div className="flex items-center gap-2">
-              <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.info.bg, statusStyles.info.text)}>
-                <Coins className={cn("w-4 h-4", statusStyles.info.text)} />
-                <span>+{AD_REWARD_POINTS} XP per ad</span>
-              </div>
-              <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.warning.bg, statusStyles.warning.text)}>
-                <Clock className={cn("w-4 h-4", statusStyles.warning.text)} />
-                <span>{dailyAds.adsWatched}/{dailyAds.maxAds} today</span>
+      {/* Video Ads for XP Item - Only show for free users */}
+      {!hasActiveSubscription && (
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-700/50 p-6 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <Play className="w-8 h-8 text-white fill-current" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xl font-bold text-foreground mb-2">
+                Watch Ads for XP
+              </h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Watch short video ads to earn free XP points! Use XP to buy hearts and other items.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.info.bg, statusStyles.info.text)}>
+                  <Coins className={cn("w-4 h-4", statusStyles.info.text)} />
+                  <span>+{AD_REWARD_POINTS} XP per ad</span>
+                </div>
+                <div className={cn("px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1", statusStyles.warning.bg, statusStyles.warning.text)}>
+                  <Clock className={cn("w-4 h-4", statusStyles.warning.text)} />
+                  <span>{dailyAds.adsWatched}/{dailyAds.maxAds} today</span>
+                </div>
               </div>
             </div>
+            <Button
+              onClick={() => setShowAdModal(true)}
+              disabled={!dailyAds.canWatch}
+              className={`px-6 py-3 font-bold text-lg ${
+                !dailyAds.canWatch
+                  ? "bg-muted text-muted-foreground cursor-not-allowed" 
+                  : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl"
+              } transition-all duration-200`}
+            >
+              {!dailyAds.canWatch ? (
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-muted-foreground/60" />
+                  <span>Daily Limit</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Play className="w-5 h-5 text-white" />
+                  <span>Watch Ad</span>
+                </div>
+              )}
+            </Button>
           </div>
-          <Button
-            onClick={() => setShowAdModal(true)}
-            disabled={!dailyAds.canWatch}
-            className={`px-6 py-3 font-bold text-lg ${
-              !dailyAds.canWatch
-                ? "bg-muted text-muted-foreground cursor-not-allowed" 
-                : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl"
-            } transition-all duration-200`}
-          >
-            {!dailyAds.canWatch ? (
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-muted-foreground/60" />
-                <span>Daily Limit</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Play className="w-5 h-5 text-white" />
-                <span>Watch Ad</span>
-              </div>
-            )}
-          </Button>
         </div>
-      </div>
+      )}
 
       {/* Pro Membership Item */}
       <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-900/20 dark:via-amber-900/20 dark:to-orange-900/20 rounded-xl border-2 border-yellow-300 dark:border-yellow-700/50 p-6 transition-all duration-200 hover:shadow-xl hover:border-yellow-400 dark:hover:border-yellow-600 relative overflow-hidden">

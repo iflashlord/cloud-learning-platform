@@ -57,9 +57,16 @@ export const upsertChallengeProgress = async (challengeId: number) => {
       eq(challengeProgress.id, existingChallengeProgress.id)
     );
 
+    // Pro users get unlimited hearts and enhanced XP
+    const heartsUpdate = userSubscription?.isActive 
+      ? currentUserProgress.hearts // Keep current hearts for pro (unlimited display)
+      : Math.min(currentUserProgress.hearts + 1, 5); // Cap at 5 for free users
+
+    const xpBonus = userSubscription?.isActive ? 15 : 10; // Pro users get 50% more XP
+
     await db.update(userProgress).set({
-      hearts: Math.min(currentUserProgress.hearts + 1, 5),
-      points: currentUserProgress.points + 10,
+      hearts: heartsUpdate,
+      points: currentUserProgress.points + xpBonus,
     }).where(eq(userProgress.userId, userId));
 
     revalidatePath("/learn");
@@ -76,8 +83,11 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     completed: true,
   });
 
+  // Pro users get enhanced XP rewards
+  const xpBonus = userSubscription?.isActive ? 15 : 10; // Pro users get 50% more XP
+
   await db.update(userProgress).set({
-    points: currentUserProgress.points + 10,
+    points: currentUserProgress.points + xpBonus,
   }).where(eq(userProgress.userId, userId));
 
   revalidatePath("/learn");

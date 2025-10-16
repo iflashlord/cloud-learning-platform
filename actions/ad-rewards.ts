@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import db from "@/db/drizzle";
-import { getUserProgress } from "@/db/queries";
+import { getUserProgress, getUserSubscription } from "@/db/queries";
 import { userProgress } from "@/db/schema";
 
 /**
@@ -19,14 +19,21 @@ export const addAdRewardPoints = async (points: number) => {
   }
 
   const currentUserProgress = await getUserProgress();
+  const userSubscription = await getUserSubscription();
 
   if (!currentUserProgress) {
     throw new Error("User progress not found");
   }
 
+  // Calculate final points with Pro bonus
+  let finalPoints = points;
+  if (userSubscription?.isActive) {
+    finalPoints = points + Math.round(points * 0.5); // 50% bonus for Pro users
+  }
+
   // Update user's points in the database
   await db.update(userProgress).set({
-    points: currentUserProgress.points + points,
+    points: currentUserProgress.points + finalPoints,
   }).where(eq(userProgress.userId, userId));
 
   // Revalidate paths to update UI
@@ -35,5 +42,10 @@ export const addAdRewardPoints = async (points: number) => {
   revalidatePath("/quests");
   revalidatePath("/leaderboard");
 
-  return { success: true, newPoints: currentUserProgress.points + points };
+  return { 
+    success: true, 
+    newPoints: currentUserProgress.points + finalPoints,
+    earnedPoints: finalPoints,
+    bonusPoints: userSubscription?.isActive ? Math.round(points * 0.5) : 0
+  };
 };

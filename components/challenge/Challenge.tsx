@@ -1,30 +1,30 @@
-"use client";
+"use client"
 
-import { challengeOptions, challenges } from "@/db/schema";
-import { useState, useEffect } from "react";
+import { challengeOptions, challenges } from "@/db/schema"
+import { useState, useEffect } from "react"
 
 // Import all challenge components
-import { QuestionHeader } from "./QuestionHeader";
-import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay";
-import { DragDropChallenge } from "./DragDropChallenge";
-import { TextInputChallenge } from "./TextInputChallenge";
-import { SpeechInputChallenge } from "./SpeechInputChallenge";
-import { ListeningChallenge } from "./ListeningChallenge";
-import { SelectChallenge } from "./SelectChallenge";
-import { VideoChallenge } from "./VideoChallenge";
+import { QuestionHeader } from "./QuestionHeader"
+import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay"
+import { DragDropChallenge } from "./DragDropChallenge"
+import { TextInputChallenge } from "./TextInputChallenge"
+import { SpeechInputChallenge } from "./SpeechInputChallenge"
+import { ListeningChallenge } from "./ListeningChallenge"
+import { SelectChallenge } from "./SelectChallenge"
+import { VideoChallenge } from "./VideoChallenge"
 
 type Props = {
-  options: typeof challengeOptions.$inferSelect[];
-  onSelect: (id: number) => void;
-  status: "correct" | "wrong" | "none";
-  selectedOption?: number;
-  disabled?: boolean;
-  type: typeof challenges.$inferSelect["type"];
-  challenge: typeof challenges.$inferSelect;
-  onTextSubmit?: (text: string) => void;
-  onTextChange?: (text: string) => void;
-  showCorrectAnswer?: boolean;
-};
+  options: (typeof challengeOptions.$inferSelect)[]
+  onSelect: (id: number) => void
+  status: "correct" | "wrong" | "none"
+  selectedOption?: number
+  disabled?: boolean
+  type: (typeof challenges.$inferSelect)["type"]
+  challenge: typeof challenges.$inferSelect
+  onTextSubmit?: (text: string) => void
+  onTextChange?: (text: string) => void
+  showCorrectAnswer?: boolean
+}
 
 export const Challenge = ({
   options,
@@ -38,36 +38,36 @@ export const Challenge = ({
   onTextChange,
   showCorrectAnswer,
 }: Props) => {
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState("")
 
   // Clear text input when status resets to "none" (retry)
   useEffect(() => {
     if (status === "none") {
-      setTextInput("");
-      onTextChange?.("");
+      setTextInput("")
+      onTextChange?.("")
     }
-  }, [status, onTextChange]);
+  }, [status, onTextChange])
 
   // Get correct answer text for display
   const getCorrectAnswerText = () => {
-    if (challenge?.correctAnswer) return challenge.correctAnswer;
-    const correctOption = options.find(option => option.correct);
-    return correctOption?.text;
-  };
+    if (challenge?.correctAnswer) return challenge.correctAnswer
+    const correctOption = options.find((option) => option.correct)
+    return correctOption?.text
+  }
 
   // Render challenge based on type
   const renderChallenge = () => {
     // Options should be disabled only during validation or when showing results
-    const optionsDisabled = disabled && status !== "none";
-    
+    const optionsDisabled = disabled && status !== "none"
+
     const baseProps = {
       options,
       selectedOption,
       onSelect,
       status,
       disabled: optionsDisabled,
-      challenge
-    };
+      challenge,
+    }
 
     switch (type) {
       case "TEXT_INPUT":
@@ -78,7 +78,7 @@ export const Challenge = ({
             onTextChange={onTextChange}
             disabled={disabled}
           />
-        );
+        )
 
       case "SPEECH_INPUT":
         return (
@@ -88,7 +88,7 @@ export const Challenge = ({
             onTextChange={onTextChange}
             disabled={disabled}
           />
-        );
+        )
 
       case "DRAG_DROP":
         return (
@@ -98,48 +98,41 @@ export const Challenge = ({
             status={status}
             onSelect={onSelect}
           />
-        );
+        )
 
       case "LISTENING":
-        return (
-          <ListeningChallenge {...baseProps} />
-        );
+        return <ListeningChallenge {...baseProps} />
 
       case "VIDEO":
         return (
-          <div className="space-y-4">
-            <VideoChallenge challenge={challenge} />
+          <div className='space-y-4'>
             <SelectChallenge {...baseProps} type={type} />
           </div>
-        );
+        )
 
       case "IMAGE_SELECT":
       case "TRUE_FALSE":
       case "SELECT":
       case "ASSIST":
       default:
-        return <SelectChallenge {...baseProps} type={type} />;
+        return <SelectChallenge {...baseProps} type={type} />
     }
-  };
+  }
 
   return (
-    <div className="space-y-4">
-      <QuestionHeader
-        challenge={challenge}
-        questionType={type}
-        status={status}
-      >
+    <div className='space-y-4'>
+      <QuestionHeader challenge={challenge} questionType={type} status={status}>
         {type === "VIDEO" && <VideoChallenge challenge={challenge} />}
       </QuestionHeader>
-      
+
       <CorrectAnswerDisplay
         showCorrectAnswer={showCorrectAnswer}
         status={status}
         options={options}
         correctAnswerText={getCorrectAnswerText()}
       />
-      
+
       {renderChallenge()}
     </div>
-  );
-};
+  )
+}

@@ -29,6 +29,9 @@ Welcome to the AWS Cloud Academy documentation! This index will help you find th
 - **[AWS Transformation Guide](./guides/aws-transformation-guide.md)** - Content structure and expansion strategy
 - **[Project Checklist](./checklist.md)** - Todo items and progress tracking
 
+### Design System
+- **[Design System Overview](./design-system-overview.md)** - Semantic tokens, component recipes, and accessibility baselines
+
 ### Admin Panel
 - **[Admin Guide](./admin/guide.md)** - Complete walkthrough of the admin experience
 - **[Quick Reference](./admin/quick-reference.md)** - One-page workflow card for content creators

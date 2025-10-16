@@ -187,6 +187,21 @@ export const SettingsDropdown = ({
               <span>Reset Progress</span>
             </Button>
 
+            {/* Subscription Management - Available to all users */}
+            <div className='h-px bg-border my-1' />
+
+            <Button
+              variant='ghost'
+              className='w-full justify-start text-left h-auto py-2 px-2'
+              onClick={() => {
+                router.push("/subscription")
+                setIsOpen(false)
+              }}
+            >
+              <Crown className='mr-2 h-4 w-4 text-yellow-500' />
+              <span>Manage Subscription</span>
+            </Button>
+
             {/* Admin-only options */}
             {isAdmin && (
               <>

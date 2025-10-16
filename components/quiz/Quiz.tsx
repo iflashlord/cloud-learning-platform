@@ -196,6 +196,7 @@ export const Quiz = ({
         lessonId={lessonId!}
         onComplete={handleComplete}
         finishAudio={finishAudio}
+        userSubscription={userSubscription}
       />
     );
   }

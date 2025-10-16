@@ -91,6 +91,7 @@ export const reduceHearts = async (challengeId: number) => {
     throw new Error("User progress not found");
   }
 
+  // Pro users have unlimited hearts - don't reduce hearts
   if (userSubscription?.isActive) {
     return { error: "subscription" };
   }
@@ -99,6 +100,7 @@ export const reduceHearts = async (challengeId: number) => {
     return { error: "hearts" };
   }
 
+  // Only reduce hearts for free users
   await db.update(userProgress).set({
     hearts: Math.max(currentUserProgress.hearts - 1, 0),
   }).where(eq(userProgress.userId, userId));
@@ -112,9 +114,15 @@ export const reduceHearts = async (challengeId: number) => {
 
 export const refillHearts = async () => {
   const currentUserProgress = await getUserProgress();
+  const userSubscription = await getUserSubscription();
 
   if (!currentUserProgress) {
     throw new Error("User progress not found");
+  }
+
+  // Pro users have unlimited hearts - no need to refill
+  if (userSubscription?.isActive) {
+    throw new Error("Pro users have unlimited hearts");
   }
 
   if (currentUserProgress.hearts === 5) {

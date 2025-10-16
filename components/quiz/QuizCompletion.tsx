@@ -12,6 +12,9 @@ interface QuizCompletionProps {
   lessonId: number;
   onComplete: () => void;
   finishAudio?: React.ReactElement;
+  userSubscription?: {
+    isActive: boolean;
+  } | null;
 }
 
 export const QuizCompletion = ({ 
@@ -19,9 +22,15 @@ export const QuizCompletion = ({
   hearts, 
   lessonId, 
   onComplete,
-  finishAudio 
+  finishAudio,
+  userSubscription 
 }: QuizCompletionProps) => {
   const { width, height } = useWindowSize();
+  
+  // Calculate XP with Pro user bonus
+  const baseXP = challenges.length * 10;
+  const bonusXP = userSubscription?.isActive ? Math.round(baseXP * 0.5) : 0;
+  const totalXP = baseXP + bonusXP;
 
   return (
     <div className="flex flex-col h-screen">
@@ -45,13 +54,20 @@ export const QuizCompletion = ({
           <div className="flex items-center gap-x-4 w-full">
             <ResultCard
               variant="points"
-              value={challenges.length * 10}
+              value={totalXP}
             />
             <ResultCard
               variant="hearts"
               value={hearts}
             />
           </div>
+          
+          {/* Show Pro bonus if applicable */}
+          {userSubscription?.isActive && bonusXP > 0 && (
+            <div className="mt-2 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-medium">
+              🎉 Pro Bonus: +{bonusXP} XP
+            </div>
+          )}
         </div>
       </div>
 
