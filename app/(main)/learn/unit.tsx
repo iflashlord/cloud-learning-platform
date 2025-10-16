@@ -15,6 +15,7 @@ type Props = {
     unit: typeof units.$inferSelect;
   } | undefined;
   activeLessonPercentage: number;
+  isPro?: boolean;
 };
 
 export const Unit = ({
@@ -25,6 +26,7 @@ export const Unit = ({
   lessons,
   activeLesson,
   activeLessonPercentage,
+  isPro = false,
 }: Props) => {
   const completedLessons = lessons.filter(lesson => lesson.completed).length;
   const isCompleted = completedLessons === lessons.length;
@@ -79,13 +81,26 @@ export const Unit = ({
             lessonCount={lessons.length}
             completedLessons={completedLessons}
             isCompleted={isCompleted}
+            isPro={isPro}
           />
         </div>
       </div>
       <div className="flex items-center flex-col relative mb-16 min-h-[400px]">
         {lessons.map((lesson, index) => {
           const isCurrent = lesson.id === activeLesson?.id;
-          const isLocked = !lesson.completed && !isCurrent;
+          
+          // Pro users can unlock more lessons ahead
+          let isLocked;
+          if (isPro) {
+            // Pro users can access up to 3 lessons ahead of their current progress
+            const currentIndex = lessons.findIndex(l => l.id === activeLesson?.id);
+            const completedIndex = lessons.findIndex(l => !l.completed) - 1;
+            const furthestAccessible = Math.max(currentIndex, completedIndex) + 3;
+            isLocked = index > furthestAccessible && !lesson.completed && !isCurrent;
+          } else {
+            // Free users can only access current lesson and completed ones
+            isLocked = !lesson.completed && !isCurrent;
+          }
 
           return (
             <LessonButton
@@ -96,6 +111,7 @@ export const Unit = ({
               current={isCurrent}
               locked={isLocked}
               percentage={activeLessonPercentage}
+              isPro={isPro}
             />
           );
         })}

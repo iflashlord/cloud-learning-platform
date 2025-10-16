@@ -16,6 +16,7 @@ type Props = {
   locked?: boolean;
   current?: boolean;
   percentage: number;
+  isPro?: boolean;
 };
 
 export const LessonButton = ({
@@ -24,7 +25,8 @@ export const LessonButton = ({
   totalCount,
   locked,
   current,
-  percentage
+  percentage,
+  isPro = false
 }: Props) => {
   const cycleLength = 8;
   const cycleIndex = index % cycleLength;
@@ -49,13 +51,14 @@ export const LessonButton = ({
 
   const Icon = isCompleted ? Check : isLast ? Crown : Star;
 
-  const href = isCompleted ? `/lesson/${id}` : "/lesson";
+  const href = isCompleted || (isPro && !locked) ? `/lesson/${id}` : "/lesson";
+  const isAccessible = !locked || isPro;
 
   return (
     <Link 
       href={href} 
-      aria-disabled={locked} 
-      style={{ pointerEvents: locked ? "none" : "auto" }}
+      aria-disabled={locked && !isPro} 
+      style={{ pointerEvents: (locked && !isPro) ? "none" : "auto" }}
     >
       <div
         className="relative"
@@ -111,25 +114,32 @@ export const LessonButton = ({
             size="icon"
             variant={locked ? "outline" : "secondary"}
             className={cn(
-              "h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-105 shadow-lg rounded-full",
+              "h-[70px] w-[70px] border-b-8 transition-all duration-200 hover:scale-105 shadow-lg rounded-full relative",
               isCompleted && "bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:shadow-xl",
               isLast && !locked && !isCompleted && "bg-gradient-to-br from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white",
-              locked && "opacity-50 cursor-not-allowed"
+              locked && !isPro && "opacity-50 cursor-not-allowed",
+              locked && isPro && "ring-2 ring-yellow-400 ring-offset-2 bg-gradient-to-br from-yellow-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200"
             )}
           >
             <Icon
               className={cn(
                 "h-10 w-10",
-                locked
+                locked && !isPro
                   ? "fill-neutral-400 text-neutral-400 stroke-neutral-400"
-                  : isCompleted
-                    ? "text-white drop-shadow-lg"
-                    : isLast
+                  : locked && isPro
+                    ? "text-yellow-600"
+                    : isCompleted
                       ? "text-white drop-shadow-lg"
-                      : "fill-primary-foreground text-primary-foreground",
+                      : isLast
+                        ? "text-white drop-shadow-lg"
+                        : "fill-primary-foreground text-primary-foreground",
                 isCompleted && "fill-none stroke-[4]"
               )}
             />
+            {/* Pro access indicator for locked lessons */}
+            {locked && isPro && (
+              <Crown className="absolute -top-1 -right-1 w-4 h-4 text-yellow-500 bg-white rounded-full p-0.5" />
+            )}
           </Button>
         )}
       </div>

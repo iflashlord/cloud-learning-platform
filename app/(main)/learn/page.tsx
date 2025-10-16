@@ -107,6 +107,7 @@ const LearnPage = async () => {
                   unit: typeof unitsSchema.$inferSelect;
                 } | undefined}
                 activeLessonPercentage={lessonPercentage}
+                isPro={isPro}
               />
             ))}
           </ContentGrid>

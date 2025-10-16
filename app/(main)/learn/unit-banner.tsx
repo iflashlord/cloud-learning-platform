@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { NotebookText, BookOpen, Target, Award } from "lucide-react"
+import { NotebookText, BookOpen, Target, Award, Crown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -9,6 +9,7 @@ type Props = {
   lessonCount?: number
   completedLessons?: number
   isCompleted?: boolean
+  isPro?: boolean
 }
 
 export const UnitBanner = ({
@@ -17,6 +18,7 @@ export const UnitBanner = ({
   lessonCount = 0,
   completedLessons = 0,
   isCompleted = false,
+  isPro = false,
 }: Props) => {
   const progress =
     lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
@@ -51,7 +53,15 @@ export const UnitBanner = ({
             <BookOpen className='w-4 h-4' />
           </div>
           <div>
-            <h3 className='text-lg font-bold'>{title}</h3>
+            <div className='flex items-center gap-2'>
+              <h3 className='text-lg font-bold'>{title}</h3>
+              {isPro && (
+                <div className='flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 rounded-md border border-yellow-400/30'>
+                  <Crown className='w-3 h-3 text-yellow-200' />
+                  <span className='text-xs font-medium text-yellow-200'>PRO ACCESS</span>
+                </div>
+              )}
+            </div>
             {isCompleted && (
               <div className='flex items-center gap-1 text-green-200'>
                 <Award className='w-3 h-3' />
@@ -61,16 +71,25 @@ export const UnitBanner = ({
           </div>
         </div>
 
-        <p className='text-sm opacity-90 leading-snug'>{description}</p>
+        <p className='text-sm opacity-90 leading-snug'>
+          {description}
+          {isPro && (
+            <span className='block mt-1 text-xs text-yellow-200 font-medium'>
+              ✨ Pro Access: Jump ahead up to 3 lessons
+            </span>
+          )}
+        </p>
 
         {/* Progress Info */}
         {lessonCount > 0 && (
           <div className='flex items-center gap-2 mt-1'>
             <div className='bg-white/20 rounded px-1.5 py-0.5 backdrop-blur-sm'>
-              <div className='text-xs font-medium'>{progress}%</div>
+              <div className='text-xs font-medium opacity-80'>Progress</div>
+              <div className='text-xs font-bold'>{progress}%</div>
             </div>
             <div className='bg-white/20 rounded px-1.5 py-0.5 backdrop-blur-sm'>
-              <div className='text-xs font-medium'>
+              <div className='text-xs font-medium opacity-80'>Lessons</div>
+              <div className='text-xs font-bold'>
                 {completedLessons}/{lessonCount}
               </div>
             </div>
