@@ -1,7 +1,7 @@
 "use client"
 
 import Confetti from "react-confetti"
-import { CheckCircle, PartyPopper } from "lucide-react"
+import { CheckCircle, PartyPopper, RotateCcw } from "lucide-react"
 import { useWindowSize } from "react-use"
 import { ResultCard } from "../../app/lesson/result-card"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ interface QuizCompletionProps {
   hearts: number
   lessonId: number
   onComplete: () => void
+  onRedo: () => void
   finishAudio?: React.ReactElement
   userSubscription?: {
     isActive: boolean
@@ -22,6 +23,7 @@ export const QuizCompletion = ({
   hearts,
   lessonId,
   onComplete,
+  onRedo,
   finishAudio,
   userSubscription,
 }: QuizCompletionProps) => {
@@ -68,7 +70,16 @@ export const QuizCompletion = ({
 
       {/* Fixed Footer for Completion */}
       <div className='fixed bottom-0 left-0 right-0 z-10 bg-white dark:bg-gray-900 border-t dark:border-gray-700 p-4'>
-        <div className='max-w-4xl mx-auto flex justify-center'>
+        <div className='max-w-4xl mx-auto flex justify-center gap-4'>
+          <Button
+            onClick={onRedo}
+            size='lg'
+            variant='secondary'
+            className='min-w-[150px] font-extrabold tracking-wide'
+          >
+            <RotateCcw className='w-4 h-4 mr-2' />
+            REDO
+          </Button>
           <Button
             onClick={onComplete}
             size='lg'

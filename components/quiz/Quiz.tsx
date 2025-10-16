@@ -1,6 +1,6 @@
 "use client"
 
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useQuizState } from "./QuizState"
 import { useQuizAudio } from "./QuizAudio"
@@ -25,6 +25,8 @@ export const Quiz = ({
   initialPercentage,
   userSubscription,
 }: QuizProps) => {
+  const router = useRouter()
+
   // Detect if this is a practice lesson (already completed)
   const isPractice = initialPercentage === 100
   const [showHeartsModal, setShowHeartsModal] = useState(false)
@@ -189,7 +191,12 @@ export const Quiz = ({
   }
 
   const handleComplete = () => {
-    redirect("/learn")
+    router.push("/learn")
+  }
+
+  const handleRedo = () => {
+    // Reset the quiz to the beginning
+    router.refresh()
   }
 
   // Show completion screen if quiz is completed
@@ -200,6 +207,7 @@ export const Quiz = ({
         hearts={hearts}
         lessonId={lessonId!}
         onComplete={handleComplete}
+        onRedo={handleRedo}
         finishAudio={finishAudio}
         userSubscription={userSubscription}
       />
