@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import db from "@/db/drizzle"
 import { getUserProgress, getUserSubscription } from "@/db/queries"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
+import { processLessonCompletion, awardXP } from "@/actions/gamification"
 
 export const upsertChallengeProgress = async (challengeId: number) => {
   const { userId } = await auth()
@@ -35,17 +36,13 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   const existingChallengeProgress = await db.query.challengeProgress.findFirst({
     where: and(
       eq(challengeProgress.userId, userId),
-      eq(challengeProgress.challengeId, challengeId)
+      eq(challengeProgress.challengeId, challengeId),
     ),
   })
 
   const isPractice = !!existingChallengeProgress
 
-  if (
-    currentUserProgress.hearts === 0 &&
-    !isPractice &&
-    !userSubscription?.isActive
-  ) {
+  if (currentUserProgress.hearts === 0 && !isPractice && !userSubscription?.isActive) {
     return { error: "hearts" }
   }
 
@@ -57,18 +54,19 @@ export const upsertChallengeProgress = async (challengeId: number) => {
       })
       .where(eq(challengeProgress.id, existingChallengeProgress.id))
 
+    // For practice lessons, just award XP (no lesson completion processing)
+    const xpAmount = userSubscription?.isActive ? 8 : 5 // Practice XP
+    await awardXP(xpAmount, "practice_lesson", lessonId.toString())
+
     // Pro users get unlimited hearts and enhanced XP
     const heartsUpdate = userSubscription?.isActive
       ? currentUserProgress.hearts // Keep current hearts for pro (unlimited display)
       : Math.min(currentUserProgress.hearts + 1, 5) // Cap at 5 for free users
 
-    const xpBonus = userSubscription?.isActive ? 15 : 10 // Pro users get 50% more XP
-
     await db
       .update(userProgress)
       .set({
         hearts: heartsUpdate,
-        points: currentUserProgress.points + xpBonus,
       })
       .where(eq(userProgress.userId, userId))
 
@@ -80,25 +78,69 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     return
   }
 
+  // First time completing this challenge
   await db.insert(challengeProgress).values({
     challengeId,
     userId,
     completed: true,
   })
 
-  // Pro users get enhanced XP rewards
-  const xpBonus = userSubscription?.isActive ? 15 : 10 // Pro users get 50% more XP
+  // Check if this is the last challenge in the lesson
+  const allChallengesInLesson = await db.query.challenges.findMany({
+    where: eq(challenges.lessonId, lessonId),
+  })
 
-  await db
-    .update(userProgress)
-    .set({
-      points: currentUserProgress.points + xpBonus,
-    })
-    .where(eq(userProgress.userId, userId))
+  const completedChallengesInLesson = await db.query.challengeProgress.findMany({
+    where: and(eq(challengeProgress.userId, userId), eq(challengeProgress.completed, true)),
+    with: {
+      challenge: true,
+    },
+  })
 
-  revalidatePath("/learn")
-  revalidatePath("/lesson")
-  revalidatePath("/quests")
-  revalidatePath("/leaderboard")
-  revalidatePath(`/lesson/${lessonId}`)
+  const completedChallengeIds = new Set(
+    completedChallengesInLesson
+      .filter((cp) => cp.challenge.lessonId === lessonId)
+      .map((cp) => cp.challengeId),
+  )
+
+  // Add the current challenge that was just completed
+  completedChallengeIds.add(challengeId)
+
+  const isLessonComplete = allChallengesInLesson.length === completedChallengeIds.size
+
+  if (isLessonComplete) {
+    // Process full lesson completion with gamification rewards
+    // TODO: Track if lesson was completed without mistakes (perfect)
+    const wasPerfect = false // Implement perfect lesson tracking logic
+
+    const rewards = await processLessonCompletion(lessonId, true, wasPerfect)
+
+    revalidatePath("/learn")
+    revalidatePath("/lesson")
+    revalidatePath("/quests")
+    revalidatePath("/leaderboard")
+    revalidatePath(`/lesson/${lessonId}`)
+
+    return {
+      lessonComplete: true,
+      rewards: {
+        xp: rewards.xp,
+        gems: rewards.gems,
+        streak: rewards.newStreak,
+        achievements: rewards.achievements,
+      },
+    }
+  } else {
+    // Just a challenge completion, award basic XP
+    const xpAmount = userSubscription?.isActive ? 15 : 10
+    await awardXP(xpAmount, "challenge_complete", challengeId.toString())
+
+    revalidatePath("/learn")
+    revalidatePath("/lesson")
+    revalidatePath("/quests")
+    revalidatePath("/leaderboard")
+    revalidatePath(`/lesson/${lessonId}`)
+
+    return { lessonComplete: false }
+  }
 }

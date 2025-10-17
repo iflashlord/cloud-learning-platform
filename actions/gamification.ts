@@ -1,0 +1,587 @@
+"use server"
+
+import { auth } from "@clerk/nextjs/server"
+import { and, eq, desc, sql } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+
+import db from "@/db/drizzle"
+import { GAMIFICATION } from "@/constants"
+import { getUserProgress, getUserSubscription } from "@/db/queries"
+import {
+  userProgress,
+  xpTransactions,
+  gemTransactions,
+  userQuestProgress,
+  dailyQuests,
+  userAchievements,
+  achievements,
+  shopItems,
+  userPurchases,
+  leaderboards,
+} from "@/db/schema"
+
+// XP System Actions
+export const awardXP = async (
+  amount: number,
+  source: string,
+  sourceId?: string,
+  description?: string,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  const userSubscription = await getUserSubscription()
+
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Apply Pro bonus if applicable
+  let finalAmount = amount
+  if (userSubscription?.isActive && (source.includes("lesson") || source.includes("practice"))) {
+    finalAmount = Math.floor(amount * 1.5) // 50% bonus for Pro users
+  }
+
+  // Apply streak bonus
+  if (currentUserProgress.streak > 0 && source.includes("lesson")) {
+    const streakMultiplier = Math.min(
+      1 + currentUserProgress.streak * 0.1,
+      1 + GAMIFICATION.MAX_STREAK_BONUS_DAYS * 0.1,
+    )
+    finalAmount = Math.floor(finalAmount * streakMultiplier)
+  }
+
+  // Update user progress
+  await db.transaction(async (tx) => {
+    await tx
+      .update(userProgress)
+      .set({
+        points: currentUserProgress.points + finalAmount,
+        totalXpEarned: currentUserProgress.totalXpEarned + finalAmount,
+      })
+      .where(eq(userProgress.userId, userId))
+
+    // Log transaction
+    await tx.insert(xpTransactions).values({
+      userId,
+      type: "earned",
+      amount: finalAmount,
+      source,
+      sourceId,
+      description: description || `Earned ${finalAmount} XP from ${source}`,
+    })
+  })
+
+  return { xpEarned: finalAmount, newTotal: currentUserProgress.points + finalAmount }
+}
+
+export const spendXP = async (
+  amount: number,
+  source: string,
+  sourceId?: string,
+  description?: string,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  if (currentUserProgress.points < amount) {
+    throw new Error("Insufficient XP")
+  }
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(userProgress)
+      .set({
+        points: currentUserProgress.points - amount,
+      })
+      .where(eq(userProgress.userId, userId))
+
+    await tx.insert(xpTransactions).values({
+      userId,
+      type: "spent",
+      amount: -amount,
+      source,
+      sourceId,
+      description: description || `Spent ${amount} XP on ${source}`,
+    })
+  })
+
+  return { xpSpent: amount, newTotal: currentUserProgress.points - amount }
+}
+
+// Gems System Actions
+export const awardGems = async (
+  amount: number,
+  source: string,
+  sourceId?: string,
+  description?: string,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(userProgress)
+      .set({
+        gems: currentUserProgress.gems + amount,
+      })
+      .where(eq(userProgress.userId, userId))
+
+    await tx.insert(gemTransactions).values({
+      userId,
+      type: "earned",
+      amount,
+      source,
+      sourceId,
+      description: description || `Earned ${amount} gems from ${source}`,
+    })
+  })
+
+  return { gemsEarned: amount, newTotal: currentUserProgress.gems + amount }
+}
+
+export const spendGems = async (
+  amount: number,
+  source: string,
+  sourceId?: string,
+  description?: string,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  if (currentUserProgress.gems < amount) {
+    throw new Error("Insufficient gems")
+  }
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(userProgress)
+      .set({
+        gems: currentUserProgress.gems - amount,
+      })
+      .where(eq(userProgress.userId, userId))
+
+    await tx.insert(gemTransactions).values({
+      userId,
+      type: "spent",
+      amount: -amount,
+      source,
+      sourceId,
+      description: description || `Spent ${amount} gems on ${source}`,
+    })
+  })
+
+  return { gemsSpent: amount, newTotal: currentUserProgress.gems - amount }
+}
+
+// Hearts System Actions
+export const refillHeartsWithGems = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  const userSubscription = await getUserSubscription()
+
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Pro users have unlimited hearts
+  if (userSubscription?.isActive) {
+    throw new Error("Pro users have unlimited hearts")
+  }
+
+  if (currentUserProgress.hearts === GAMIFICATION.MAX_HEARTS) {
+    throw new Error("Hearts are already full")
+  }
+
+  if (currentUserProgress.gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS) {
+    throw new Error("Insufficient gems")
+  }
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(userProgress)
+      .set({
+        hearts: GAMIFICATION.MAX_HEARTS,
+        gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+        heartsRefillAt: null, // Reset refill timer
+      })
+      .where(eq(userProgress.userId, userId))
+
+    await tx.insert(gemTransactions).values({
+      userId,
+      type: "spent",
+      amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+      source: "hearts_refill",
+      description: `Refilled hearts for ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems`,
+    })
+  })
+
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+  return { success: true }
+}
+
+// Streak System Actions
+export const updateStreak = async (isLessonCompleted: boolean = true) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  const today = new Date()
+  const lastActive = currentUserProgress.lastActiveDate
+  const isToday = lastActive && lastActive.toDateString() === today.toDateString()
+
+  if (isToday) {
+    // Already active today, no streak update needed
+    return { streak: currentUserProgress.streak }
+  }
+
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const wasActiveYesterday = lastActive && lastActive.toDateString() === yesterday.toDateString()
+
+  let newStreak = 1
+  if (wasActiveYesterday && isLessonCompleted) {
+    newStreak = currentUserProgress.streak + 1
+  } else if (!isLessonCompleted) {
+    newStreak = 0 // Streak broken
+  }
+
+  // Award streak bonus gems and XP
+  if (newStreak > 0 && isLessonCompleted) {
+    await awardGems(
+      GAMIFICATION.GEMS_PER_STREAK_DAY,
+      "daily_streak",
+      undefined,
+      `Daily streak bonus: Day ${newStreak}`,
+    )
+
+    if (newStreak >= 7) {
+      await awardXP(
+        GAMIFICATION.XP_STREAK_BONUS,
+        "streak_bonus",
+        undefined,
+        `Weekly streak bonus: ${newStreak} days`,
+      )
+    }
+  }
+
+  await db
+    .update(userProgress)
+    .set({
+      streak: newStreak,
+      lastActiveDate: today,
+    })
+    .where(eq(userProgress.userId, userId))
+
+  return { streak: newStreak }
+}
+
+// Quest System Actions
+export const updateQuestProgress = async (questType: string, incrementBy: number = 1) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  // Find active quests of this type for today
+  const activeQuests = await db.query.dailyQuests.findMany({
+    where: and(
+      eq(dailyQuests.type, questType as any),
+      eq(dailyQuests.isActive, true),
+      sql`DATE(${dailyQuests.date}) = DATE(${today})`,
+    ),
+  })
+
+  for (const quest of activeQuests) {
+    // Check existing progress
+    const existingProgress = await db.query.userQuestProgress.findFirst({
+      where: and(eq(userQuestProgress.userId, userId), eq(userQuestProgress.questId, quest.id)),
+    })
+
+    if (existingProgress && existingProgress.completed) {
+      continue // Quest already completed
+    }
+
+    const currentValue = existingProgress?.currentValue || 0
+    const newValue = currentValue + incrementBy
+    const isCompleted = newValue >= quest.targetValue
+
+    if (existingProgress) {
+      await db
+        .update(userQuestProgress)
+        .set({
+          currentValue: newValue,
+          completed: isCompleted,
+          completedAt: isCompleted ? new Date() : null,
+        })
+        .where(eq(userQuestProgress.id, existingProgress.id))
+    } else {
+      await db.insert(userQuestProgress).values({
+        userId,
+        questId: quest.id,
+        currentValue: newValue,
+        completed: isCompleted,
+        completedAt: isCompleted ? new Date() : null,
+      })
+    }
+
+    // If quest completed, award rewards
+    if (isCompleted && !existingProgress?.completed) {
+      if (quest.xpReward > 0) {
+        await awardXP(quest.xpReward, "quest_reward", quest.id.toString())
+      }
+      if (quest.gemsReward > 0) {
+        await awardGems(quest.gemsReward, "quest_reward", quest.id.toString())
+      }
+    }
+  }
+}
+
+// Shop System Actions
+export const purchaseShopItem = async (shopItemKey: string) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const shopItem = await db.query.shopItems.findFirst({
+    where: and(eq(shopItems.key, shopItemKey), eq(shopItems.isActive, true)),
+  })
+
+  if (!shopItem) throw new Error("Shop item not found")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Check if user can afford the item
+  if (shopItem.gemCost > 0 && currentUserProgress.gems < shopItem.gemCost) {
+    throw new Error("Insufficient gems")
+  }
+  if (shopItem.xpCost > 0 && currentUserProgress.points < shopItem.xpCost) {
+    throw new Error("Insufficient XP")
+  }
+
+  await db.transaction(async (tx) => {
+    // Deduct costs
+    const updates: any = {}
+    if (shopItem.gemCost > 0) {
+      updates.gems = currentUserProgress.gems - shopItem.gemCost
+    }
+    if (shopItem.xpCost > 0) {
+      updates.points = currentUserProgress.points - shopItem.xpCost
+    }
+
+    // Apply item effects
+    switch (shopItem.type) {
+      case "hearts_refill":
+        updates.hearts = GAMIFICATION.MAX_HEARTS
+        updates.heartsRefillAt = null
+        break
+      // Add other item types as needed
+    }
+
+    await tx.update(userProgress).set(updates).where(eq(userProgress.userId, userId))
+
+    // Record purchase
+    await tx.insert(userPurchases).values({
+      userId,
+      shopItemId: shopItem.id,
+      gemCost: shopItem.gemCost,
+      xpCost: shopItem.xpCost,
+    })
+
+    // Log transactions
+    if (shopItem.gemCost > 0) {
+      await tx.insert(gemTransactions).values({
+        userId,
+        type: "spent",
+        amount: -shopItem.gemCost,
+        source: "shop_purchase",
+        sourceId: shopItem.id.toString(),
+        description: `Purchased ${shopItem.title}`,
+      })
+    }
+    if (shopItem.xpCost > 0) {
+      await tx.insert(xpTransactions).values({
+        userId,
+        type: "spent",
+        amount: -shopItem.xpCost,
+        source: "shop_purchase",
+        sourceId: shopItem.id.toString(),
+        description: `Purchased ${shopItem.title}`,
+      })
+    }
+  })
+
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+  return { success: true }
+}
+
+// Achievement System Actions
+export const checkAndUnlockAchievements = async (
+  context: "lesson_complete" | "streak" | "xp_milestone" | "perfect_lesson" | "course_complete",
+  value?: number,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Get user's existing achievements
+  const userAchievementsList = await db.query.userAchievements.findMany({
+    where: eq(userAchievements.userId, userId),
+  })
+
+  const unlockedAchievementIds = new Set(userAchievementsList.map((ua) => ua.achievementId))
+
+  // Define achievement unlock conditions
+  const achievementChecks: { [key: string]: boolean } = {
+    first_lesson: context === "lesson_complete" && currentUserProgress.lessonsCompleted === 1,
+    "10_lessons": context === "lesson_complete" && currentUserProgress.lessonsCompleted === 10,
+    "50_lessons": context === "lesson_complete" && currentUserProgress.lessonsCompleted === 50,
+    "100_lessons": context === "lesson_complete" && currentUserProgress.lessonsCompleted === 100,
+    first_streak: context === "streak" && value === 3,
+    week_streak: context === "streak" && value === 7,
+    month_streak: context === "streak" && value === 30,
+    "1000_xp": context === "xp_milestone" && currentUserProgress.totalXpEarned >= 1000,
+    "5000_xp": context === "xp_milestone" && currentUserProgress.totalXpEarned >= 5000,
+    "10000_xp": context === "xp_milestone" && currentUserProgress.totalXpEarned >= 10000,
+    perfect_10: context === "perfect_lesson" && currentUserProgress.perfectLessons >= 10,
+    perfect_50: context === "perfect_lesson" && currentUserProgress.perfectLessons >= 50,
+  }
+
+  const newlyUnlockedAchievements = []
+
+  // Get all achievements
+  const allAchievements = await db.query.achievements.findMany()
+
+  for (const achievement of allAchievements) {
+    if (unlockedAchievementIds.has(achievement.id)) continue
+
+    if (achievementChecks[achievement.key]) {
+      // Unlock achievement
+      await db.insert(userAchievements).values({
+        userId,
+        achievementId: achievement.id,
+      })
+
+      // Award rewards
+      if (achievement.xpReward > 0) {
+        await awardXP(
+          achievement.xpReward,
+          "achievement_unlock",
+          achievement.id.toString(),
+          `Achievement unlocked: ${achievement.title}`,
+        )
+      }
+      if (achievement.gemsReward > 0) {
+        await awardGems(
+          achievement.gemsReward,
+          "achievement_unlock",
+          achievement.id.toString(),
+          `Achievement unlocked: ${achievement.title}`,
+        )
+      }
+
+      newlyUnlockedAchievements.push(achievement)
+    }
+  }
+
+  return { newAchievements: newlyUnlockedAchievements }
+}
+
+// Helper function to process lesson completion with all gamification rewards
+export const processLessonCompletion = async (
+  lessonId: number,
+  wasFirstAttempt: boolean,
+  wasPerfect: boolean,
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  const rewards = {
+    xp: 0,
+    gems: 0,
+    newStreak: 0,
+    achievements: [] as any[],
+  }
+
+  // Base XP reward
+  let xpAmount = GAMIFICATION.XP_PER_LESSON
+  if (wasPerfect) {
+    xpAmount += GAMIFICATION.XP_PERFECT_LESSON_BONUS
+  }
+
+  const xpResult = await awardXP(xpAmount, "lesson_complete", lessonId.toString())
+  rewards.xp = xpResult.xpEarned
+
+  // Gems for first-time completion
+  if (wasFirstAttempt) {
+    let gemsAmount = GAMIFICATION.GEMS_PER_LESSON_FIRST_TIME
+    if (wasPerfect) {
+      gemsAmount += GAMIFICATION.GEMS_PER_PERFECT_LESSON
+    }
+    const gemsResult = await awardGems(gemsAmount, "lesson_complete", lessonId.toString())
+    rewards.gems = gemsResult.gemsEarned
+  }
+
+  // Update progress counters
+  const updates: any = {
+    lessonsCompleted: currentUserProgress.lessonsCompleted + 1,
+  }
+  if (wasPerfect) {
+    updates.perfectLessons = currentUserProgress.perfectLessons + 1
+  }
+
+  await db.update(userProgress).set(updates).where(eq(userProgress.userId, userId))
+
+  // Update streak
+  const streakResult = await updateStreak(true)
+  rewards.newStreak = streakResult.streak
+
+  // Update quest progress
+  await updateQuestProgress("complete_lessons", 1)
+  await updateQuestProgress("earn_xp", rewards.xp)
+  if (wasPerfect) {
+    await updateQuestProgress("perfect_lesson", 1)
+  }
+
+  // Check achievements
+  const achievementResult = await checkAndUnlockAchievements("lesson_complete")
+  if (wasPerfect) {
+    const perfectAchievementResult = await checkAndUnlockAchievements("perfect_lesson")
+    achievementResult.newAchievements.push(...perfectAchievementResult.newAchievements)
+  }
+  if (rewards.xp > 0) {
+    const xpAchievementResult = await checkAndUnlockAchievements("xp_milestone")
+    achievementResult.newAchievements.push(...xpAchievementResult.newAchievements)
+  }
+  if (rewards.newStreak > 0) {
+    const streakAchievementResult = await checkAndUnlockAchievements("streak", rewards.newStreak)
+    achievementResult.newAchievements.push(...streakAchievementResult.newAchievements)
+  }
+
+  rewards.achievements = achievementResult.newAchievements
+
+  revalidatePath("/learn")
+  revalidatePath("/lesson")
+  revalidatePath("/quests")
+  revalidatePath("/leaderboard")
+
+  return rewards
+}

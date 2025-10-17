@@ -6,13 +6,10 @@ import { revalidatePath } from "next/cache"
 import { auth, currentUser } from "@clerk/nextjs/server"
 
 import db from "@/db/drizzle"
-import { POINTS_TO_REFILL } from "@/constants"
-import {
-  getCourseById,
-  getUserProgress,
-  getUserSubscription,
-} from "@/db/queries"
+import { GAMIFICATION, POINTS_TO_REFILL } from "@/constants"
+import { getCourseById, getUserProgress, getUserSubscription } from "@/db/queries"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
+import { spendXP, spendGems, refillHeartsWithGems } from "@/actions/gamification"
 
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth()
@@ -51,6 +48,7 @@ export const upsertUserProgress = async (courseId: number) => {
     activeCourseId: courseId,
     userName: user.firstName || "User",
     userImageSrc: user.imageUrl || "/mascot.svg",
+    gems: GAMIFICATION.GEMS_STARTING_AMOUNT,
   })
 
   revalidatePath("/courses")
@@ -81,7 +79,7 @@ export const reduceHearts = async (challengeId: number) => {
   const existingChallengeProgress = await db.query.challengeProgress.findFirst({
     where: and(
       eq(challengeProgress.userId, userId),
-      eq(challengeProgress.challengeId, challengeId)
+      eq(challengeProgress.challengeId, challengeId),
     ),
   })
 
@@ -152,4 +150,19 @@ export const refillHearts = async () => {
   revalidatePath("/learn")
   revalidatePath("/quests")
   revalidatePath("/leaderboard")
+}
+
+export const refillHeartsWithGemsAction = async () => {
+  try {
+    const result = await refillHeartsWithGems()
+
+    revalidatePath("/shop")
+    revalidatePath("/learn")
+    revalidatePath("/quests")
+    revalidatePath("/leaderboard")
+
+    return result
+  } catch (error) {
+    throw error
+  }
 }

@@ -36,6 +36,27 @@
       "when": 1759938992935,
       "tag": "0004_odd_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1760740354178,
+      "tag": "0005_eager_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1760743602577,
+      "tag": "0006_worthless_dreadnoughts",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1760743716700,
+      "tag": "0007_aberrant_starjammers",
+      "breakpoints": true
     }
   ]
 }

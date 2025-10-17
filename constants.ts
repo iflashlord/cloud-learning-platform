@@ -1,4 +1,4 @@
-import { CONFIG } from "@/lib/config";
+import { CONFIG } from "@/lib/config"
 import {
   Sprout,
   Search,
@@ -33,9 +33,61 @@ import {
   CloudSnow,
   Smile,
   Frown,
-} from "lucide-react";
+} from "lucide-react"
 
-export const POINTS_TO_REFILL = 10;
+export const POINTS_TO_REFILL = 10
+
+// Gamification Constants
+export const GAMIFICATION = {
+  // Hearts System
+  MAX_HEARTS: 5,
+  HEART_REFILL_INTERVAL_HOURS: 1,
+  HEARTS_REFILL_COST_GEMS: 5,
+  HEARTS_REFILL_COST_XP: 10,
+
+  // XP System
+  XP_PER_LESSON: 10,
+  XP_PER_LESSON_PRO: 15, // 50% bonus for Pro users
+  XP_PER_PRACTICE: 5,
+  XP_PER_PRACTICE_PRO: 8,
+  XP_PERFECT_LESSON_BONUS: 5, // Bonus for no mistakes
+  XP_STREAK_BONUS: 5, // Daily streak bonus
+
+  // Gems System
+  GEMS_STARTING_AMOUNT: 50,
+  GEMS_PER_LESSON_FIRST_TIME: 2,
+  GEMS_PER_PERFECT_LESSON: 3,
+  GEMS_PER_STREAK_DAY: 1, // Daily login bonus
+  GEMS_FROM_AD_WATCH: 5,
+  GEMS_PRO_DAILY_BONUS: 10, // Pro users get daily gems
+  GEMS_CHEST_BRONZE: 5,
+  GEMS_CHEST_SILVER: 10,
+  GEMS_CHEST_GOLD: 20,
+
+  // Streak System
+  STREAK_XP_MULTIPLIER: 1.1, // 10% bonus XP per day (up to 7 days)
+  MAX_STREAK_BONUS_DAYS: 7,
+  STREAK_FREEZE_COST_GEMS: 15, // Cost to protect streak
+
+  // Shop Costs
+  DOUBLE_XP_DURATION_HOURS: 2,
+  DOUBLE_XP_COST_GEMS: 20,
+
+  // Quest Rewards
+  DAILY_QUEST_XP_RANGE: [15, 50],
+  DAILY_QUEST_GEMS_RANGE: [2, 8],
+  WEEKLY_QUEST_MULTIPLIER: 3,
+
+  // Achievement Rewards
+  ACHIEVEMENT_XP_RANGE: [25, 100],
+  ACHIEVEMENT_GEMS_RANGE: [5, 25],
+
+  // Leaderboard Rewards (weekly)
+  LEADERBOARD_TOP_1_GEMS: 100,
+  LEADERBOARD_TOP_3_GEMS: 50,
+  LEADERBOARD_TOP_10_GEMS: 25,
+  LEADERBOARD_TOP_50_GEMS: 10,
+} as const
 
 export const QUEST_ICON_MAP = {
   sprout: Sprout,
@@ -46,9 +98,9 @@ export const QUEST_ICON_MAP = {
   trophy: Trophy,
   sparkles: Sparkles,
   wind: Wind,
-} as const;
+} as const
 
-export type QuestIconKey = keyof typeof QUEST_ICON_MAP;
+export type QuestIconKey = keyof typeof QUEST_ICON_MAP
 
 // SVG to Lucide Icon mappings
 export const ICON_MAP = {
@@ -76,25 +128,25 @@ export const ICON_MAP = {
   es: Globe,
   hr: Flag,
   it: Flag,
-} as const;
+} as const
 
-export type IconKey = keyof typeof ICON_MAP;
+export type IconKey = keyof typeof ICON_MAP
 
 type QuestDefinition = {
-  title: string;
-  description: string;
-  value: number;
+  title: string
+  description: string
+  value: number
   reward: {
-    xp: number;
-    hearts: number;
-    badge: string;
-  };
-  icon: QuestIconKey;
-  color: string;
-  difficulty: string;
-  category: string;
-  type: string;
-};
+    xp: number
+    hearts: number
+    badge: string
+  }
+  icon: QuestIconKey
+  color: string
+  difficulty: string
+  category: string
+  type: string
+}
 
 export const quests: QuestDefinition[] = [
   {
@@ -104,13 +156,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 5,
       hearts: 1,
-      badge: "novice"
+      badge: "novice",
     },
     icon: "sprout",
     color: "green",
     difficulty: "Beginner",
     category: "Getting Started",
-    type: "milestone"
+    type: "milestone",
   },
   {
     title: "Knowledge Seeker",
@@ -119,13 +171,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 10,
       hearts: 1,
-      badge: "explorer"
+      badge: "explorer",
     },
     icon: "search",
     color: "blue",
     difficulty: "Beginner",
     category: "Learning",
-    type: "milestone"
+    type: "milestone",
   },
   {
     title: "Consistent Learner",
@@ -134,13 +186,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 25,
       hearts: 2,
-      badge: "consistent"
+      badge: "consistent",
     },
     icon: "flame",
     color: "orange",
     difficulty: "Intermediate",
     category: "Consistency",
-    type: "streak"
+    type: "streak",
   },
   {
     title: "Challenge Champion",
@@ -149,13 +201,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 50,
       hearts: 3,
-      badge: "champion"
+      badge: "champion",
     },
     icon: "zap",
     color: "purple",
     difficulty: "Intermediate",
     category: "Achievement",
-    type: "milestone"
+    type: "milestone",
   },
   {
     title: "Course Conqueror",
@@ -164,13 +216,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 100,
       hearts: 5,
-      badge: "conqueror"
+      badge: "conqueror",
     },
     icon: "crown",
     color: "gold",
     difficulty: "Advanced",
     category: "Mastery",
-    type: "completion"
+    type: "completion",
   },
   {
     title: "Technology Master",
@@ -179,13 +231,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 200,
       hearts: 10,
-      badge: "master"
+      badge: "master",
     },
     icon: "trophy",
     color: "platinum",
     difficulty: "Expert",
     category: "Mastery",
-    type: "milestone"
+    type: "milestone",
   },
   {
     title: "Perfect Week",
@@ -194,13 +246,13 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 75,
       hearts: 4,
-      badge: "perfectionist"
+      badge: "perfectionist",
     },
     icon: "sparkles",
     color: "rainbow",
     difficulty: "Advanced",
     category: "Consistency",
-    type: "streak"
+    type: "streak",
   },
   {
     title: "Speed Demon",
@@ -209,17 +261,17 @@ export const quests: QuestDefinition[] = [
     reward: {
       xp: 35,
       hearts: 2,
-      badge: "speedster"
+      badge: "speedster",
     },
     icon: "wind",
     color: "cyan",
     difficulty: "Intermediate",
     category: "Performance",
-    type: "challenge"
-  }
-];
+    type: "challenge",
+  },
+]
 
 // Platform branding constants
-export const PLATFORM_NAME = CONFIG.PLATFORM_NAME;
-export const PLATFORM_DESCRIPTION = CONFIG.PLATFORM_DESCRIPTION;
-export const FULL_TITLE = CONFIG.FULL_TITLE;
+export const PLATFORM_NAME = CONFIG.PLATFORM_NAME
+export const PLATFORM_DESCRIPTION = CONFIG.PLATFORM_DESCRIPTION
+export const FULL_TITLE = CONFIG.FULL_TITLE
