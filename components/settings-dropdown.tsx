@@ -7,15 +7,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+  NativeDialog,
+  NativeDialogContent,
+  NativeDialogDescription,
+  NativeDialogFooter,
+  NativeDialogHeader,
+  NativeDialogTitle,
+} from "@/components/ui/native-dialog"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
 import { useUser } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
@@ -241,14 +239,14 @@ export const SettingsDropdown = ({
       )}
 
       {/* Reset Progress Dialog */}
-      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
-        <AlertDialogContent className='max-w-md'>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Reset Progress</AlertDialogTitle>
-            <AlertDialogDescription>
+      <NativeDialog open={showResetDialog} onOpenChange={setShowResetDialog} className='max-w-md'>
+        <NativeDialogContent>
+          <NativeDialogHeader>
+            <NativeDialogTitle>Reset Progress</NativeDialogTitle>
+            <NativeDialogDescription>
               Choose what progress you want to reset. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </NativeDialogDescription>
+          </NativeDialogHeader>
 
           <div className='space-y-4'>
             {/* Reset All Option */}
@@ -313,9 +311,11 @@ export const SettingsDropdown = ({
             )}
           </div>
 
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+          <NativeDialogFooter>
+            <Button variant='outline' onClick={() => setShowResetDialog(false)}>
+              Cancel
+            </Button>
+            <Button
               onClick={handleResetProgress}
               disabled={!resetAll && selectedCourses.length === 0}
               className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
@@ -325,10 +325,10 @@ export const SettingsDropdown = ({
                 : `Reset ${selectedCourses.length} Course${
                     selectedCourses.length !== 1 ? "s" : ""
                   }`}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </NativeDialogFooter>
+        </NativeDialogContent>
+      </NativeDialog>
 
       {/* Audio Settings Modal */}
       <AudioSettingsModal open={showAudioSettings} onOpenChange={setShowAudioSettings} />

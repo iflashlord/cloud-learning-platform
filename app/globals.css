@@ -749,4 +749,23 @@ html.dark {
       0 10px 15px -3px rgba(0, 0, 0, 0.4),
       0 4px 6px -2px rgba(0, 0, 0, 0.2);
   }
+
+  /* Native dialog enhancements */
+  dialog {
+    /* Ensure native dialog appears above everything */
+    z-index: 9999;
+  }
+  
+  dialog::backdrop {
+    /* Fallback for browsers that don't support CSS custom properties in backdrop */
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Ensure dialog is centered when shown */
+  dialog[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

@@ -2,12 +2,13 @@
 
 import React, { useState } from "react"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  NativeDialog,
+  NativeDialogContent,
+  NativeDialogDescription,
+  NativeDialogFooter,
+  NativeDialogHeader,
+  NativeDialogTitle,
+} from "@/components/ui/native-dialog"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -136,17 +137,17 @@ export function AudioSettingsModal({ open, onOpenChange }: AudioSettingsModalPro
   const formatVolumeLabel = (volume: number) => `${volume}%`
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
-        <DialogHeader>
-          <DialogTitle className='flex items-center gap-2'>
+    <NativeDialog open={open} onOpenChange={onOpenChange} className='max-w-2xl'>
+      <NativeDialogContent className='max-h-[90vh] overflow-y-auto'>
+        <NativeDialogHeader>
+          <NativeDialogTitle className='flex items-center gap-2'>
             <Settings className='w-5 h-5' />
             Audio Settings
-          </DialogTitle>
-          <DialogDescription>
+          </NativeDialogTitle>
+          <NativeDialogDescription>
             Configure your audio preferences for lessons, sound effects, and media playback.
-          </DialogDescription>
-        </DialogHeader>
+          </NativeDialogDescription>
+        </NativeDialogHeader>
 
         <div className='space-y-6'>
           {/* Master Audio Control */}
@@ -375,7 +376,7 @@ export function AudioSettingsModal({ open, onOpenChange }: AudioSettingsModalPro
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </NativeDialogContent>
+    </NativeDialog>
   )
 }
