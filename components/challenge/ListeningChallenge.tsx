@@ -4,6 +4,12 @@ import { cn } from "@/lib/utils"
 import { Volume2, Headphones } from "lucide-react"
 import { ChallengeCard } from "./ChallengeCard"
 import { challengeOptions, challenges } from "@/db/schema"
+import {
+  useLessonsAudioVolume,
+  useAutoPlaySettings,
+  useAudioEnabled,
+} from "@/contexts/AudioSettingsContext"
+import { useEffect, useRef } from "react"
 
 interface ListeningChallengeProps {
   challenge: typeof challenges.$inferSelect
@@ -22,6 +28,23 @@ export const ListeningChallenge = ({
   status,
   disabled,
 }: ListeningChallengeProps) => {
+  const audioEnabled = useAudioEnabled()
+  const lessonsAudioVolume = useLessonsAudioVolume()
+  const { autoPlayAudio } = useAutoPlaySettings()
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  // Set volume and autoplay when component mounts or settings change
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = audioEnabled ? lessonsAudioVolume : 0
+      audioRef.current.muted = !audioEnabled
+
+      // Auto-play if enabled and audio is available
+      if (autoPlayAudio && audioEnabled && challenge?.audioSrc) {
+        audioRef.current.play().catch(console.error)
+      }
+    }
+  }, [audioEnabled, lessonsAudioVolume, autoPlayAudio, challenge?.audioSrc])
   return (
     <div className='space-y-4'>
       {challenge?.audioSrc && (
@@ -32,10 +55,12 @@ export const ListeningChallenge = ({
           </p>
           <div className='bg-white dark:bg-gray-800 p-3 rounded-lg border border-indigo-100 dark:border-indigo-700/30 shadow-sm'>
             <audio
+              ref={audioRef}
               controls
               className='w-full'
               style={{ height: "40px" }}
               preload='metadata'
+              muted={!audioEnabled}
             >
               <source src={challenge.audioSrc} type='audio/mpeg' />
               <source src={challenge.audioSrc} type='audio/wav' />

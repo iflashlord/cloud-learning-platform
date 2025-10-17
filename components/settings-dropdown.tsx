@@ -1,14 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  Settings,
-  RotateCcw,
-  Shield,
-  Crown,
-  BookOpen,
-  ChevronDown,
-} from "lucide-react"
+import { Settings, RotateCcw, Shield, Crown, BookOpen, ChevronDown, Volume2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -27,6 +20,7 @@ import { useIsAdmin } from "@/hooks/useIsAdmin"
 import { useUser } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { AudioSettingsModal } from "@/components/modals/AudioSettingsModal"
 
 interface SettingsDropdownProps {
   onResetProgress?: () => void
@@ -43,22 +37,18 @@ export const SettingsDropdown = ({
   const { user } = useUser()
   const router = useRouter()
   const [isOpen, setIsOpen] = React.useState(false)
-  const [courses, setCourses] = React.useState<
-    Array<{ id: number; title: string }>
-  >([])
+  const [courses, setCourses] = React.useState<Array<{ id: number; title: string }>>([])
   const [loadingCourses, setLoadingCourses] = React.useState(false)
   const [showResetDialog, setShowResetDialog] = React.useState(false)
   const [selectedCourses, setSelectedCourses] = React.useState<number[]>([])
   const [resetAll, setResetAll] = React.useState(false)
+  const [showAudioSettings, setShowAudioSettings] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false)
       }
     }
@@ -80,7 +70,7 @@ export const SettingsDropdown = ({
           data.map((course: any) => ({
             id: course.id,
             title: course.title,
-          }))
+          })),
         )
       }
     } catch (error) {
@@ -142,9 +132,7 @@ export const SettingsDropdown = ({
 
   const toggleCourseSelection = (courseId: number) => {
     setSelectedCourses((prev) =>
-      prev.includes(courseId)
-        ? prev.filter((id) => id !== courseId)
-        : [...prev, courseId]
+      prev.includes(courseId) ? prev.filter((id) => id !== courseId) : [...prev, courseId],
     )
   }
 
@@ -170,12 +158,23 @@ export const SettingsDropdown = ({
             {/* Header */}
             <div className='px-2 py-1.5'>
               <p className='text-sm font-medium'>Settings</p>
-              <p className='text-xs text-muted-foreground'>
-                {user?.firstName || "User"}
-              </p>
+              <p className='text-xs text-muted-foreground'>{user?.firstName || "User"}</p>
             </div>
 
             <div className='h-px bg-border my-1' />
+
+            {/* Audio Settings */}
+            <Button
+              variant='ghost'
+              className='w-full justify-start text-left h-auto py-2 px-2'
+              onClick={() => {
+                setShowAudioSettings(true)
+                setIsOpen(false)
+              }}
+            >
+              <Volume2 className='mr-2 h-4 w-4' />
+              <span>Audio Settings</span>
+            </Button>
 
             {/* Reset Progress */}
             <Button
@@ -230,7 +229,7 @@ export const SettingsDropdown = ({
                   <Crown
                     className={cn(
                       "mr-2 h-4 w-4",
-                      isProMode ? "text-yellow-500" : "text-muted-foreground"
+                      isProMode ? "text-yellow-500" : "text-muted-foreground",
                     )}
                   />
                   <span>Switch to {isProMode ? "Free" : "Pro"} Mode</span>
@@ -247,8 +246,7 @@ export const SettingsDropdown = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Reset Progress</AlertDialogTitle>
             <AlertDialogDescription>
-              Choose what progress you want to reset. This action cannot be
-              undone.
+              Choose what progress you want to reset. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -264,7 +262,7 @@ export const SettingsDropdown = ({
                 }}
                 className={cn(
                   "w-full justify-start",
-                  resetAll && "bg-primary text-primary-foreground"
+                  resetAll && "bg-primary text-primary-foreground",
                 )}
               >
                 <BookOpen className='mr-2 h-4 w-4' />
@@ -275,13 +273,9 @@ export const SettingsDropdown = ({
             {/* Individual Courses */}
             {!resetAll && (
               <div className='space-y-2'>
-                <p className='text-sm font-medium'>
-                  Or select specific courses:
-                </p>
+                <p className='text-sm font-medium'>Or select specific courses:</p>
                 {loadingCourses ? (
-                  <div className='text-sm text-muted-foreground'>
-                    Loading courses...
-                  </div>
+                  <div className='text-sm text-muted-foreground'>Loading courses...</div>
                 ) : (
                   <div className='space-y-2 max-h-48 overflow-y-auto'>
                     {courses.map((course) => (
@@ -293,7 +287,7 @@ export const SettingsDropdown = ({
                         className={cn(
                           "w-full justify-start text-left",
                           selectedCourses.includes(course.id) &&
-                            "bg-primary text-primary-foreground"
+                            "bg-primary text-primary-foreground",
                         )}
                       >
                         <span className='truncate'>{course.title}</span>
@@ -307,12 +301,8 @@ export const SettingsDropdown = ({
             {/* Warning */}
             {(resetAll || selectedCourses.length > 0) && (
               <div className='bg-destructive/10 border border-destructive/20 rounded-lg p-3'>
-                <p className='text-sm text-destructive font-medium'>
-                  ⚠️ Warning
-                </p>
-                <p className='text-sm text-destructive/80 mt-1'>
-                  This will permanently delete:
-                </p>
+                <p className='text-sm text-destructive font-medium'>⚠️ Warning</p>
+                <p className='text-sm text-destructive/80 mt-1'>This will permanently delete:</p>
                 <ul className='text-sm text-destructive/80 mt-1 ml-4 list-disc'>
                   <li>All completed lessons and units</li>
                   <li>Your current points and hearts</li>
@@ -339,6 +329,9 @@ export const SettingsDropdown = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Audio Settings Modal */}
+      <AudioSettingsModal open={showAudioSettings} onOpenChange={setShowAudioSettings} />
     </div>
   )
 }

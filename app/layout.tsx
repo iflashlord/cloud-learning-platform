@@ -7,6 +7,7 @@ import { HeartsModal } from "@/components/modals/hearts-modal"
 import { PracticeModal } from "@/components/modals/practice-modal"
 import { ThemeProvider } from "@/lib/theme"
 import { EnhancedThemeLayoutWrapper } from "@/components/enhanced-theme-layout-wrapper"
+import { AudioSettingsProvider } from "@/contexts/AudioSettingsContext"
 import { CONFIG } from "@/lib/config"
 import "./globals.css"
 
@@ -27,13 +28,15 @@ export default function RootLayout({
       <html lang='en'>
         <body className={font.className}>
           <ThemeProvider>
-            <EnhancedThemeLayoutWrapper>
-              <Toaster />
-              <ExitModal />
-              <HeartsModal />
-              <PracticeModal />
-              {children}
-            </EnhancedThemeLayoutWrapper>
+            <AudioSettingsProvider>
+              <EnhancedThemeLayoutWrapper>
+                <Toaster />
+                <ExitModal />
+                <HeartsModal />
+                <PracticeModal />
+                {children}
+              </EnhancedThemeLayoutWrapper>
+            </AudioSettingsProvider>
           </ThemeProvider>
         </body>
       </html>
