@@ -64,12 +64,9 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
       addAdRewardPoints(earnedPoints)
         .then((result) => {
           dailyAds.watchAd()
-          toast.success(
-            `You earned ${earnedPoints} XP! Total XP: ${result.newPoints}`,
-            {
-              duration: 4000,
-            }
-          )
+          toast.success(`You earned ${earnedPoints} XP! Total XP: ${result.newPoints}`, {
+            duration: 4000,
+          })
         })
         .catch((error) => {
           console.error("Failed to add ad reward points:", error)
@@ -88,9 +85,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               <Heart className='w-8 h-8 text-white fill-current' />
             </div>
             <div className='flex-1 min-w-0'>
-              <h3 className='text-xl font-bold text-foreground mb-2'>
-                Refill Hearts
-              </h3>
+              <h3 className='text-xl font-bold text-foreground mb-2'>Refill Hearts</h3>
               <p className='text-sm text-muted-foreground mb-3'>
                 Get back in the game when you run out of hearts!
               </p>
@@ -99,23 +94,18 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
                   className={cn(
                     "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1",
                     statusStyles.error.bg,
-                    statusStyles.error.text
+                    statusStyles.error.text,
                   )}
                 >
-                  <Heart
-                    className={cn("w-4 h-4", statusStyles.error.text)}
-                    fill='currentColor'
-                  />
-                  <span>
-                    {hearts === 5 ? "Hearts Full" : `${hearts}/5 Hearts`}
-                  </span>
+                  <Heart className={cn("w-4 h-4", statusStyles.error.text)} fill='currentColor' />
+                  <span>{hearts === 5 ? "Hearts Full" : `${hearts}/5 Hearts`}</span>
                 </div>
                 {hearts < 5 && (
                   <div
                     className={cn(
                       "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1",
                       statusStyles.info.bg,
-                      statusStyles.info.text
+                      statusStyles.info.text,
                     )}
                   >
                     <Zap className={cn("w-4 h-4", statusStyles.info.text)} />
@@ -125,6 +115,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               </div>
             </div>
             <Button
+              variant='subtle'
               onClick={onRefillHearts}
               disabled={pending || hearts === 5 || points < POINTS_TO_REFILL}
               className={`px-6 py-3 font-bold text-lg ${
@@ -137,10 +128,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
             >
               {hearts === 5 ? (
                 <div className='flex items-center gap-2'>
-                  <Heart
-                    className='w-5 h-5 text-muted-foreground/60'
-                    fill='currentColor'
-                  />
+                  <Heart className='w-5 h-5 text-muted-foreground/60' fill='currentColor' />
                   <span>Hearts Full</span>
                 </div>
               ) : points < POINTS_TO_REFILL ? (
@@ -164,19 +152,16 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               <Play className='w-8 h-8 text-white fill-current' />
             </div>
             <div className='flex-1 min-w-0'>
-              <h3 className='text-xl font-bold text-foreground mb-2'>
-                Watch Ads for XP
-              </h3>
+              <h3 className='text-xl font-bold text-foreground mb-2'>Watch Ads for XP</h3>
               <p className='text-sm text-muted-foreground mb-3'>
-                Watch short video ads to earn free XP points! Use XP to buy
-                hearts and other items.
+                Watch short video ads to earn free XP points! Use XP to buy hearts and other items.
               </p>
               <div className='flex items-center gap-2'>
                 <div
                   className={cn(
                     "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1",
                     statusStyles.info.bg,
-                    statusStyles.info.text
+                    statusStyles.info.text,
                   )}
                 >
                   <Coins className={cn("w-4 h-4", statusStyles.info.text)} />
@@ -186,7 +171,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
                   className={cn(
                     "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1",
                     statusStyles.warning.bg,
-                    statusStyles.warning.text
+                    statusStyles.warning.text,
                   )}
                 >
                   <Clock className={cn("w-4 h-4", statusStyles.warning.text)} />
@@ -197,6 +182,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               </div>
             </div>
             <Button
+              variant='subtle'
               onClick={() => setShowAdModal(true)}
               disabled={!dailyAds.canWatch}
               className={`px-6 py-3 font-bold text-lg ${
@@ -227,7 +213,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
           className={cn(
             "absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide",
             statusStyles.warning.bg,
-            statusStyles.warning.text
+            statusStyles.warning.text,
           )}
         >
           {hasActiveSubscription ? "Active" : "Popular"}
@@ -243,37 +229,30 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               <Crown className={cn("w-5 h-5", statusStyles.warning.text)} />
             </h3>
             <p className='text-sm text-muted-foreground mb-3'>
-              Unlock unlimited hearts, remove ads, and get access to exclusive
-              pro features and content.
+              Unlock unlimited hearts, remove ads, and get access to exclusive pro features and
+              content.
             </p>
             <div className='space-y-2'>
               <div className='flex items-center gap-2'>
                 <Check className={cn("w-4 h-4", statusStyles.success.text)} />
-                <span className='text-sm text-muted-foreground'>
-                  Unlimited Hearts
-                </span>
+                <span className='text-sm text-muted-foreground'>Unlimited Hearts</span>
               </div>
               <div className='flex items-center gap-2'>
                 <Check className={cn("w-4 h-4", statusStyles.success.text)} />
-                <span className='text-sm text-muted-foreground'>
-                  Ad-free Experience
-                </span>
+                <span className='text-sm text-muted-foreground'>Ad-free Experience</span>
               </div>
               <div className='flex items-center gap-2'>
                 <Check className={cn("w-4 h-4", statusStyles.success.text)} />
-                <span className='text-sm text-muted-foreground'>
-                  Exclusive Pro Content
-                </span>
+                <span className='text-sm text-muted-foreground'>Exclusive Pro Content</span>
               </div>
               <div className='flex items-center gap-2'>
                 <Check className={cn("w-4 h-4", statusStyles.success.text)} />
-                <span className='text-sm text-muted-foreground'>
-                  Priority Support
-                </span>
+                <span className='text-sm text-muted-foreground'>Priority Support</span>
               </div>
             </div>
           </div>
           <Button
+            variant='subtle'
             onClick={onUpgrade}
             disabled={pending}
             className={`px-6 py-3 font-bold text-lg ${
@@ -303,12 +282,9 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
           <div className='w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4'>
             <Rocket className='w-8 h-8 text-white' />
           </div>
-          <h3 className='text-xl font-bold text-foreground mb-2'>
-            More Items Coming Soon!
-          </h3>
+          <h3 className='text-xl font-bold text-foreground mb-2'>More Items Coming Soon!</h3>
           <p className='text-sm text-muted-foreground'>
-            We&apos;re working on exciting new power-ups, themes, and learning
-            boosters. Stay tuned!
+            We&apos;re working on exciting new power-ups, themes, and learning boosters. Stay tuned!
           </p>
         </div>
       </div>

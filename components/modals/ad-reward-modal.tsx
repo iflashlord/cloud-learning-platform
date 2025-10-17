@@ -32,9 +32,7 @@ export const AdRewardModal = ({
   maxDailyAds,
   rewardPoints,
 }: AdRewardModalProps) => {
-  const [adState, setAdState] = useState<"ready" | "playing" | "completed">(
-    "ready"
-  )
+  const [adState, setAdState] = useState<"ready" | "playing" | "completed">("ready")
   const [adProgress, setAdProgress] = useState(0)
   const [isClient, setIsClient] = useState(false)
 
@@ -126,20 +124,17 @@ export const AdRewardModal = ({
           <DialogDescription className='text-center text-base'>
             {adState === "ready" && (
               <>
-                Watch a short 15-second video ad to earn{" "}
-                <strong>{rewardPoints} XP</strong>!<br />
+                Watch a short 15-second video ad to earn <strong>{rewardPoints} XP</strong>!<br />
                 <span className='text-sm text-muted-foreground mt-2 block'>
                   Daily limit: {dailyAdsWatched}/{maxDailyAds} ads watched
                 </span>
               </>
             )}
-            {adState === "playing" && (
-              <>Please wait while the ad plays. Don't close this window!</>
-            )}
+            {adState === "playing" && <>Please wait while the ad plays. Don't close this window!</>}
             {adState === "completed" && (
               <>
-                Great job! You've earned <strong>{rewardPoints} XP</strong>. You
-                can use these points to buy hearts and other items.
+                Great job! You've earned <strong>{rewardPoints} XP</strong>. You can use these
+                points to buy hearts and other items.
               </>
             )}
           </DialogDescription>
@@ -177,16 +172,14 @@ export const AdRewardModal = ({
             {adState === "ready" && (
               <>
                 <Button
-                  variant='primary'
+                  variant='subtle'
                   className='w-full flex items-center gap-2'
                   size='lg'
                   onClick={watchAd}
                   disabled={!canWatchMoreAds}
                 >
                   <Play className='w-5 h-5' />
-                  {canWatchMoreAds
-                    ? `Watch Ad (+${rewardPoints} XP)`
-                    : "Daily Limit Reached"}
+                  {canWatchMoreAds ? `Watch Ad (+${rewardPoints} XP)` : "Daily Limit Reached"}
                 </Button>
                 <Button
                   variant='outline'
