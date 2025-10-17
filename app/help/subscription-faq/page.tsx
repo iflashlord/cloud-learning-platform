@@ -77,6 +77,24 @@ const SubscriptionFAQPage = () => {
         "We're working on student pricing options. For now, contact support@behrouz.nl with your student ID for potential discounts.",
       icon: HelpCircle,
     },
+    {
+      question: "Can I share my Pro subscription with family?",
+      answer:
+        "Each Pro subscription is for individual use only. We're considering family plans for the future, but currently each person needs their own subscription.",
+      icon: HelpCircle,
+    },
+    {
+      question: "What happens to my learning progress if I cancel?",
+      answer:
+        "All your learning progress, achievements, and XP points are permanently saved to your account. Even if you cancel and resubscribe later, everything will be exactly as you left it.",
+      icon: RefreshCw,
+    },
+    {
+      question: "Is there a free trial for Pro?",
+      answer:
+        "Yes! New users get a 7-day free trial when they sign up for Pro. You can cancel anytime during the trial period without being charged.",
+      icon: Crown,
+    },
   ]
 
   const proFeatures = [
@@ -128,13 +146,10 @@ const SubscriptionFAQPage = () => {
       <div className='mb-8'>
         <div className='flex items-center gap-3 mb-4'>
           <Crown className='w-8 h-8 text-yellow-500' />
-          <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>
-            Subscription FAQ
-          </h1>
+          <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>Subscription FAQ</h1>
         </div>
         <p className='text-lg text-gray-600 dark:text-gray-400'>
-          Everything you need to know about {BRAND_CONFIG.PLATFORM_NAME} Pro
-          subscription
+          Everything you need to know about {BRAND_CONFIG.PLATFORM_NAME} Pro subscription
         </p>
       </div>
 
@@ -142,32 +157,20 @@ const SubscriptionFAQPage = () => {
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
         <Card>
           <CardContent className='p-6 text-center'>
-            <div className='text-3xl font-bold text-green-600 dark:text-green-400 mb-2'>
-              7 Days
-            </div>
-            <div className='text-sm text-gray-600 dark:text-gray-400'>
-              Free Trial Period
-            </div>
+            <div className='text-3xl font-bold text-green-600 dark:text-green-400 mb-2'>7 Days</div>
+            <div className='text-sm text-gray-600 dark:text-gray-400'>Free Trial Period</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className='p-6 text-center'>
-            <div className='text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2'>
-              $9.99
-            </div>
-            <div className='text-sm text-gray-600 dark:text-gray-400'>
-              Per Month
-            </div>
+            <div className='text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2'>$9.99</div>
+            <div className='text-sm text-gray-600 dark:text-gray-400'>Per Month</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className='p-6 text-center'>
-            <div className='text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2'>
-              ∞
-            </div>
-            <div className='text-sm text-gray-600 dark:text-gray-400'>
-              Unlimited Hearts
-            </div>
+            <div className='text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2'>∞</div>
+            <div className='text-sm text-gray-600 dark:text-gray-400'>Unlimited Hearts</div>
           </CardContent>
         </Card>
       </div>
@@ -194,9 +197,7 @@ const SubscriptionFAQPage = () => {
                     <Clock className='w-5 h-5 text-gray-400' />
                   )}
                   <div>
-                    <div className='font-medium text-gray-900 dark:text-white'>
-                      {item.feature}
-                    </div>
+                    <div className='font-medium text-gray-900 dark:text-white'>{item.feature}</div>
                     <div className='text-sm text-gray-600 dark:text-gray-400'>
                       {item.description}
                     </div>
@@ -234,9 +235,7 @@ const SubscriptionFAQPage = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-gray-600 dark:text-gray-400 ml-11'>
-                    {faq.answer}
-                  </p>
+                  <p className='text-gray-600 dark:text-gray-400 ml-11'>{faq.answer}</p>
                 </CardContent>
               </Card>
             )
@@ -252,8 +251,7 @@ const SubscriptionFAQPage = () => {
             Still have questions?
           </h3>
           <p className='text-gray-600 dark:text-gray-400 mb-6'>
-            Our support team is here to help with any subscription or billing
-            questions.
+            Our support team is here to help with any subscription or billing questions.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
             <Button asChild>

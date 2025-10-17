@@ -26,8 +26,8 @@ const GettingStartedPage = () => {
       completed: true,
       actions: [
         {
-          label: "Already signed up? Manage Profile",
-          href: "/help/account-settings",
+          label: "Manage Your Profile",
+          href: "/learn",
         },
       ],
     },
@@ -38,7 +38,7 @@ const GettingStartedPage = () => {
       icon: Target,
       actions: [
         { label: "Browse Courses", href: "/courses" },
-        { label: "View Course Guide", href: "/help/courses" },
+        { label: "Start Learning", href: "/learn" },
       ],
     },
     {
@@ -48,7 +48,7 @@ const GettingStartedPage = () => {
       icon: Play,
       actions: [
         { label: "Start Learning", href: "/learn" },
-        { label: "First Lesson Tips", href: "/help/first-lesson" },
+        { label: "Understanding Hearts", href: "/help/hearts-system" },
       ],
     },
     {
@@ -151,27 +151,22 @@ const GettingStartedPage = () => {
             Welcome to {BRAND_CONFIG.PLATFORM_NAME}!
           </h2>
           <p className='text-gray-600 dark:text-gray-400 max-w-2xl mx-auto'>
-            You&apos;re about to start an exciting journey learning Amazon Web
-            Services (AWS). Our platform makes cloud learning interactive,
-            engaging, and fun through gamified lessons.
+            You&apos;re about to start an exciting journey learning Amazon Web Services (AWS). Our
+            platform makes cloud learning interactive, engaging, and fun through gamified lessons.
           </p>
         </CardContent>
       </Card>
 
       {/* Getting Started Steps */}
       <div className='mb-8'>
-        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>
-          Quick Start Guide
-        </h2>
+        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>Quick Start Guide</h2>
         <div className='space-y-6'>
           {steps.map((step, index) => {
             const Icon = step.icon
             return (
               <Card
                 key={index}
-                className={
-                  step.completed ? "border-green-200 dark:border-green-800" : ""
-                }
+                className={step.completed ? "border-green-200 dark:border-green-800" : ""}
               >
                 <CardContent className='p-6'>
                   <div className='flex items-start gap-4'>
@@ -202,17 +197,10 @@ const GettingStartedPage = () => {
                           </Badge>
                         )}
                       </div>
-                      <p className='text-gray-600 dark:text-gray-400 mb-4'>
-                        {step.description}
-                      </p>
+                      <p className='text-gray-600 dark:text-gray-400 mb-4'>{step.description}</p>
                       <div className='flex flex-wrap gap-2'>
                         {step.actions.map((action, actionIndex) => (
-                          <Button
-                            key={actionIndex}
-                            variant='outline'
-                            size='sm'
-                            asChild
-                          >
+                          <Button key={actionIndex} variant='outline' size='sm' asChild>
                             <Link href={action.href}>
                               {action.label}
                               <ArrowRight className='w-4 h-4 ml-1' />
@@ -248,19 +236,12 @@ const GettingStartedPage = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-gray-600 dark:text-gray-400 mb-4'>
-                    {element.description}
-                  </p>
+                  <p className='text-gray-600 dark:text-gray-400 mb-4'>{element.description}</p>
                   <div className='space-y-2'>
                     {element.details.map((detail, detailIndex) => (
-                      <div
-                        key={detailIndex}
-                        className='flex items-start gap-2 text-sm'
-                      >
+                      <div key={detailIndex} className='flex items-start gap-2 text-sm'>
                         <CheckCircle className='w-4 h-4 text-green-500 mt-0.5 flex-shrink-0' />
-                        <span className='text-gray-600 dark:text-gray-400'>
-                          {detail}
-                        </span>
+                        <span className='text-gray-600 dark:text-gray-400'>{detail}</span>
                       </div>
                     ))}
                   </div>
@@ -290,9 +271,7 @@ const GettingStartedPage = () => {
                       <h3 className='font-semibold text-gray-900 dark:text-white mb-2'>
                         {tip.title}
                       </h3>
-                      <p className='text-gray-600 dark:text-gray-400 mb-3'>
-                        {tip.description}
-                      </p>
+                      <p className='text-gray-600 dark:text-gray-400 mb-3'>{tip.description}</p>
                       <div className='bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg'>
                         <div className='text-sm font-medium text-blue-800 dark:text-blue-300'>
                           💡 Pro Tip: {tip.tip}
@@ -315,9 +294,8 @@ const GettingStartedPage = () => {
             Ready to Start Learning?
           </h3>
           <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto'>
-            Now that you understand the basics, it&apos;s time to dive into your
-            first AWS lesson. Choose a course that matches your experience level
-            and goals.
+            Now that you understand the basics, it&apos;s time to dive into your first AWS lesson.
+            Choose a course that matches your experience level and goals.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
             <Button size='lg' asChild>

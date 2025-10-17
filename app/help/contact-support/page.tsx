@@ -18,8 +18,7 @@ const ContactSupportPage = () => {
     },
     {
       title: "Priority Support (Pro)",
-      description:
-        "Pro subscribers get faster response times and priority handling",
+      description: "Pro subscribers get faster response times and priority handling",
       icon: Crown,
       action: "Email Pro Support",
       href: "mailto:support@behrouz.nl?subject=Pro%20Support%20Request",
@@ -42,8 +41,8 @@ const ContactSupportPage = () => {
       issue: "Account Issues",
       description: "Login problems, password reset, or account settings",
       quickActions: [
-        { label: "Reset Password", href: "/reset-password" },
-        { label: "Account Settings", href: "/help/account-settings" },
+        { label: "Getting Started Guide", href: "/help/getting-started" },
+        { label: "Go to Dashboard", href: "/learn" },
       ],
     },
     {
@@ -51,15 +50,15 @@ const ContactSupportPage = () => {
       description: "Questions about hearts, XP, courses, or progress tracking",
       quickActions: [
         { label: "Hearts System Guide", href: "/help/hearts-system" },
-        { label: "XP Points Guide", href: "/help/xp-points" },
+        { label: "Getting Started Guide", href: "/help/getting-started" },
       ],
     },
     {
       issue: "Technical Problems",
       description: "App crashes, loading issues, or browser compatibility",
       quickActions: [
-        { label: "Technical Issues Guide", href: "/help/technical-issues" },
-        { label: "Browser Support", href: "/help/browser-support" },
+        { label: "Contact Email Support", href: "mailto:support@behrouz.nl" },
+        { label: "View Help Center", href: "/help" },
       ],
     },
   ]
@@ -70,9 +69,7 @@ const ContactSupportPage = () => {
       <div className='mb-8'>
         <div className='flex items-center gap-3 mb-4'>
           <Mail className='w-8 h-8 text-blue-500' />
-          <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>
-            Contact Support
-          </h1>
+          <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>Contact Support</h1>
         </div>
         <p className='text-lg text-gray-600 dark:text-gray-400'>
           Get help from our support team or find answers to common questions
@@ -120,9 +117,7 @@ const ContactSupportPage = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-gray-600 dark:text-gray-400 mb-4'>
-                    {option.description}
-                  </p>
+                  <p className='text-gray-600 dark:text-gray-400 mb-4'>{option.description}</p>
 
                   <div className='space-y-3 mb-6'>
                     <div className='flex items-center gap-2 text-sm'>
@@ -171,17 +166,11 @@ const ContactSupportPage = () => {
                 <CardTitle className='text-lg'>{item.issue}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-gray-600 dark:text-gray-400 mb-4'>
-                  {item.description}
-                </p>
+                <p className='text-gray-600 dark:text-gray-400 mb-4'>{item.description}</p>
                 <div className='space-y-2'>
                   {item.quickActions.map((action, actionIndex) => (
                     <Link key={actionIndex} href={action.href}>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        className='w-full justify-start'
-                      >
+                      <Button variant='outline' size='sm' className='w-full justify-start'>
                         <Zap className='w-4 h-4 mr-2' />
                         {action.label}
                       </Button>
@@ -206,9 +195,7 @@ const ContactSupportPage = () => {
                 <div className='flex items-center gap-3'>
                   <Mail className='w-5 h-5 text-blue-500' />
                   <div>
-                    <div className='font-medium text-gray-900 dark:text-white'>
-                      Email Support
-                    </div>
+                    <div className='font-medium text-gray-900 dark:text-white'>Email Support</div>
                     <Link
                       href='mailto:support@behrouz.nl'
                       className='text-blue-600 dark:text-blue-400 hover:underline'
@@ -220,9 +207,7 @@ const ContactSupportPage = () => {
                 <div className='flex items-center gap-3'>
                   <Clock className='w-5 h-5 text-blue-500' />
                   <div>
-                    <div className='font-medium text-gray-900 dark:text-white'>
-                      Response Times
-                    </div>
+                    <div className='font-medium text-gray-900 dark:text-white'>Response Times</div>
                     <div className='text-sm text-gray-600 dark:text-gray-400'>
                       Free users: 24 hours • Pro users: 4 hours
                     </div>
@@ -271,7 +256,7 @@ const ContactSupportPage = () => {
             <Link href='/help/subscription-faq'>Subscription FAQ</Link>
           </Button>
           <Button variant='outline' asChild>
-            <Link href='/help/technical-issues'>Technical Issues</Link>
+            <Link href='/help/hearts-system'>Hearts System</Link>
           </Button>
         </div>
       </div>

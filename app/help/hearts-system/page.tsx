@@ -1,13 +1,4 @@
-import {
-  Heart,
-  Shield,
-  Crown,
-  Clock,
-  Zap,
-  Star,
-  AlertTriangle,
-  CheckCircle,
-} from "lucide-react"
+import { Heart, Shield, Crown, Clock, Zap, Star, AlertTriangle, CheckCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -86,8 +77,8 @@ const HeartsSystemPage = () => {
           </h1>
         </div>
         <p className='text-lg text-gray-600 dark:text-gray-400'>
-          Understanding how hearts work in {BRAND_CONFIG.PLATFORM_NAME} and how
-          they affect your learning
+          Understanding how hearts work in {BRAND_CONFIG.PLATFORM_NAME} and how they affect your
+          learning
         </p>
       </div>
 
@@ -107,9 +98,7 @@ const HeartsSystemPage = () => {
                 <div className='font-medium text-gray-900 dark:text-white text-sm mb-2'>
                   {fact.title}
                 </div>
-                <div className='text-xs text-gray-600 dark:text-gray-400'>
-                  {fact.description}
-                </div>
+                <div className='text-xs text-gray-600 dark:text-gray-400'>{fact.description}</div>
               </CardContent>
             </Card>
           )
@@ -127,16 +116,12 @@ const HeartsSystemPage = () => {
         <CardContent className='space-y-6'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <div>
-              <h3 className='font-semibold text-gray-900 dark:text-white mb-3'>
-                For Free Users
-              </h3>
+              <h3 className='font-semibold text-gray-900 dark:text-white mb-3'>For Free Users</h3>
               <div className='space-y-3'>
                 <div className='flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'>
                   <Heart className='w-5 h-5 text-red-500 fill-current mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      Start with 5 hearts
-                    </div>
+                    <div className='font-medium text-sm'>Start with 5 hearts</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       Every new day begins with full hearts
                     </div>
@@ -145,9 +130,7 @@ const HeartsSystemPage = () => {
                 <div className='flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'>
                   <AlertTriangle className='w-5 h-5 text-orange-500 mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      Lose hearts on mistakes
-                    </div>
+                    <div className='font-medium text-sm'>Lose hearts on mistakes</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       Each wrong answer costs 1 heart
                     </div>
@@ -156,9 +139,7 @@ const HeartsSystemPage = () => {
                 <div className='flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'>
                   <Clock className='w-5 h-5 text-blue-500 mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      Hearts refill over time
-                    </div>
+                    <div className='font-medium text-sm'>Hearts refill over time</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       1 heart refills every hour automatically
                     </div>
@@ -196,9 +177,7 @@ const HeartsSystemPage = () => {
                 <div className='flex items-start gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/50'>
                   <Shield className='w-5 h-5 text-green-500 mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      Uninterrupted learning
-                    </div>
+                    <div className='font-medium text-sm'>Uninterrupted learning</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       Focus on learning without heart management
                     </div>
@@ -207,9 +186,7 @@ const HeartsSystemPage = () => {
                 <div className='flex items-start gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/50'>
                   <Star className='w-5 h-5 text-purple-500 mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      Learn at your pace
-                    </div>
+                    <div className='font-medium text-sm'>Learn at your pace</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       Practice as much as you want, anytime
                     </div>
@@ -218,9 +195,7 @@ const HeartsSystemPage = () => {
                 <div className='flex items-start gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/50'>
                   <CheckCircle className='w-5 h-5 text-blue-500 mt-0.5' />
                   <div>
-                    <div className='font-medium text-sm'>
-                      No heart purchases needed
-                    </div>
+                    <div className='font-medium text-sm'>No heart purchases needed</div>
                     <div className='text-xs text-gray-600 dark:text-gray-400'>
                       Save your XP for other rewards
                     </div>
@@ -255,10 +230,7 @@ const HeartsSystemPage = () => {
               </thead>
               <tbody>
                 {heartsComparison.map((row, index) => (
-                  <tr
-                    key={index}
-                    className='border-b border-gray-100 dark:border-gray-800'
-                  >
+                  <tr key={index} className='border-b border-gray-100 dark:border-gray-800'>
                     <td className='py-4 px-4 font-medium text-gray-900 dark:text-white'>
                       {row.feature}
                     </td>
@@ -267,9 +239,7 @@ const HeartsSystemPage = () => {
                     </td>
                     <td className='py-4 px-4 text-center'>
                       <div className='flex items-center justify-center gap-2'>
-                        {row.proIcon && (
-                          <Crown className='w-4 h-4 text-yellow-500' />
-                        )}
+                        {row.proIcon && <Crown className='w-4 h-4 text-yellow-500' />}
                         <span className='text-green-600 dark:text-green-400 font-medium'>
                           {row.pro}
                         </span>
@@ -317,9 +287,7 @@ const HeartsSystemPage = () => {
               </ul>
             </div>
             <div className='space-y-3'>
-              <h4 className='font-semibold text-gray-900 dark:text-white'>
-                Heart Conservation
-              </h4>
+              <h4 className='font-semibold text-gray-900 dark:text-white'>Heart Conservation</h4>
               <ul className='space-y-2 text-sm text-gray-600 dark:text-gray-400'>
                 <li className='flex items-start gap-2'>
                   <Clock className='w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0' />
@@ -343,6 +311,108 @@ const HeartsSystemPage = () => {
         </CardContent>
       </Card>
 
+      {/* Hearts FAQ */}
+      <div className='mb-8'>
+        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>
+          Frequently Asked Questions
+        </h2>
+        <div className='space-y-4'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-start gap-3 text-lg'>
+                <div className='w-8 h-8 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
+                  <Heart className='w-4 h-4 text-red-600 dark:text-red-400' />
+                </div>
+                <span>How many hearts do I lose when I make a mistake?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-gray-600 dark:text-gray-400 ml-11'>
+                You lose exactly 1 heart per incorrect answer. Whether it&apos;s a multiple choice
+                question, typing exercise, or any other challenge type - each wrong answer costs 1
+                heart.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-start gap-3 text-lg'>
+                <div className='w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
+                  <Clock className='w-4 h-4 text-blue-600 dark:text-blue-400' />
+                </div>
+                <span>How long does it take for hearts to refill?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-gray-600 dark:text-gray-400 ml-11'>
+                Hearts refill automatically at a rate of 1 heart per hour. If you&apos;ve used all 5
+                hearts, it will take 5 hours to completely refill. You can also purchase heart
+                refills using XP points.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-start gap-3 text-lg'>
+                <div className='w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
+                  <Zap className='w-4 h-4 text-purple-600 dark:text-purple-400' />
+                </div>
+                <span>How can I get more hearts without waiting?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='text-gray-600 dark:text-gray-400 ml-11 space-y-2'>
+                <p>You have several options to get hearts faster:</p>
+                <ul className='list-disc pl-5 space-y-1'>
+                  <li>Use XP points to purchase heart refills (costs vary)</li>
+                  <li>Complete daily quests which may reward hearts</li>
+                  <li>Upgrade to Pro for unlimited hearts</li>
+                  <li>Wait for the automatic refill (1 heart per hour)</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-start gap-3 text-lg'>
+                <div className='w-8 h-8 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
+                  <Crown className='w-4 h-4 text-yellow-600 dark:text-yellow-400' />
+                </div>
+                <span>What happens to hearts with Pro subscription?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-gray-600 dark:text-gray-400 ml-11'>
+                Pro subscribers get unlimited hearts! You&apos;ll never lose hearts when making
+                mistakes, allowing you to learn at your own pace without interruptions. This is one
+                of the most popular Pro features.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-start gap-3 text-lg'>
+                <div className='w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
+                  <CheckCircle className='w-4 h-4 text-green-600 dark:text-green-400' />
+                </div>
+                <span>Do hearts reset daily?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-gray-600 dark:text-gray-400 ml-11'>
+                No, hearts don&apos;t reset daily. They refill gradually at 1 heart per hour.
+                However, you always start each day with any hearts you had remaining from the
+                previous day, plus any that refilled overnight.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
       {/* Upgrade CTA */}
       <Card className='bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300 dark:border-yellow-700/50'>
         <CardContent className='p-8 text-center'>
@@ -351,8 +421,8 @@ const HeartsSystemPage = () => {
             Ready for Unlimited Hearts?
           </h3>
           <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto'>
-            Upgrade to Pro and never worry about hearts again. Focus entirely on
-            learning without interruptions.
+            Upgrade to Pro and never worry about hearts again. Focus entirely on learning without
+            interruptions.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
             <Button

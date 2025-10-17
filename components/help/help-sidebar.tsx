@@ -1,15 +1,6 @@
 "use client"
 
-import {
-  Crown,
-  CreditCard,
-  BookOpen,
-  Shield,
-  Users,
-  Settings,
-  Mail,
-  FileText,
-} from "lucide-react"
+import { Crown, CreditCard, BookOpen, Shield, Users, Settings, Mail, FileText } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -18,59 +9,22 @@ const helpSections = [
   {
     title: "Getting Started",
     icon: BookOpen,
-    links: [
-      { href: "/help/getting-started", label: "How to Get Started" },
-      { href: "/help/account-setup", label: "Account Setup" },
-      { href: "/help/first-lesson", label: "Taking Your First Lesson" },
-    ],
+    links: [{ href: "/help/getting-started", label: "How to Get Started" }],
   },
   {
     title: "Subscription & Billing",
     icon: Crown,
-    links: [
-      { href: "/help/subscription-faq", label: "Subscription FAQ" },
-      { href: "/help/billing", label: "Billing & Payments" },
-      { href: "/help/cancel-subscription", label: "Cancel Subscription" },
-      { href: "/help/refunds", label: "Refunds & Returns" },
-    ],
+    links: [{ href: "/help/subscription-faq", label: "Subscription FAQ" }],
   },
   {
     title: "Learning Features",
     icon: Shield,
-    links: [
-      { href: "/help/hearts-system", label: "Hearts & Lives System" },
-      { href: "/help/xp-points", label: "XP Points & Rewards" },
-      { href: "/help/courses", label: "Courses & Lessons" },
-      { href: "/help/progress-tracking", label: "Progress Tracking" },
-    ],
-  },
-  {
-    title: "Account & Settings",
-    icon: Settings,
-    links: [
-      { href: "/help/account-settings", label: "Account Settings" },
-      { href: "/help/password-reset", label: "Password Reset" },
-      { href: "/help/profile-management", label: "Profile Management" },
-      { href: "/help/privacy-settings", label: "Privacy Settings" },
-    ],
-  },
-  {
-    title: "Troubleshooting",
-    icon: FileText,
-    links: [
-      { href: "/help/technical-issues", label: "Technical Issues" },
-      { href: "/help/browser-support", label: "Browser Support" },
-      { href: "/help/mobile-app", label: "Mobile App Issues" },
-    ],
+    links: [{ href: "/help/hearts-system", label: "Hearts & Lives System" }],
   },
   {
     title: "Contact & Support",
     icon: Mail,
-    links: [
-      { href: "/help/contact-support", label: "Contact Support" },
-      { href: "/help/community", label: "Community Forums" },
-      { href: "/help/feedback", label: "Submit Feedback" },
-    ],
+    links: [{ href: "/help/contact-support", label: "Contact Support" }],
   },
 ]
 
@@ -81,9 +35,7 @@ export const HelpSidebar = () => {
     <div className='bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6'>
       <div className='space-y-6'>
         <div>
-          <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-4'>
-            Help Topics
-          </h2>
+          <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-4'>Help Topics</h2>
         </div>
 
         {helpSections.map((section) => {
@@ -105,7 +57,7 @@ export const HelpSidebar = () => {
                       "block text-sm py-1 px-2 rounded transition-colors",
                       pathname === link.href
                         ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800",
                     )}
                   >
                     {link.label}
@@ -123,8 +75,7 @@ export const HelpSidebar = () => {
               Need More Help?
             </h3>
             <p className='text-xs text-blue-700 dark:text-blue-300 mb-3'>
-              Can&apos;t find what you&apos;re looking for? Our support team is
-              here to help.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help.
             </p>
             <Link
               href='mailto:support@behrouz.nl'

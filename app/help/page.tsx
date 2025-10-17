@@ -29,16 +29,16 @@ const HelpPage = () => {
       description: "How hearts work and how to earn XP points",
     },
     {
-      title: "Getting started with your first lesson",
-      href: "/help/first-lesson",
+      title: "Getting started guide",
+      href: "/help/getting-started",
       icon: BookOpen,
-      description: "Step-by-step guide to taking your first AWS lesson",
+      description: "Step-by-step guide to start learning AWS",
     },
     {
-      title: "Managing your account settings",
-      href: "/help/account-settings",
+      title: "Contact our support team",
+      href: "/help/contact-support",
       icon: Settings,
-      description: "How to update your profile and preferences",
+      description: "Get help from our support team",
     },
   ]
 
@@ -48,14 +48,14 @@ const HelpPage = () => {
       description: "Questions about Pro membership, billing, and payments",
       icon: Crown,
       href: "/help/subscription-faq",
-      articles: 8,
+      articles: 10,
     },
     {
       title: "Learning Features",
       description: "Hearts, XP, courses, and progress tracking",
       icon: Shield,
       href: "/help/hearts-system",
-      articles: 6,
+      articles: 8,
     },
     {
       title: "Getting Started",
@@ -65,25 +65,11 @@ const HelpPage = () => {
       articles: 5,
     },
     {
-      title: "Account & Settings",
-      description: "Profile management and account settings",
-      icon: Settings,
-      href: "/help/account-settings",
-      articles: 7,
-    },
-    {
-      title: "Technical Support",
-      description: "Troubleshooting and technical issues",
-      icon: HelpCircle,
-      href: "/help/technical-issues",
-      articles: 4,
-    },
-    {
       title: "Contact & Support",
       description: "Get in touch with our support team",
       icon: Mail,
       href: "/help/contact-support",
-      articles: 3,
+      articles: 4,
     },
   ]
 
@@ -93,9 +79,7 @@ const HelpPage = () => {
       <div className='text-center mb-12'>
         <div className='flex items-center justify-center gap-3 mb-4'>
           <HelpCircle className='w-12 h-12 text-blue-500' />
-          <h1 className='text-4xl font-bold text-gray-900 dark:text-white'>
-            How can we help you?
-          </h1>
+          <h1 className='text-4xl font-bold text-gray-900 dark:text-white'>How can we help you?</h1>
         </div>
         <p className='text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto'>
           Find answers to common questions or get in touch with our support team
@@ -106,20 +90,14 @@ const HelpPage = () => {
       <div className='max-w-2xl mx-auto mb-12'>
         <div className='relative'>
           <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
-          <Input
-            type='text'
-            placeholder='Search help articles...'
-            className='pl-12 h-12 text-lg'
-          />
+          <Input type='text' placeholder='Search help articles...' className='pl-12 h-12 text-lg' />
           <Button className='absolute right-2 top-2 h-8'>Search</Button>
         </div>
       </div>
 
       {/* Popular Articles */}
       <div className='mb-12'>
-        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>
-          Popular Articles
-        </h2>
+        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>Popular Articles</h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {popularArticles.map((article) => {
             const Icon = article.icon
@@ -174,9 +152,7 @@ const HelpPage = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className='text-gray-600 dark:text-gray-400 mb-4'>
-                      {category.description}
-                    </p>
+                    <p className='text-gray-600 dark:text-gray-400 mb-4'>{category.description}</p>
                     <div className='flex items-center justify-between'>
                       <span className='text-sm text-gray-500 dark:text-gray-500'>
                         {category.articles} articles
@@ -193,9 +169,7 @@ const HelpPage = () => {
 
       {/* Contact CTA */}
       <div className='mt-12 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-8 text-center'>
-        <h3 className='text-xl font-bold text-gray-900 dark:text-white mb-2'>
-          Still need help?
-        </h3>
+        <h3 className='text-xl font-bold text-gray-900 dark:text-white mb-2'>Still need help?</h3>
         <p className='text-gray-600 dark:text-gray-400 mb-6'>
           Our support team is ready to assist you with any questions about{" "}
           {BRAND_CONFIG.PLATFORM_NAME}
