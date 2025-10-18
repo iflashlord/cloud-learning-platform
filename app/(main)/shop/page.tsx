@@ -28,9 +28,7 @@ const ShopPage = async () => {
 
   const isPro = !!userSubscription?.isActive
 
-  const activeCourseData = courses.find(
-    (course) => course.id === userProgress.activeCourse?.id
-  )
+  const activeCourseData = courses.find((course) => course.id === userProgress.activeCourse?.id)
 
   return (
     <div className='w-full min-h-screen'>
@@ -51,7 +49,7 @@ const ShopPage = async () => {
             }
           >
             <ContentGrid cols={1} gap='lg' className='max-w-4xl mx-auto'>
-            <ContentGrid cols={4} gap='md' className='w-full'>
+              <ContentGrid cols={4} gap='md' className='w-full'>
                 <StatCard
                   variant='info'
                   icon={<Zap className='w-6 h-6' />}
@@ -75,13 +73,7 @@ const ShopPage = async () => {
                 />
                 <StatCard
                   variant={isPro ? "success" : "warning"}
-                  icon={
-                    isPro ? (
-                      <Crown className='w-6 h-6' />
-                    ) : (
-                      <Target className='w-6 h-6' />
-                    )
-                  }
+                  icon={isPro ? <Crown className='w-6 h-6' /> : <Target className='w-6 h-6' />}
                   title='Status'
                   value={isPro ? "PRO" : "FREE"}
                   subtitle={isPro ? "Premium member" : "Basic account"}
@@ -95,19 +87,10 @@ const ShopPage = async () => {
                     <div className='font-semibold'>Shopping Tips:</div>
                     <div>• Earn XP by completing lessons and quests</div>
                     <div>• Earn Gems by watching ads and Pro daily bonuses</div>
-                    <div>
-                      • Hearts are used when you make mistakes during lessons
-                    </div>
-                    <div>
-                      • Use Gems to refill hearts when you run out
-                    </div>
-                    <div>
-                      • Pro membership gives you unlimited hearts and exclusive
-                      features
-                    </div>
-                    <div>
-                      • Check back regularly for new items and special offers!
-                    </div>
+                    <div>• Hearts are used when you make mistakes during lessons</div>
+                    <div>• Use Gems to refill hearts when you run out</div>
+                    <div>• Pro membership gives you unlimited hearts and exclusive features</div>
+                    <div>• Check back regularly for new items and special offers!</div>
                   </div>
                 </AlertDescription>
               </Alert>

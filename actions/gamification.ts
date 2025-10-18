@@ -595,7 +595,7 @@ export const watchAdForGems = async () => {
     GAMIFICATION.GEMS_FROM_AD_WATCH,
     "advertisement",
     undefined,
-    "Watched advertisement for gems"
+    "Watched advertisement for gems",
   )
 
   // Update quest progress for watching ads (if such quest exists)
@@ -685,7 +685,7 @@ export const claimProDailyBonus = async () => {
       where: and(
         eq(gemTransactions.userId, userId),
         eq(gemTransactions.source, "pro_daily_bonus"),
-        sql`DATE(${gemTransactions.createdAt}) = CURRENT_DATE`
+        sql`DATE(${gemTransactions.createdAt}) = CURRENT_DATE`,
       ),
       limit: 1,
     })
@@ -699,13 +699,16 @@ export const claimProDailyBonus = async () => {
     GAMIFICATION.GEMS_PRO_DAILY_BONUS,
     "pro_daily_bonus",
     undefined,
-    "Pro user daily gem bonus"
+    "Pro user daily gem bonus",
   )
 
   // Update last active date
-  await db.update(userProgress).set({
-    lastActiveDate: new Date(),
-  }).where(eq(userProgress.userId, userId))
+  await db
+    .update(userProgress)
+    .set({
+      lastActiveDate: new Date(),
+    })
+    .where(eq(userProgress.userId, userId))
 
   revalidatePath("/shop")
   revalidatePath("/learn")

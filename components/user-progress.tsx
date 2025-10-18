@@ -34,10 +34,7 @@ export const UserProgress = ({
   return (
     <div className='flex items-center justify-between gap-x-2 w-full'>
       <Link href='/courses'>
-        <Button
-          variant='ghost'
-          className='flex items-center gap-x-2 hover:bg-neutral-100'
-        >
+        <Button variant='ghost' className='flex items-center gap-x-2 hover:bg-neutral-100'>
           <Image
             src={activeCourse.imageSrc}
             alt={activeCourse.title}
@@ -54,10 +51,7 @@ export const UserProgress = ({
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button
-          variant='ghost'
-          className={cn("gap-x-2", themeClasses.primaryText)}
-        >
+        <Button variant='ghost' className={cn("gap-x-2", themeClasses.primaryText)}>
           <Coins className='h-7 w-7' />
           <span className='font-medium flex items-center gap-1'>
             <span className='font-bold'>{points}</span>
@@ -65,10 +59,7 @@ export const UserProgress = ({
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button
-          variant='ghost'
-          className='gap-x-2 text-purple-500'
-        >
+        <Button variant='ghost' className='gap-x-2 text-purple-500'>
           <Gem className='h-5 w-5' />
           <span className='font-medium'>
             <span className='font-bold'>{gems}</span>
@@ -76,17 +67,10 @@ export const UserProgress = ({
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button
-          variant='ghost'
-          className={cn("gap-x-2", statusStyles.error.text)}
-        >
+        <Button variant='ghost' className={cn("gap-x-2", statusStyles.error.text)}>
           <Heart className='h-5 w-5 fill-current' />
           <span className='font-medium'>
-            {hasActiveSubscription ? (
-              <InfinityIcon className='h-4 w-4 stroke-[3]' />
-            ) : (
-              hearts
-            )}
+            {hasActiveSubscription ? <InfinityIcon className='h-4 w-4 stroke-[3]' /> : hearts}
           </span>
         </Button>
       </Link>

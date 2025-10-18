@@ -43,21 +43,25 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) =>
       toast.error("Please wait, operation in progress...")
       return
     }
-    
+
     if (hearts === 5) {
       toast.error("Your hearts are already full!")
       return
     }
-    
+
     if (gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS) {
-      toast.error(`You need ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts. You have ${gems} gems.`)
+      toast.error(
+        `You need ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts. You have ${gems} gems.`,
+      )
       return
     }
 
     startTransition(() => {
       refillHeartsWithGemsAction()
         .then(() => {
-          toast.success(`Hearts refilled successfully! You spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems.`)
+          toast.success(
+            `Hearts refilled successfully! You spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems.`,
+          )
         })
         .catch((error) => {
           console.error("Heart refill error:", error)
@@ -83,9 +87,12 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) =>
       watchAdForGems()
         .then((result) => {
           dailyAds.watchAd()
-          toast.success(`You earned ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems! Total gems: ${result.newTotal}`, {
-            duration: 4000,
-          })
+          toast.success(
+            `You earned ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems! Total gems: ${result.newTotal}`,
+            {
+              duration: 4000,
+            },
+          )
         })
         .catch((error) => {
           console.error("Failed to earn gems from ad:", error)

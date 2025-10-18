@@ -445,11 +445,7 @@ export const GameShop = ({
       </div>
 
       {/* Pro Daily Bonus Section */}
-      <ProBonusSection
-        isPro={isPro}
-        userGems={userGems}
-        onGemsChange={onGemsChange}
-      />
+      <ProBonusSection isPro={isPro} userGems={userGems} onGemsChange={onGemsChange} />
 
       {/* Free Ads Section */}
       <AdWatchSection

@@ -17,10 +17,7 @@ import { SettingsDropdown } from "@/components/settings-dropdown"
 import { Button } from "@/components/ui/button"
 import { useThemeClasses } from "@/lib/theme-utils"
 import { statusStyles } from "@/lib/style-utils"
-import {
-  toggleManualProMode,
-  getManualProModeStatus,
-} from "@/actions/admin-pro-mode"
+import { toggleManualProMode, getManualProModeStatus } from "@/actions/admin-pro-mode"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,20 +66,20 @@ const HeaderNavItem = ({ item, isActive }: HeaderNavItemProps) => {
         "transition-all duration-200 ease-out",
         "active:scale-95",
         "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background",
-        "rounded-lg"
+        "rounded-lg",
       )}
     >
       <Icon
         className={cn(
           "h-5 w-5 transition-all duration-200",
-          isActive ? activeColor : "text-muted-foreground"
+          isActive ? activeColor : "text-muted-foreground",
         )}
       />
       <span
         className={cn(
           "text-xs font-medium mt-0.5 truncate w-full text-center",
           "transition-all duration-200",
-          isActive ? activeColor : "text-muted-foreground"
+          isActive ? activeColor : "text-muted-foreground",
         )}
       >
         {label}
@@ -140,9 +137,7 @@ export const EnhancedMobileHeader: React.FC = () => {
     if (isAdmin && isLoggedIn) {
       getManualProModeStatus()
         .then((result) => setIsProMode(result.isProMode))
-        .catch((error) =>
-          console.error("Failed to get pro mode status:", error)
-        )
+        .catch((error) => console.error("Failed to get pro mode status:", error))
     }
   }, [isAdmin, isLoggedIn])
 
@@ -185,14 +180,14 @@ export const EnhancedMobileHeader: React.FC = () => {
         "bg-background dark:bg-background backdrop-blur-md",
         "border-b border-border/50 fixed top-0 w-full",
         "shadow-sm",
-        zIndex("MOBILE_HEADER")
+        zIndex("MOBILE_HEADER"),
       )}
     >
       <Link href='/learn' className='flex items-center gap-1 sm:gap-2 min-w-0'>
         <div
           className={cn(
             "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center",
-            "bg-gradient-to-br from-primary to-primary/80 flex-shrink-0"
+            "bg-gradient-to-br from-primary to-primary/80 flex-shrink-0",
           )}
         >
           <GraduationCap className='h-4 w-4 sm:h-5 sm:w-5 text-white dark:text-gray-700' />
@@ -230,22 +225,14 @@ export const EnhancedMobileHeader: React.FC = () => {
               className={cn("gap-1 px-2 h-8", themeClasses.primaryText)}
             >
               <Coins className='h-4 w-4 sm:h-5 sm:w-5' />
-              <span className='font-bold text-xs sm:text-sm'>
-                {userProgress.points}
-              </span>
+              <span className='font-bold text-xs sm:text-sm'>{userProgress.points}</span>
             </Button>
           </Link>
 
           <Link href='/shop'>
-            <Button
-              variant='ghost'
-              size='sm'
-              className='gap-1 px-2 h-8 text-purple-500'
-            >
+            <Button variant='ghost' size='sm' className='gap-1 px-2 h-8 text-purple-500'>
               <Gem className='h-4 w-4 sm:h-5 sm:w-5' />
-              <span className='font-bold text-xs sm:text-sm'>
-                {userProgress.gems}
-              </span>
+              <span className='font-bold text-xs sm:text-sm'>{userProgress.gems}</span>
             </Button>
           </Link>
 
@@ -308,8 +295,8 @@ export const EnhancedMobileHeader: React.FC = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Reset Progress</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to reset all your progress? This action
-              cannot be undone and will permanently delete:
+              Are you sure you want to reset all your progress? This action cannot be undone and
+              will permanently delete:
               <ul className='mt-2 ml-4 list-disc'>
                 <li>All completed lessons and units</li>
                 <li>Your current points and hearts</li>
