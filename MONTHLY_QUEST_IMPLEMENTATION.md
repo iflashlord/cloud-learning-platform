@@ -61,6 +61,7 @@ CREATE TABLE user_monthly_quest_progress (
 ## User Interface
 
 The monthly quest is displayed on the main quests page (`/quests`) as a prominent card showing:
+
 - Quest title (e.g., "October Learning Champion")
 - Progress (e.g., "5 / 15 lessons completed")
 - Time remaining in the month
@@ -70,6 +71,7 @@ The monthly quest is displayed on the main quests page (`/quests`) as a prominen
 ## Admin Testing
 
 Admin users can test the monthly quest system using the "Test Monthly Quest" button in the admin dashboard, which:
+
 1. Ensures a monthly quest exists for the current month
 2. Immediately completes the quest for the current user
 3. Awards the completion rewards
@@ -77,21 +79,27 @@ Admin users can test the monthly quest system using the "Test Monthly Quest" but
 ## API Endpoints
 
 ### Get Monthly Quest Status
+
 ```
 GET /api/monthly-quest
 ```
+
 Returns the current month's quest and user progress.
 
 ### Test Quest Completion (Admin)
+
 ```
 PUT /api/monthly-quest/test
 ```
+
 Simulates quest completion for testing purposes.
 
 ### Add Single Lesson Progress
+
 ```
 POST /api/monthly-quest/test
 ```
+
 Adds 1 lesson completion to the monthly quest progress.
 
 ## Integration Points
@@ -115,6 +123,7 @@ The monthly quest system integrates with:
 ### Progress Tracking
 
 Progress is tracked in two places:
+
 - `processLessonCompletion()`: When a user completes a full lesson for the first time
 - `upsertChallengeProgress()`: When a user practices already completed lessons
 
@@ -132,6 +141,7 @@ To test the monthly quest system:
 ## Future Enhancements
 
 Possible future enhancements include:
+
 - Different monthly quest types (earn XP, maintain streak, etc.)
 - Seasonal or special event quests
 - Progressive rewards (partial rewards at milestones)

@@ -24,7 +24,7 @@ const QuestsPage = async () => {
 
   // Get monthly quest data
   let monthlyQuestData = await getMonthlyQuestProgress()
-  
+
   // If no monthly quest exists, create one
   if (!monthlyQuestData) {
     try {
@@ -47,13 +47,9 @@ const QuestsPage = async () => {
 
   const isPro = !!userSubscription?.isActive
 
-  const activeCourseData = courses.find(
-    (course) => course.id === userProgress.activeCourse?.id
-  )
+  const activeCourseData = courses.find((course) => course.id === userProgress.activeCourse?.id)
 
-  const completedQuests = quests.filter(
-    (quest) => userProgress.points >= quest.value
-  )
+  const completedQuests = quests.filter((quest) => userProgress.points >= quest.value)
   const totalQuests = quests.length
 
   return (
@@ -64,21 +60,13 @@ const QuestsPage = async () => {
             <ContentGrid cols={1} gap='lg' className='max-w-6xl mx-auto'>
               <QuestStats
                 completedQuests={completedQuests.length}
-                availableQuests={
-                  quests.filter((quest) => userProgress.points < quest.value)
-                    .length
-                }
+                availableQuests={quests.filter((quest) => userProgress.points < quest.value).length}
                 totalPoints={userProgress.points}
               />
 
-              <MonthlyQuestContainer 
-                monthlyQuestData={monthlyQuestData}
-              />
+              <MonthlyQuestContainer monthlyQuestData={monthlyQuestData} />
 
-              <QuestProgressTrackerComponent
-                quests={quests}
-                userPoints={userProgress.points}
-              />
+              <QuestProgressTrackerComponent quests={quests} userPoints={userProgress.points} />
 
               <QuestAchievements
                 userPoints={userProgress.points}
@@ -91,9 +79,7 @@ const QuestsPage = async () => {
           </DashboardLayout>
         </div>
 
-        <div className='hidden lg:block w-80 space-y-4'>
-          {!isPro && <ProUpgradeCard />}
-        </div>
+        <div className='hidden lg:block w-80 space-y-4'>{!isPro && <ProUpgradeCard />}</div>
       </div>
     </div>
   )

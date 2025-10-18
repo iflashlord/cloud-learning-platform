@@ -357,7 +357,10 @@ export const updateMonthlyQuestProgress = async (questType: string, incrementBy:
   if (!userId) throw new Error("Unauthorized")
 
   const currentDate = new Date()
-  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}`
   const currentYear = currentDate.getFullYear()
 
   // Find active monthly quests of this type for current month
@@ -373,7 +376,10 @@ export const updateMonthlyQuestProgress = async (questType: string, incrementBy:
   for (const quest of activeMonthlyQuests) {
     // Check existing progress
     const existingProgress = await db.query.userMonthlyQuestProgress.findFirst({
-      where: and(eq(userMonthlyQuestProgress.userId, userId), eq(userMonthlyQuestProgress.questId, quest.id)),
+      where: and(
+        eq(userMonthlyQuestProgress.userId, userId),
+        eq(userMonthlyQuestProgress.questId, quest.id),
+      ),
     })
 
     if (existingProgress && existingProgress.completed) {
@@ -420,7 +426,10 @@ export const createMonthlyQuest = async () => {
   if (!userId) throw new Error("Unauthorized")
 
   const currentDate = new Date()
-  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}`
   const currentYear = currentDate.getFullYear()
 
   // Check if monthly quest already exists for this month
@@ -438,19 +447,24 @@ export const createMonthlyQuest = async () => {
   }
 
   // Create new monthly quest
-  const monthName = new Date(currentYear, currentDate.getMonth()).toLocaleString('default', { month: 'long' })
-  const newQuest = await db.insert(monthlyQuests).values({
-    type: "complete_monthly_lessons",
-    title: `${monthName} Learning Champion`,
-    description: "Complete 15 lessons or practice sessions this month",
-    targetValue: 15,
-    xpReward: 500,
-    gemsReward: 50,
-    heartsReward: 0,
-    month: currentMonth,
-    year: currentYear,
-    isActive: true,
-  }).returning()
+  const monthName = new Date(currentYear, currentDate.getMonth()).toLocaleString("default", {
+    month: "long",
+  })
+  const newQuest = await db
+    .insert(monthlyQuests)
+    .values({
+      type: "complete_monthly_lessons",
+      title: `${monthName} Learning Champion`,
+      description: "Complete 15 lessons or practice sessions this month",
+      targetValue: 15,
+      xpReward: 500,
+      gemsReward: 50,
+      heartsReward: 0,
+      month: currentMonth,
+      year: currentYear,
+      isActive: true,
+    })
+    .returning()
 
   return newQuest[0]
 }
@@ -460,7 +474,10 @@ export const getMonthlyQuestProgress = async () => {
   if (!userId) return null
 
   const currentDate = new Date()
-  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}`
   const currentYear = currentDate.getFullYear()
 
   // Get current month's quest
@@ -504,7 +521,10 @@ export const adminFakeCompleteMonthlyQuest = async () => {
   // if (!isAdmin) throw new Error("Admin access required")
 
   const currentDate = new Date()
-  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}`
   const currentYear = currentDate.getFullYear()
 
   // Ensure monthly quest exists

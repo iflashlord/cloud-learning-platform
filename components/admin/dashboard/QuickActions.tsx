@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { toast } from "sonner";
-import { adminFakeCompleteMonthlyQuest } from "@/actions/gamification";
+import * as React from "react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { toast } from "sonner"
+import { adminFakeCompleteMonthlyQuest } from "@/actions/gamification"
 import {
   GraduationCap,
   BookOpen,
@@ -14,46 +14,44 @@ import {
   CreditCard,
   Plus,
   Target,
-} from "lucide-react";
+} from "lucide-react"
 
 interface QuickAction {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-  description?: string;
-  isAction?: boolean;
+  label: string
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  color: string
+  description?: string
+  isAction?: boolean
 }
 
 interface QuickActionsProps {
-  className?: string;
+  className?: string
 }
 
-export const QuickActions: React.FC<QuickActionsProps> = ({
-  className,
-}) => {
-  const [loading, setLoading] = React.useState(false);
+export const QuickActions: React.FC<QuickActionsProps> = ({ className }) => {
+  const [loading, setLoading] = React.useState(false)
 
   const handleMonthlyQuestTest = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const result = await adminFakeCompleteMonthlyQuest();
+      const result = await adminFakeCompleteMonthlyQuest()
       if (result.success) {
-        toast.success(result.message);
+        toast.success(result.message)
       }
     } catch (error) {
-      console.error("Error testing monthly quest:", error);
-      toast.error("Failed to complete monthly quest test");
+      console.error("Error testing monthly quest:", error)
+      toast.error("Failed to complete monthly quest test")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleAction = async (action: QuickAction) => {
     if (action.label === "Test Monthly Quest") {
-      await handleMonthlyQuestTest();
+      await handleMonthlyQuestTest()
     }
-  };
+  }
   const quickActions: QuickAction[] = [
     {
       label: "Add Course",
@@ -105,17 +103,15 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
       description: "Simulate monthly quest completion for testing",
       isAction: true,
     },
-  ];
+  ]
 
   return (
     <div className={className}>
-      <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-        Quick Actions
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h2 className='text-xl font-semibold mb-4 text-gray-900 dark:text-white'>Quick Actions</h2>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
         {quickActions.map((action, index) => {
-          const IconComponent = action.icon;
-          
+          const IconComponent = action.icon
+
           if (action.isAction) {
             return (
               <Button
@@ -124,42 +120,38 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
                 disabled={loading}
                 className={`w-full h-auto p-6 flex flex-col items-center gap-3 text-white transition-all duration-200 hover:scale-105 hover:shadow-lg ${action.color}`}
               >
-                <div className="p-3 bg-white/20 rounded-xl">
-                  <IconComponent className="w-6 h-6" />
+                <div className='p-3 bg-white/20 rounded-xl'>
+                  <IconComponent className='w-6 h-6' />
                 </div>
-                <div className="text-center">
-                  <div className="font-semibold">{action.label}</div>
+                <div className='text-center'>
+                  <div className='font-semibold'>{action.label}</div>
                   {action.description && (
-                    <div className="text-sm opacity-90 mt-1">
-                      {action.description}
-                    </div>
+                    <div className='text-sm opacity-90 mt-1'>{action.description}</div>
                   )}
                 </div>
               </Button>
-            );
+            )
           }
-          
+
           return (
             <Link key={index} href={action.href}>
               <Button
                 className={`w-full h-auto p-6 flex flex-col items-center gap-3 text-white transition-all duration-200 hover:scale-105 hover:shadow-lg ${action.color}`}
               >
-                <div className="p-3 bg-white/20 rounded-xl">
-                  <IconComponent className="w-6 h-6" />
+                <div className='p-3 bg-white/20 rounded-xl'>
+                  <IconComponent className='w-6 h-6' />
                 </div>
-                <div className="text-center">
-                  <div className="font-semibold">{action.label}</div>
+                <div className='text-center'>
+                  <div className='font-semibold'>{action.label}</div>
                   {action.description && (
-                    <div className="text-sm opacity-90 mt-1">
-                      {action.description}
-                    </div>
+                    <div className='text-sm opacity-90 mt-1'>{action.description}</div>
                   )}
                 </div>
               </Button>
             </Link>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
