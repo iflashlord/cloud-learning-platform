@@ -75,13 +75,7 @@ export const ShopPageClient = ({ initialUserProgress, isPro }: Props) => {
                 />
                 <StatCard
                   variant={isPro ? "success" : "warning"}
-                  icon={
-                    isPro ? (
-                      <Crown className='w-6 h-6' />
-                    ) : (
-                      <Target className='w-6 h-6' />
-                    )
-                  }
+                  icon={isPro ? <Crown className='w-6 h-6' /> : <Target className='w-6 h-6' />}
                   title='Status'
                   value={isPro ? "PRO" : "FREE"}
                   subtitle={isPro ? "Premium member" : "Basic account"}
@@ -95,19 +89,10 @@ export const ShopPageClient = ({ initialUserProgress, isPro }: Props) => {
                     <div className='font-semibold'>Shopping Tips:</div>
                     <div>• Earn XP by completing lessons and quests</div>
                     <div>• Earn Gems by watching ads and Pro daily bonuses</div>
-                    <div>
-                      • Hearts are used when you make mistakes during lessons
-                    </div>
-                    <div>
-                      • Use Gems to refill hearts when you run out
-                    </div>
-                    <div>
-                      • Pro membership gives you unlimited hearts and exclusive
-                      features
-                    </div>
-                    <div>
-                      • Check back regularly for new items and special offers!
-                    </div>
+                    <div>• Hearts are used when you make mistakes during lessons</div>
+                    <div>• Use Gems to refill hearts when you run out</div>
+                    <div>• Pro membership gives you unlimited hearts and exclusive features</div>
+                    <div>• Check back regularly for new items and special offers!</div>
                   </div>
                 </AlertDescription>
               </Alert>

@@ -22,7 +22,7 @@ const ShopPage = async () => {
   const activeCourseData = courses.find((course) => course.id === userProgress.activeCourse?.id)
 
   return (
-    <ShopPageClient 
+    <ShopPageClient
       initialUserProgress={{
         hearts: userProgress.hearts,
         points: userProgress.points,
@@ -31,7 +31,7 @@ const ShopPage = async () => {
           id: userProgress.activeCourse?.id || 0,
           title: userProgress.activeCourse?.title || "No Course",
           imageSrc: userProgress.activeCourse?.imageSrc || "/placeholder.svg",
-        }
+        },
       }}
       isPro={isPro}
     />
