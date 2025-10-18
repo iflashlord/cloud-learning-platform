@@ -31,9 +31,10 @@ type Props = {
   points: number
   gems: number
   hasActiveSubscription: boolean
+  onRefresh?: () => void
 }
 
-export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) => {
+export const Items = ({ hearts, points, gems, hasActiveSubscription, onRefresh }: Props) => {
   const [pending, startTransition] = useTransition()
   const [showAdModal, setShowAdModal] = useState(false)
   const dailyAds = useDailyAds(5) // Max 5 ads per day
@@ -62,6 +63,8 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) =>
           toast.success(
             `Hearts refilled successfully! You spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems.`,
           )
+          // Refresh the user progress data
+          onRefresh?.()
         })
         .catch((error) => {
           console.error("Heart refill error:", error)
@@ -93,6 +96,8 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) =>
               duration: 4000,
             },
           )
+          // Refresh the user progress data
+          onRefresh?.()
         })
         .catch((error) => {
           console.error("Failed to earn gems from ad:", error)
