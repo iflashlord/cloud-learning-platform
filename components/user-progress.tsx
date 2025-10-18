@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { InfinityIcon, Coins, Heart } from "lucide-react"
+import { InfinityIcon, Coins, Heart, Gem } from "lucide-react"
 
 import { courses } from "@/db/schema"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,7 @@ type Props = {
   }
   hearts: number
   points: number
+  gems: number
   hasActiveSubscription: boolean
 }
 
@@ -25,6 +26,7 @@ export const UserProgress = ({
   activeCourse,
   points,
   hearts,
+  gems,
   hasActiveSubscription,
 }: Props) => {
   const themeClasses = useThemeClasses()
@@ -59,6 +61,17 @@ export const UserProgress = ({
           <Coins className='h-7 w-7' />
           <span className='font-medium flex items-center gap-1'>
             <span className='font-bold'>{points}</span>
+          </span>
+        </Button>
+      </Link>
+      <Link href='/shop'>
+        <Button
+          variant='ghost'
+          className='gap-x-2 text-purple-500'
+        >
+          <Gem className='h-5 w-5' />
+          <span className='font-medium'>
+            <span className='font-bold'>{gems}</span>
           </span>
         </Button>
       </Link>

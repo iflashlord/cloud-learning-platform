@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { GraduationCap, Crown, InfinityIcon, Coins, Heart } from "lucide-react"
+import { GraduationCap, Crown, InfinityIcon, Coins, Heart, Gem } from "lucide-react"
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs"
 import { toast } from "sonner"
 
@@ -105,6 +105,7 @@ export const EnhancedMobileHeader: React.FC = () => {
     }
     hearts: number
     points: number
+    gems: number
   } | null>(null)
 
   const themeClasses = useThemeClasses()
@@ -231,6 +232,19 @@ export const EnhancedMobileHeader: React.FC = () => {
               <Coins className='h-4 w-4 sm:h-5 sm:w-5' />
               <span className='font-bold text-xs sm:text-sm'>
                 {userProgress.points}
+              </span>
+            </Button>
+          </Link>
+
+          <Link href='/shop'>
+            <Button
+              variant='ghost'
+              size='sm'
+              className='gap-1 px-2 h-8 text-purple-500'
+            >
+              <Gem className='h-4 w-4 sm:h-5 sm:w-5' />
+              <span className='font-bold text-xs sm:text-sm'>
+                {userProgress.gems}
               </span>
             </Button>
           </Link>

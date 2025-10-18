@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Play, X, Coins, Trophy, CheckCircle, Clock } from "lucide-react"
+import { Play, X, Coins, Trophy, CheckCircle, Clock, Gem } from "lucide-react"
 import { toast } from "sonner"
 
 import {
@@ -95,8 +95,8 @@ export const AdRewardModal = ({
             {adState === "ready" && (
               <div className='relative'>
                 <Play className='h-24 w-24 text-blue-500 fill-current' />
-                <div className='absolute -bottom-2 -right-2 bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold'>
-                  <Coins className='w-4 h-4' />
+                <div className='absolute -bottom-2 -right-2 bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold'>
+                  <Gem className='w-4 h-4' />
                 </div>
               </div>
             )}
@@ -124,7 +124,7 @@ export const AdRewardModal = ({
           <DialogDescription className='text-center text-base'>
             {adState === "ready" && (
               <>
-                Watch a short 15-second video ad to earn <strong>{rewardPoints} XP</strong>!<br />
+                Watch a short 15-second video ad to earn <strong>{rewardPoints} gems</strong>!<br />
                 <span className='text-sm text-muted-foreground mt-2 block'>
                   Daily limit: {dailyAdsWatched}/{maxDailyAds} ads watched
                 </span>
@@ -133,8 +133,8 @@ export const AdRewardModal = ({
             {adState === "playing" && <>Please wait while the ad plays. Don't close this window!</>}
             {adState === "completed" && (
               <>
-                Great job! You've earned <strong>{rewardPoints} XP</strong>. You can use these
-                points to buy hearts and other items.
+                Great job! You've earned <strong>{rewardPoints} gems</strong>. You can use these
+                gems to buy hearts and other items.
               </>
             )}
           </DialogDescription>

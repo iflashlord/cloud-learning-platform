@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Heart, ShoppingCart, X, Zap } from "lucide-react";
+import { Heart, ShoppingCart, X, Gem } from "lucide-react";
 
 import {
   Dialog,
@@ -71,8 +71,8 @@ export const HeartsDepleteModal = ({ isOpen, onClose }: HeartsDepleteModalProps)
               size="lg" 
               onClick={handleBuyHearts}
             >
-              <Zap className="w-5 h-5" />
-              Buy Hearts (10 XP)
+              <Gem className="w-5 h-5" />
+              Buy Hearts (5 Gems)
             </Button>
             <Button
               variant="outline" 

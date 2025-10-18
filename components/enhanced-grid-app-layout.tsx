@@ -29,6 +29,7 @@ type Props = {
   activeCourse: Course;
   hearts: number;
   points: number;
+  gems: number;
   hasActiveSubscription: boolean;
   showQuests?: boolean;
   additionalSidebarContent?: React.ReactNode;
@@ -40,6 +41,7 @@ export const EnhancedGridAppLayout = ({
   activeCourse,
   hearts,
   points,
+  gems,
   hasActiveSubscription,
   showQuests = true,
   additionalSidebarContent,
@@ -68,6 +70,7 @@ export const EnhancedGridAppLayout = ({
             activeCourse={activeCourse}
             hearts={hearts}
             points={points}
+            gems={gems}
             hasActiveSubscription={hasActiveSubscription}
           />
         </div>

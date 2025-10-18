@@ -1,5 +1,5 @@
 import { challengeProgress, userProgress } from "@/db/schema";
-import { POINTS_TO_REFILL } from "@/constants";
+import { GAMIFICATION } from "@/constants";
 
 const {
   mockAuth,
@@ -83,7 +83,7 @@ vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
-const { upsertUserProgress, reduceHearts, refillHearts } = await import("@/actions/user-progress");
+const { upsertUserProgress, reduceHearts, refillHeartsWithGemsAction } = await import("@/actions/user-progress");
 
 describe("upsertUserProgress", () => {
   beforeEach(() => {

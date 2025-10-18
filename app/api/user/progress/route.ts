@@ -24,6 +24,9 @@ export async function GET() {
       },
       hearts: userProgress.hearts,
       points: userProgress.points,
+      gems: userProgress.gems,
+      streak: userProgress.streak,
+      totalXpEarned: userProgress.totalXpEarned,
     })
   } catch (error) {
     console.error("[USER_PROGRESS_GET]", error)

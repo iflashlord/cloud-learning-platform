@@ -13,13 +13,14 @@ import {
   Infinity,
   Play,
   Clock,
+  Gem,
 } from "lucide-react"
 
-import { refillHearts } from "@/actions/user-progress"
-import { addAdRewardPoints } from "@/actions/ad-rewards"
+import { refillHeartsWithGemsAction } from "@/actions/user-progress"
+import { watchAdForGems } from "@/actions/gamification"
 import { createStripeUrl } from "@/actions/user-subscription"
 import { Button } from "@/components/ui/button"
-import { POINTS_TO_REFILL } from "@/constants"
+import { GAMIFICATION } from "@/constants"
 import { cn } from "@/lib/utils"
 import { statusStyles } from "@/lib/style-utils"
 import { AdRewardModal } from "@/components/modals/ad-reward-modal"
@@ -28,22 +29,40 @@ import { useDailyAds } from "@/hooks/use-daily-ads"
 type Props = {
   hearts: number
   points: number
+  gems: number
   hasActiveSubscription: boolean
 }
 
-export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
+export const Items = ({ hearts, points, gems, hasActiveSubscription }: Props) => {
   const [pending, startTransition] = useTransition()
   const [showAdModal, setShowAdModal] = useState(false)
   const dailyAds = useDailyAds(5) // Max 5 ads per day
-  const AD_REWARD_POINTS = 10
 
   const onRefillHearts = () => {
-    if (pending || hearts === 5 || points < POINTS_TO_REFILL) {
+    if (pending) {
+      toast.error("Please wait, operation in progress...")
+      return
+    }
+    
+    if (hearts === 5) {
+      toast.error("Your hearts are already full!")
+      return
+    }
+    
+    if (gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS) {
+      toast.error(`You need ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts. You have ${gems} gems.`)
       return
     }
 
     startTransition(() => {
-      refillHearts().catch(() => toast.error("Something went wrong"))
+      refillHeartsWithGemsAction()
+        .then(() => {
+          toast.success(`Hearts refilled successfully! You spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems.`)
+        })
+        .catch((error) => {
+          console.error("Heart refill error:", error)
+          toast.error(`Failed to refill hearts: ${error.message || "Something went wrong"}`)
+        })
     })
   }
 
@@ -59,18 +78,18 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
     })
   }
 
-  const handleAdReward = (earnedPoints: number) => {
+  const handleAdReward = () => {
     startTransition(() => {
-      addAdRewardPoints(earnedPoints)
+      watchAdForGems()
         .then((result) => {
           dailyAds.watchAd()
-          toast.success(`You earned ${earnedPoints} XP! Total XP: ${result.newPoints}`, {
+          toast.success(`You earned ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems! Total gems: ${result.newTotal}`, {
             duration: 4000,
           })
         })
         .catch((error) => {
-          console.error("Failed to add ad reward points:", error)
-          toast.error("Failed to add XP points. Please try again.")
+          console.error("Failed to earn gems from ad:", error)
+          toast.error("Failed to earn gems. Please try again.")
         })
     })
   }
@@ -104,12 +123,12 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
                   <div
                     className={cn(
                       "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1",
-                      statusStyles.info.bg,
-                      statusStyles.info.text,
+                      statusStyles.success.bg,
+                      statusStyles.success.text,
                     )}
                   >
-                    <Zap className={cn("w-4 h-4", statusStyles.info.text)} />
-                    <span>Cost: {POINTS_TO_REFILL} XP</span>
+                    <Gem className={cn("w-4 h-4", statusStyles.success.text)} />
+                    <span>Cost: {GAMIFICATION.HEARTS_REFILL_COST_GEMS} Gems</span>
                   </div>
                 )}
               </div>
@@ -117,11 +136,11 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
             <Button
               variant='subtle'
               onClick={onRefillHearts}
-              disabled={pending || hearts === 5 || points < POINTS_TO_REFILL}
+              disabled={pending || hearts === 5 || gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS}
               className={`px-6 py-3 font-bold text-lg ${
                 hearts === 5
                   ? "bg-muted text-muted-foreground cursor-not-allowed"
-                  : points < POINTS_TO_REFILL
+                  : gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS
                   ? "bg-muted text-muted-foreground cursor-not-allowed"
                   : "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
               } transition-all duration-200`}
@@ -131,12 +150,12 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
                   <Heart className='w-5 h-5 text-muted-foreground/60' fill='currentColor' />
                   <span>Hearts Full</span>
                 </div>
-              ) : points < POINTS_TO_REFILL ? (
-                "Not enough XP"
+              ) : gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS ? (
+                "Not enough Gems"
               ) : (
                 <div className='flex items-center gap-2'>
-                  <Coins className='w-5 h-5 text-yellow-600' />
-                  <span>{POINTS_TO_REFILL} XP</span>
+                  <Gem className='w-5 h-5 text-purple-300' />
+                  <span>{GAMIFICATION.HEARTS_REFILL_COST_GEMS} Gems</span>
                 </div>
               )}
             </Button>
@@ -152,9 +171,9 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
               <Play className='w-8 h-8 text-white fill-current' />
             </div>
             <div className='flex-1 min-w-0'>
-              <h3 className='text-xl font-bold text-foreground mb-2'>Watch Ads for XP</h3>
+              <h3 className='text-xl font-bold text-foreground mb-2'>Watch Ads for Gems</h3>
               <p className='text-sm text-muted-foreground mb-3'>
-                Watch short video ads to earn free XP points! Use XP to buy hearts and other items.
+                Watch short video ads to earn free gems! Use gems to buy hearts and other items.
               </p>
               <div className='flex items-center gap-2'>
                 <div
@@ -164,8 +183,8 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
                     statusStyles.info.text,
                   )}
                 >
-                  <Coins className={cn("w-4 h-4", statusStyles.info.text)} />
-                  <span>+{AD_REWARD_POINTS} XP per ad</span>
+                  <Gem className={cn("w-4 h-4", statusStyles.success.text)} />
+                  <span>+{GAMIFICATION.GEMS_FROM_AD_WATCH} Gems per ad</span>
                 </div>
                 <div
                   className={cn(
@@ -293,10 +312,10 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
       <AdRewardModal
         isOpen={showAdModal}
         onClose={() => setShowAdModal(false)}
-        onRewardEarned={handleAdReward}
+        onRewardEarned={() => handleAdReward()}
         dailyAdsWatched={dailyAds.adsWatched}
         maxDailyAds={dailyAds.maxAds}
-        rewardPoints={AD_REWARD_POINTS}
+        rewardPoints={GAMIFICATION.GEMS_FROM_AD_WATCH}
       />
     </div>
   )

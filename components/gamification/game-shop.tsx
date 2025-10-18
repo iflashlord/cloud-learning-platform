@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge"
 import { CurrencyDisplay } from "./currency-display"
 import { purchaseShopItem } from "@/actions/gamification"
 import { refillHeartsWithGemsAction } from "@/actions/user-progress"
+import { AdWatchSection } from "./ad-watch-section"
+import { ProBonusSection } from "./pro-bonus-section"
 
 interface ShopItem {
   id: string
@@ -441,6 +443,23 @@ export const GameShop = ({
           </button>
         ))}
       </div>
+
+      {/* Pro Daily Bonus Section */}
+      <ProBonusSection
+        isPro={isPro}
+        userGems={userGems}
+        onGemsChange={onGemsChange}
+      />
+
+      {/* Free Ads Section */}
+      <AdWatchSection
+        userGems={userGems}
+        userHearts={userHearts}
+        maxHearts={maxHearts}
+        isPro={isPro}
+        onGemsChange={onGemsChange}
+        onHeartsChange={onHeartsChange}
+      />
 
       {/* Shop Items Grid */}
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>

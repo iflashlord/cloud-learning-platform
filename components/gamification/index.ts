@@ -18,6 +18,10 @@ export { Leaderboard, LeaderboardEntry } from "./leaderboard"
 
 export { GameShop, ShopItemCard } from "./game-shop"
 
+export { AdWatchSection } from "./ad-watch-section"
+
+export { ProBonusSection } from "./pro-bonus-section"
+
 export { GamificationDashboard } from "./gamification-dashboard"
 
 // Re-export commonly used types

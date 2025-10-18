@@ -124,22 +124,22 @@ export const awardGems = async (
   const currentUserProgress = await getUserProgress()
   if (!currentUserProgress) throw new Error("User progress not found")
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(userProgress)
-      .set({
-        gems: currentUserProgress.gems + amount,
-      })
-      .where(eq(userProgress.userId, userId))
-
-    await tx.insert(gemTransactions).values({
-      userId,
-      type: "earned",
-      amount,
-      source,
-      sourceId,
-      description: description || `Earned ${amount} gems from ${source}`,
+  // Update user gems
+  await db
+    .update(userProgress)
+    .set({
+      gems: currentUserProgress.gems + amount,
     })
+    .where(eq(userProgress.userId, userId))
+
+  // Log the gem transaction
+  await db.insert(gemTransactions).values({
+    userId,
+    type: "earned",
+    amount,
+    source,
+    sourceId,
+    description: description || `Earned ${amount} gems from ${source}`,
   })
 
   return { gemsEarned: amount, newTotal: currentUserProgress.gems + amount }
@@ -161,22 +161,22 @@ export const spendGems = async (
     throw new Error("Insufficient gems")
   }
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(userProgress)
-      .set({
-        gems: currentUserProgress.gems - amount,
-      })
-      .where(eq(userProgress.userId, userId))
-
-    await tx.insert(gemTransactions).values({
-      userId,
-      type: "spent",
-      amount: -amount,
-      source,
-      sourceId,
-      description: description || `Spent ${amount} gems on ${source}`,
+  // Update user gems
+  await db
+    .update(userProgress)
+    .set({
+      gems: currentUserProgress.gems - amount,
     })
+    .where(eq(userProgress.userId, userId))
+
+  // Log the gem transaction
+  await db.insert(gemTransactions).values({
+    userId,
+    type: "spent",
+    amount: -amount,
+    source,
+    sourceId,
+    description: description || `Spent ${amount} gems on ${source}`,
   })
 
   return { gemsSpent: amount, newTotal: currentUserProgress.gems - amount }
@@ -205,23 +205,23 @@ export const refillHeartsWithGems = async () => {
     throw new Error("Insufficient gems")
   }
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(userProgress)
-      .set({
-        hearts: GAMIFICATION.MAX_HEARTS,
-        gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
-        heartsRefillAt: null, // Reset refill timer
-      })
-      .where(eq(userProgress.userId, userId))
-
-    await tx.insert(gemTransactions).values({
-      userId,
-      type: "spent",
-      amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
-      source: "hearts_refill",
-      description: `Refilled hearts for ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems`,
+  // Update user progress (hearts and gems)
+  await db
+    .update(userProgress)
+    .set({
+      hearts: GAMIFICATION.MAX_HEARTS,
+      gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+      heartsRefillAt: null, // Reset refill timer
     })
+    .where(eq(userProgress.userId, userId))
+
+  // Log the gem transaction
+  await db.insert(gemTransactions).values({
+    userId,
+    type: "spent",
+    amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+    source: "hearts_refill",
+    description: `Refilled hearts for ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems`,
   })
 
   revalidatePath("/shop")
@@ -584,4 +584,131 @@ export const processLessonCompletion = async (
   revalidatePath("/leaderboard")
 
   return rewards
+}
+
+// Watch Ad Action - Awards gems for watching advertisements
+export const watchAdForGems = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const result = await awardGems(
+    GAMIFICATION.GEMS_FROM_AD_WATCH,
+    "advertisement",
+    undefined,
+    "Watched advertisement for gems"
+  )
+
+  // Update quest progress for watching ads (if such quest exists)
+  await updateQuestProgress("watch_ads", 1)
+
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+
+  return result
+}
+
+// Refill Hearts with Gems - Integrated action
+export const buyHeartsWithGems = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentUserProgress = await getUserProgress()
+  const userSubscription = await getUserSubscription()
+
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Pro users have unlimited hearts
+  if (userSubscription?.isActive) {
+    throw new Error("Pro users have unlimited hearts")
+  }
+
+  if (currentUserProgress.hearts >= GAMIFICATION.MAX_HEARTS) {
+    throw new Error("Hearts are already full")
+  }
+
+  if (currentUserProgress.gems < GAMIFICATION.HEARTS_REFILL_COST_GEMS) {
+    throw new Error("Insufficient gems")
+  }
+
+  await db.transaction(async (tx) => {
+    // Spend gems
+    await tx
+      .update(userProgress)
+      .set({
+        gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+        hearts: GAMIFICATION.MAX_HEARTS,
+        heartsRefillAt: null, // Reset the refill timer since hearts are full
+      })
+      .where(eq(userProgress.userId, userId))
+
+    // Record gem transaction
+    await tx.insert(gemTransactions).values({
+      userId,
+      type: "spent",
+      amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+      source: "hearts_refill",
+      description: `Spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts`,
+    })
+  })
+
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+  revalidatePath("/lesson")
+
+  return {
+    gemsSpent: GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+    newGems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+    newHearts: GAMIFICATION.MAX_HEARTS,
+  }
+}
+
+// Pro User Daily Bonus - Awards daily gems to Pro users
+export const claimProDailyBonus = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const userSubscription = await getUserSubscription()
+  if (!userSubscription?.isActive) {
+    throw new Error("Pro subscription required")
+  }
+
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress) throw new Error("User progress not found")
+
+  // Check if user already claimed today's bonus
+  const today = new Date().toDateString()
+  const lastClaimDate = currentUserProgress.lastActiveDate?.toDateString()
+
+  if (lastClaimDate === today && currentUserProgress.gems >= GAMIFICATION.GEMS_PRO_DAILY_BONUS) {
+    // Check if they've already received today's bonus by looking at gem transactions
+    const todayTransactions = await db.query.gemTransactions.findMany({
+      where: and(
+        eq(gemTransactions.userId, userId),
+        eq(gemTransactions.source, "pro_daily_bonus"),
+        sql`DATE(${gemTransactions.createdAt}) = CURRENT_DATE`
+      ),
+      limit: 1,
+    })
+
+    if (todayTransactions.length > 0) {
+      throw new Error("Daily Pro bonus already claimed today")
+    }
+  }
+
+  const result = await awardGems(
+    GAMIFICATION.GEMS_PRO_DAILY_BONUS,
+    "pro_daily_bonus",
+    undefined,
+    "Pro user daily gem bonus"
+  )
+
+  // Update last active date
+  await db.update(userProgress).set({
+    lastActiveDate: new Date(),
+  }).where(eq(userProgress.userId, userId))
+
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+
+  return result
 }

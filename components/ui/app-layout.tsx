@@ -17,6 +17,7 @@ type Props = {
   activeCourse: Course;
   hearts: number;
   points: number;
+  gems: number;
   hasActiveSubscription: boolean;
   showQuests?: boolean;
   additionalSidebarContent?: React.ReactNode;
@@ -28,6 +29,7 @@ export const AppLayout = ({
   activeCourse,
   hearts,
   points,
+  gems,
   hasActiveSubscription,
   showQuests = true,
   additionalSidebarContent,
@@ -40,6 +42,7 @@ export const AppLayout = ({
           activeCourse={activeCourse}
           hearts={hearts}
           points={points}
+          gems={gems}
           hasActiveSubscription={hasActiveSubscription}
         />
         

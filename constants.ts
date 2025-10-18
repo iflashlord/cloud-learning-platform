@@ -35,8 +35,6 @@ import {
   Frown,
 } from "lucide-react"
 
-export const POINTS_TO_REFILL = 10
-
 // Gamification Constants
 export const GAMIFICATION = {
   // Hearts System

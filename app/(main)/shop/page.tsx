@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries"
 import { Items } from "./items"
 import { BRAND_CONFIG } from "@/lib/config"
-import { Zap, Heart, Crown, Target, Lightbulb } from "lucide-react"
+import { Zap, Heart, Crown, Target, Lightbulb, Gem } from "lucide-react"
 
 const ShopPage = async () => {
   const userProgressData = getUserProgress()
@@ -41,7 +41,7 @@ const ShopPage = async () => {
               <PageHeader
                 variant='gradient'
                 title={`${BRAND_CONFIG.PLATFORM_NAME} Marketplace`}
-                description='Spend your hard-earned XP points on useful items and power-ups to enhance your learning journey.'
+                description='Use your gems to purchase hearts and other power-ups to enhance your learning journey.'
                 badge={
                   <Badge variant={isPro ? "success" : "warning"}>
                     {isPro ? "PRO Member" : "Free Account"}
@@ -51,13 +51,20 @@ const ShopPage = async () => {
             }
           >
             <ContentGrid cols={1} gap='lg' className='max-w-4xl mx-auto'>
-              <ContentGrid cols={3} gap='md' className='w-full'>
+            <ContentGrid cols={4} gap='md' className='w-full'>
                 <StatCard
                   variant='info'
                   icon={<Zap className='w-6 h-6' />}
                   title='XP Points'
                   value={userProgress.points.toString()}
-                  subtitle='Available to spend'
+                  subtitle='Experience earned'
+                />
+                <StatCard
+                  variant='success'
+                  icon={<Gem className='w-6 h-6' />}
+                  title='Gems'
+                  value={userProgress.gems.toString()}
+                  subtitle='Premium currency'
                 />
                 <StatCard
                   variant='danger'
@@ -87,8 +94,12 @@ const ShopPage = async () => {
                   <div className='space-y-1'>
                     <div className='font-semibold'>Shopping Tips:</div>
                     <div>• Earn XP by completing lessons and quests</div>
+                    <div>• Earn Gems by watching ads and Pro daily bonuses</div>
                     <div>
                       • Hearts are used when you make mistakes during lessons
+                    </div>
+                    <div>
+                      • Use Gems to refill hearts when you run out
                     </div>
                     <div>
                       • Pro membership gives you unlimited hearts and exclusive
@@ -104,6 +115,7 @@ const ShopPage = async () => {
               <Items
                 hearts={userProgress.hearts}
                 points={userProgress.points}
+                gems={userProgress.gems}
                 hasActiveSubscription={isPro}
               />
             </ContentGrid>

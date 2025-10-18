@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import { auth, currentUser } from "@clerk/nextjs/server"
 
 import db from "@/db/drizzle"
-import { GAMIFICATION, POINTS_TO_REFILL } from "@/constants"
+import { GAMIFICATION } from "@/constants"
 import { getCourseById, getUserProgress, getUserSubscription } from "@/db/queries"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
 import { spendXP, spendGems, refillHeartsWithGems } from "@/actions/gamification"
@@ -115,41 +115,6 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath("/quests")
   revalidatePath("/leaderboard")
   revalidatePath(`/lesson/${lessonId}`)
-}
-
-export const refillHearts = async () => {
-  const currentUserProgress = await getUserProgress()
-  const userSubscription = await getUserSubscription()
-
-  if (!currentUserProgress) {
-    throw new Error("User progress not found")
-  }
-
-  // Pro users have unlimited hearts - no need to refill
-  if (userSubscription?.isActive) {
-    throw new Error("Pro users have unlimited hearts")
-  }
-
-  if (currentUserProgress.hearts === 5) {
-    throw new Error("Hearts are already full")
-  }
-
-  if (currentUserProgress.points < POINTS_TO_REFILL) {
-    throw new Error("Not enough points")
-  }
-
-  await db
-    .update(userProgress)
-    .set({
-      hearts: 5,
-      points: currentUserProgress.points - POINTS_TO_REFILL,
-    })
-    .where(eq(userProgress.userId, currentUserProgress.userId))
-
-  revalidatePath("/shop")
-  revalidatePath("/learn")
-  revalidatePath("/quests")
-  revalidatePath("/leaderboard")
 }
 
 export const refillHeartsWithGemsAction = async () => {
