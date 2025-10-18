@@ -33,6 +33,10 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
   const lessonId = challenge.lessonId
 
+  if (!lessonId) {
+    throw new Error("Challenge is not associated with a lesson")
+  }
+
   const existingChallengeProgress = await db.query.challengeProgress.findFirst({
     where: and(
       eq(challengeProgress.userId, userId),
@@ -57,6 +61,10 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     // For practice lessons, just award XP (no lesson completion processing)
     const xpAmount = userSubscription?.isActive ? 8 : 5 // Practice XP
     await awardXP(xpAmount, "practice_lesson", lessonId.toString())
+
+    // Update monthly quest progress for practice lessons
+    const { updateMonthlyQuestProgress } = await import("@/actions/gamification")
+    await updateMonthlyQuestProgress("complete_monthly_lessons", 1)
 
     // Pro users get unlimited hearts and enhanced XP
     const heartsUpdate = userSubscription?.isActive

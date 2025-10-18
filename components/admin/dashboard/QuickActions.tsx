@@ -1,14 +1,10 @@
-/**
- * Quick Actions Component
- * 
- * Grid of action buttons for common admin tasks
- */
-
 "use client";
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
+import { adminFakeCompleteMonthlyQuest } from "@/actions/gamification";
 import {
   GraduationCap,
   BookOpen,
@@ -17,6 +13,7 @@ import {
   Users,
   CreditCard,
   Plus,
+  Target,
 } from "lucide-react";
 
 interface QuickAction {
@@ -25,6 +22,7 @@ interface QuickAction {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   description?: string;
+  isAction?: boolean;
 }
 
 interface QuickActionsProps {
@@ -34,6 +32,28 @@ interface QuickActionsProps {
 export const QuickActions: React.FC<QuickActionsProps> = ({
   className,
 }) => {
+  const [loading, setLoading] = React.useState(false);
+
+  const handleMonthlyQuestTest = async () => {
+    setLoading(true);
+    try {
+      const result = await adminFakeCompleteMonthlyQuest();
+      if (result.success) {
+        toast.success(result.message);
+      }
+    } catch (error) {
+      console.error("Error testing monthly quest:", error);
+      toast.error("Failed to complete monthly quest test");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAction = async (action: QuickAction) => {
+    if (action.label === "Test Monthly Quest") {
+      await handleMonthlyQuestTest();
+    }
+  };
   const quickActions: QuickAction[] = [
     {
       label: "Add Course",
@@ -77,6 +97,14 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
       color: "bg-emerald-500 hover:bg-emerald-600",
       description: "Payment and subscription tracking",
     },
+    {
+      label: "Test Monthly Quest",
+      href: "#",
+      icon: Target,
+      color: "bg-yellow-500 hover:bg-yellow-600",
+      description: "Simulate monthly quest completion for testing",
+      isAction: true,
+    },
   ];
 
   return (
@@ -87,6 +115,29 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {quickActions.map((action, index) => {
           const IconComponent = action.icon;
+          
+          if (action.isAction) {
+            return (
+              <Button
+                key={index}
+                onClick={() => handleAction(action)}
+                disabled={loading}
+                className={`w-full h-auto p-6 flex flex-col items-center gap-3 text-white transition-all duration-200 hover:scale-105 hover:shadow-lg ${action.color}`}
+              >
+                <div className="p-3 bg-white/20 rounded-xl">
+                  <IconComponent className="w-6 h-6" />
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold">{action.label}</div>
+                  {action.description && (
+                    <div className="text-sm opacity-90 mt-1">
+                      {action.description}
+                    </div>
+                  )}
+                </div>
+              </Button>
+            );
+          }
           
           return (
             <Link key={index} href={action.href}>

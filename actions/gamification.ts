@@ -13,6 +13,8 @@ import {
   gemTransactions,
   userQuestProgress,
   dailyQuests,
+  monthlyQuests,
+  userMonthlyQuestProgress,
   userAchievements,
   achievements,
   shopItems,
@@ -349,6 +351,171 @@ export const updateQuestProgress = async (questType: string, incrementBy: number
   }
 }
 
+// Monthly Quest System Actions
+export const updateMonthlyQuestProgress = async (questType: string, incrementBy: number = 1) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentDate = new Date()
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentYear = currentDate.getFullYear()
+
+  // Find active monthly quests of this type for current month
+  const activeMonthlyQuests = await db.query.monthlyQuests.findMany({
+    where: and(
+      eq(monthlyQuests.type, questType as any),
+      eq(monthlyQuests.isActive, true),
+      eq(monthlyQuests.month, currentMonth),
+      eq(monthlyQuests.year, currentYear),
+    ),
+  })
+
+  for (const quest of activeMonthlyQuests) {
+    // Check existing progress
+    const existingProgress = await db.query.userMonthlyQuestProgress.findFirst({
+      where: and(eq(userMonthlyQuestProgress.userId, userId), eq(userMonthlyQuestProgress.questId, quest.id)),
+    })
+
+    if (existingProgress && existingProgress.completed) {
+      continue // Quest already completed
+    }
+
+    const currentValue = existingProgress?.currentValue || 0
+    const newValue = currentValue + incrementBy
+    const isCompleted = newValue >= quest.targetValue
+
+    if (existingProgress) {
+      await db
+        .update(userMonthlyQuestProgress)
+        .set({
+          currentValue: newValue,
+          completed: isCompleted,
+          completedAt: isCompleted ? new Date() : null,
+        })
+        .where(eq(userMonthlyQuestProgress.id, existingProgress.id))
+    } else {
+      await db.insert(userMonthlyQuestProgress).values({
+        userId,
+        questId: quest.id,
+        currentValue: newValue,
+        completed: isCompleted,
+        completedAt: isCompleted ? new Date() : null,
+      })
+    }
+
+    // If quest completed, award rewards
+    if (isCompleted && !existingProgress?.completed) {
+      if (quest.xpReward > 0) {
+        await awardXP(quest.xpReward, "monthly_quest_reward", quest.id.toString())
+      }
+      if (quest.gemsReward > 0) {
+        await awardGems(quest.gemsReward, "monthly_quest_reward", quest.id.toString())
+      }
+    }
+  }
+}
+
+export const createMonthlyQuest = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const currentDate = new Date()
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentYear = currentDate.getFullYear()
+
+  // Check if monthly quest already exists for this month
+  const existingQuest = await db.query.monthlyQuests.findFirst({
+    where: and(
+      eq(monthlyQuests.type, "complete_monthly_lessons"),
+      eq(monthlyQuests.month, currentMonth),
+      eq(monthlyQuests.year, currentYear),
+      eq(monthlyQuests.isActive, true),
+    ),
+  })
+
+  if (existingQuest) {
+    return existingQuest
+  }
+
+  // Create new monthly quest
+  const monthName = new Date(currentYear, currentDate.getMonth()).toLocaleString('default', { month: 'long' })
+  const newQuest = await db.insert(monthlyQuests).values({
+    type: "complete_monthly_lessons",
+    title: `${monthName} Learning Champion`,
+    description: "Complete 15 lessons or practice sessions this month",
+    targetValue: 15,
+    xpReward: 500,
+    gemsReward: 50,
+    heartsReward: 0,
+    month: currentMonth,
+    year: currentYear,
+    isActive: true,
+  }).returning()
+
+  return newQuest[0]
+}
+
+export const getMonthlyQuestProgress = async () => {
+  const { userId } = await auth()
+  if (!userId) return null
+
+  const currentDate = new Date()
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentYear = currentDate.getFullYear()
+
+  // Get current month's quest
+  const monthlyQuest = await db.query.monthlyQuests.findFirst({
+    where: and(
+      eq(monthlyQuests.type, "complete_monthly_lessons"),
+      eq(monthlyQuests.month, currentMonth),
+      eq(monthlyQuests.year, currentYear),
+      eq(monthlyQuests.isActive, true),
+    ),
+  })
+
+  if (!monthlyQuest) return null
+
+  // Get user's progress
+  const progress = await db.query.userMonthlyQuestProgress.findFirst({
+    where: and(
+      eq(userMonthlyQuestProgress.userId, userId),
+      eq(userMonthlyQuestProgress.questId, monthlyQuest.id),
+    ),
+  })
+
+  return {
+    quest: monthlyQuest,
+    progress: progress || {
+      currentValue: 0,
+      completed: false,
+      completedAt: null,
+      rewardClaimed: false,
+    },
+  }
+}
+
+// Admin function to fake complete monthly quest for testing
+export const adminFakeCompleteMonthlyQuest = async () => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  // For demo purposes, you might want to add role checking here
+  // const isAdmin = await checkAdminRole(userId)
+  // if (!isAdmin) throw new Error("Admin access required")
+
+  const currentDate = new Date()
+  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+  const currentYear = currentDate.getFullYear()
+
+  // Ensure monthly quest exists
+  await createMonthlyQuest()
+
+  // Update quest progress to completion for testing
+  await updateMonthlyQuestProgress("complete_monthly_lessons", 15)
+
+  return { success: true, message: "Monthly quest completed for testing!" }
+}
+
 // Shop System Actions
 export const purchaseShopItem = async (shopItemKey: string) => {
   const { userId } = await auth()
@@ -560,6 +727,9 @@ export const processLessonCompletion = async (
   if (wasPerfect) {
     await updateQuestProgress("perfect_lesson", 1)
   }
+
+  // Update monthly quest progress
+  await updateMonthlyQuestProgress("complete_monthly_lessons", 1)
 
   // Check achievements
   const achievementResult = await checkAndUnlockAchievements("lesson_complete")

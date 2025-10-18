@@ -279,6 +279,7 @@ export const questsEnum = pgEnum("quest_type", [
   "practice_old", // Practice previous lessons
   "no_hearts_lost", // Don't lose any hearts today
   "speed_lesson", // Complete lesson under time limit
+  "complete_monthly_lessons", // Complete X lessons in a month
 ])
 
 export const dailyQuests = pgTable("daily_quests", {
@@ -318,6 +319,50 @@ export const userQuestProgressRelations = relations(userQuestProgress, ({ one })
   }),
   user: one(userProgress, {
     fields: [userQuestProgress.userId],
+    references: [userProgress.userId],
+  }),
+}))
+
+// Monthly Quests System
+export const monthlyQuests = pgTable("monthly_quests", {
+  id: serial("id").primaryKey(),
+  type: questsEnum("type").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  targetValue: integer("target_value").notNull(), // Target amount to complete
+  xpReward: integer("xp_reward").notNull().default(0),
+  gemsReward: integer("gems_reward").notNull().default(0),
+  heartsReward: integer("hearts_reward").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  month: text("month").notNull(), // Format: "2024-10" for October 2024
+  year: integer("year").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
+export const monthlyQuestsRelations = relations(monthlyQuests, ({ many }) => ({
+  userMonthlyQuestProgress: many(userMonthlyQuestProgress),
+}))
+
+export const userMonthlyQuestProgress = pgTable("user_monthly_quest_progress", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  questId: integer("quest_id")
+    .references(() => monthlyQuests.id, { onDelete: "cascade" })
+    .notNull(),
+  currentValue: integer("current_value").notNull().default(0),
+  completed: boolean("completed").notNull().default(false),
+  completedAt: timestamp("completed_at"),
+  rewardClaimed: boolean("reward_claimed").notNull().default(false),
+  claimedAt: timestamp("claimed_at"),
+})
+
+export const userMonthlyQuestProgressRelations = relations(userMonthlyQuestProgress, ({ one }) => ({
+  quest: one(monthlyQuests, {
+    fields: [userMonthlyQuestProgress.questId],
+    references: [monthlyQuests.id],
+  }),
+  user: one(userProgress, {
+    fields: [userMonthlyQuestProgress.userId],
     references: [userProgress.userId],
   }),
 }))

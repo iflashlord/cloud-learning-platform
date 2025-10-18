@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system"
 import { ProUpgradeCard } from "@/components/pro-upgrade-card"
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries"
+import { getMonthlyQuestProgress, createMonthlyQuest } from "@/actions/gamification"
 import { QuestCard } from "@/components/ui/quest-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { Badge } from "@/components/ui/badge"
@@ -13,12 +14,26 @@ import { QuestProgressTrackerComponent } from "./quest-progress-tracker"
 import { QuestPageHeader } from "@/components/ui/quest-page-header"
 import { QuestStats } from "@/components/ui/quest-stats"
 import { QuestListing } from "@/components/ui/quest-listing"
+import { MonthlyQuestContainer } from "@/components/quests/MonthlyQuestContainer"
 import { quests } from "@/constants"
 
 const QuestsPage = async () => {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()
   const coursesData = getCourses()
+
+  // Get monthly quest data
+  let monthlyQuestData = await getMonthlyQuestProgress()
+  
+  // If no monthly quest exists, create one
+  if (!monthlyQuestData) {
+    try {
+      await createMonthlyQuest()
+      monthlyQuestData = await getMonthlyQuestProgress()
+    } catch (error) {
+      console.error("Failed to create monthly quest:", error)
+    }
+  }
 
   const [userProgress, userSubscription, courses] = await Promise.all([
     userProgressData,
@@ -54,6 +69,10 @@ const QuestsPage = async () => {
                     .length
                 }
                 totalPoints={userProgress.points}
+              />
+
+              <MonthlyQuestContainer 
+                monthlyQuestData={monthlyQuestData}
               />
 
               <QuestProgressTrackerComponent

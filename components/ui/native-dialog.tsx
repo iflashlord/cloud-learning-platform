@@ -1,18 +1,33 @@
 "use client"
 
 import * as React from "react"
-import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { DialogCloseButton } from "./dialog-close-button"
 
 interface NativeDialogProps extends React.DialogHTMLAttributes<HTMLDialogElement> {
   open?: boolean
   onOpenChange?: (open: boolean) => void
   showCloseButton?: boolean
+  closeButtonVariant?: "default" | "subtle" | "ghost" | "destructive"
+  closeButtonPosition?: "top-right" | "top-left" | "custom"
+  closeButtonTooltip?: string
 }
 
 const NativeDialog = React.forwardRef<HTMLDialogElement, NativeDialogProps>(
-  ({ className, children, open, onOpenChange, showCloseButton = true, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      open,
+      onOpenChange,
+      showCloseButton = true,
+      closeButtonVariant = "default",
+      closeButtonPosition = "top-right",
+      closeButtonTooltip,
+      ...props
+    },
+    ref,
+  ) => {
     const dialogRef = React.useRef<HTMLDialogElement>(null)
 
     React.useImperativeHandle(ref, () => dialogRef.current!)
@@ -70,23 +85,27 @@ const NativeDialog = React.forwardRef<HTMLDialogElement, NativeDialogProps>(
         className={cn(
           // Base dialog styles
           "bg-background border border-border rounded-lg shadow-lg",
-          "w-full max-w-lg p-0 m-auto overflow-hidden",
+          "w-full max-w-lg p-0 m-auto overflow-visible",
           // Backdrop styles (using CSS custom properties for better browser support)
           "[&::backdrop]:bg-black/80 [&::backdrop]:backdrop-blur-sm",
           className,
         )}
         {...props}
       >
-        <div className='relative'>
+        <div
+          className={cn(
+            "relative min-h-0",
+            showCloseButton && closeButtonPosition === "top-right" && "pr-0 pt-0",
+          )}
+        >
           {showCloseButton && (
-            <button
-              type='button'
+            <DialogCloseButton
               onClick={() => onOpenChange?.(false)}
-              className='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10'
-            >
-              <X className='h-4 w-4' />
-              <span className='sr-only'>Close</span>
-            </button>
+              variant={closeButtonVariant}
+              position={closeButtonPosition}
+              tooltipText={closeButtonTooltip}
+              className='z-10'
+            />
           )}
           {children}
         </div>

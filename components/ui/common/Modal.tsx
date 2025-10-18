@@ -10,7 +10,7 @@ import * as React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { DialogCloseButton } from "../dialog-close-button";
 
 interface ModalProps {
   open: boolean;
@@ -23,6 +23,7 @@ interface ModalProps {
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
   className?: string;
+  closeButtonVariant?: "default" | "subtle" | "ghost" | "destructive";
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -36,6 +37,7 @@ export const Modal: React.FC<ModalProps> = ({
   showCloseButton = true,
   closeOnOverlayClick = true,
   className,
+  closeButtonVariant = "ghost",
 }) => {
   const sizeClasses = {
     sm: "max-w-sm",
@@ -80,14 +82,12 @@ export const Modal: React.FC<ModalProps> = ({
               </div>
               {showCloseButton && (
                 <Dialog.Close asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                  >
-                    <X className="h-4 w-4" />
-                    <span className="sr-only">Close</span>
-                  </Button>
+                  <DialogCloseButton
+                    variant={closeButtonVariant}
+                    position="custom"
+                    size="md"
+                    className="h-8 w-8"
+                  />
                 </Dialog.Close>
               )}
             </div>
