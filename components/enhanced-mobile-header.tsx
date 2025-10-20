@@ -117,18 +117,18 @@ export const EnhancedMobileHeader: React.FC = () => {
     let mounted = true
     let timeoutId: NodeJS.Timeout
     let failsafeTimeoutId: NodeJS.Timeout
-    
+
     const fetchUserData = async () => {
       if (!mounted) return
-      
+
       setIsLoading(true)
       isLoadingRef.current = true
       setLoadingError(false)
-      
+
       try {
         const [subscriptionResponse, progressResponse] = await Promise.all([
           fetch("/api/user/subscription"),
-          fetch("/api/user/progress")
+          fetch("/api/user/progress"),
         ])
 
         if (!mounted) return
@@ -142,7 +142,7 @@ export const EnhancedMobileHeader: React.FC = () => {
           const progressData = await progressResponse.json()
           setUserProgress(progressData)
         }
-        
+
         setHasLoadedOnce(true)
       } catch (error) {
         if (mounted) {
@@ -164,7 +164,7 @@ export const EnhancedMobileHeader: React.FC = () => {
       timeoutId = setTimeout(() => {
         fetchUserData()
       }, 150)
-      
+
       // Failsafe: force stop loading after 5 seconds
       failsafeTimeoutId = setTimeout(() => {
         if (mounted && isLoadingRef.current) {
@@ -273,7 +273,7 @@ export const EnhancedMobileHeader: React.FC = () => {
             <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
           </div>
         </ClerkLoading>
-        
+
         <ClerkLoaded>
           {isSignedIn && (isLoading || !hasLoadedOnce) ? (
             // Loading skeleton for data fetch

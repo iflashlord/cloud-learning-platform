@@ -122,7 +122,7 @@ const useUserData = () => {
       try {
         const [subscriptionRes, progressRes] = await Promise.all([
           fetch("/api/user/subscription"),
-          fetch("/api/user/progress")
+          fetch("/api/user/progress"),
         ])
 
         if (cancelled) return
@@ -165,7 +165,7 @@ const useUserData = () => {
     isLoading: isLoading && isSignedIn,
     error,
     hasData: !!userProgress,
-    isSignedIn
+    isSignedIn,
   }
 }
 
@@ -174,7 +174,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
   const { isAdmin, isLoggedIn } = useIsAdmin()
   const [showResetDialog, setShowResetDialog] = React.useState(false)
   const [isProMode, setIsProMode] = React.useState(false)
-  
+
   const { userProgress, isPro, isLoading, hasData, isSignedIn } = useUserData()
   const themeClasses = useThemeClasses()
   const headerNavItems = getHeaderNavItems(isPro)
@@ -253,7 +253,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
             <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
           </div>
         </ClerkLoading>
-        
+
         <ClerkLoaded>
           {isSignedIn && isLoading ? (
             <div className='flex items-center gap-1 sm:gap-2'>
