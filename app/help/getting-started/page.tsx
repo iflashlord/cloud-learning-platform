@@ -226,7 +226,7 @@ const GettingStartedPage = () => {
           {gameElements.map((element, index) => {
             const Icon = element.icon
             return (
-              <Card key={index}>
+              <Card key={index} className='p-2'>
                 <CardHeader>
                   <CardTitle className='flex items-center gap-3'>
                     <div className='w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>

@@ -223,7 +223,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
   return (
     <nav
       className={cn(
-        "px-2 sm:px-4 h-[60px] flex items-center justify-between",
+        "px-2 sm:px-4 h-[65px] flex items-center justify-between",
         "bg-background dark:bg-background backdrop-blur-md",
         "border-b border-border/50 fixed top-0 w-full",
         "shadow-sm",
@@ -231,7 +231,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
       )}
     >
       <Link href='/learn' className='flex items-center gap-1 sm:gap-2 min-w-0'>
-        <div
+        {/* <div
           className={cn(
             "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center",
             "bg-gradient-to-br from-primary to-primary/80 flex-shrink-0",
@@ -241,7 +241,15 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
         </div>
         <h1 className='text-sm sm:text-lg font-bold text-foreground truncate hidden sm:block'>
           {CONFIG.PLATFORM_NAME}
-        </h1>
+        </h1> */}
+        <div className='flex items-center gap-x-3'>
+          <div className='w-10 h-10 bg-gradient-to-br from-primary to-orange-500 rounded-xl flex items-center justify-center shadow-lg'>
+            <GraduationCap className='h-6 w-6 text-white' />
+          </div>
+          <h1 className='text-xl font-bold bg-gradient-to-r from-primary to-orange-500 bg-clip-text text-transparent'>
+            {CONFIG.PLATFORM_NAME}
+          </h1>
+        </div>
       </Link>
 
       {/* Simplified progress section */}

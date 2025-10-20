@@ -176,9 +176,9 @@ const SubscriptionFAQPage = () => {
       </div>
 
       {/* Pro Features Comparison */}
-      <Card className='mb-8'>
+      <Card className='mb-8 p-4'>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
+          <CardTitle className='flex items-center gap-2 mb-4'>
             <CheckCircle className='w-5 h-5 text-green-500' />
             Pro Features Overview
           </CardTitle>
@@ -225,7 +225,7 @@ const SubscriptionFAQPage = () => {
           {faqs.map((faq, index) => {
             const Icon = faq.icon
             return (
-              <Card key={index}>
+              <Card key={index} className='p-2'>
                 <CardHeader>
                   <CardTitle className='flex items-start gap-3 text-lg'>
                     <div className='w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>

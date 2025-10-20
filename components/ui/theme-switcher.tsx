@@ -45,8 +45,22 @@ export function ThemeSwitcher({
   useEffect(() => {
     setMounted(true);
     
-    // Get saved theme from localStorage or default to system
-    const savedTheme = (localStorage.getItem('theme') as Theme) || 'system';
+    // Migration: Check for old darkMode storage and convert to new format
+    let savedTheme = localStorage.getItem('theme') as Theme;
+    if (!savedTheme) {
+      const oldDarkMode = localStorage.getItem('darkMode');
+      if (oldDarkMode === 'true') {
+        savedTheme = 'dark';
+      } else if (oldDarkMode === 'false') {
+        savedTheme = 'light';
+      } else {
+        savedTheme = 'system';
+      }
+      // Save in new format and remove old format
+      localStorage.setItem('theme', savedTheme);
+      localStorage.removeItem('darkMode');
+    }
+    
     setTheme(savedTheme);
     applyTheme(savedTheme);
 
@@ -156,7 +170,23 @@ export function useTheme() {
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = (localStorage.getItem('theme') as Theme) || 'system';
+    
+    // Migration: Check for old darkMode storage and convert to new format
+    let savedTheme = localStorage.getItem('theme') as Theme;
+    if (!savedTheme) {
+      const oldDarkMode = localStorage.getItem('darkMode');
+      if (oldDarkMode === 'true') {
+        savedTheme = 'dark';
+      } else if (oldDarkMode === 'false') {
+        savedTheme = 'light';
+      } else {
+        savedTheme = 'system';
+      }
+      // Save in new format and remove old format
+      localStorage.setItem('theme', savedTheme);
+      localStorage.removeItem('darkMode');
+    }
+    
     setTheme(savedTheme);
   }, []);
 

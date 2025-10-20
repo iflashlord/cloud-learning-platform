@@ -106,9 +106,9 @@ const HeartsSystemPage = () => {
       </div>
 
       {/* How Hearts Work */}
-      <Card className='mb-8'>
+      <Card className='mb-8 p-4'>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
+          <CardTitle className='flex items-center gap-2 mb-4'>
             <Heart className='w-5 h-5 text-red-500 fill-current' />
             How Hearts Work
           </CardTitle>
@@ -208,8 +208,8 @@ const HeartsSystemPage = () => {
       </Card>
 
       {/* Comparison Table */}
-      <Card className='mb-8'>
-        <CardHeader>
+      <Card className='mb-8 p-4'>
+        <CardHeader className=' mb-4'>
           <CardTitle>Free vs Pro Hearts Comparison</CardTitle>
         </CardHeader>
         <CardContent>
@@ -254,9 +254,9 @@ const HeartsSystemPage = () => {
       </Card>
 
       {/* Tips for Free Users */}
-      <Card className='mb-8'>
+      <Card className='mb-8 p-4'>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
+          <CardTitle className='flex items-center gap-2 mb-4'>
             <Zap className='w-5 h-5 text-purple-500' />
             Tips for Managing Hearts (Free Users)
           </CardTitle>
@@ -317,7 +317,7 @@ const HeartsSystemPage = () => {
           Frequently Asked Questions
         </h2>
         <div className='space-y-4'>
-          <Card>
+          <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-start gap-3 text-lg'>
                 <div className='w-8 h-8 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
@@ -335,7 +335,7 @@ const HeartsSystemPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-start gap-3 text-lg'>
                 <div className='w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
@@ -353,7 +353,7 @@ const HeartsSystemPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-start gap-3 text-lg'>
                 <div className='w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
@@ -375,7 +375,7 @@ const HeartsSystemPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-start gap-3 text-lg'>
                 <div className='w-8 h-8 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>
@@ -393,7 +393,7 @@ const HeartsSystemPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-start gap-3 text-lg'>
                 <div className='w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1'>

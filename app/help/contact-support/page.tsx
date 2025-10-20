@@ -89,8 +89,8 @@ const ContactSupportPage = () => {
                 key={index}
                 className={
                   option.isPro
-                    ? "border-yellow-200 dark:border-yellow-800 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20"
-                    : ""
+                    ? "p-4 border-yellow-200 dark:border-yellow-800 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20"
+                    : "p-4"
                 }
               >
                 <CardHeader>
@@ -161,7 +161,7 @@ const ContactSupportPage = () => {
         </h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           {commonIssues.map((item, index) => (
-            <Card key={index}>
+            <Card key={index} className='p-2'>
               <CardHeader>
                 <CardTitle className='text-lg'>{item.issue}</CardTitle>
               </CardHeader>
@@ -170,7 +170,7 @@ const ContactSupportPage = () => {
                 <div className='space-y-2'>
                   {item.quickActions.map((action, actionIndex) => (
                     <Link key={actionIndex} href={action.href}>
-                      <Button variant='outline' size='sm' className='w-full justify-start'>
+                      <Button variant='outline' size='sm' className='w-full justify-start mb-1'>
                         <Zap className='w-4 h-4 mr-2' />
                         {action.label}
                       </Button>
