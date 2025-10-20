@@ -229,13 +229,13 @@ export const SubscriptionManager = ({
                       Cancel Subscription
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent showCloseButton={false}>
                     <AlertDialogHeader>
                       <AlertDialogTitle className='flex items-center gap-2'>
                         <AlertTriangle className='w-5 h-5 text-red-500' />
                         Cancel Pro Subscription?
                       </AlertDialogTitle>
-                      <AlertDialogDescription>
+                      <AlertDialogDescription className='p-4'>
                         You&apos;ll lose access to Pro features when your current billing period
                         ends on {formatDate(subscription?.stripeCurrentPeriodEnd)}. Your learning
                         progress will remain saved.

@@ -278,7 +278,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
                     width={24}
                     height={24}
                   />
-                  <span className='text-xs font-medium text-foreground truncate max-w-[80px] sm:max-w-[120px] hidden sm:inline'>
+                  <span className='text-xs font-medium text-foreground truncate max-w-[80px] sm:max-w-[80px] md:max-w-[150px] hidden sm:inline'>
                     {userProgress.activeCourse.title}
                   </span>
                 </Button>

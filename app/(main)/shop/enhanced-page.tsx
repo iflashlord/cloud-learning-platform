@@ -11,6 +11,7 @@ import { BRAND_CONFIG } from "@/lib/config"
 import { GAMIFICATION, GAME_ELEMENT_COLORS } from "@/constants"
 import { Zap, Heart, Crown, Target, Lightbulb, Gem, Flame } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { statusStyles } from "@/lib/style-utils"
 
 // Import new gamification components
 import { CurrencyHeader, GameShop } from "@/components/gamification"
@@ -189,7 +190,7 @@ const EnhancedShopPage = async () => {
           {/* Quick Stats */}
           <div className='bg-white dark:bg-gray-800 rounded-lg border p-4'>
             <h3 className='font-semibold mb-3 flex items-center gap-2'>
-              <Target className='h-4 w-4 text-blue-500' />
+              <Target className={cn("h-4 w-4", statusStyles.info.icon)} />
               Quick Stats
             </h3>
             <div className='space-y-2 text-sm'>

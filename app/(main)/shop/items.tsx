@@ -288,7 +288,7 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription, onRefresh }
             disabled={pending}
             className={`px-6 py-3 font-bold text-lg ${
               hasActiveSubscription
-                ? "bg-green-500 hover:bg-green-600 text-white"
+                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
                 : "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
             } shadow-lg hover:shadow-xl transition-all duration-200`}
           >
