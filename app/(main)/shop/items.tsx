@@ -20,7 +20,7 @@ import { refillHeartsWithGemsAction } from "@/actions/user-progress"
 import { watchAdForGems } from "@/actions/gamification"
 import { createStripeUrl } from "@/actions/user-subscription"
 import { Button } from "@/components/ui/button"
-import { GAMIFICATION } from "@/constants"
+import { GAMIFICATION, GAME_ELEMENT_COLORS } from "@/constants"
 import { cn } from "@/lib/utils"
 import { statusStyles } from "@/lib/style-utils"
 import { AdRewardModal } from "@/components/modals/ad-reward-modal"
@@ -166,7 +166,7 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription, onRefresh }
                 "Not enough Gems"
               ) : (
                 <div className='flex items-center gap-2'>
-                  <Gem className='w-5 h-5 text-purple-300' />
+                  <Gem className={cn("w-5 h-5", GAME_ELEMENT_COLORS.GEMS.text)} />
                   <span>{GAMIFICATION.HEARTS_REFILL_COST_GEMS} Gems</span>
                 </div>
               )}

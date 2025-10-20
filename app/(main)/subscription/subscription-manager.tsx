@@ -75,11 +75,7 @@ export const SubscriptionManager = ({
             window.location.href = response.data
           }
         })
-        .catch(() =>
-          toast.error(
-            "Failed to open subscription management. Please try again."
-          )
-        )
+        .catch(() => toast.error("Failed to open subscription management. Please try again."))
     })
   }
 
@@ -91,9 +87,7 @@ export const SubscriptionManager = ({
             window.location.href = response.data
           }
         })
-        .catch(() =>
-          toast.error("Failed to start upgrade process. Please try again.")
-        )
+        .catch(() => toast.error("Failed to start upgrade process. Please try again."))
     })
   }
 
@@ -147,21 +141,18 @@ export const SubscriptionManager = ({
             <Crown className='w-6 h-6 text-white' />
           </div>
           <div>
-            <h1 className='text-3xl sm:text-4xl font-bold text-left'>
-              Subscription Management
-            </h1>
+            <h1 className='text-3xl sm:text-4xl font-bold text-left'>Subscription Management</h1>
           </div>
         </div>
         <p className='text-lg text-muted-foreground max-w-3xl mx-auto'>
-          Manage your {BRAND_CONFIG.PLATFORM_NAME} Pro subscription, billing
-          settings, and explore premium features designed to enhance your
-          learning experience.
+          Manage your {BRAND_CONFIG.PLATFORM_NAME} Pro subscription, billing settings, and explore
+          premium features designed to enhance your learning experience.
         </p>
       </div>
 
       {isPro ? (
         <div className='space-y-6'>
-          <Card className='bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+          <Card className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
               <CardTitle className='flex items-center gap-3'>
                 <div className='w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center'>
@@ -195,9 +186,7 @@ export const SubscriptionManager = ({
                   <CreditCard className='w-5 h-5 text-purple-500' />
                   <div>
                     <div className='font-medium text-sm'>Plan</div>
-                    <div className='text-xs text-muted-foreground'>
-                      Pro Monthly ($9.99)
-                    </div>
+                    <div className='text-xs text-muted-foreground'>Pro Monthly ($9.99)</div>
                   </div>
                 </div>
                 <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
@@ -247,10 +236,9 @@ export const SubscriptionManager = ({
                         Cancel Pro Subscription?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        You&apos;ll lose access to Pro features when your
-                        current billing period ends on{" "}
-                        {formatDate(subscription?.stripeCurrentPeriodEnd)}. Your
-                        learning progress will remain saved.
+                        You&apos;ll lose access to Pro features when your current billing period
+                        ends on {formatDate(subscription?.stripeCurrentPeriodEnd)}. Your learning
+                        progress will remain saved.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -268,9 +256,9 @@ export const SubscriptionManager = ({
             </CardContent>
           </Card>
 
-          <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
+          <Card className='p-4 border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
+              <CardTitle className='p-2 flex items-center gap-2'>
                 <Crown className='w-5 h-5 text-yellow-500' />
                 Your Pro Benefits
               </CardTitle>
@@ -287,9 +275,7 @@ export const SubscriptionManager = ({
                     </div>
                     <div>
                       <h4 className='font-medium text-sm'>{feature.title}</h4>
-                      <p className='text-xs text-muted-foreground'>
-                        {feature.description}
-                      </p>
+                      <p className='text-xs text-muted-foreground'>{feature.description}</p>
                     </div>
                   </div>
                 ))}
@@ -299,7 +285,7 @@ export const SubscriptionManager = ({
         </div>
       ) : (
         <div className='space-y-6'>
-          <Card className='bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800'>
+          <Card className='p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800'>
             <CardHeader>
               <CardTitle className='flex items-center gap-3'>
                 <div className='w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center'>
@@ -325,12 +311,12 @@ export const SubscriptionManager = ({
                     Ready to unlock your potential?
                   </div>
                   <p className='text-muted-foreground'>
-                    Join thousands of learners who&apos;ve accelerated their
-                    progress with Pro.
+                    Join thousands of learners who&apos;ve accelerated their progress with Pro.
                   </p>
                   <Button
                     onClick={onUpgradeNow}
                     disabled={pending}
+                    variant='subtle'
                     size='lg'
                     className='bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold px-8'
                   >
@@ -352,11 +338,9 @@ export const SubscriptionManager = ({
             </CardContent>
           </Card>
 
-          <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
+          <Card className='p-4 border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>
-              <CardTitle className='text-center'>
-                What You&apos;ll Get with Pro
-              </CardTitle>
+              <CardTitle className='p-4 text-center'>What You&apos;ll Get with Pro</CardTitle>
             </CardHeader>
             <CardContent>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -370,9 +354,7 @@ export const SubscriptionManager = ({
                     </div>
                     <div>
                       <h4 className='font-medium text-sm'>{feature.title}</h4>
-                      <p className='text-xs text-muted-foreground'>
-                        {feature.description}
-                      </p>
+                      <p className='text-xs text-muted-foreground'>{feature.description}</p>
                     </div>
                   </div>
                 ))}
@@ -397,6 +379,7 @@ export const SubscriptionManager = ({
                   onClick={onUpgradeNow}
                   disabled={pending}
                   size='lg'
+                  variant='subtle'
                   className='w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold text-lg h-12'
                 >
                   {pending ? (
@@ -413,8 +396,7 @@ export const SubscriptionManager = ({
                 </Button>
 
                 <p className='text-xs text-muted-foreground'>
-                  Secure payment powered by Stripe •{" "}
-                  {BRAND_CONFIG.PLATFORM_NAME} Pro
+                  Secure payment powered by Stripe • {BRAND_CONFIG.PLATFORM_NAME} Pro
                 </p>
               </div>
             </CardContent>
@@ -424,7 +406,7 @@ export const SubscriptionManager = ({
 
       <div className='space-y-6'>
         {isPro && (
-          <Card className='bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+          <Card className='p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardContent className='p-6'>
               <h3 className='text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
                 <Star className='w-5 h-5 text-yellow-500' />
@@ -432,12 +414,8 @@ export const SubscriptionManager = ({
               </h3>
               <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
                 <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
-                  <div className='text-2xl font-bold text-green-600 dark:text-green-400'>
-                    ∞
-                  </div>
-                  <div className='text-xs text-muted-foreground'>
-                    Hearts Used
-                  </div>
+                  <div className='text-2xl font-bold text-green-600 dark:text-green-400'>∞</div>
+                  <div className='text-xs text-muted-foreground'>Hearts Used</div>
                 </div>
                 <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
                   <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
@@ -452,9 +430,7 @@ export const SubscriptionManager = ({
                   <div className='text-xs text-muted-foreground'>XP Bonus</div>
                 </div>
                 <div className='text-center p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
-                  <div className='text-2xl font-bold text-yellow-600 dark:text-yellow-400'>
-                    0
-                  </div>
+                  <div className='text-2xl font-bold text-yellow-600 dark:text-yellow-400'>0</div>
                   <div className='text-xs text-muted-foreground'>Ads Seen</div>
                 </div>
               </div>
@@ -462,7 +438,7 @@ export const SubscriptionManager = ({
           </Card>
         )}
 
-        <Card className='border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
+        <Card className='p-4 border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
           <CardHeader>
             <CardTitle className='text-center flex items-center justify-center gap-2'>
               <MessageSquare className='w-5 h-5 text-blue-500' />
@@ -472,16 +448,13 @@ export const SubscriptionManager = ({
           <CardContent>
             <div className='text-center space-y-6'>
               <p className='text-muted-foreground'>
-                Have questions about your subscription, billing, or need
-                technical support?
+                Have questions about your subscription, billing, or need technical support?
               </p>
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                 <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600'>
                   <MessageSquare className='w-8 h-8 text-blue-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-foreground mb-2'>
-                    Email Support
-                  </h4>
+                  <h4 className='font-medium text-foreground mb-2'>Email Support</h4>
                   <p className='text-sm text-muted-foreground mb-3'>
                     Get personalized help via email
                   </p>
@@ -495,12 +468,8 @@ export const SubscriptionManager = ({
 
                 <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-green-300 dark:hover:border-green-600'>
                   <HelpCircle className='w-8 h-8 text-green-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-foreground mb-2'>
-                    Help Center
-                  </h4>
-                  <p className='text-sm text-muted-foreground mb-3'>
-                    Browse our comprehensive FAQ
-                  </p>
+                  <h4 className='font-medium text-foreground mb-2'>Help Center</h4>
+                  <p className='text-sm text-muted-foreground mb-3'>Browse our comprehensive FAQ</p>
                   <Button size='sm' variant='outline' asChild>
                     <Link href='/help'>Browse Help</Link>
                   </Button>
@@ -508,9 +477,7 @@ export const SubscriptionManager = ({
 
                 <div className='p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:border-purple-300 dark:hover:border-purple-600'>
                   <Crown className='w-8 h-8 text-purple-500 mx-auto mb-3' />
-                  <h4 className='font-medium text-foreground mb-2'>
-                    Subscription FAQ
-                  </h4>
+                  <h4 className='font-medium text-foreground mb-2'>Subscription FAQ</h4>
                   <p className='text-sm text-muted-foreground mb-3'>
                     Specific billing & Pro questions
                   </p>
@@ -527,8 +494,8 @@ export const SubscriptionManager = ({
                     <span className='font-medium'>Pro Priority Support</span>
                   </div>
                   <p className='text-sm text-yellow-600 dark:text-yellow-400'>
-                    As a Pro member, you get priority support with faster
-                    response times (within 4 hours)
+                    As a Pro member, you get priority support with faster response times (within 24
+                    hours)
                   </p>
                 </div>
               )}

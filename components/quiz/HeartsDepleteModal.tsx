@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { GAME_ELEMENT_COLORS } from "@/constants"
+import { cn } from "@/lib/utils"
 
 interface HeartsDepleteModalProps {
   isOpen: boolean
@@ -69,7 +71,7 @@ export const HeartsDepleteModal = ({ isOpen, onClose }: HeartsDepleteModalProps)
               size='lg'
               onClick={handleBuyHearts}
             >
-              <Gem className='w-5 h-5' />
+              <Gem className={cn("w-5 h-5", GAME_ELEMENT_COLORS.GEMS.text)} />
               Buy Hearts (5 Gems)
             </Button>
             <Button

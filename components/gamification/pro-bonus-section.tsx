@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CurrencyDisplay } from "./currency-display"
 import { claimProDailyBonus } from "@/actions/gamification"
-import { GAMIFICATION } from "@/constants"
+import { GAMIFICATION, GAME_ELEMENT_COLORS } from "@/constants"
 
 interface ProBonusSectionProps {
   isPro: boolean
@@ -71,7 +71,13 @@ export const ProBonusSection = ({ isPro, userGems, onGemsChange }: ProBonusSecti
 
         <div className='flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/20 rounded-lg border border-yellow-200/50 dark:border-yellow-700/50'>
           <div className='flex items-center gap-3'>
-            <div className='w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center'>
+            <div
+              className={cn(
+                "w-12 h-12 rounded-lg flex items-center justify-center",
+                "bg-gradient-to-br",
+                GAME_ELEMENT_COLORS.GEMS.gradient,
+              )}
+            >
               <Gem className='h-6 w-6 text-white' />
             </div>
 

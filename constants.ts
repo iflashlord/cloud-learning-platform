@@ -87,6 +87,36 @@ export const GAMIFICATION = {
   LEADERBOARD_TOP_50_GEMS: 10,
 } as const
 
+// Design System Colors for Game Elements - Vibrant & Accessible
+export const GAME_ELEMENT_COLORS = {
+  // XP/Points Colors - Golden/Amber theme (more vibrant)
+  XP: {
+    text: "text-amber-500 dark:text-amber-300",
+    bg: "bg-amber-50 dark:bg-amber-950/50",
+    border: "border-amber-200 dark:border-amber-800",
+    icon: "text-amber-500 dark:text-amber-300",
+    gradient: "from-amber-500 to-yellow-500",
+  },
+
+  // Gems Colors - Bright Purple theme (more vibrant and visible)
+  GEMS: {
+    text: "text-purple-500 dark:text-purple-300",
+    bg: "bg-purple-50 dark:bg-purple-950/50",
+    border: "border-purple-200 dark:border-purple-800",
+    icon: "text-purple-500 dark:text-purple-300",
+    gradient: "from-purple-500 to-violet-500",
+  },
+
+  // Hearts Colors - Red theme (existing)
+  HEARTS: {
+    text: "text-red-500 dark:text-red-400",
+    bg: "bg-red-50 dark:bg-red-950/50",
+    border: "border-red-200 dark:border-red-800",
+    icon: "text-red-500 dark:text-red-400",
+    gradient: "from-red-500 to-rose-500",
+  },
+} as const
+
 export const QUEST_ICON_MAP = {
   sprout: Sprout,
   search: Search,

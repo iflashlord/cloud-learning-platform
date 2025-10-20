@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { useThemeClasses } from "@/lib/theme-utils"
 import { statusStyles } from "@/lib/style-utils"
 import { cn } from "@/lib/utils"
+import { GAME_ELEMENT_COLORS } from "@/constants"
 
 type Props = {
   activeCourse: {
@@ -51,24 +52,24 @@ export const UserProgress = ({
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button variant='ghost' className={cn("gap-x-2", themeClasses.primaryText)}>
-          <Coins className='h-7 w-7' />
+        <Button variant='ghost' className={cn("gap-x-2", GAME_ELEMENT_COLORS.XP.text)}>
+          <Coins className={cn("h-7 w-7", GAME_ELEMENT_COLORS.XP.icon)} />
           <span className='font-medium flex items-center gap-1'>
             <span className='font-bold'>{points}</span>
           </span>
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button variant='ghost' className='gap-x-2 text-purple-500'>
-          <Gem className='h-5 w-5' />
+        <Button variant='ghost' className={cn("gap-x-2", GAME_ELEMENT_COLORS.GEMS.text)}>
+          <Gem className={cn("h-5 w-5", GAME_ELEMENT_COLORS.GEMS.icon)} />
           <span className='font-medium'>
             <span className='font-bold'>{gems}</span>
           </span>
         </Button>
       </Link>
       <Link href='/shop'>
-        <Button variant='ghost' className={cn("gap-x-2", statusStyles.error.text)}>
-          <Heart className='h-5 w-5 fill-current' />
+        <Button variant='ghost' className={cn("gap-x-2", GAME_ELEMENT_COLORS.HEARTS.text)}>
+          <Heart className={cn("h-5 w-5 fill-current", GAME_ELEMENT_COLORS.HEARTS.icon)} />
           <span className='font-medium'>
             {hasActiveSubscription ? <InfinityIcon className='h-4 w-4 stroke-[3]' /> : hearts}
           </span>

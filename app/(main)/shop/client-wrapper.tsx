@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Items } from "./items"
 import { BRAND_CONFIG } from "@/lib/config"
+import { GAME_ELEMENT_COLORS } from "@/constants"
 import { Zap, Heart, Crown, Target, Lightbulb, Gem } from "lucide-react"
 import { useUserProgress } from "@/hooks/use-user-progress"
+import { cn } from "@/lib/utils"
 
 type Props = {
   initialUserProgress: {
@@ -53,19 +55,38 @@ export const ShopPageClient = ({ initialUserProgress, isPro }: Props) => {
             <ContentGrid cols={1} gap='lg' className='max-w-4xl mx-auto'>
               <ContentGrid cols={4} gap='md' className='w-full'>
                 <StatCard
-                  variant='info'
-                  icon={<Zap className='w-6 h-6' />}
+                  variant='warning'
+                  icon={<Zap className={cn("w-6 h-6", GAME_ELEMENT_COLORS.XP.text)} />}
                   title='XP Points'
                   value={currentData.points.toString()}
                   subtitle='Experience earned'
                 />
-                <StatCard
-                  variant='success'
-                  icon={<Gem className='w-6 h-6' />}
-                  title='Gems'
-                  value={currentData.gems.toString()}
-                  subtitle='Premium currency'
-                />
+                <div
+                  className={cn(
+                    "flex items-center justify-between p-6 transition-all duration-200 hover:shadow-md rounded-lg",
+                    "bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
+                    "border border-purple-200 dark:border-purple-700",
+                  )}
+                >
+                  <div className='flex items-center gap-4'>
+                    <div
+                      className={cn(
+                        "w-12 h-12 rounded-full flex items-center justify-center",
+                        "bg-gradient-to-br",
+                        GAME_ELEMENT_COLORS.GEMS.gradient,
+                      )}
+                    >
+                      <Gem className='w-6 h-6 text-white' />
+                    </div>
+                    <div>
+                      <p className='text-sm font-medium text-muted-foreground'>Gems</p>
+                      <p className={cn("text-2xl font-bold", GAME_ELEMENT_COLORS.GEMS.text)}>
+                        {currentData.gems.toString()}
+                      </p>
+                      <p className='text-sm text-muted-foreground'>Premium currency</p>
+                    </div>
+                  </div>
+                </div>
                 <StatCard
                   variant='danger'
                   icon={<Heart className='w-6 h-6' />}

@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { GAME_ELEMENT_COLORS } from "@/constants"
+import { cn } from "@/lib/utils"
 
 interface AdRewardModalProps {
   isOpen: boolean
@@ -95,8 +97,14 @@ export const AdRewardModal = ({
             {adState === "ready" && (
               <div className='relative'>
                 <Play className='h-24 w-24 text-blue-500 fill-current' />
-                <div className='absolute -bottom-2 -right-2 bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold'>
-                  <Gem className='w-4 h-4' />
+                <div
+                  className={cn(
+                    "absolute -bottom-2 -right-2 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold",
+                    GAME_ELEMENT_COLORS.GEMS.bg,
+                    "bg-violet-500",
+                  )}
+                >
+                  <Gem className={cn("w-4 h-4", "text-white")} />
                 </div>
               </div>
             )}

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CurrencyDisplay } from "./currency-display"
 import { watchAdForGems } from "@/actions/gamification"
+import { GAME_ELEMENT_COLORS } from "@/constants"
 
 interface AdReward {
   type: "gems" | "hearts" | "xp"
@@ -87,7 +88,7 @@ export const AdWatchSection = ({
         onGemsChange?.(result.newTotal)
 
         toast.success(`You earned ${gemAmount} gems for watching the ad!`, {
-          icon: <Gem className='h-4 w-4 text-purple-500' />,
+          icon: <Gem className={cn("h-4 w-4", GAME_ELEMENT_COLORS.GEMS.text)} />,
         })
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "Failed to watch ad")

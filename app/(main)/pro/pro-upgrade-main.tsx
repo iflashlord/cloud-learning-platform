@@ -38,10 +38,7 @@ interface ProUpgradeMainProps {
   isProActive: boolean
 }
 
-export const ProUpgradeMain = ({
-  userProgress,
-  isProActive,
-}: ProUpgradeMainProps) => {
+export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProps) => {
   const [pending, startTransition] = useTransition()
 
   const onUpgrade = () => {
@@ -60,22 +57,19 @@ export const ProUpgradeMain = ({
     {
       icon: <Heart className='w-5 h-5' />,
       title: "Unlimited Hearts",
-      description:
-        "Never lose progress due to mistakes. Practice as much as you want!",
+      description: "Never lose progress due to mistakes. Practice as much as you want!",
       benefit: "No more waiting or XP spending",
     },
     {
       icon: <Zap className='w-5 h-5' />,
       title: "Ad-Free Experience",
-      description:
-        "Focus on learning without interruptions from advertisements.",
+      description: "Focus on learning without interruptions from advertisements.",
       benefit: "Distraction-free learning",
     },
     {
       icon: <Award className='w-5 h-5' />,
       title: "Exclusive Pro Content",
-      description:
-        "Access advanced courses, expert tips, and premium learning materials.",
+      description: "Access advanced courses, expert tips, and premium learning materials.",
       benefit: "Accelerated learning path",
     },
     {
@@ -87,8 +81,7 @@ export const ProUpgradeMain = ({
     {
       icon: <Target className='w-5 h-5' />,
       title: "Advanced Analytics",
-      description:
-        "Track detailed progress with comprehensive learning insights.",
+      description: "Track detailed progress with comprehensive learning insights.",
       benefit: "Data-driven improvement",
     },
     {
@@ -116,8 +109,8 @@ export const ProUpgradeMain = ({
           </Badge>
         </div>
         <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-          Unlock unlimited learning potential with advanced features, exclusive
-          content, and priority support.
+          Unlock unlimited learning potential with advanced features, exclusive content, and
+          priority support.
         </p>
       </div>
 
@@ -164,17 +157,14 @@ export const ProUpgradeMain = ({
               Pro Membership
             </h2>
             <p className='text-muted-foreground mb-6 max-w-md mx-auto'>
-              Transform your learning experience with unlimited access and
-              premium features.
+              Transform your learning experience with unlimited access and premium features.
             </p>
 
             {/* Pricing */}
             <div className='bg-white/80 dark:bg-black/20 rounded-xl p-6 mb-6 border border-yellow-200 dark:border-yellow-700/50'>
               <div className='flex items-center justify-center gap-4 mb-4'>
                 <div className='text-center'>
-                  <div className='text-4xl font-bold text-foreground'>
-                    $9.99
-                  </div>
+                  <div className='text-4xl font-bold text-foreground'>$9.99</div>
                   <div className='text-sm text-muted-foreground'>per month</div>
                 </div>
                 <div className='text-muted-foreground'>•</div>
@@ -182,9 +172,7 @@ export const ProUpgradeMain = ({
                   <div className='text-lg font-semibold text-green-600 dark:text-green-400'>
                     7-day
                   </div>
-                  <div className='text-sm text-muted-foreground'>
-                    free trial
-                  </div>
+                  <div className='text-sm text-muted-foreground'>free trial</div>
                 </div>
               </div>
 
@@ -214,9 +202,7 @@ export const ProUpgradeMain = ({
 
           {/* Feature Comparison */}
           <div className='space-y-4'>
-            <h3 className='text-xl font-semibold text-center mb-6'>
-              What You'll Get
-            </h3>
+            <h3 className='text-xl font-semibold text-center mb-6'>What You'll Get</h3>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {proFeatures.map((feature, index) => (
                 <div
@@ -227,12 +213,8 @@ export const ProUpgradeMain = ({
                     {feature.icon}
                   </div>
                   <div className='flex-1'>
-                    <h4 className='font-semibold text-sm mb-1'>
-                      {feature.title}
-                    </h4>
-                    <p className='text-xs text-muted-foreground mb-2'>
-                      {feature.description}
-                    </p>
+                    <h4 className='font-semibold text-sm mb-1'>{feature.title}</h4>
+                    <p className='text-xs text-muted-foreground mb-2'>{feature.description}</p>
                     <div className='flex items-center gap-1'>
                       <Check className='w-3 h-3 text-green-500' />
                       <span className='text-xs font-medium text-green-600 dark:text-green-400'>
@@ -250,9 +232,7 @@ export const ProUpgradeMain = ({
       {/* Comparison Table */}
       <Card>
         <CardContent className='p-6'>
-          <h3 className='text-xl font-semibold text-center mb-6'>
-            Free vs Pro Comparison
-          </h3>
+          <h3 className='text-xl font-semibold text-center mb-6'>Free vs Pro Comparison</h3>
           <div className='space-y-4'>
             <div className='grid grid-cols-3 gap-4 font-semibold text-sm border-b pb-3'>
               <div>Feature</div>
@@ -274,9 +254,7 @@ export const ProUpgradeMain = ({
                 className='grid grid-cols-3 gap-4 py-3 border-b border-border/50 last:border-b-0 text-sm'
               >
                 <div className='font-medium'>{item.feature}</div>
-                <div className='text-center text-muted-foreground'>
-                  {item.free}
-                </div>
+                <div className='text-center text-muted-foreground'>{item.free}</div>
                 <div className='text-center font-semibold text-yellow-600 dark:text-yellow-400'>
                   {item.pro}
                 </div>
@@ -290,28 +268,18 @@ export const ProUpgradeMain = ({
       <Card className='bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800'>
         <CardContent className='p-6 text-center'>
           <Star className='w-8 h-8 text-yellow-500 mx-auto mb-4' />
-          <h3 className='text-xl font-semibold mb-4'>
-            Join thousands of successful learners
-          </h3>
+          <h3 className='text-xl font-semibold mb-4'>Join thousands of successful learners</h3>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6 text-sm'>
             <div>
-              <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
-                10,000+
-              </div>
+              <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>10,000+</div>
               <div className='text-muted-foreground'>Active Pro members</div>
             </div>
             <div>
-              <div className='text-2xl font-bold text-green-600 dark:text-green-400'>
-                95%
-              </div>
-              <div className='text-muted-foreground'>
-                Completion rate increase
-              </div>
+              <div className='text-2xl font-bold text-green-600 dark:text-green-400'>95%</div>
+              <div className='text-muted-foreground'>Completion rate increase</div>
             </div>
             <div>
-              <div className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
-                4.9★
-              </div>
+              <div className='text-2xl font-bold text-purple-600 dark:text-purple-400'>4.9★</div>
               <div className='text-muted-foreground'>Average rating</div>
             </div>
           </div>
@@ -321,44 +289,34 @@ export const ProUpgradeMain = ({
       {/* FAQ Section */}
       <Card>
         <CardContent className='p-6'>
-          <h3 className='text-xl font-semibold text-center mb-6'>
-            Frequently Asked Questions
-          </h3>
+          <h3 className='text-xl font-semibold text-center mb-6'>Frequently Asked Questions</h3>
           <div className='space-y-4 text-sm'>
             <div>
-              <h4 className='font-semibold mb-2'>
-                How does the free trial work?
-              </h4>
+              <h4 className='font-semibold mb-2'>How does the free trial work?</h4>
               <p className='text-muted-foreground'>
-                Start with a 7-day free trial with full Pro access. Cancel
-                anytime before the trial ends to avoid charges.
+                Start with a 7-day free trial with full Pro access. Cancel anytime before the trial
+                ends to avoid charges.
               </p>
             </div>
             <div>
-              <h4 className='font-semibold mb-2'>
-                Can I cancel my subscription?
-              </h4>
+              <h4 className='font-semibold mb-2'>Can I cancel my subscription?</h4>
               <p className='text-muted-foreground'>
-                Yes! You can cancel anytime from your account settings. You'll
-                keep Pro benefits until your current billing period ends.
+                Yes! You can cancel anytime from your account settings. You'll keep Pro benefits
+                until your current billing period ends.
               </p>
             </div>
             <div>
-              <h4 className='font-semibold mb-2'>
-                What happens to my progress if I cancel?
-              </h4>
+              <h4 className='font-semibold mb-2'>What happens to my progress if I cancel?</h4>
               <p className='text-muted-foreground'>
-                Your learning progress is always saved. You'll simply return to
-                the free plan with its limitations.
+                Your learning progress is always saved. You'll simply return to the free plan with
+                its limitations.
               </p>
             </div>
             <div>
-              <h4 className='font-semibold mb-2'>
-                Is there a student discount?
-              </h4>
+              <h4 className='font-semibold mb-2'>Is there a student discount?</h4>
               <p className='text-muted-foreground'>
-                We offer special pricing for students and educational
-                institutions. Contact our support team for details.
+                We offer special pricing for students and educational institutions. Contact our
+                support team for details.
               </p>
             </div>
           </div>
@@ -367,12 +325,9 @@ export const ProUpgradeMain = ({
 
       {/* Final CTA */}
       <div className='text-center space-y-4'>
-        <h3 className='text-2xl font-bold'>
-          Ready to accelerate your learning?
-        </h3>
+        <h3 className='text-2xl font-bold'>Ready to accelerate your learning?</h3>
         <p className='text-muted-foreground'>
-          Join thousands of learners who've transformed their education with
-          Pro.
+          Join thousands of learners who've transformed their education with Pro.
         </p>
         <Button
           onClick={onUpgrade}

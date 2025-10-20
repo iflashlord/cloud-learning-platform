@@ -10,6 +10,7 @@ import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { CONFIG } from "@/lib/config"
+import { GAME_ELEMENT_COLORS } from "@/constants"
 import { zIndex } from "@/lib/z-index-system"
 import { ThemeSwitcher } from "@/components/ui/theme-switcher"
 import { useIsAdmin } from "@/hooks/useIsAdmin"
@@ -299,7 +300,7 @@ export const EnhancedMobileHeader: React.FC = () => {
                     width={24}
                     height={24}
                   />
-                  <span className='text-xs font-medium text-foreground truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline'>
+                  <span className='text-xs font-medium text-foreground truncate max-w-[130px] sm:max-w-[140px] hidden sm:inline'>
                     {userProgress.activeCourse.title}
                   </span>
                 </Button>
@@ -309,16 +310,20 @@ export const EnhancedMobileHeader: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
-                  className={cn("gap-1 px-2 h-8", themeClasses.primaryText)}
+                  className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.XP.text)}
                 >
-                  <Coins className='h-4 w-4 sm:h-5 sm:w-5' />
+                  <Coins className={cn("h-4 w-4 sm:h-5 sm:w-5", GAME_ELEMENT_COLORS.XP.icon)} />
                   <span className='font-bold text-xs sm:text-sm'>{userProgress.points}</span>
                 </Button>
               </Link>
 
               <Link href='/shop'>
-                <Button variant='ghost' size='sm' className='gap-1 px-2 h-8 text-purple-500'>
-                  <Gem className='h-4 w-4 sm:h-5 sm:w-5' />
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.GEMS.text)}
+                >
+                  <Gem className={cn("h-4 w-4 sm:h-5 sm:w-5", GAME_ELEMENT_COLORS.GEMS.icon)} />
                   <span className='font-bold text-xs sm:text-sm'>{userProgress.gems}</span>
                 </Button>
               </Link>
@@ -327,9 +332,14 @@ export const EnhancedMobileHeader: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
-                  className={cn("gap-1 px-2 h-8", statusStyles.error.text)}
+                  className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.HEARTS.text)}
                 >
-                  <Heart className='h-4 w-4 sm:h-5 sm:w-5 fill-current' />
+                  <Heart
+                    className={cn(
+                      "h-4 w-4 sm:h-5 sm:w-5 fill-current",
+                      GAME_ELEMENT_COLORS.HEARTS.icon,
+                    )}
+                  />
                   <span className='font-medium text-xs sm:text-sm'>
                     {isPro ? (
                       <InfinityIcon className='h-3 w-3 sm:h-4 sm:w-4 stroke-[3]' />
