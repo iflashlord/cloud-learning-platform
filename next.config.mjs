@@ -23,7 +23,10 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_APP_URL || "https://your-domain.com" : "*",
+            value:
+              process.env.NODE_ENV === "production"
+                ? process.env.NEXT_PUBLIC_APP_URL || "https://your-domain.com"
+                : "*",
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -39,8 +42,8 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

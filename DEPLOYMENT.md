@@ -3,6 +3,7 @@
 ## 🔧 Pre-Deployment Setup
 
 ### 1. Environment Variables
+
 Copy `.env.example` to `.env.production` and set:
 
 ```bash
@@ -17,6 +18,7 @@ NODE_ENV="production"
 ```
 
 ### 2. Database Setup
+
 ```bash
 # Push schema to production database
 npm run db:push
@@ -26,6 +28,7 @@ npm run db:seed
 ```
 
 ### 3. Stripe Configuration
+
 1. Create Stripe account and get live API keys
 2. Set up webhook endpoint: `https://your-domain.com/api/webhooks/stripe`
 3. Configure webhook events: `checkout.session.completed`, `invoice.payment_succeeded`
@@ -33,11 +36,13 @@ npm run db:seed
 ## 🚀 Deployment Options
 
 ### Option A: Vercel (Recommended)
+
 1. Connect GitHub repository to Vercel
 2. Set environment variables in Vercel dashboard
 3. Deploy automatically on push to main branch
 
 ### Option B: Docker
+
 ```bash
 # Build and run container
 docker build -t aws-learning-platform .
@@ -45,6 +50,7 @@ docker run -p 3000:3000 --env-file .env.production aws-learning-platform
 ```
 
 ### Option C: Manual Server
+
 ```bash
 npm run build
 npm start
@@ -70,6 +76,7 @@ npm start
 ## 📊 Monitoring Setup (Post-Launch)
 
 Consider adding:
+
 - Error tracking (Sentry)
 - Performance monitoring (Vercel Analytics)
 - Database monitoring (NeonDB dashboard)
