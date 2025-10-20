@@ -88,13 +88,9 @@ const HeaderNavItem = ({ item, isActive }: HeaderNavItemProps) => {
   )
 }
 
-export const EnhancedMobileHeader: React.FC = () => {
-  const pathname = usePathname()
-  const { user, isSignedIn } = useUser()
-  const { isAdmin, isLoggedIn } = useIsAdmin()
-  const [showResetDialog, setShowResetDialog] = React.useState(false)
-  const [isProMode, setIsProMode] = React.useState(false)
-  const [isPro, setIsPro] = React.useState(false)
+// Custom hook for user data with simplified loading logic
+const useUserData = () => {
+  const { user, isSignedIn, isLoaded } = useUser()
   const [userProgress, setUserProgress] = React.useState<{
     activeCourse: {
       id: number
@@ -105,97 +101,82 @@ export const EnhancedMobileHeader: React.FC = () => {
     points: number
     gems: number
   } | null>(null)
+  const [isPro, setIsPro] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [hasLoadedOnce, setHasLoadedOnce] = React.useState(false)
-  const [loadingError, setLoadingError] = React.useState(false)
-  const isLoadingRef = React.useRef(false)
+  const [error, setError] = React.useState<string | null>(null)
 
-  const themeClasses = useThemeClasses()
-
-  // Fetch user data when Clerk user is available
   React.useEffect(() => {
-    let mounted = true
-    let timeoutId: NodeJS.Timeout
-    let failsafeTimeoutId: NodeJS.Timeout
-    
-    const fetchUserData = async () => {
-      if (!mounted) return
-      
-      setIsLoading(true)
-      isLoadingRef.current = true
-      setLoadingError(false)
-      
+    if (!isLoaded || !isSignedIn || !user?.id) {
+      setUserProgress(null)
+      setIsPro(false)
+      setIsLoading(false)
+      setError(null)
+      return
+    }
+
+    let cancelled = false
+    setIsLoading(true)
+    setError(null)
+
+    const fetchData = async () => {
       try {
-        const [subscriptionResponse, progressResponse] = await Promise.all([
+        const [subscriptionRes, progressRes] = await Promise.all([
           fetch("/api/user/subscription"),
           fetch("/api/user/progress")
         ])
 
-        if (!mounted) return
+        if (cancelled) return
 
-        if (subscriptionResponse.ok) {
-          const subscriptionData = await subscriptionResponse.json()
-          setIsPro(!!subscriptionData.isActive)
+        if (subscriptionRes.ok) {
+          const subData = await subscriptionRes.json()
+          setIsPro(!!subData.isActive)
         }
 
-        if (progressResponse.ok) {
-          const progressData = await progressResponse.json()
+        if (progressRes.ok) {
+          const progressData = await progressRes.json()
           setUserProgress(progressData)
+        } else {
+          setError("Failed to load progress")
         }
-        
-        setHasLoadedOnce(true)
-      } catch (error) {
-        if (mounted) {
-          console.error("Failed to fetch user data:", error)
-          setLoadingError(true)
-          setHasLoadedOnce(true)
+      } catch (err) {
+        if (!cancelled) {
+          setError("Network error")
+          console.error("User data fetch error:", err)
         }
       } finally {
-        if (mounted) {
+        if (!cancelled) {
           setIsLoading(false)
-          isLoadingRef.current = false
         }
       }
     }
 
-    // Simple condition: only fetch if signed in, has user ID, and hasn't loaded yet
-    if (isSignedIn && user?.id && !hasLoadedOnce) {
-      // Small delay to ensure Clerk is stable
-      timeoutId = setTimeout(() => {
-        fetchUserData()
-      }, 150)
-      
-      // Failsafe: force stop loading after 5 seconds
-      failsafeTimeoutId = setTimeout(() => {
-        if (mounted && isLoadingRef.current) {
-          console.warn("Loading timeout reached, forcing completion")
-          setIsLoading(false)
-          isLoadingRef.current = false
-          setHasLoadedOnce(true)
-          setLoadingError(true)
-        }
-      }, 5000)
-    }
+    // Add small delay to ensure Clerk is stable
+    const timeoutId = setTimeout(fetchData, 100)
 
     return () => {
-      mounted = false
-      if (timeoutId) clearTimeout(timeoutId)
-      if (failsafeTimeoutId) clearTimeout(failsafeTimeoutId)
+      cancelled = true
+      clearTimeout(timeoutId)
     }
-  }, [isSignedIn, user?.id, hasLoadedOnce])
+  }, [isLoaded, isSignedIn, user?.id])
 
-  // Reset states when user signs out
-  React.useEffect(() => {
-    if (!isSignedIn) {
-      setUserProgress(null)
-      setIsPro(false)
-      setIsLoading(false)
-      isLoadingRef.current = false
-      setHasLoadedOnce(false)
-      setLoadingError(false)
-    }
-  }, [isSignedIn])
+  return {
+    userProgress,
+    isPro,
+    isLoading: isLoading && isSignedIn,
+    error,
+    hasData: !!userProgress,
+    isSignedIn
+  }
+}
 
+export const EnhancedMobileHeaderSimple: React.FC = () => {
+  const pathname = usePathname()
+  const { isAdmin, isLoggedIn } = useIsAdmin()
+  const [showResetDialog, setShowResetDialog] = React.useState(false)
+  const [isProMode, setIsProMode] = React.useState(false)
+  
+  const { userProgress, isPro, isLoading, hasData, isSignedIn } = useUserData()
+  const themeClasses = useThemeClasses()
   const headerNavItems = getHeaderNavItems(isPro)
 
   React.useEffect(() => {
@@ -262,10 +243,9 @@ export const EnhancedMobileHeader: React.FC = () => {
         </h1>
       </Link>
 
-      {/* Progress section with improved loading state */}
+      {/* Simplified progress section */}
       <div className='flex items-center gap-1 sm:gap-2 flex-1 justify-center mx-2'>
         <ClerkLoading>
-          {/* Show skeleton while Clerk is loading */}
           <div className='flex items-center gap-1 sm:gap-2'>
             <div className='w-8 h-8 bg-muted rounded animate-pulse'></div>
             <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
@@ -275,16 +255,14 @@ export const EnhancedMobileHeader: React.FC = () => {
         </ClerkLoading>
         
         <ClerkLoaded>
-          {isSignedIn && (isLoading || !hasLoadedOnce) ? (
-            // Loading skeleton for data fetch
+          {isSignedIn && isLoading ? (
             <div className='flex items-center gap-1 sm:gap-2'>
               <div className='w-8 h-8 bg-muted rounded animate-pulse'></div>
               <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
               <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
               <div className='w-12 h-6 bg-muted rounded animate-pulse'></div>
             </div>
-          ) : isSignedIn && userProgress ? (
-            // User progress data
+          ) : isSignedIn && hasData && userProgress ? (
             <>
               <Link href='/courses'>
                 <Button

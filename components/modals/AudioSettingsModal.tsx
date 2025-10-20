@@ -151,7 +151,7 @@ export function AudioSettingsModal({ open, onOpenChange }: AudioSettingsModalPro
 
         <div className='space-y-6'>
           {/* Master Audio Control */}
-          <Card>
+          <Card className='p-2'>
             <CardHeader>
               <CardTitle className='text-lg flex items-center gap-2'>
                 <Volume2 className='w-5 h-5' />
@@ -208,7 +208,7 @@ export function AudioSettingsModal({ open, onOpenChange }: AudioSettingsModalPro
           </Card>
 
           {/* Sound Effects */}
-          <Card>
+          <Card className='p-2'>
             <CardHeader>
               <CardTitle className='text-lg flex items-center gap-2'>
                 <Volume2 className='w-5 h-5 text-green-600' />
@@ -275,7 +275,7 @@ export function AudioSettingsModal({ open, onOpenChange }: AudioSettingsModalPro
           </Card>
 
           {/* Lesson Audio */}
-          <Card>
+          <Card className='p-2'>
             <CardHeader>
               <CardTitle className='text-lg flex items-center gap-2'>
                 <Headphones className='w-5 h-5 text-blue-600' />

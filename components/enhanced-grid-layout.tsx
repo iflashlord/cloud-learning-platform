@@ -13,7 +13,7 @@
 
 import * as React from "react"
 import { EnhancedSidebar } from "@/components/enhanced-sidebar"
-import { EnhancedMobileHeader } from "@/components/enhanced-mobile-header"
+import { EnhancedMobileHeaderSimple } from "@/components/enhanced-mobile-header-simple"
 import { MobileBottomNav } from "@/components/mobile-bottom-nav"
 import { BackgroundProvider, useResponsive } from "@/lib/enhanced-layout-system"
 import { SidebarProvider, useSidebar } from "@/lib/sidebar-context"
@@ -38,7 +38,7 @@ const GridLayoutContent = ({ children }: Props) => {
           zIndex("MOBILE_HEADER"),
         )}
       >
-        <EnhancedMobileHeader />
+        <EnhancedMobileHeaderSimple />
       </header>
 
       {/* Main Content Area - Always with mobile spacing */}

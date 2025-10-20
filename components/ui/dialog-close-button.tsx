@@ -166,33 +166,33 @@ const DialogCloseButton = React.forwardRef<HTMLButtonElement, DialogCloseButtonP
             )}
           />
           <span className='sr-only'>{ariaLabel} (Press Escape)</span>
-        </button>
 
-        {/* Enhanced tooltip */}
-        {showTooltip && isHovered && (
-          <div
-            className={cn(
-              "absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded",
-              "shadow-lg pointer-events-none whitespace-nowrap",
-              "animate-in fade-in-0 zoom-in-95 duration-200",
-              // Position tooltip based on button position
-              position === "top-right" && "-bottom-10 right-0",
-              position === "top-left" && "-bottom-10 left-0",
-              position === "custom" && "-top-10 left-1/2 -translate-x-1/2",
-            )}
-          >
-            <div>{tooltipText}</div>
-            <div className='text-xs opacity-75 mt-1'>Press Esc</div>
+          {/* Enhanced tooltip */}
+          {showTooltip && isHovered && (
             <div
               className={cn(
-                "absolute w-2 h-2 bg-gray-900 rotate-45",
-                position === "top-right" && "-top-1 right-2",
-                position === "top-left" && "-top-1 left-2",
-                position === "custom" && "-bottom-1 left-1/2 -translate-x-1/2",
+                "absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded",
+                "shadow-lg pointer-events-none whitespace-nowrap",
+                "animate-in fade-in-0 zoom-in-95 duration-200",
+                // Position tooltip based on button position
+                position === "top-right" && "-bottom-12 right-1",
+                position === "top-left" && "-bottom-12 left-1",
+                position === "custom" && "-top-12 left-1/2 -translate-x-1/2",
               )}
-            />
-          </div>
-        )}
+            >
+              <div>{tooltipText}</div>
+              <div className='text-xs opacity-75 mt-1'>Press Esc</div>
+              <div
+                className={cn(
+                  "absolute w-2 h-2 bg-gray-900 rotate-45",
+                  position === "top-right" && "-top-1 right-2",
+                  position === "top-left" && "-top-1 left-2",
+                  position === "custom" && "-bottom-1 left-1/2 -translate-x-1/2",
+                )}
+              />
+            </div>
+          )}
+        </button>
       </div>
     )
   },

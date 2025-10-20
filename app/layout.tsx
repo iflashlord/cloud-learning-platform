@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/lib/theme"
 import { EnhancedThemeLayoutWrapper } from "@/components/enhanced-theme-layout-wrapper"
 import { AudioSettingsProvider } from "@/contexts/AudioSettingsContext"
 import { CONFIG } from "@/lib/config"
+import { DebugAuthStates } from "@/components/debug-auth-states"
 import "./globals.css"
 
 const font = Nunito({ subsets: ["latin"] })
@@ -30,6 +31,7 @@ export default function RootLayout({
           <ThemeProvider>
             <AudioSettingsProvider>
               <EnhancedThemeLayoutWrapper>
+                {/* {process.env.NODE_ENV === 'development' && <DebugAuthStates />} */}
                 <Toaster />
                 <ExitModal />
                 <HeartsModal />
