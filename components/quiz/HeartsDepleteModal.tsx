@@ -60,7 +60,8 @@ export const HeartsDepleteModal = ({ isOpen, onClose }: HeartsDepleteModalProps)
           </div>
           <DialogTitle className='text-center font-bold text-2xl'>Out of Hearts!</DialogTitle>
           <DialogDescription className='text-center text-base'>
-            You've run out of hearts! Choose how you'd like to continue your learning journey.
+            You&apos;ve run out of hearts! Choose how you&apos;d like to continue your learning
+            journey.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className='mb-4'>
@@ -71,7 +72,7 @@ export const HeartsDepleteModal = ({ isOpen, onClose }: HeartsDepleteModalProps)
               size='lg'
               onClick={handleBuyHearts}
             >
-              <Gem className={cn("w-5 h-5", GAME_ELEMENT_COLORS.GEMS.text)} />
+              <Gem className={cn("w-5 h-5")} />
               Buy Hearts (5 Gems)
             </Button>
             <Button

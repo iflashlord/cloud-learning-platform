@@ -2,7 +2,30 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { LoadingState } from "@/components/ui/common";
+import { Button } from "@/components/ui/button";
+import { Trophy, Award, Filter, ChevronDown, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Status styles for the component
+const statusStyles = {
+  warning: {
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
+    text: "text-yellow-700"
+  },
+  info: {
+    bg: "bg-blue-50", 
+    border: "border-blue-200",
+    text: "text-blue-700"
+  },
+  success: {
+    bg: "bg-green-50",
+    border: "border-green-200", 
+    text: "text-green-700"
+  }
+};
 import {
   LeaderboardTabs,
   LeaderboardHeader,

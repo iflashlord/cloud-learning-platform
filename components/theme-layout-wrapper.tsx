@@ -1,8 +1,7 @@
 import { getUserProgress } from "@/db/queries";
-import { AutoThemeProvider } from "@/lib/auto-theme";
 
 /**
- * Server component that fetches user's active course and provides it to the theme system
+ * Server component that provides theme layout (simplified without auto-theme)
  */
 export const ThemeLayoutWrapper = async ({ children }: { children: React.ReactNode }) => {
   let activeCourseId: number | null = null;
@@ -16,8 +15,8 @@ export const ThemeLayoutWrapper = async ({ children }: { children: React.ReactNo
   }
 
   return (
-    <AutoThemeProvider activeCourseId={activeCourseId}>
+    <div data-course-id={activeCourseId}>
       {children}
-    </AutoThemeProvider>
+    </div>
   );
 };

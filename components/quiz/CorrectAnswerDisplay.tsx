@@ -133,7 +133,7 @@ export const CorrectAnswerDisplay = ({
         </span>
       </div>
       <div className='text-sm text-green-700 dark:text-green-400 mb-3'>
-        You've made 3 incorrect attempts. Here's the correct answer to help you
+        You&apos;ve made 3 incorrect attempts. Here&apos;s the correct answer to help you
         learn:
       </div>
       {renderCorrectAnswer()}

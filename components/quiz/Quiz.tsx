@@ -216,7 +216,7 @@ export const Quiz = ({
         lessonId={lessonId!}
         onComplete={handleComplete}
         onRedo={handleRedo}
-        finishAudio={finishAudio}
+        finishAudio={finishAudio || undefined}
         userSubscription={userSubscription}
       />
     )

@@ -87,6 +87,7 @@ const AdminChallengeEditPage = async ({
                 challengeId={challengeId} 
                 initialData={{
                   ...challenge,
+                  lessonId: challenge.lessonId ?? 0, // Provide default value for null
                   hint: challenge.hint || undefined,
                   audioSrc: challenge.audioSrc ?? undefined,
                   imageSrc: challenge.imageSrc ?? undefined,

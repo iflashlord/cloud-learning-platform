@@ -1,5 +1,5 @@
 import React, { RefObject } from "react";
-import { Course } from "./types";
+import { Course } from "./index";
 
 interface CourseDropdownProps {
   courses: Course[];

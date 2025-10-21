@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@/components/ui/button";
 import { ChallengeForm as ChallengeFormComponent } from "@/components/forms"
 
 type Lesson = {

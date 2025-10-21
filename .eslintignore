@@ -1,0 +1,21 @@
+# Ignore original/backup files that have compilation issues
+**/leaderboard-tabs-original.tsx
+**/ChallengeForm-original.tsx
+**/challenge-original.tsx
+**/pro-upgrade-main.tsx
+
+# Ignore build output and dependencies
+.next/
+node_modules/
+dist/
+build/
+
+# Ignore generated files
+coverage/
+*.log
+
+# Ignore test files if needed
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx

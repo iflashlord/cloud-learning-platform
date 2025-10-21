@@ -38,10 +38,13 @@ export const Quiz = ({
   return (
     <ModularQuiz
       initialLessonId={initialLessonId}
-      initialLessonChallenges={initialLessonChallenges}
+      initialLessonChallenges={initialLessonChallenges.map(challenge => ({
+        ...challenge,
+        lessonId: challenge.lessonId ?? initialLessonId, // Use current lesson ID as fallback
+      }))}
       initialHearts={initialHearts}
       initialPercentage={initialPercentage}
-      userSubscription={userSubscription || undefined}
+      userSubscription={userSubscription ? { isActive: userSubscription.isActive } : { isActive: false }}
     />
   );
 };

@@ -138,10 +138,10 @@ export const AdRewardModal = ({
                 </span>
               </>
             )}
-            {adState === "playing" && <>Please wait while the ad plays. Don't close this window!</>}
+            {adState === "playing" && <>Please wait while the ad plays. Don&apos;t close this window!</>}
             {adState === "completed" && (
               <>
-                Great job! You've earned <strong>{rewardPoints} gems</strong>. You can use these
+                Great job! You&apos;ve earned <strong>{rewardPoints} gems</strong>. You can use these
                 gems to buy hearts and other items.
               </>
             )}

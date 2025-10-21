@@ -59,7 +59,7 @@ interface MobileBottomNavItemProps {
 }
 
 const MobileBottomNavItem = ({ item, isActive }: MobileBottomNavItemProps) => {
-  const { label, href, icon: Icon, activeColor, badge } = item
+  const { label, href, icon: Icon, activeColor } = item
 
   return (
     <Link
@@ -81,11 +81,6 @@ const MobileBottomNavItem = ({ item, isActive }: MobileBottomNavItemProps) => {
             isActive ? activeColor : "text-muted-foreground",
           )}
         />
-        {badge && (
-          <span className='absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse'>
-            {badge}
-          </span>
-        )}
       </div>
 
       {/* Label */}

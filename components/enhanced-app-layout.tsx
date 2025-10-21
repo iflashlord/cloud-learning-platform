@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { EnhancedAppLayout, useResponsive } from "@/lib/enhanced-layout-system"
+import { PageLayout, useResponsive } from "@/lib/enhanced-layout-system"
 import { EnhancedSidebar } from "@/components/enhanced-sidebar"
 import { EnhancedMobileHeader } from "@/components/enhanced-mobile-header"
 import { StickyWrapper } from "@/components/sticky-wrapper"
@@ -50,15 +50,12 @@ export const EnhancedAppLayoutComponent = ({
           className
         )}
       >
-        <EnhancedAppLayout
-          background='learning'
-          sidebar={sidebarContent}
-          stickyOffset={isMobile ? "custom" : "none"}
-          customStickyOffset={isMobile ? "top-[60px]" : "top-0"}
-          className='px-4 sm:px-6'
-        >
-          {children}
-        </EnhancedAppLayout>
+        <div className="flex">
+          {sidebarContent}
+          <div className="flex-1 px-4 sm:px-6">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   )

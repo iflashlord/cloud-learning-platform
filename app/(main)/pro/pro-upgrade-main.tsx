@@ -202,7 +202,7 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
 
           {/* Feature Comparison */}
           <div className='space-y-4'>
-            <h3 className='text-xl font-semibold text-center mb-6'>What You'll Get</h3>
+            <h3 className='text-xl font-semibold text-center mb-6'>What You&apos;ll Get</h3>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {proFeatures.map((feature, index) => (
                 <div
@@ -301,14 +301,14 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
             <div>
               <h4 className='font-semibold mb-2'>Can I cancel my subscription?</h4>
               <p className='text-muted-foreground'>
-                Yes! You can cancel anytime from your account settings. You'll keep Pro benefits
+                Yes! You can cancel anytime from your account settings. You&apos;ll keep Pro benefits
                 until your current billing period ends.
               </p>
             </div>
             <div>
               <h4 className='font-semibold mb-2'>What happens to my progress if I cancel?</h4>
               <p className='text-muted-foreground'>
-                Your learning progress is always saved. You'll simply return to the free plan with
+                Your learning progress is always saved. You&apos;ll simply return to the free plan with
                 its limitations.
               </p>
             </div>
@@ -327,7 +327,7 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
       <div className='text-center space-y-4'>
         <h3 className='text-2xl font-bold'>Ready to accelerate your learning?</h3>
         <p className='text-muted-foreground'>
-          Join thousands of learners who've transformed their education with Pro.
+          Join thousands of learners who&apos;ve transformed their education with Pro.
         </p>
         <Button
           onClick={onUpgrade}

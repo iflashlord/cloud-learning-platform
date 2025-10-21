@@ -1,3 +1,4 @@
+import React from "react";
 import { CheckSquare, MousePointer, FileQuestion, ArrowUpDown, Type, ImageIcon, Volume2, Mic } from "lucide-react";
 
 export type ChallengeType = "SELECT" | "ASSIST" | "TRUE_FALSE" | "DRAG_DROP" | "TEXT_INPUT" | "IMAGE_SELECT" | "LISTENING" | "SPEECH_INPUT";
