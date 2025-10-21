@@ -47,14 +47,12 @@ export const EnhancedAppLayoutComponent = ({
           "transition-all duration-300",
           !isMobile ? "lg:pl-[280px]" : "",
           isMobile ? "pt-[60px]" : "",
-          className
+          className,
         )}
       >
-        <div className="flex">
+        <div className='flex'>
           {sidebarContent}
-          <div className="flex-1 px-4 sm:px-6">
-            {children}
-          </div>
+          <div className='flex-1 px-4 sm:px-6'>{children}</div>
         </div>
       </div>
     </div>

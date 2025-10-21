@@ -59,14 +59,8 @@ export const Quiz = ({
     initialPercentage,
   })
 
-  const {
-    correctAudio,
-    incorrectAudio,
-    finishAudio,
-    playCorrect,
-    playIncorrect,
-    playFinish,
-  } = useQuizAudio()
+  const { correctAudio, incorrectAudio, finishAudio, playCorrect, playIncorrect, playFinish } =
+    useQuizAudio()
 
   const { validateAnswer, pending } = useQuizValidator({
     challengeId: challenge?.id ?? 0,
@@ -137,15 +131,10 @@ export const Quiz = ({
       return
     }
 
-    if (
-      challenge?.type === "TEXT_INPUT" ||
-      challenge?.type === "SPEECH_INPUT"
-    ) {
+    if (challenge?.type === "TEXT_INPUT" || challenge?.type === "SPEECH_INPUT") {
       if (!textInput.trim()) return
 
-      const isCorrect =
-        textInput.trim().toLowerCase() ===
-        challenge.correctAnswer?.toLowerCase()
+      const isCorrect = textInput.trim().toLowerCase() === challenge.correctAnswer?.toLowerCase()
 
       if (isCorrect) {
         setStatus("correct")
@@ -167,9 +156,7 @@ export const Quiz = ({
 
     if (!selectedOption) return
 
-    const selectedChallengeOption = options.find(
-      (option: any) => option.id === selectedOption
-    )
+    const selectedChallengeOption = options.find((option: any) => option.id === selectedOption)
 
     if (!selectedChallengeOption) return
 
@@ -246,10 +233,7 @@ export const Quiz = ({
         onTextChange={setTextInput}
       />
 
-      <HeartsDepleteModal
-        isOpen={showHeartsModal}
-        onClose={() => setShowHeartsModal(false)}
-      />
+      <HeartsDepleteModal isOpen={showHeartsModal} onClose={() => setShowHeartsModal(false)} />
     </>
   )
 }

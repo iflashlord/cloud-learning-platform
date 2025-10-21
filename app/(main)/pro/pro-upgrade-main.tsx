@@ -301,15 +301,15 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
             <div>
               <h4 className='font-semibold mb-2'>Can I cancel my subscription?</h4>
               <p className='text-muted-foreground'>
-                Yes! You can cancel anytime from your account settings. You&apos;ll keep Pro benefits
-                until your current billing period ends.
+                Yes! You can cancel anytime from your account settings. You&apos;ll keep Pro
+                benefits until your current billing period ends.
               </p>
             </div>
             <div>
               <h4 className='font-semibold mb-2'>What happens to my progress if I cancel?</h4>
               <p className='text-muted-foreground'>
-                Your learning progress is always saved. You&apos;ll simply return to the free plan with
-                its limitations.
+                Your learning progress is always saved. You&apos;ll simply return to the free plan
+                with its limitations.
               </p>
             </div>
             <div>

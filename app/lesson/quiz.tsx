@@ -1,23 +1,25 @@
-"use client";
+"use client"
 
-import { useMount } from "react-use";
-import { useHeartsModal } from "@/store/use-hearts-modal";
-import { usePracticeModal } from "@/store/use-practice-modal";
-import { challengeOptions, challenges, userSubscription } from "@/db/schema";
-import { Quiz as ModularQuiz } from "@/components/quiz";
+import { useMount } from "react-use"
+import { useHeartsModal } from "@/store/use-hearts-modal"
+import { usePracticeModal } from "@/store/use-practice-modal"
+import { challengeOptions, challenges, userSubscription } from "@/db/schema"
+import { Quiz as ModularQuiz } from "@/components/quiz"
 
 type Props = {
-  initialPercentage: number;
-  initialHearts: number;
-  initialLessonId: number;
+  initialPercentage: number
+  initialHearts: number
+  initialLessonId: number
   initialLessonChallenges: (typeof challenges.$inferSelect & {
-    completed: boolean;
-    challengeOptions: typeof challengeOptions.$inferSelect[];
-  })[];
-  userSubscription: typeof userSubscription.$inferSelect & {
-    isActive: boolean;
-  } | null;
-};
+    completed: boolean
+    challengeOptions: (typeof challengeOptions.$inferSelect)[]
+  })[]
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & {
+        isActive: boolean
+      })
+    | null
+}
 
 export const Quiz = ({
   initialPercentage,
@@ -26,25 +28,27 @@ export const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: Props) => {
-  const { open: openHeartsModal } = useHeartsModal();
-  const { open: openPracticeModal } = usePracticeModal();
+  const { open: openHeartsModal } = useHeartsModal()
+  const { open: openPracticeModal } = usePracticeModal()
 
   useMount(() => {
     if (initialPercentage === 100) {
-      openPracticeModal();
+      openPracticeModal()
     }
-  });
+  })
 
   return (
     <ModularQuiz
       initialLessonId={initialLessonId}
-      initialLessonChallenges={initialLessonChallenges.map(challenge => ({
+      initialLessonChallenges={initialLessonChallenges.map((challenge) => ({
         ...challenge,
         lessonId: challenge.lessonId ?? initialLessonId, // Use current lesson ID as fallback
       }))}
       initialHearts={initialHearts}
       initialPercentage={initialPercentage}
-      userSubscription={userSubscription ? { isActive: userSubscription.isActive } : { isActive: false }}
+      userSubscription={
+        userSubscription ? { isActive: userSubscription.isActive } : { isActive: false }
+      }
     />
-  );
-};
+  )
+}
