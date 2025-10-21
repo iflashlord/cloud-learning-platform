@@ -1,43 +1,44 @@
-'use client';
+"use client"
 
-import { BookOpen, Trophy, Target, ShoppingCart } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useResponsive } from "@/lib/enhanced-layout-system";
-import { useSidebar } from "@/lib/sidebar-context";
-import { SidebarProps, SidebarItem } from "./types";
-import { SidebarLogo } from "./SidebarLogo";
-import { SidebarNavigation } from "./SidebarNavigation";
-import { SidebarProUpgrade } from "./SidebarProUpgrade";
-import { SidebarBottomSection } from "./SidebarBottomSection";
-import { SidebarUserProfile } from "./SidebarUserProfile";
-import { SidebarToggle } from "./SidebarToggle";
+import { BookOpen, Trophy, Target, ShoppingCart, RotateCcw } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useResponsive } from "@/lib/enhanced-layout-system"
+import { useSidebar } from "@/lib/sidebar-context"
+import { SidebarProps, SidebarItem } from "./types"
+import { SidebarLogo } from "./SidebarLogo"
+import { SidebarNavigation } from "./SidebarNavigation"
+import { SidebarProUpgrade } from "./SidebarProUpgrade"
+import { SidebarBottomSection } from "./SidebarBottomSection"
+import { SidebarUserProfile } from "./SidebarUserProfile"
+import { SidebarToggle } from "./SidebarToggle"
 
 const defaultSidebarItems: SidebarItem[] = [
   { label: "Learn", href: "/learn", icon: BookOpen },
   { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { label: "Quests", href: "/quests", icon: Target, badge: "3" },
+  { label: "Review", href: "/review", icon: RotateCcw },
   { label: "Shop", href: "/shop", icon: ShoppingCart },
   { label: "Courses", href: "/courses", icon: BookOpen },
-];
+]
 
-export const ModularSidebar = ({ 
+export const ModularSidebar = ({
   className,
   items = defaultSidebarItems,
   showProUpgrade = true,
   showThemeSwitcher = true,
-  showSettings = true
+  showSettings = true,
 }: SidebarProps) => {
-  const { isMobile } = useResponsive();
-  const { isCollapsed, setIsCollapsed, sidebarWidth } = useSidebar();
+  const { isMobile } = useResponsive()
+  const { isCollapsed, setIsCollapsed, sidebarWidth } = useSidebar()
 
   // Mobile Version (Hidden Drawer)
   if (isMobile) {
-    return null; // Mobile sidebar is handled by MobileSidebar component
+    return null // Mobile sidebar is handled by MobileSidebar component
   }
 
   // Desktop Version - Relative positioning within CSS Grid
   return (
-    <div 
+    <div
       className={cn(
         "flex h-full relative flex-col",
         "bg-card/95 dark:bg-card/95 backdrop-blur-md",
@@ -49,30 +50,27 @@ export const ModularSidebar = ({
       style={{ width: `${sidebarWidth}px` }}
     >
       {/* Collapse Toggle */}
-      <SidebarToggle 
-        isCollapsed={isCollapsed}
-        onToggle={() => setIsCollapsed(!isCollapsed)}
-      />
+      <SidebarToggle isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
 
       {/* Logo and Title */}
       <SidebarLogo isCollapsed={isCollapsed} />
 
       {/* Navigation Items - Scrollable middle section */}
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div className='flex-1 overflow-y-auto min-h-0'>
         <SidebarNavigation items={items} isCollapsed={isCollapsed} />
       </div>
 
       {/* Sticky Footer Section */}
-      <div className="flex-shrink-0 border-t border-border/30 bg-card/98 backdrop-blur-lg">
+      <div className='flex-shrink-0 border-t border-border/30 bg-card/98 backdrop-blur-lg'>
         {/* Pro Upgrade Card */}
         {showProUpgrade && (
-          <div className="px-4 pt-4 pb-2">
+          <div className='px-4 pt-4 pb-2'>
             <SidebarProUpgrade isCollapsed={isCollapsed} />
           </div>
         )}
 
         {/* Bottom Section */}
-        <SidebarBottomSection 
+        <SidebarBottomSection
           isCollapsed={isCollapsed}
           showThemeSwitcher={showThemeSwitcher}
           showSettings={showSettings}
@@ -82,5 +80,5 @@ export const ModularSidebar = ({
         <SidebarUserProfile isCollapsed={isCollapsed} />
       </div>
     </div>
-  );
-};
+  )
+}

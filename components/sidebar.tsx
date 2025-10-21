@@ -11,6 +11,7 @@ import {
   Target,
   ShoppingCart,
   Infinity,
+  RotateCcw,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -31,18 +32,13 @@ export const Sidebar = ({ className }: Props) => {
     <div
       className={cn(
         "flex h-full lg:w-[256px] lg:fixed left-0 top-0 px-4 border-r-2 border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex-col",
-        className
+        className,
       )}
     >
       <Link href='/learn'>
         <div className='pt-8 pl-4 pb-7 flex items-center gap-x-3'>
           <GraduationCap className='h-10 w-10 text-primary' />
-          <h1
-            className={cn(
-              "text-2xl font-extrabold tracking-wide",
-              themeClasses.primaryText
-            )}
-          >
+          <h1 className={cn("text-2xl font-extrabold tracking-wide", themeClasses.primaryText)}>
             {CONFIG.PLATFORM_NAME}
           </h1>
         </div>
@@ -51,6 +47,7 @@ export const Sidebar = ({ className }: Props) => {
         <SidebarItem label='Learn' href='/learn' icon={BookOpen} />
         <SidebarItem label='Leaderboard' href='/leaderboard' icon={Trophy} />
         <SidebarItem label='Quests' href='/quests' icon={Target} />
+        <SidebarItem label='Review' href='/review' icon={RotateCcw} />
         <SidebarItem label='Shop' href='/shop' icon={ShoppingCart} />
         <SidebarItem label='Courses' href='/courses' icon={BookOpen} />
       </div>

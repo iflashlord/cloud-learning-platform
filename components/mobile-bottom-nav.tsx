@@ -13,7 +13,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BookOpen, Library, Trophy, Target, ShoppingCart, User } from "lucide-react"
+import { BookOpen, Library, Trophy, Target, RotateCcw, ShoppingCart, User } from "lucide-react"
 import { ClerkLoading, ClerkLoaded, UserButton } from "@clerk/nextjs"
 
 import { cn } from "@/lib/utils"
@@ -44,6 +44,12 @@ const mobileNavItems = [
     href: "/quests",
     icon: Target,
     activeColor: "text-green-500 dark:text-green-400",
+  },
+  {
+    label: "Review",
+    href: "/review",
+    icon: RotateCcw,
+    activeColor: "text-orange-500 dark:text-orange-400",
   },
   {
     label: "Shop",

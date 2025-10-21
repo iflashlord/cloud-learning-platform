@@ -504,3 +504,88 @@ export const gemTransactionsRelations = relations(gemTransactions, ({ one }) => 
     references: [userProgress.userId],
   }),
 }))
+
+// Lesson Review System
+export const lessonCompletions = pgTable("lesson_completions", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  lessonId: integer("lesson_id")
+    .references(() => lessons.id, { onDelete: "cascade" })
+    .notNull(),
+  completedAt: timestamp("completed_at").defaultNow().notNull(),
+  score: integer("score").notNull().default(0), // Percentage score
+  totalChallenges: integer("total_challenges").notNull(),
+  correctAnswers: integer("correct_answers").notNull(),
+  timeSpent: integer("time_spent"), // In seconds
+  wasPerfect: boolean("was_perfect").notNull().default(false),
+  attemptsCount: integer("attempts_count").notNull().default(1),
+})
+
+export const lessonCompletionsRelations = relations(lessonCompletions, ({ one, many }) => ({
+  user: one(userProgress, {
+    fields: [lessonCompletions.userId],
+    references: [userProgress.userId],
+  }),
+  lesson: one(lessons, {
+    fields: [lessonCompletions.lessonId],
+    references: [lessons.id],
+  }),
+  aiConversations: many(aiConversations),
+}))
+
+// AI Chat System for PRO Users
+export const aiConversations = pgTable("ai_conversations", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  lessonCompletionId: integer("lesson_completion_id").references(() => lessonCompletions.id, {
+    onDelete: "cascade",
+  }),
+  title: text("title").notNull(),
+  context: jsonb("context").$type<{
+    lessonId: number
+    lessonTitle: string
+    challenges: Array<{
+      id: number
+      question: string
+      type: string
+      correctAnswer?: string
+      options?: Array<{ text: string; correct: boolean }>
+    }>
+  }>(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
+export const aiConversationsRelations = relations(aiConversations, ({ one, many }) => ({
+  user: one(userProgress, {
+    fields: [aiConversations.userId],
+    references: [userProgress.userId],
+  }),
+  lessonCompletion: one(lessonCompletions, {
+    fields: [aiConversations.lessonCompletionId],
+    references: [lessonCompletions.id],
+  }),
+  messages: many(aiMessages),
+}))
+
+export const aiMessages = pgTable("ai_messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id")
+    .references(() => aiConversations.id, { onDelete: "cascade" })
+    .notNull(),
+  role: text("role").notNull(), // "user" or "assistant"
+  content: text("content").notNull(),
+  metadata: jsonb("metadata").$type<{
+    tokenCount?: number
+    model?: string
+    temperature?: number
+  }>(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
+export const aiMessagesRelations = relations(aiMessages, ({ one }) => ({
+  conversation: one(aiConversations, {
+    fields: [aiMessages.conversationId],
+    references: [aiConversations.id],
+  }),
+}))
