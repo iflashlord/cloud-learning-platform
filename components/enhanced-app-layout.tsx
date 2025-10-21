@@ -46,7 +46,7 @@ export const EnhancedAppLayoutComponent = ({
         className={cn(
           "transition-all duration-300",
           !isMobile ? "lg:pl-[280px]" : "",
-          isMobile ? "pt-[60px]" : "",
+          isMobile ? "pt-[65px]" : "",
           className,
         )}
       >

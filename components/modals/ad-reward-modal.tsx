@@ -5,13 +5,13 @@ import { Play, X, Coins, Trophy, CheckCircle, Clock, Gem } from "lucide-react"
 import { toast } from "sonner"
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  NativeDialog as Dialog,
+  NativeDialogContent as DialogContent,
+  NativeDialogDescription as DialogDescription,
+  NativeDialogFooter as DialogFooter,
+  NativeDialogHeader as DialogHeader,
+  NativeDialogTitle as DialogTitle,
+} from "@/components/ui/native-dialog"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { GAME_ELEMENT_COLORS } from "@/constants"
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 interface AdRewardModalProps {
   isOpen: boolean
   onClose: () => void
-  onRewardEarned: (points: number) => void
+  onRewardEarned: (points: number) => Promise<void>
   dailyAdsWatched: number
   maxDailyAds: number
   rewardPoints: number
@@ -69,14 +69,17 @@ export const AdRewardModal = ({
     }, interval)
   }
 
-  const claimReward = () => {
-    onRewardEarned(rewardPoints)
-    setAdState("ready")
-    setAdProgress(0)
-    onClose()
-    toast.success(`+${rewardPoints} XP earned! Great job!`, {
-      duration: 3000,
-    })
+  const claimReward = async () => {
+    try {
+      await onRewardEarned(rewardPoints)
+      setAdState("ready")
+      setAdProgress(0)
+      onClose()
+      // Don't show success toast here - let the parent component handle it
+    } catch (error) {
+      console.error("Failed to claim reward:", error)
+      toast.error("Failed to claim reward. Please try again.")
+    }
   }
 
   const handleClose = () => {
@@ -90,7 +93,7 @@ export const AdRewardModal = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose} showCloseButton={false}>
       <DialogContent className='max-w-md'>
         <DialogHeader>
           <div className='flex items-center w-full justify-center mb-5'>
@@ -124,7 +127,7 @@ export const AdRewardModal = ({
           </div>
 
           <DialogTitle className='text-center font-bold text-2xl'>
-            {adState === "ready" && "Watch Ad & Earn XP!"}
+            {adState === "ready" && "Watch Ad & Earn Gems!"}
             {adState === "playing" && "Ad Playing..."}
             {adState === "completed" && "Reward Earned!"}
           </DialogTitle>
@@ -189,7 +192,7 @@ export const AdRewardModal = ({
                   disabled={!canWatchMoreAds}
                 >
                   <Play className='w-5 h-5' />
-                  {canWatchMoreAds ? `Watch Ad (+${rewardPoints} XP)` : "Daily Limit Reached"}
+                  {canWatchMoreAds ? `Watch Ad (+${rewardPoints} Gems)` : "Daily Limit Reached"}
                 </Button>
                 <Button
                   variant='outline'
@@ -218,7 +221,7 @@ export const AdRewardModal = ({
                   onClick={claimReward}
                 >
                   <Trophy className='w-5 h-5' />
-                  Claim {rewardPoints} XP
+                  Claim {rewardPoints} Gems
                 </Button>
               </>
             )}

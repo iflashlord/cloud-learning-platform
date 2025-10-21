@@ -1,20 +1,20 @@
 /**
  * Enhanced Sticky Wrapper Component
- * 
+ *
  * Provides proper positioning and backdrop for sticky elements
  */
 
-"use client";
+"use client"
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
 interface EnhancedStickyWrapperProps {
-  children: React.ReactNode;
-  className?: string;
-  offset?: "none" | "header" | "custom";
-  customOffset?: string;
-  zIndex?: number;
+  children: React.ReactNode
+  className?: string
+  offset?: "none" | "header" | "custom"
+  customOffset?: string
+  zIndex?: number
 }
 
 export const EnhancedStickyWrapper: React.FC<EnhancedStickyWrapperProps> = ({
@@ -27,28 +27,19 @@ export const EnhancedStickyWrapper: React.FC<EnhancedStickyWrapperProps> = ({
   const offsetClasses = React.useMemo(() => {
     switch (offset) {
       case "none":
-        return "top-0";
+        return "top-0"
       case "header":
-        return "top-[60px]"; // Always account for mobile header (60px) since we always use mobile layout
+        return "top-[65px]" // Always account for mobile header (65px) since we always use mobile layout
       case "custom":
-        return customOffset || "top-0";
+        return customOffset || "top-0"
       default:
-        return "top-0";
+        return "top-0"
     }
-  }, [offset, customOffset]);
+  }, [offset, customOffset])
 
   return (
-    <div 
-      className={cn(
-        "sticky w-[368px] self-start",
-        offsetClasses,
-        className
-      )}
-      style={{ zIndex }}
-    >
-      <div className="flex flex-col gap-y-4">
-        {children}
-      </div>
+    <div className={cn("sticky w-[368px] self-start", offsetClasses, className)} style={{ zIndex }}>
+      <div className='flex flex-col gap-y-4'>{children}</div>
     </div>
-  );
-};
+  )
+}

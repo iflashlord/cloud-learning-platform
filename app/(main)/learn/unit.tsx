@@ -35,7 +35,7 @@ export const Unit = ({
 
   return (
     <div data-unit-id={id} className='unit-container scroll-mt-24'>
-      <div className='sticky top-[60px] z-30 mb-6'>
+      <div className='sticky top-[65px] z-30 mb-6'>
         <div className='block lg:hidden'>
           <div
             className={`w-full rounded-lg p-4 text-white flex items-center justify-between relative overflow-hidden transition-all duration-300 ${
@@ -65,9 +65,7 @@ export const Unit = ({
                       className='bg-white h-1.5 rounded-full transition-all duration-500'
                       style={{
                         width: `${
-                          lessons.length > 0
-                            ? (completedLessons / lessons.length) * 100
-                            : 0
+                          lessons.length > 0 ? (completedLessons / lessons.length) * 100 : 0
                         }%`,
                       }}
                     />
@@ -100,14 +98,10 @@ export const Unit = ({
 
           let isLocked
           if (isPro) {
-            const currentIndex = lessons.findIndex(
-              (l) => l.id === activeLesson?.id
-            )
+            const currentIndex = lessons.findIndex((l) => l.id === activeLesson?.id)
             const completedIndex = lessons.findIndex((l) => !l.completed) - 1
-            const furthestAccessible =
-              Math.max(currentIndex, completedIndex) + 3
-            isLocked =
-              index > furthestAccessible && !lesson.completed && !isCurrent
+            const furthestAccessible = Math.max(currentIndex, completedIndex) + 3
+            isLocked = index > furthestAccessible && !lesson.completed && !isCurrent
           } else {
             isLocked = !lesson.completed && !isCurrent
           }

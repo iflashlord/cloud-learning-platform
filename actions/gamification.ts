@@ -126,25 +126,32 @@ export const awardGems = async (
   const currentUserProgress = await getUserProgress()
   if (!currentUserProgress) throw new Error("User progress not found")
 
-  // Update user gems
-  await db
-    .update(userProgress)
-    .set({
-      gems: currentUserProgress.gems + amount,
+  try {
+    // Update user gems
+    await db
+      .update(userProgress)
+      .set({
+        gems: currentUserProgress.gems + amount,
+      })
+      .where(eq(userProgress.userId, userId))
+
+    // Log the gem transaction
+    await db.insert(gemTransactions).values({
+      userId,
+      type: "earned",
+      amount,
+      source,
+      sourceId,
+      description: description || `Earned ${amount} gems from ${source}`,
     })
-    .where(eq(userProgress.userId, userId))
 
-  // Log the gem transaction
-  await db.insert(gemTransactions).values({
-    userId,
-    type: "earned",
-    amount,
-    source,
-    sourceId,
-    description: description || `Earned ${amount} gems from ${source}`,
-  })
-
-  return { gemsEarned: amount, newTotal: currentUserProgress.gems + amount }
+    return { gemsEarned: amount, newTotal: currentUserProgress.gems + amount }
+  } catch (error) {
+    console.error("Failed to award gems:", error)
+    throw new Error(
+      `Failed to award gems: ${error instanceof Error ? error.message : "Unknown error"}`,
+    )
+  }
 }
 
 export const spendGems = async (
@@ -778,23 +785,38 @@ export const processLessonCompletion = async (
 
 // Watch Ad Action - Awards gems for watching advertisements
 export const watchAdForGems = async () => {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthorized")
+  try {
+    const { userId } = await auth()
+    if (!userId) throw new Error("Unauthorized")
 
-  const result = await awardGems(
-    GAMIFICATION.GEMS_FROM_AD_WATCH,
-    "advertisement",
-    undefined,
-    "Watched advertisement for gems",
-  )
+    console.log(`[watchAdForGems] Starting gem award for user: ${userId}`)
 
-  // Update quest progress for watching ads (if such quest exists)
-  await updateQuestProgress("watch_ads", 1)
+    const result = await awardGems(
+      GAMIFICATION.GEMS_FROM_AD_WATCH,
+      "advertisement",
+      undefined,
+      "Watched advertisement for gems",
+    )
 
-  revalidatePath("/shop")
-  revalidatePath("/learn")
+    console.log(`[watchAdForGems] Successfully awarded gems:`, result)
 
-  return result
+    // Update quest progress for watching ads (if such quest exists)
+    try {
+      await updateQuestProgress("watch_ads", 1)
+      console.log(`[watchAdForGems] Quest progress updated successfully`)
+    } catch (error) {
+      console.warn("Failed to update quest progress for watch_ads:", error)
+      // Don't fail the entire operation if quest update fails
+    }
+
+    revalidatePath("/shop")
+    revalidatePath("/learn")
+
+    return result
+  } catch (error) {
+    console.error("[watchAdForGems] Failed to award gems:", error)
+    throw error
+  }
 }
 
 // Refill Hearts with Gems - Integrated action

@@ -13,9 +13,7 @@ let stickyUpdateCallbacks: Array<(unitId: number | null) => void> = []
 const registerStickyCallback = (callback: (unitId: number | null) => void) => {
   stickyUpdateCallbacks.push(callback)
   return () => {
-    stickyUpdateCallbacks = stickyUpdateCallbacks.filter(
-      (cb) => cb !== callback
-    )
+    stickyUpdateCallbacks = stickyUpdateCallbacks.filter((cb) => cb !== callback)
   }
 }
 
@@ -48,8 +46,7 @@ export const StickyUnitBanner = ({
   const originalBannerRef = useRef<HTMLDivElement>(null)
   const unitContainerRef = useRef<HTMLDivElement>(null)
 
-  const progress =
-    lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
+  const progress = lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
   const isCurrentUnitSticky = activeUnitId === unitId
 
   useEffect(() => {
@@ -68,7 +65,7 @@ export const StickyUnitBanner = ({
       {
         threshold: 0,
         rootMargin: "-80px 0px 0px 0px", // Account for top navigation
-      }
+      },
     )
 
     const unitObserver = new IntersectionObserver(
@@ -82,7 +79,7 @@ export const StickyUnitBanner = ({
       {
         threshold: [0.1, 0.3, 0.5],
         rootMargin: "-80px 0px -20% 0px",
-      }
+      },
     )
 
     if (originalBannerRef.current) {
@@ -107,7 +104,7 @@ export const StickyUnitBanner = ({
         isCompact ? "p-3" : "p-6 hover:shadow-lg",
         isCompleted
           ? "bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500"
-          : "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500"
+          : "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500",
       )}
     >
       {/* Background Pattern */}
@@ -116,39 +113,23 @@ export const StickyUnitBanner = ({
       {/* Decorative Elements */}
       {!isCompact && (
         <div className='absolute top-4 right-4 opacity-20'>
-          {isCompleted ? (
-            <Award className='w-8 h-8' />
-          ) : (
-            <Target className='w-8 h-8' />
-          )}
+          {isCompleted ? <Award className='w-8 h-8' /> : <Target className='w-8 h-8' />}
         </div>
       )}
 
-      <div
-        className={cn(
-          "flex-1 relative z-10",
-          isCompact ? "space-y-1" : "space-y-3"
-        )}
-      >
+      <div className={cn("flex-1 relative z-10", isCompact ? "space-y-1" : "space-y-3")}>
         <div className='flex items-center gap-3'>
           <div
             className={cn(
               "rounded-xl flex items-center justify-center shadow-lg",
               isCompact ? "w-8 h-8" : "w-12 h-12",
-              isCompleted ? "bg-green-600" : "bg-blue-600"
+              isCompleted ? "bg-green-600" : "bg-blue-600",
             )}
           >
             <BookOpen className={cn(isCompact ? "w-4 h-4" : "w-6 h-6")} />
           </div>
           <div>
-            <h3
-              className={cn(
-                "font-bold mb-1",
-                isCompact ? "text-lg" : "text-2xl"
-              )}
-            >
-              {title}
-            </h3>
+            <h3 className={cn("font-bold mb-1", isCompact ? "text-lg" : "text-2xl")}>{title}</h3>
             {isCompleted && !isCompact && (
               <div className='flex items-center gap-2 text-green-200'>
                 <Award className='w-4 h-4' />
@@ -158,39 +139,18 @@ export const StickyUnitBanner = ({
           </div>
         </div>
 
-        {!isCompact && (
-          <p className='text-lg opacity-90 leading-relaxed'>{description}</p>
-        )}
+        {!isCompact && <p className='text-lg opacity-90 leading-relaxed'>{description}</p>}
 
         {/* Progress Info */}
         {lessonCount > 0 && (
-          <div
-            className={cn(
-              "flex items-center gap-4",
-              isCompact ? "mt-1" : "mt-4"
-            )}
-          >
+          <div className={cn("flex items-center gap-4", isCompact ? "mt-1" : "mt-4")}>
             <div className='bg-white/20 rounded-lg px-2 py-1 backdrop-blur-sm'>
-              <div
-                className={cn("font-medium", isCompact ? "text-xs" : "text-sm")}
-              >
-                Progress
-              </div>
-              <div
-                className={cn("font-bold", isCompact ? "text-sm" : "text-lg")}
-              >
-                {progress}%
-              </div>
+              <div className={cn("font-medium", isCompact ? "text-xs" : "text-sm")}>Progress</div>
+              <div className={cn("font-bold", isCompact ? "text-sm" : "text-lg")}>{progress}%</div>
             </div>
             <div className='bg-white/20 rounded-lg px-2 py-1 backdrop-blur-sm'>
-              <div
-                className={cn("font-medium", isCompact ? "text-xs" : "text-sm")}
-              >
-                Lessons
-              </div>
-              <div
-                className={cn("font-bold", isCompact ? "text-sm" : "text-lg")}
-              >
+              <div className={cn("font-medium", isCompact ? "text-xs" : "text-sm")}>Lessons</div>
+              <div className={cn("font-bold", isCompact ? "text-sm" : "text-lg")}>
                 {completedLessons}/{lessonCount}
               </div>
             </div>
@@ -228,8 +188,8 @@ export const StickyUnitBanner = ({
       {isCurrentUnitSticky && (
         <div
           className={cn(
-            "fixed top-[60px] left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
-            "translate-y-0 opacity-100"
+            "fixed top-[65px] left-0 right-0 z-40 mx-4 transition-all duration-300 ease-in-out",
+            "translate-y-0 opacity-100",
           )}
           style={{
             maxWidth: "calc(100vw - 2rem)",

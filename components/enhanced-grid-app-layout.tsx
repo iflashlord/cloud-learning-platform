@@ -64,7 +64,7 @@ export const EnhancedGridAppLayout = ({
     <div className={cn("w-full h-full", className)}>
       {/* Top Navigation Bar - Switch Course and Shop Links */}
       <div
-        className={`w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-[60px] mb-6 ${zIndex(
+        className={`w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-[65px] mb-6 ${zIndex(
           "TOP_NAVIGATION",
         )}`}
       >

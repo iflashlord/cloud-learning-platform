@@ -80,6 +80,11 @@ export const LeaderboardTabsContainer = ({
     }
   }, [courseDropdownOpen])
 
+  // Filter courses based on search query
+  const filteredCourses = courses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+
   // Close dropdown on escape key
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -180,7 +185,7 @@ export const LeaderboardTabsContainer = ({
               </div>
             </div>
           </div>
-          {renderLeaderboardList(generalLeaderboard, true)}
+          <LeaderboardList users={generalLeaderboard} />
         </div>
       )}
 
@@ -339,7 +344,9 @@ export const LeaderboardTabsContainer = ({
 
           {/* Leaderboard Display */}
           {selectedCourse && courseLeaderboard ? (
-            <div>{renderLeaderboardList(courseLeaderboard)}</div>
+            <div>
+              <LeaderboardList users={courseLeaderboard} />
+            </div>
           ) : selectedCourseId ? (
             <div className='text-center py-12'>
               <div className='w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4'></div>

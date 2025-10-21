@@ -85,25 +85,26 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription, onRefresh }
     })
   }
 
-  const handleAdReward = () => {
-    startTransition(() => {
-      watchAdForGems()
-        .then((result) => {
-          dailyAds.watchAd()
-          toast.success(
-            `You earned ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems! Total gems: ${result.newTotal}`,
-            {
-              duration: 4000,
-            },
-          )
-          // Refresh the user progress data
-          onRefresh?.()
-        })
-        .catch((error) => {
-          console.error("Failed to earn gems from ad:", error)
-          toast.error("Failed to earn gems. Please try again.")
-        })
-    })
+  const handleAdReward = async () => {
+    try {
+      console.log("[handleAdReward] Starting...")
+      const result = await watchAdForGems()
+      console.log("[handleAdReward] Success:", result)
+
+      dailyAds.watchAd()
+      toast.success(
+        `You earned ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems! Total gems: ${result.newTotal}`,
+        {
+          duration: 4000,
+        },
+      )
+      // Refresh the user progress data
+      onRefresh?.()
+    } catch (error) {
+      console.error("[handleAdReward] Error:", error)
+      toast.error("Failed to earn gems. Please try again.")
+      throw error
+    }
   }
 
   return (
@@ -324,7 +325,7 @@ export const Items = ({ hearts, points, gems, hasActiveSubscription, onRefresh }
       <AdRewardModal
         isOpen={showAdModal}
         onClose={() => setShowAdModal(false)}
-        onRewardEarned={() => handleAdReward()}
+        onRewardEarned={async () => await handleAdReward()}
         dailyAdsWatched={dailyAds.adsWatched}
         maxDailyAds={dailyAds.maxAds}
         rewardPoints={GAMIFICATION.GEMS_FROM_AD_WATCH}
