@@ -75,43 +75,47 @@ vi.mock("@/components/ui/button", () => ({
 import { Quests } from "@/components/quests";
 
 describe("Quests component", () => {
-  it("highlights the next quest and shows progress summary for the learner", () => {
+  it("renders the next quest with progress details and summary", () => {
     render(<Quests points={5} />);
 
     expect(screen.getByText("Daily Quests")).toBeInTheDocument();
-    expect(screen.getByText("Quest Alpha")).toBeInTheDocument();
-    expect(screen.getByText("NEXT")).toBeInTheDocument();
-    expect(screen.getByText("0 of 4 completed")).toBeInTheDocument();
+    expect(screen.getByText("0/4 Complete")).toBeInTheDocument();
     expect(screen.getByText("5 XP")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 4, name: "Quest Alpha" })).toBeInTheDocument();
+    expect(screen.getByText("5/10 XP")).toBeInTheDocument();
+    expect(screen.getByText("50%")).toBeInTheDocument();
   });
 
-  it("injects the most recently completed quest when fewer than three are in progress", () => {
-    render(<Quests points={60} />);
+  it("limits the list to the next two incomplete quests", () => {
+    render(<Quests points={0} />);
 
     const displayedTitles = screen
       .getAllByRole("heading", { level: 4 })
       .map((node) => node.textContent);
-    expect(displayedTitles).toEqual(["Quest Charlie", "Quest Delta"]);
+    expect(displayedTitles).toEqual(["Quest Alpha", "Quest Bravo"]);
   });
 
-  it("provides a call-to-action and view all link when unfinished quests remain", async () => {
+  it("provides a call-to-action link and view-all shortcut when quests remain", async () => {
     const user = userEvent.setup();
     render(<Quests points={20} />);
 
-    const continueLink = screen.getByRole("link", { name: /Continue Quest Journey/i });
+    const continueLink = screen.getByRole("link", { name: /Continue Quests/i });
     expect(continueLink).toHaveAttribute("href", "/quests");
 
-    await user.click(screen.getByRole("button", { name: /View All/i }));
+    const viewAllButton = screen.getByRole("button", { name: /View All/i });
+    expect(viewAllButton.closest("a")).toHaveAttribute("href", "/quests");
+
+    await user.click(viewAllButton);
     expect(screen.getByRole("button", { name: /View All/i }).closest("a")).toHaveAttribute(
       "href",
       "/quests"
     );
   });
 
-  it("hides the CTA when all quests are complete", () => {
+  it("shows the completion message and hides the CTA when all quests are complete", () => {
     render(<Quests points={100} />);
 
-    expect(screen.getAllByRole("heading", { level: 4 })[0]).toHaveTextContent("Quest Delta");
-    expect(screen.queryByRole("link", { name: /Continue Quest Journey/i })).toBeNull();
+    expect(screen.getByText("All quests completed!")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Continue Quests/i })).toBeNull();
   });
 });

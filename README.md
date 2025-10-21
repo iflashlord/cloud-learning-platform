@@ -27,21 +27,24 @@ Originally based on a Duolingo clone, now fully transformed into a comprehensive
 - 🌟 **Cloud Fundamentals**: Complete starter content with 4 units and 13 lessons
 
 ### Gamification
-- ❤️ **Hearts System**: Lives that make learning engaging
-- ⭐ **XP/Points System**: Earn points for correct answers
-- 🏆 **Leaderboard**: Compete with other technology learners
-- 🎯 **Daily Quests**: Bonus challenges for consistent learning
-- 🛍 **Shop System**: Exchange points for hearts and power-ups
-- 💳 **Pro Tier**: Unlimited hearts via Stripe subscription
+- ❤️ **Hearts System**: Dynamic lives with hourly refills and gem refills
+- 💎 **Gems Economy**: Earn, spend, and track gem transactions across the app
+- ⭐ **XP System**: Server-side XP with pro multipliers and streak bonuses
+- 🔥 **Daily & Monthly Quests**: Quest engine covering practice, streak, and lesson goals
+- 🛍 **Shop System**: Trade gems for power-ups, streak freezes, and heart refills
+- 🏆 **Leaderboard & Achievements**: Weekly rewards, badges, and celebration modals
+- 💳 **Pro Tier**: Unlimited hearts plus enhanced XP and daily gems via Stripe subscription
 
 ### Technical Stack
-- � **Next.js 14** with Server Actions
+- ⚡ **Next.js 14** with Server Actions and App Router
 - 🎨 **Shadcn UI** for beautiful components
 - 🔐 **Clerk** for authentication
-- 🌧 **DrizzleORM** for database operations
-- 💾 **PostgreSQL** (NeonDB)
-- � **React Admin** dashboard for content management
-- 🚀 **Vercel** ready for deployment
+- 🌧 **Drizzle ORM** for database operations
+- 💾 **PostgreSQL** (NeonDB or self-hosted)
+- 🧪 **Vitest + Testing Library** for unit tests
+- 📚 **Storybook 8** for design system previews
+- 🛡 **React Admin** dashboard for content management
+- 🚀 **Vercel** ready for deployment (Docker fallback included)
 - 📱 **Mobile responsive** design
 
 ## 📚 Technology Content Included
@@ -63,7 +66,9 @@ Originally based on a Duolingo clone, now fully transformed into a comprehensive
 
 ### Prerequisites
 
-**Node version 14.x or higher**
+**Node.js 18.17+ (or 20.x)**
+
+The platform targets the Next.js 14 runtime and relies on server actions—older Node versions are not supported.
 
 ### Install packages
 
@@ -104,6 +109,14 @@ npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to start learning technology skills!
+
+### Run Tests
+
+```shell
+npm test
+```
+
+Vitest powers the unit test suite. Run the tests before pushing changes to confirm gamification logic, quests, and server actions still behave as expected.
 
 ## 📖 Documentation
 

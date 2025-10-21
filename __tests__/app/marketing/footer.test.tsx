@@ -10,25 +10,28 @@ describe("Marketing Footer", () => {
     Footer = footerModule.Footer;
   });
 
-  it("highlights featured learning tracks", () => {
+  it("renders the footer link sections", () => {
     render(<Footer />);
 
-    expect(screen.getByText(/Cloud Fundamentals/i)).toBeInTheDocument();
-    expect(screen.getByText(/System Architecture/i)).toBeInTheDocument();
-    expect(screen.getByText(/Development/i)).toBeInTheDocument();
-    expect(screen.getByText(/DevOps & Ops/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^Learning$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^Platform$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^Support$/i })).toBeInTheDocument();
   });
 
-  it("renders four call-to-action buttons", () => {
+  it("exposes primary navigation links", () => {
     render(<Footer />);
 
-    expect(screen.getAllByRole("button")).toHaveLength(4);
+    expect(screen.getByRole("link", { name: /Courses/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Leaderboard/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Pro Membership/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Help Center/i })).toBeInTheDocument();
   });
 
   it("applies the marketing footer layout styles", () => {
     const { container } = render(<Footer />);
     const footer = container.querySelector("footer");
 
-    expect(footer).toHaveClass("border-t-2", "p-2");
+    expect(footer).toHaveClass("w-full", "border-t");
+    expect(footer?.className).toContain("backdrop-blur-md");
   });
 });

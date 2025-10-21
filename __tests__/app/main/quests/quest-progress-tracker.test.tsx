@@ -48,37 +48,48 @@ const sampleQuests = [
     type: "milestone",
   },
 ];
-
 describe("QuestProgressTracker", () => {
-  it("summarises quest status counts and completion percentage", () => {
+  it("displays overall progress and quick stats", () => {
     render(<QuestProgressTracker quests={sampleQuests} userPoints={70} />);
 
-    expect(screen.getByText("Quest Progress Tracker")).toBeInTheDocument();
-
-    const completedLabel = screen.getByText("Completed");
-    expect(completedLabel.previousElementSibling).toHaveTextContent("2");
-
-    const activeLabel = screen.getByText("Active");
-    expect(activeLabel.previousElementSibling).toHaveTextContent("1");
-
-    const upcomingLabel = screen.getByText("Upcoming");
-    expect(upcomingLabel.previousElementSibling).toHaveTextContent("0");
-
+    expect(screen.getByText("Quest Progress")).toBeInTheDocument();
+    expect(screen.getByText("Overall Progress")).toBeInTheDocument();
     expect(screen.getByText("67%")).toBeInTheDocument();
+
+    const completed = screen.getByText("Completed");
+    expect(completed.previousElementSibling).toHaveTextContent("2");
+
+    const remaining = screen.getByText("Remaining");
+    expect(remaining.previousElementSibling).toHaveTextContent("1");
+
+    expect(screen.getByText("70")).toBeInTheDocument();
+    expect(screen.getByText("120")).toBeInTheDocument();
   });
 
-  it("filters quests by category selection", async () => {
-    render(<QuestProgressTracker quests={sampleQuests} userPoints={15} />);
+  it("highlights the next quest with progress and rewards", () => {
+    render(<QuestProgressTracker quests={sampleQuests} userPoints={40} />);
 
-    // All quests visible by default
-    expect(screen.getAllByRole("heading", { level: 4 }).length).toBe(3);
+    expect(screen.getByText("Next: Consistency Quest")).toBeInTheDocument();
+    expect(screen.getByText("40 / 60 XP")).toBeInTheDocument();
+    expect(screen.getByText("+10 XP reward")).toBeInTheDocument();
+  });
 
-    await userEvent.click(screen.getByRole("button", { name: "Habits" }));
+  it("switches the active category button", async () => {
+    render(<QuestProgressTracker quests={sampleQuests} userPoints={70} />);
 
-    const questHeadings = screen.getAllByRole("heading", { level: 4 }).map((node) => node.textContent);
-    expect(questHeadings).toEqual(["Consistency Quest", "Mastery Quest"]);
+    const allButton = screen.getByRole("button", { name: /all/i });
+    const habitsButton = screen.getByRole("button", { name: "Habits" });
 
-    await userEvent.click(screen.getByRole("button", { name: "All Quests" }));
-    expect(screen.getAllByRole("heading", { level: 4 })).toHaveLength(3);
+    expect(allButton.getAttribute("variant")).toBe("primary");
+    expect(habitsButton.getAttribute("variant")).toBe("ghost");
+
+    await userEvent.click(habitsButton);
+
+    expect(habitsButton.getAttribute("variant")).toBe("primary");
+    expect(allButton.getAttribute("variant")).toBe("ghost");
+
+    expect(screen.getByText("Foundations", { selector: "span" })).toBeInTheDocument();
+    expect(screen.getByText("1/1")).toBeInTheDocument();
+    expect(screen.getByText("1/2")).toBeInTheDocument();
   });
 });

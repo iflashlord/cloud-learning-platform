@@ -27,7 +27,15 @@ npm run db:push
 npm run db:seed
 ```
 
-### 3. Stripe Configuration
+### 3. Run Test Suite
+
+```bash
+npm test
+```
+
+Vitest validates server actions (XP, hearts, quests) and UI logic. Run the suite with production env vars loaded to catch regressions before deploying.
+
+### 4. Stripe Configuration
 
 1. Create Stripe account and get live API keys
 2. Set up webhook endpoint: `https://your-domain.com/api/webhooks/stripe`

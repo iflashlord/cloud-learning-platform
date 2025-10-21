@@ -46,6 +46,22 @@ vi.mock("next/image", () => ({
   ),
 }));
 
+beforeAll(() => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+});
+
 describe("Marketing Header", () => {
   let Header: any;
 
@@ -93,6 +109,7 @@ describe("Marketing Header", () => {
     const { container } = render(<Header />);
     
     const header = container.querySelector("header");
-    expect(header).toHaveClass("h-20", "w-full");
+    expect(header).toHaveClass("sticky", "top-0", "w-full");
+    expect(header?.className).toContain("backdrop-blur-md");
   });
 });

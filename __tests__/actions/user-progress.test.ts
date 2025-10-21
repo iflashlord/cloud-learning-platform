@@ -1,5 +1,4 @@
 import { challengeProgress, userProgress } from "@/db/schema"
-import { GAMIFICATION } from "@/constants"
 
 const {
   mockAuth,
@@ -15,6 +14,7 @@ const {
   updateMock,
   insertCalls,
   insertMock,
+  mockRefillHeartsWithGems,
 } = vi.hoisted(() => {
   const updateCalls: Array<{ table: unknown; values: Record<string, unknown> }> = []
   const insertCalls: Array<{ table: unknown; values: Record<string, unknown> }> = []
@@ -45,6 +45,7 @@ const {
         return Promise.resolve()
       },
     })),
+    mockRefillHeartsWithGems: vi.fn(),
   }
 })
 
@@ -73,6 +74,13 @@ vi.mock("@/db/drizzle", () => ({
     update: updateMock,
     insert: insertMock,
   },
+}))
+
+vi.mock("@/actions/gamification", () => ({
+  __esModule: true,
+  spendXP: vi.fn(),
+  spendGems: vi.fn(),
+  refillHeartsWithGems: mockRefillHeartsWithGems,
 }))
 
 vi.mock("next/cache", () => ({
@@ -240,46 +248,29 @@ describe("reduceHearts", () => {
   })
 })
 
-describe("refillHearts", () => {
+describe("refillHeartsWithGemsAction", () => {
   beforeEach(() => {
-    mockGetUserProgress.mockReset()
     revalidatePathMock.mockClear()
-    updateMock.mockClear()
-    updateCalls.length = 0
+    mockRefillHeartsWithGems.mockReset()
   })
 
-  it("throws when progress cannot be found", async () => {
-    mockGetUserProgress.mockResolvedValue(null)
-    await expect(refillHearts()).rejects.toThrow("User progress not found")
-  })
+  it("revalidates and returns the underlying gamification result", async () => {
+    mockRefillHeartsWithGems.mockResolvedValue({ success: true })
 
-  it("throws when hearts are already full", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 5, points: 100 })
-    await expect(refillHearts()).rejects.toThrow("Hearts are already full")
-  })
+    await expect(refillHeartsWithGemsAction()).resolves.toEqual({ success: true })
 
-  it("throws when there are not enough points", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 2, points: POINTS_TO_REFILL - 10 })
-    await expect(refillHearts()).rejects.toThrow("Not enough points")
-  })
-
-  it("refills hearts and deducts points", async () => {
-    mockGetUserProgress.mockResolvedValue({
-      hearts: 2,
-      points: POINTS_TO_REFILL + 15,
-      userId: "user_9",
-    })
-
-    await refillHearts()
-
-    expect(updateCalls).toHaveLength(1)
-    expect(updateCalls[0]).toMatchObject({
-      table: userProgress,
-      values: {
-        hearts: 5,
-        points: 15,
-      },
-    })
+    expect(mockRefillHeartsWithGems).toHaveBeenCalledTimes(1)
+    expect(revalidatePathMock).toHaveBeenCalledWith("/shop")
+    expect(revalidatePathMock).toHaveBeenCalledWith("/learn")
+    expect(revalidatePathMock).toHaveBeenCalledWith("/quests")
     expect(revalidatePathMock).toHaveBeenCalledWith("/leaderboard")
+  })
+
+  it("rethrows errors from the gamification layer", async () => {
+    const error = new Error("Insufficient gems")
+    mockRefillHeartsWithGems.mockRejectedValue(error)
+
+    await expect(refillHeartsWithGemsAction()).rejects.toThrow("Insufficient gems")
+    expect(revalidatePathMock).not.toHaveBeenCalled()
   })
 })

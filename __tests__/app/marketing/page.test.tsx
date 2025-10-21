@@ -30,8 +30,12 @@ vi.mock("@clerk/nextjs", () => ({
     mockSignedIn(children);
     return <div data-testid="signed-in">{children}</div>;
   },
-  SignInButton: () => <button data-testid="sign-in-button">Get Started</button>,
-  SignUpButton: () => <button data-testid="sign-up-button">I already have an account</button>,
+  SignInButton: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="sign-in-button">{children}</div>
+  ),
+  SignUpButton: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="sign-up-button">{children}</div>
+  ),
 }));
 
 vi.mock("next/image", () => ({
@@ -65,8 +69,8 @@ describe("Marketing Homepage", () => {
     render(<HomePage />);
     
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/Master Technology Skills/i)).toBeInTheDocument();
-    expect(screen.getByText(/interactive, gamified learning/i)).toBeInTheDocument();
+    expect(screen.getByText(/Learn, Practice/i)).toBeInTheDocument();
+    expect(screen.getByText(/Transform your learning journey/i)).toBeInTheDocument();
   });
 
   it("displays clerk loading state", () => {
@@ -78,8 +82,8 @@ describe("Marketing Homepage", () => {
   it("shows sign up and sign in buttons when signed out", () => {
     render(<HomePage />);
     
-    expect(screen.getByText(/Get Started/i)).toBeInTheDocument();
-    expect(screen.getByText(/I already have an account/i)).toBeInTheDocument();
+    expect(screen.getByText(/Start Learning Free/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sign In/i)).toBeInTheDocument();
   });
 
   it("displays continue learning button for authenticated users", () => {
@@ -91,7 +95,7 @@ describe("Marketing Homepage", () => {
   it("has proper layout structure", () => {
     const { container } = render(<HomePage />);
     
-    expect(container.firstChild).toHaveClass("max-w-[988px]", "mx-auto");
-    expect(container.querySelector(".flex")).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass("w-full");
+    expect(container.querySelector("section")).toBeInTheDocument();
   });
 });

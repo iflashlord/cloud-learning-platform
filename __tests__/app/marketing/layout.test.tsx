@@ -43,7 +43,7 @@ describe("Marketing Layout", () => {
     expect(layoutDiv).toHaveClass("min-h-screen", "flex", "flex-col");
     
     const main = container.querySelector("main");
-    expect(main).toHaveClass("flex-1", "flex", "flex-col", "items-center", "justify-center");
+    expect(main).toHaveClass("flex-1", "flex", "flex-col");
   });
 
   it("renders children correctly", () => {

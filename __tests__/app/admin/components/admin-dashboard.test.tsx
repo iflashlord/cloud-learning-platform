@@ -1,6 +1,10 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 
+vi.mock("@/actions/gamification", () => ({
+  adminFakeCompleteMonthlyQuest: vi.fn().mockResolvedValue({ success: true, message: "Quest updated" }),
+}));
+
 import { AdminDashboard } from "@/app/admin/components/admin-dashboard";
 
 describe("AdminDashboard", () => {

@@ -32,13 +32,13 @@ describe("Course Card", () => {
       />,
     );
 
-    const card = screen.getByText("Starter").closest("div");
-    expect(card?.className).toContain("pointer-events-none");
-    expect(card?.className).toContain("opacity-50");
+    const card = screen.getByRole("button", { name: /Starter course/i });
+    expect(card.className).toContain("pointer-events-none");
+    expect(card.className).toContain("opacity-50");
   });
 
   it("shows the active checkmark when the course is active", () => {
-    const { container } = render(
+    render(
       <Card
         id={1}
         title="Active Course"
@@ -48,6 +48,8 @@ describe("Course Card", () => {
       />,
     );
 
-    expect(container.querySelector('svg[data-lucide="check"]')).toBeInTheDocument();
+    const card = screen.getByRole("button", { name: /Active Course course/i });
+    expect(card.className).toContain("ring-2");
+    expect(card.className).toContain("border-primary");
   });
 });

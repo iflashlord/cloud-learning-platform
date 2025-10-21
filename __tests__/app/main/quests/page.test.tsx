@@ -5,26 +5,41 @@ const {
   mockGetUserProgress,
   mockGetUserSubscription,
   mockGetCourses,
+  mockGetMonthlyQuestProgress,
+  mockCreateMonthlyQuest,
   redirectMock,
   userProgressCalls,
   trackerCalls,
   achievementsCalls,
+  questStatsCalls,
+  questListingCalls,
+  monthlyQuestCalls,
 } = vi.hoisted(() => ({
   mockGetUserProgress: vi.fn(),
   mockGetUserSubscription: vi.fn(),
   mockGetCourses: vi.fn(),
+  mockGetMonthlyQuestProgress: vi.fn(),
+  mockCreateMonthlyQuest: vi.fn(),
   redirectMock: vi.fn(() => {
     throw new Error("redirect");
   }),
   userProgressCalls: [] as any[],
   trackerCalls: [] as any[],
   achievementsCalls: [] as any[],
+  questStatsCalls: [] as any[],
+  questListingCalls: [] as any[],
+  monthlyQuestCalls: [] as any[],
 }));
 
 vi.mock("@/db/queries", () => ({
   getUserProgress: mockGetUserProgress,
   getUserSubscription: mockGetUserSubscription,
   getCourses: mockGetCourses,
+}));
+
+vi.mock("@/actions/gamification", () => ({
+  getMonthlyQuestProgress: mockGetMonthlyQuestProgress,
+  createMonthlyQuest: mockCreateMonthlyQuest,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -41,6 +56,44 @@ vi.mock("@/components/feed-wrapper", () => ({
   FeedWrapper: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="feed-wrapper">{children}</div>
   ),
+}));
+
+vi.mock("@/lib/css-grid-system", () => ({
+  DashboardLayout: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="dashboard-layout">{children}</div>
+  ),
+  ContentGrid: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="content-grid">{children}</div>
+  ),
+}));
+
+vi.mock("@/components/pro-upgrade-card", () => ({
+  ProUpgradeCard: () => <div data-testid="pro-upgrade-card" />,
+}));
+
+vi.mock("@/components/ui/quest-page-header", () => ({
+  QuestPageHeader: () => <div data-testid="quest-page-header" />,
+}));
+
+vi.mock("@/components/ui/quest-stats", () => ({
+  QuestStats: (props: any) => {
+    questStatsCalls.push(props);
+    return <div data-testid="quest-stats" />;
+  },
+}));
+
+vi.mock("@/components/ui/quest-listing", () => ({
+  QuestListing: (props: any) => {
+    questListingCalls.push(props);
+    return <div data-testid="quest-listing" />;
+  },
+}));
+
+vi.mock("@/components/quests/MonthlyQuestContainer", () => ({
+  MonthlyQuestContainer: (props: any) => {
+    monthlyQuestCalls.push(props);
+    return <div data-testid="monthly-quest" />;
+  },
 }));
 
 vi.mock("@/components/user-progress", () => ({
@@ -79,6 +132,8 @@ describe("QuestsPage server component", () => {
     mockGetUserProgress.mockReset();
     mockGetUserSubscription.mockReset();
     mockGetCourses.mockReset();
+    mockGetMonthlyQuestProgress.mockReset();
+    mockCreateMonthlyQuest.mockReset();
     redirectMock.mockReset();
     redirectMock.mockImplementation(() => {
       throw new Error("redirect");
@@ -86,15 +141,20 @@ describe("QuestsPage server component", () => {
     userProgressCalls.length = 0;
     trackerCalls.length = 0;
     achievementsCalls.length = 0;
+    questStatsCalls.length = 0;
+    questListingCalls.length = 0;
+    monthlyQuestCalls.length = 0;
   });
 
   it("redirects to courses when user progress is unavailable", async () => {
     mockGetUserProgress.mockResolvedValueOnce(null);
     mockGetUserSubscription.mockResolvedValueOnce(null);
     mockGetCourses.mockResolvedValueOnce([]);
+    mockGetMonthlyQuestProgress.mockResolvedValueOnce({ id: 1 });
 
     await expect(QuestsPage()).rejects.toThrow("redirect");
     expect(redirectMock).toHaveBeenCalledWith("/courses");
+    expect(mockCreateMonthlyQuest).not.toHaveBeenCalled();
   });
 
   it("hydrates quest context for the active learner", async () => {
@@ -122,19 +182,22 @@ describe("QuestsPage server component", () => {
         imageSrc: "/other.png",
       },
     ]);
+    mockGetMonthlyQuestProgress.mockResolvedValueOnce({
+      id: 1,
+      title: "Consistency Champion",
+      targetValue: 10,
+      currentValue: 3,
+    });
 
     const element = await QuestsPage();
+    expect(React.isValidElement(element)).toBe(true);
     render(element);
 
-    expect(screen.getByTestId("user-progress")).toBeInTheDocument();
     expect(screen.getByTestId("quest-progress-tracker")).toBeInTheDocument();
     expect(screen.getByTestId("quest-achievements")).toBeInTheDocument();
-
-    const [userProgressProps] = userProgressCalls;
-    expect(userProgressProps.activeCourse.id).toBe(7);
-    expect(userProgressProps.hearts).toBe(4);
-    expect(userProgressProps.points).toBe(120);
-    expect(userProgressProps.hasActiveSubscription).toBe(false);
+    expect(screen.getByTestId("quest-stats")).toBeInTheDocument();
+    expect(screen.getByTestId("quest-listing")).toBeInTheDocument();
+    expect(screen.getByTestId("monthly-quest")).toBeInTheDocument();
 
     const [trackerProps] = trackerCalls;
     expect(trackerProps.userPoints).toBe(120);
@@ -144,6 +207,27 @@ describe("QuestsPage server component", () => {
     expect(achievementsProps.userPoints).toBe(120);
     expect(achievementsProps.totalQuests).toBeGreaterThan(0);
 
+    const [statsProps] = questStatsCalls;
+    expect(statsProps).toMatchObject({
+      completedQuests: expect.any(Number),
+      availableQuests: expect.any(Number),
+      totalPoints: 120,
+    });
+    expect(statsProps.completedQuests).toBeGreaterThan(0);
+
+    const [listingProps] = questListingCalls;
+    expect(listingProps.userPoints).toBe(120);
+    expect(Array.isArray(listingProps.quests)).toBe(true);
+
+    const [monthlyProps] = monthlyQuestCalls;
+    expect(monthlyProps.monthlyQuestData).toMatchObject({
+      id: 1,
+      title: "Consistency Champion",
+      currentValue: 3,
+      targetValue: 10,
+    });
+
     expect(redirectMock).not.toHaveBeenCalled();
+    expect(mockCreateMonthlyQuest).not.toHaveBeenCalled();
   });
 });

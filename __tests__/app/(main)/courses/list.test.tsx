@@ -46,6 +46,7 @@ describe("Courses List", () => {
     mockRouterPush.mockReset();
     mockUpsertUserProgress.mockReset();
     mockStartTransition.mockReset();
+    mockUpsertUserProgress.mockResolvedValue(undefined);
   });
 
   const courses = [

@@ -28,6 +28,9 @@ Welcome to the AWS Cloud Academy documentation! This index will help you find th
 - **[Content Quick Reference](./guides/content-quick-reference.md)** - Templates and examples for adding content
 - **[AWS Transformation Guide](./guides/aws-transformation-guide.md)** - Content structure and expansion strategy
 - **[Project Checklist](./checklist.md)** - Todo items and progress tracking
+- **[Gamification System](./GAMIFICATION_SYSTEM.md)** - Hearts, XP, gems, and quest mechanics
+- **[Gamification System Implementation](./gamification-system-implementation.md)** - Engineering deep dive for quests, rewards, and pro perks
+- **[Enhanced Courses Overview](./enhanced-courses-implementation.md)** - Improved course selection and progress UX
 
 ### Design System
 - **[Design System Overview](./design-system-overview.md)** - Semantic tokens, component recipes, and accessibility baselines
@@ -60,6 +63,7 @@ npm run db:seed
 # Development
 npm run dev                # Start dev server
 npm run db:studio          # View database
+npm test                   # Run the Vitest suite
 
 # Database operations
 npm run db:reset           # Reset database
@@ -108,38 +112,20 @@ npm run db:prod            # Production seed
 ## 🗂️ File Structure
 
 ```
-my-duo-lingo/
-├── docs/
-│   ├── README.md
-│   ├── checklist.md
-│   ├── getting-started-aws.md
-│   ├── admin/
-│   │   ├── complete-transformation.md
-│   │   ├── fixes-2025-10-07.md
-│   │   ├── guide.md
-│   │   ├── improvements-summary.md
-│   │   ├── lesson-edit-enhancement.md
-│   │   ├── quick-reference.md
-│   │   ├── testing-checklist.md
-│   │   ├── transformation-complete.md
-│   │   ├── unified-course-management.md
-│   │   ├── unified-view-summary.md
-│   │   └── workflow-improvements-visual.md
-│   ├── guides/
-│   │   ├── aws-transformation-guide.md
-│   │   └── content-quick-reference.md
-│   └── history/
-│       ├── complete-changelog.md
-│       ├── phase2-complete.md
-│       ├── readme-expansion-complete.md
-│       ├── readme-expansion.md
-│       ├── transformation-complete.md
-│       └── transformation-summary.md
+aws-learning-platform/
 ├── README.md
+├── DEPLOYMENT.md
+├── actions/
 ├── app/
-├── scripts/
+├── components/
+├── constants.ts
+├── db/                # Schema definitions and seed helpers
+├── drizzle/           # Drizzle migrations
+├── docs/              # This documentation set
+├── __tests__/         # Vitest suites
 ├── public/
-├── prisma/
+├── scripts/
+├── vitest.config.ts
 └── …
 ```
 
