@@ -18,7 +18,7 @@ import {
   Lightbulb,
 } from "lucide-react"
 import Link from "next/link"
-import { AIChat } from "./ai-chat"
+import { AILearningAssistant } from "./ai-learning-assistant"
 
 interface LessonReviewContentProps {
   lessonReview: {
@@ -355,7 +355,7 @@ export const LessonReviewContent = ({
           </Card>
 
           {/* AI Learning Assistant - Full Width at Bottom */}
-          <AIChat
+          <AILearningAssistant
             lessonData={lesson}
             completionData={completion}
             isPro={isPro}
