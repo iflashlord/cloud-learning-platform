@@ -203,13 +203,19 @@ export const LessonReviewContent = ({
             <CardContent>
               <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
                 {(() => {
-                  const typeCount = lesson.challenges.reduce((acc: Record<string, number>, challenge: any) => {
-                    acc[challenge.type] = (acc[challenge.type] || 0) + 1
-                    return acc
-                  }, {})
-                  
+                  const typeCount = lesson.challenges.reduce(
+                    (acc: Record<string, number>, challenge: any) => {
+                      acc[challenge.type] = (acc[challenge.type] || 0) + 1
+                      return acc
+                    },
+                    {},
+                  )
+
                   return Object.entries(typeCount).map(([type, count]) => (
-                    <div key={type} className='text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'>
+                    <div
+                      key={type}
+                      className='text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg'
+                    >
                       <div className='text-lg font-bold text-gray-900 dark:text-gray-100'>
                         {count as number}
                       </div>
@@ -220,7 +226,7 @@ export const LessonReviewContent = ({
                   ))
                 })()}
               </div>
-              
+
               {/* Media Content Summary */}
               {(() => {
                 const mediaCount = {
@@ -228,9 +234,9 @@ export const LessonReviewContent = ({
                   video: lesson.challenges.filter((c: any) => c.videoSrc).length,
                   image: lesson.challenges.filter((c: any) => c.imageSrc).length,
                 }
-                
+
                 const hasMedia = mediaCount.audio + mediaCount.video + mediaCount.image > 0
-                
+
                 return hasMedia ? (
                   <div className='mt-4 pt-4 border-t border-gray-200 dark:border-gray-700'>
                     <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
@@ -370,7 +376,7 @@ export const LessonReviewContent = ({
                                 </h4>
                                 <div className='p-3 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-900/20 dark:border-blue-800'>
                                   <audio controls className='w-full'>
-                                    <source src={challenge.audioSrc} type="audio/mpeg" />
+                                    <source src={challenge.audioSrc} type='audio/mpeg' />
                                     Your browser does not support the audio element.
                                   </audio>
                                 </div>
@@ -386,7 +392,7 @@ export const LessonReviewContent = ({
                                 </h4>
                                 <div className='p-3 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-900/20 dark:border-blue-800'>
                                   <video controls className='w-full max-h-64 rounded'>
-                                    <source src={challenge.videoSrc} type="video/mp4" />
+                                    <source src={challenge.videoSrc} type='video/mp4' />
                                     Your browser does not support the video element.
                                   </video>
                                 </div>
@@ -402,9 +408,9 @@ export const LessonReviewContent = ({
                                 </h4>
                                 <div className='p-3 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-900/20 dark:border-blue-800'>
                                   <div className='relative w-full h-64'>
-                                    <Image 
-                                      src={challenge.imageSrc} 
-                                      alt="Question image" 
+                                    <Image
+                                      src={challenge.imageSrc}
+                                      alt='Question image'
                                       fill
                                       className='object-contain rounded'
                                     />
@@ -418,7 +424,9 @@ export const LessonReviewContent = ({
                               challenge.challengeOptions.length > 0 && (
                                 <div className='space-y-2'>
                                   <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
-                                    {challenge.type === "TRUE_FALSE" ? "True/False Options:" : "Answer Options:"}
+                                    {challenge.type === "TRUE_FALSE"
+                                      ? "True/False Options:"
+                                      : "Answer Options:"}
                                   </h4>
                                   {challenge.challengeOptions.map((option: any, index: number) => (
                                     <div
@@ -452,8 +460,8 @@ export const LessonReviewContent = ({
                                       {option.imageSrc && (
                                         <div className='mt-2'>
                                           <div className='relative w-20 h-20'>
-                                            <Image 
-                                              src={option.imageSrc} 
+                                            <Image
+                                              src={option.imageSrc}
                                               alt={`Option ${String.fromCharCode(65 + index)}`}
                                               fill
                                               className='object-cover rounded border'
@@ -467,17 +475,21 @@ export const LessonReviewContent = ({
                               )}
 
                             {/* Text Input/Speech Input Answer */}
-                            {(challenge.type === "TEXT_INPUT" || challenge.type === "SPEECH_INPUT") && challenge.correctAnswer && (
-                              <div className='space-y-2'>
-                                <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2'>
-                                  {challenge.type === "SPEECH_INPUT" && <Mic className='h-4 w-4' />}
-                                  Correct Answer:
-                                </h4>
-                                <div className='p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200'>
-                                  {challenge.correctAnswer}
+                            {(challenge.type === "TEXT_INPUT" ||
+                              challenge.type === "SPEECH_INPUT") &&
+                              challenge.correctAnswer && (
+                                <div className='space-y-2'>
+                                  <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2'>
+                                    {challenge.type === "SPEECH_INPUT" && (
+                                      <Mic className='h-4 w-4' />
+                                    )}
+                                    Correct Answer:
+                                  </h4>
+                                  <div className='p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200'>
+                                    {challenge.correctAnswer}
+                                  </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
 
                             {/* Drag & Drop Instructions */}
                             {challenge.type === "DRAG_DROP" && (
@@ -488,7 +500,8 @@ export const LessonReviewContent = ({
                                 </h4>
                                 <div className='p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200'>
                                   <p className='text-sm'>
-                                    This question requires dragging and dropping items in the correct order.
+                                    This question requires dragging and dropping items in the
+                                    correct order.
                                     {challenge.challengeOptions?.length > 0 && (
                                       <span> Review the correct sequence above.</span>
                                     )}
@@ -527,19 +540,22 @@ export const LessonReviewContent = ({
                             {/* Question Type Information */}
                             <div className='pt-2 border-t border-gray-200 dark:border-gray-700'>
                               {/* Show fallback message if no answer content is available */}
-                              {!challenge.challengeOptions?.length && 
-                               !challenge.correctAnswer && 
-                               !challenge.audioSrc && 
-                               !challenge.videoSrc && 
-                               !challenge.imageSrc && (
-                                <div className='mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200'>
-                                  <div className='flex items-center gap-2 text-sm'>
-                                    <Lightbulb className='h-4 w-4' />
-                                    <span>This question may require interaction during the lesson to see the full answer content.</span>
+                              {!challenge.challengeOptions?.length &&
+                                !challenge.correctAnswer &&
+                                !challenge.audioSrc &&
+                                !challenge.videoSrc &&
+                                !challenge.imageSrc && (
+                                  <div className='mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200'>
+                                    <div className='flex items-center gap-2 text-sm'>
+                                      <Lightbulb className='h-4 w-4' />
+                                      <span>
+                                        This question may require interaction during the lesson to
+                                        see the full answer content.
+                                      </span>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
-                              
+                                )}
+
                               <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
                                 <span>Question Type:</span>
                                 <Badge variant='neutral' className='text-xs'>
