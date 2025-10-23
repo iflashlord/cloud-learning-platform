@@ -16,6 +16,7 @@ export type {
   ChallengeOption,
   QuizProps,
   UserSubscription,
+  LessonMeta,
 } from "./types";
 
 /**

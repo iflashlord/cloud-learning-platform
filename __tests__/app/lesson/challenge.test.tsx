@@ -50,6 +50,14 @@ const baseChallenge = {
   correctAnswer: null,
 };
 
+const lessonContext = {
+  lessonTitle: "Sample Lesson",
+  unitTitle: null,
+  courseTitle: null,
+  percentage: 0,
+  totalChallenges: 1,
+};
+
 describe("Challenge component", () => {
   beforeEach(() => {
     mockCard.mockClear();
@@ -65,6 +73,7 @@ describe("Challenge component", () => {
         options={[
           { ...baseOption, id: 1, text: "Option A" },
         ]}
+        lessonContext={lessonContext}
       />,
     );
 
@@ -91,6 +100,7 @@ describe("Challenge component", () => {
           { ...baseOption, id: 1, text: "Compute" },
           { ...baseOption, id: 2, text: "Storage" },
         ]}
+        lessonContext={lessonContext}
       />,
     );
 

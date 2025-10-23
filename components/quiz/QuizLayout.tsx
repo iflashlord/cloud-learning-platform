@@ -4,13 +4,14 @@ import { Header } from "../../app/lesson/header"
 import { Challenge } from "../../app/lesson/challenge"
 import { Footer } from "../../app/lesson/footer"
 import { CorrectAnswerDisplay } from "./CorrectAnswerDisplay"
+import { LessonMeta, QuizChallenge } from "./types"
 
 interface QuizLayoutProps {
   percentage: number
   hearts: number
   hasActiveSubscription: boolean
-  challenge: any
-  options: any[]
+  challenge: QuizChallenge | null
+  options: QuizChallenge["challengeOptions"]
   selectedOption: number | undefined
   textInput: string
   status: "correct" | "wrong" | "none"
@@ -22,6 +23,8 @@ interface QuizLayoutProps {
   onContinue: () => void
   onCheck: () => void
   onTextChange: (text: string) => void
+  lesson: LessonMeta
+  totalChallenges: number
 }
 
 export const QuizLayout = ({
@@ -41,9 +44,19 @@ export const QuizLayout = ({
   onContinue,
   onCheck,
   onTextChange,
+  lesson,
+  totalChallenges,
 }: QuizLayoutProps) => {
   if (!challenge || !lessonId) {
     return null
+  }
+
+  const lessonContext = {
+    lessonTitle: lesson.title,
+    unitTitle: lesson.unit?.title ?? null,
+    courseTitle: lesson.unit?.course?.title ?? null,
+    percentage,
+    totalChallenges,
   }
 
   return (
@@ -70,6 +83,7 @@ export const QuizLayout = ({
             challenge={challenge}
             onTextChange={onTextChange}
             showCorrectAnswer={showCorrectAnswer}
+            lessonContext={lessonContext}
           />
 
           {/* Show correct answer after 3 wrong attempts */}

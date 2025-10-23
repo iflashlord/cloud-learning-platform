@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -24,7 +24,13 @@ import {
   Copy,
   Download,
   Info,
+  Trash2,
 } from "lucide-react"
+import {
+  resolveAssistantApi,
+  resolveLanguageModelApi,
+  resolveSummarizerApi,
+} from "@/lib/ai/chrome-ai-utils"
 
 type ConversationEntry = {
   id: string
@@ -53,6 +59,11 @@ type PromptExecutionRequest = {
   isExternal?: boolean
   onComplete?: (entry: ConversationEntry) => void
 }
+
+type SavedConversationEntry = ConversationEntry & { savedAt?: string }
+
+const SAVED_STORAGE_KEY = "aws-learning-ai-assistant-saved"
+
 
 const escapeHtml = (value: string) => {
   return value
@@ -176,6 +187,7 @@ export const AILearningAssistant = ({
   const [promptApiAvailable, setPromptApiAvailable] = useState(false)
   const [conversation, setConversation] = useState<ConversationEntry[]>([])
   const [liveEntry, setLiveEntry] = useState<ConversationEntry | null>(null)
+  const [savedHistory, setSavedHistory] = useState<SavedConversationEntry[]>([])
   const [savedEntries, setSavedEntries] = useState<Set<string>>(new Set())
   const [actionNotice, setActionNotice] = useState<string | null>(null)
   const summaryPromiseRef = useRef<Promise<string | null> | null>(null)
@@ -184,8 +196,57 @@ export const AILearningAssistant = ({
   const lastExternalRequestIdRef = useRef<string | null>(null)
   const actionNoticeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const checkChromeAI = useCallback(async () => {
+    try {
+      if (typeof window === "undefined") return
+
+      const assistantApi = resolveAssistantApi()
+      const summarizerApi = resolveSummarizerApi()
+      const languageModelApi = resolveLanguageModelApi()
+
+      const hasAssistant = Boolean(assistantApi)
+      const hasSummarizer = Boolean(summarizerApi)
+      const hasLanguageModel = Boolean(languageModelApi)
+
+      if (hasLanguageModel && !promptDefaultsLoadedRef.current) {
+        await loadPromptDefaults()
+      }
+
+      setChromeAISupported(hasAssistant || hasLanguageModel)
+      setPromptApiAvailable(hasLanguageModel)
+      setAiCapabilities({
+        assistant: hasAssistant ? "available" : "unavailable",
+        summarizer: hasSummarizer ? "available" : "unavailable",
+        prompt: hasLanguageModel ? "available" : "unavailable",
+      })
+    } catch (error) {
+      console.log("Chrome AI not available:", error)
+      setChromeAISupported(false)
+      setPromptApiAvailable(false)
+      setAiCapabilities(null)
+    }
+  }, [])
+
   useEffect(() => {
-    checkChromeAI()
+    void checkChromeAI()
+  }, [checkChromeAI])
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    try {
+      const stored = window.localStorage.getItem(SAVED_STORAGE_KEY)
+      if (!stored) {
+        return
+      }
+      const parsed: SavedConversationEntry[] = JSON.parse(stored)
+      setSavedHistory(parsed)
+      setSavedEntries(new Set(parsed.map((entry) => entry.id)))
+    } catch (error) {
+      console.error("Failed to load saved AI history:", error)
+    }
   }, [])
 
   useEffect(() => {
@@ -222,7 +283,7 @@ export const AILearningAssistant = ({
     setPromptSession(null)
     setPromptStats(null)
     setPromptInputCost(null)
-  }, [promptConfig.temperature, promptConfig.topK])
+  }, [promptConfig.temperature, promptConfig.topK, promptSession])
 
   useEffect(() => {
     return () => {
@@ -232,51 +293,15 @@ export const AILearningAssistant = ({
     }
   }, [])
 
-  const checkChromeAI = async () => {
-    try {
-      if (typeof window === "undefined") return
-
-      const globalScope = window as any
-      const chromeNavigator = window.navigator as any
-      const assistantApi = globalScope.ai?.assistant || chromeNavigator?.ai?.assistant
-      const promptApi =
-        globalScope.ai?.languageModel ||
-        chromeNavigator?.ai?.languageModel ||
-        globalScope.LanguageModel
-      const summarizerApi = globalScope.Summarizer || chromeNavigator?.ai?.summarizer
-
-      const hasAssistant = Boolean(assistantApi)
-      const hasSummarizer = Boolean(summarizerApi)
-      const hasLanguageModel = Boolean(promptApi)
-
-      if (hasLanguageModel && !promptDefaultsLoadedRef.current) {
-        await loadPromptDefaults()
-      }
-
-      setChromeAISupported(hasAssistant || hasLanguageModel)
-      setPromptApiAvailable(hasLanguageModel)
-      setAiCapabilities({
-        assistant: hasAssistant ? "available" : "unavailable",
-        summarizer: hasSummarizer ? "available" : "unavailable",
-        prompt: hasLanguageModel ? "available" : "unavailable",
-      })
-    } catch (error) {
-      console.log("Chrome AI not available:", error)
-      setChromeAISupported(false)
-      setPromptApiAvailable(false)
-      setAiCapabilities(null)
-    }
-  }
-
   const loadPromptDefaults = async () => {
     try {
       if (typeof window === "undefined") return
-      const globalScope = window as any
-      if (!globalScope.LanguageModel?.params || promptDefaultsLoadedRef.current) {
+      const languageModelApi = resolveLanguageModelApi()
+      if (!languageModelApi?.params || promptDefaultsLoadedRef.current) {
         return
       }
 
-      const params = await globalScope.LanguageModel.params()
+      const params = await languageModelApi.params()
 
       setPromptConfig({
         temperature: params?.defaultTemperature ?? 0.7,
@@ -326,22 +351,31 @@ export const AILearningAssistant = ({
           type: "key-points",
           length: "short",
           format: "plain-text",
-          sharedContext: `Lesson review material for ${lessonData.unit.course.title} / ${lessonData.unit.title}.`,
+          sharedContext: `Lesson review material for ${
+            lessonData?.unit?.course?.title ?? "Course"
+          } / ${lessonData?.unit?.title ?? "Unit"}.`,
         })
 
+        const objectives: string[] = Array.isArray(lessonData?.objectives)
+          ? lessonData.objectives
+          : []
+        const challenges: any[] = Array.isArray(lessonData?.challenges)
+          ? lessonData.challenges
+          : []
+
         const lessonContent = [
-          `Lesson title: ${lessonData.title}`,
-          `Unit: ${lessonData.unit.title}`,
-          `Course: ${lessonData.unit.course.title}`,
-          `Score: ${completionData.score}%`,
+          `Lesson title: ${lessonData?.title ?? "Lesson"}`,
+          `Unit: ${lessonData?.unit?.title ?? "Unit"}`,
+          `Course: ${lessonData?.unit?.course?.title ?? "Course"}`,
+          `Score: ${completionData?.score ?? 0}%`,
           ``,
           `Learning objectives:`,
-          ...(lessonData.objectives || []).map(
+          ...objectives.map(
             (objective: string, index: number) => `${index + 1}. ${objective}`,
           ),
           ``,
           `Challenge highlights:`,
-          ...lessonData.challenges.map(
+          ...challenges.map(
             (challenge: any, index: number) =>
               `${index + 1}. ${challenge.question}${
                 challenge.explanation ? ` Explanation: ${challenge.explanation}` : ""
@@ -382,8 +416,11 @@ export const AILearningAssistant = ({
   }
 
   const buildSystemPrompt = (summaryText?: string | null) => {
-    const snippetLimit = summaryText ? 5 : Math.min(lessonData.challenges.length, 8)
-    const challengeSnippets = lessonData.challenges
+    const challenges: any[] = Array.isArray(lessonData?.challenges)
+      ? lessonData.challenges
+      : []
+    const snippetLimit = summaryText ? 5 : Math.min(challenges.length, 8)
+    const challengeSnippets = challenges
       .slice(0, snippetLimit)
       .map((challenge: any, index: number) => {
         const answer = challenge.correctAnswer
@@ -395,12 +432,17 @@ export const AILearningAssistant = ({
 
     const summarySection = summaryText ? `Lesson summary:\n${summaryText}\n\n` : ""
 
+    const lessonTitle = lessonData?.title ?? "Lesson"
+    const courseTitle = lessonData?.unit?.course?.title ?? "Course"
+    const unitTitle = lessonData?.unit?.title ?? "Unit"
+    const scoreValue = typeof completionData?.score === "number" ? completionData.score : 0
+
     return `You are an expert AI tutor helping students review and understand lesson content. 
       
-Lesson: "${lessonData.title}"
-Course: ${lessonData.unit.course.title}
-Unit: ${lessonData.unit.title}
-Student Score: ${completionData.score}%
+Lesson: "${lessonTitle}"
+Course: ${courseTitle}
+Unit: ${unitTitle}
+Student Score: ${scoreValue}%
 
 ${summarySection}Important context:
 ${challengeSnippets}
@@ -481,14 +523,14 @@ If the student asks for more depth, you can request specific challenge details. 
       return null
     }
 
-    const globalScope = window as any
-    if (!globalScope.LanguageModel?.create) {
+    const languageModelApi = resolveLanguageModelApi()
+    if (!languageModelApi?.create) {
       return null
     }
 
     try {
       const summary = await getLessonSummary()
-      const session = await globalScope.LanguageModel.create({
+      const session = await languageModelApi.create({
         temperature: Number(promptConfig.temperature),
         topK: Number(promptConfig.topK),
         initialPrompts: [
@@ -671,6 +713,13 @@ If the student asks for more depth, you can request specific challenge details. 
     }, 4000)
   }
 
+  const syncSavedHistory = (entries: SavedConversationEntry[]) => {
+    if (typeof window === "undefined") {
+      return
+    }
+    window.localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(entries))
+  }
+
   useEffect(() => {
     if (!externalRequest) {
       return
@@ -725,28 +774,16 @@ If the student asks for more depth, you can request specific challenge details. 
   }
 
   const handleSaveEntry = (entry: ConversationEntry) => {
-    if (typeof window === "undefined") {
-      return
-    }
     try {
-      const storageKey = "aws-learning-ai-assistant-saved"
-      let saved: Array<ConversationEntry & { savedAt?: string }> = []
-      const existingRaw = window.localStorage.getItem(storageKey)
-      if (existingRaw) {
-        try {
-          saved = JSON.parse(existingRaw)
-        } catch {
-          saved = []
-        }
+      const entryWithTimestamp: SavedConversationEntry = {
+        ...entry,
+        savedAt: new Date().toISOString(),
       }
-      const entryWithTimestamp = { ...entry, savedAt: new Date().toISOString() }
-      saved.unshift(entryWithTimestamp)
-      window.localStorage.setItem(storageKey, JSON.stringify(saved.slice(0, 100)))
-      setSavedEntries((prev) => {
-        const next = new Set(prev)
-        next.add(entry.id)
-        return next
-      })
+      const filtered = savedHistory.filter((item) => item.id !== entry.id)
+      const updated = [entryWithTimestamp, ...filtered].slice(0, 100)
+      setSavedHistory(updated)
+      syncSavedHistory(updated)
+      setSavedEntries(new Set(updated.map((item) => item.id)))
       showActionNotice("Saved locally in this browser.")
     } catch (error) {
       console.error("Failed to save entry locally:", error)
@@ -781,6 +818,20 @@ If the student asks for more depth, you can request specific challenge details. 
       console.error("Failed to export entry:", error)
       showActionNotice("Export failed. Please try again.")
     }
+  }
+
+  const handleDeleteSavedEntry = (entryId: string) => {
+    setSavedHistory((prev) => {
+      const updated = prev.filter((item) => item.id !== entryId)
+      syncSavedHistory(updated)
+      setSavedEntries((prevSet) => {
+        const next = new Set(prevSet)
+        next.delete(entryId)
+        return next
+      })
+      return updated
+    })
+    showActionNotice("Removed from saved history.")
   }
 
   const handleAIAction = async (action: string, prompt?: string) => {
@@ -870,13 +921,19 @@ If the student asks for more depth, you can request specific challenge details. 
 
   const renderConversationEntry = (
     entry: ConversationEntry,
-    options: { isLive?: boolean } = {},
+    options: {
+      isLive?: boolean
+      hideSave?: boolean
+      showRemove?: boolean
+      onRemove?: () => void
+    } = {},
   ) => {
-    const isLive = options.isLive ?? false
+    const { isLive = false, hideSave = false, showRemove = false, onRemove } = options
     const answerText = entry.answer?.toString() ?? ""
     const hasAnswer = answerText.trim().length > 0
-    const canUseActions = hasAnswer && !isLive
     const isSaved = savedEntries.has(entry.id)
+    const showSaveButton = !hideSave && !isLive && !isSaved
+    const canUseActions = hasAnswer && !isLive
 
     return (
       <div className='rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-4 space-y-3 shadow-sm'>
@@ -903,21 +960,23 @@ If the student asks for more depth, you can request specific challenge details. 
             {isLive && (
               <Loader2 className='h-4 w-4 animate-spin text-blue-600 dark:text-blue-300' />
             )}
-            <Button
-              type='button'
-              size='sm'
-              variant='ghost'
-              className='h-8 gap-1 text-emerald-600 font-semibold disabled:text-gray-400'
-              title='Save locally (stored in this browser only)'
-              onClick={(event) => {
-                event.preventDefault()
-                handleSaveEntry(entry)
-              }}
-              disabled={!canUseActions}
-            >
-              <Save className='h-4 w-4' />
-              <span className='text-xs font-semibold uppercase tracking-wide'>Save</span>
-            </Button>
+            {showSaveButton && (
+              <Button
+                type='button'
+                size='sm'
+                variant='ghost'
+                className='h-8 gap-1 text-emerald-600 font-semibold disabled:text-gray-400'
+                title='Save locally (stored in this browser only)'
+                onClick={(event) => {
+                  event.preventDefault()
+                  handleSaveEntry(entry)
+                }}
+                disabled={!canUseActions}
+              >
+                <Save className='h-4 w-4' />
+                <span className='text-xs font-semibold uppercase tracking-wide'>Save</span>
+              </Button>
+            )}
             <Button
               type='button'
               size='icon'
@@ -928,7 +987,7 @@ If the student asks for more depth, you can request specific challenge details. 
                 event.preventDefault()
                 handleCopyEntry(entry)
               }}
-              disabled={!canUseActions}
+              disabled={!hasAnswer}
             >
               <Copy className='h-4 w-4' />
             </Button>
@@ -942,10 +1001,25 @@ If the student asks for more depth, you can request specific challenge details. 
                 event.preventDefault()
                 handleExportEntry(entry)
               }}
-              disabled={!canUseActions}
+              disabled={!hasAnswer}
             >
               <Download className='h-4 w-4' />
             </Button>
+            {showRemove && (
+              <Button
+                type='button'
+                size='icon'
+                variant='ghost'
+                className='text-gray-600 dark:text-gray-300'
+                title='Remove from saved history'
+                onClick={(event) => {
+                  event.preventDefault()
+                  onRemove?.()
+                }}
+              >
+                <Trash2 className='h-4 w-4' />
+              </Button>
+            )}
           </div>
         </div>
 
@@ -1058,9 +1132,8 @@ If the student asks for more depth, you can request specific challenge details. 
                 <Zap className='h-4 w-4 text-blue-600 dark:text-blue-300' />
                 <span className='font-medium'>Chrome Built-in AI Modes (runs locally)</span>
               </div>
-              <div className='grid gap-2 sm:grid-cols-3'>
+              <div className='grid gap-2 sm:grid-cols-2'>
                 {[
-                  { label: "Chrome Gemini Nano", status: aiCapabilities.assistant },
                   { label: "Chrome Prompt API", status: aiCapabilities.prompt },
                   { label: "Chrome Summarizer API", status: aiCapabilities.summarizer },
                 ].map(({ label, status }) => (
@@ -1303,6 +1376,26 @@ If the student asks for more depth, you can request specific challenge details. 
               <Info className='h-4 w-4 text-emerald-600 dark:text-emerald-300' />
               <span>{actionNotice}</span>
             </div>
+          )}
+
+          {savedHistory.length > 0 && (
+            <details className='border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 rounded-lg shadow-sm'>
+              <summary className='cursor-pointer select-none flex items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-gray-800 dark:text-gray-200'>
+                <span>Saved history ({savedHistory.length})</span>
+                <span className='text-xs text-gray-500 dark:text-gray-400'>Click to expand</span>
+              </summary>
+              <div className='px-4 pb-4 space-y-3 text-sm'>
+                {savedHistory.map((entry) => (
+                  <div key={entry.id}>
+                    {renderConversationEntry(entry, {
+                      hideSave: true,
+                      showRemove: true,
+                      onRemove: () => handleDeleteSavedEntry(entry.id),
+                    })}
+                  </div>
+                ))}
+              </div>
+            </details>
           )}
 
           {/* AI Conversation */}

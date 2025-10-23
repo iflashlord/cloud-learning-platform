@@ -24,12 +24,26 @@ export interface UserSubscription {
   isActive: boolean;
 }
 
+export interface LessonMeta {
+  id: number;
+  title: string;
+  objectives?: string[] | null;
+  unit?: {
+    title?: string | null;
+    course?: {
+      title?: string | null;
+    } | null;
+  } | null;
+  challenges: any[];
+}
+
 export interface QuizProps {
   initialPercentage: number;
   initialHearts: number;
   initialLessonId: number;
   initialLessonChallenges: QuizChallenge[];
   userSubscription: UserSubscription | null;
+  lesson: LessonMeta;
 }
 
 export interface QuizState {

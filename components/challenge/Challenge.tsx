@@ -11,6 +11,7 @@ import { SpeechInputChallenge } from "./SpeechInputChallenge"
 import { ListeningChallenge } from "./ListeningChallenge"
 import { SelectChallenge } from "./SelectChallenge"
 import { VideoChallenge } from "./VideoChallenge"
+import { QuestionStudyCoach } from "./QuestionStudyCoach"
 
 type Props = {
   options: (typeof challengeOptions.$inferSelect)[]
@@ -23,6 +24,13 @@ type Props = {
   onTextSubmit?: (text: string) => void
   onTextChange?: (text: string) => void
   showCorrectAnswer?: boolean
+  lessonContext: {
+    lessonTitle: string
+    unitTitle?: string | null
+    courseTitle?: string | null
+    percentage: number
+    totalChallenges: number
+  }
 }
 
 export const Challenge = ({
@@ -36,8 +44,11 @@ export const Challenge = ({
   onTextSubmit,
   onTextChange,
   showCorrectAnswer,
+  lessonContext,
 }: Props) => {
   const [textInput, setTextInput] = useState("")
+  const [showStudyCoach, setShowStudyCoach] = useState(false)
+  const [lastMessageId, setLastMessageId] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === "none") {
@@ -124,12 +135,37 @@ export const Challenge = ({
   }
   return (
     <div className='space-y-4'>
-      <QuestionHeader challenge={challenge} questionType={type} status={status}>
+      <QuestionHeader
+        challenge={challenge}
+        questionType={type}
+        status={status}
+        isStudyCoachOpen={showStudyCoach}
+        onToggleStudyCoach={() => {
+          setShowStudyCoach((prev) => {
+            const next = !prev
+            if (!prev && !lastMessageId) {
+              // ensure first open expands
+              setTimeout(() => setLastMessageId("auto-open"), 0)
+            }
+            return next
+          })
+        }}
+      >
         {type === "VIDEO" && <VideoChallenge challenge={challenge} />}
         {type === "LISTENING" && <ListeningChallenge {...baseProps} />}
       </QuestionHeader>
 
       {renderChallenge()}
+
+      {showStudyCoach && (
+        <QuestionStudyCoach
+          lesson={lessonContext}
+          challenge={challenge}
+          options={options}
+          lastMessageId={lastMessageId}
+          onMessagesChange={(latestId) => setLastMessageId(latestId)}
+        />
+      )}
     </div>
   )
 }

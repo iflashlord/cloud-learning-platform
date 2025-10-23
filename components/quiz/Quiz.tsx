@@ -9,7 +9,7 @@ import { useQuizValidator } from "./QuizValidator"
 import { QuizLayout } from "./QuizLayout"
 import { QuizCompletion } from "./QuizCompletion"
 import { HeartsDepleteModal } from "./HeartsDepleteModal"
-import { QuizChallenge, UserSubscription } from "./types"
+import { LessonMeta, QuizChallenge, UserSubscription } from "./types"
 import { upsertChallengeProgress } from "@/actions/challenge-progress"
 
 interface QuizProps {
@@ -17,7 +17,8 @@ interface QuizProps {
   initialLessonChallenges: QuizChallenge[]
   initialHearts: number
   initialPercentage: number
-  userSubscription: UserSubscription
+  userSubscription: UserSubscription | null
+  lesson: LessonMeta
 }
 
 export const Quiz = ({
@@ -26,6 +27,7 @@ export const Quiz = ({
   initialHearts,
   initialPercentage,
   userSubscription,
+  lesson,
 }: QuizProps) => {
   const router = useRouter()
 
@@ -231,6 +233,8 @@ export const Quiz = ({
         onContinue={onContinue}
         onCheck={status === "none" ? onCheck : onContinue}
         onTextChange={setTextInput}
+        lesson={lesson}
+        totalChallenges={initialLessonChallenges.length}
       />
 
       <HeartsDepleteModal isOpen={showHeartsModal} onClose={() => setShowHeartsModal(false)} />

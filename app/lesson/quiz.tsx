@@ -5,6 +5,7 @@ import { useHeartsModal } from "@/store/use-hearts-modal"
 import { usePracticeModal } from "@/store/use-practice-modal"
 import { challengeOptions, challenges, userSubscription } from "@/db/schema"
 import { Quiz as ModularQuiz } from "@/components/quiz"
+import { LessonMeta } from "@/components/quiz/types"
 
 type Props = {
   initialPercentage: number
@@ -19,6 +20,7 @@ type Props = {
         isActive: boolean
       })
     | null
+  lesson: LessonMeta
 }
 
 export const Quiz = ({
@@ -27,6 +29,7 @@ export const Quiz = ({
   initialLessonId,
   initialLessonChallenges,
   userSubscription,
+  lesson,
 }: Props) => {
   const { open: openHeartsModal } = useHeartsModal()
   const { open: openPracticeModal } = usePracticeModal()
@@ -37,18 +40,26 @@ export const Quiz = ({
     }
   })
 
+  const normalizedChallenges = initialLessonChallenges.map((challenge) => ({
+    ...challenge,
+    lessonId: challenge.lessonId ?? initialLessonId, // Use current lesson ID as fallback
+  }))
+
+  const lessonForAssistant: LessonMeta = {
+    ...lesson,
+    challenges: normalizedChallenges,
+  }
+
   return (
     <ModularQuiz
       initialLessonId={initialLessonId}
-      initialLessonChallenges={initialLessonChallenges.map((challenge) => ({
-        ...challenge,
-        lessonId: challenge.lessonId ?? initialLessonId, // Use current lesson ID as fallback
-      }))}
+      initialLessonChallenges={normalizedChallenges}
       initialHearts={initialHearts}
       initialPercentage={initialPercentage}
       userSubscription={
         userSubscription ? { isActive: userSubscription.isActive } : { isActive: false }
       }
+      lesson={lessonForAssistant}
     />
   )
 }

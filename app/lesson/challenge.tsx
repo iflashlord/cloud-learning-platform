@@ -12,6 +12,13 @@ type Props = {
   onTextSubmit?: (text: string) => void;
   onTextChange?: (text: string) => void;
   showCorrectAnswer?: boolean;
+  lessonContext: {
+    lessonTitle: string
+    unitTitle?: string | null
+    courseTitle?: string | null
+    percentage: number
+    totalChallenges: number
+  };
 };
 
 export const Challenge = ({
@@ -25,6 +32,7 @@ export const Challenge = ({
   onTextSubmit,
   onTextChange,
   showCorrectAnswer,
+  lessonContext,
 }: Props) => {
   return (
     <ChallengeComponent
@@ -38,6 +46,7 @@ export const Challenge = ({
       onTextSubmit={onTextSubmit}
       onTextChange={onTextChange}
       showCorrectAnswer={showCorrectAnswer}
+      lessonContext={lessonContext}
     />
   );
 };
