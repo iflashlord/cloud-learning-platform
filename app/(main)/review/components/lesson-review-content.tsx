@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -25,7 +25,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import Link from "next/link"
-import { AILearningAssistant } from "./ai-learning-assistant"
+import { QuestionStudyCoach } from "@/components/challenge/QuestionStudyCoach"
 
 interface LessonReviewContentProps {
   lessonReview: {
@@ -43,21 +43,10 @@ export const LessonReviewContent = ({
 }: LessonReviewContentProps) => {
   const [expandedChallenges, setExpandedChallenges] = useState<Set<number>>(new Set())
   const [allExpanded, setAllExpanded] = useState(false)
-  const [aiQuestionRequest, setAiQuestionRequest] = useState<{
-    id: string
-    label: string
-    prompt: string
-    preferredEngine?: "assistant" | "prompt"
-  } | null>(null)
+  const [studyCoachOpen, setStudyCoachOpen] = useState<Record<number, boolean>>({})
+  const [studyCoachLastMessage, setStudyCoachLastMessage] = useState<Record<number, string | null>>({})
 
   const { completion, lesson } = lessonReview
-
-  const getConversationId = useMemo(() => {
-    if (typeof window !== "undefined" && window.crypto?.randomUUID) {
-      return () => window.crypto.randomUUID()
-    }
-    return () => `question-${Date.now()}-${Math.random().toString(16).slice(2)}`
-  }, [])
 
   const toggleChallenge = (challengeId: number) => {
     const newExpanded = new Set(expandedChallenges)
@@ -120,91 +109,6 @@ export const LessonReviewContent = ({
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
-
-  const handleAskAiAboutChallenge = (challenge: any, index: number) => {
-    const optionSummary =
-      Array.isArray(challenge.challengeOptions) && challenge.challengeOptions.length > 0
-        ? challenge.challengeOptions
-            .map((option: any, optionIndex: number) => {
-              const optionLabel = String.fromCharCode(65 + optionIndex)
-              const base = `${optionLabel}. ${option.text}`
-              const correctness = option.correct ? " (correct)" : ""
-              const guide = option.guide ? ` | guidance: ${option.guide}` : ""
-              return `${base}${correctness}${guide}`
-            })
-            .join("\n")
-        : null
-
-    const learnerProgressSummary = Array.isArray(challenge.challengeProgress)
-      ? challenge.challengeProgress
-          .map((progress: any, progressIndex: number) => {
-            const statusParts = [
-              progress.completed ? "completed" : "incomplete",
-              progress.correct != null ? `correct: ${progress.correct}` : null,
-              progress.selectedOptionText
-                ? `selected: ${progress.selectedOptionText}`
-                : progress.selectedOption
-                ? `selected option id: ${progress.selectedOption}`
-                : null,
-              progress.inputValue ? `input: ${progress.inputValue}` : null,
-              progress.score != null ? `score: ${progress.score}` : null,
-            ].filter(Boolean)
-            return `Attempt ${progress.attempt ?? progressIndex + 1}: ${statusParts.join(" | ")}`
-          })
-          .join("\n")
-      : null
-
-    const resourcesSummary =
-      Array.isArray(challenge.resources) && challenge.resources.length > 0
-        ? challenge.resources
-            .map((resource: any) =>
-              typeof resource === "string"
-                ? resource
-                : resource?.title
-                ? `${resource.title}${resource.url ? ` (${resource.url})` : ""}`
-                : JSON.stringify(resource),
-            )
-            .join("\n")
-        : null
-
-    const lessonTime = completion.timeSpent
-      ? `${Math.round(Number(completion.timeSpent) / 60)} minutes`
-      : null
-
-    const promptLines = [
-      `You are assisting a learner who wants deeper insight into a specific challenge they reviewed.`,
-      ``,
-      `Lesson: ${lesson.title}`,
-      `Unit: ${lesson.unit.title}`,
-      `Course: ${lesson.unit.course.title}`,
-      ``,
-      `Challenge ${index + 1} (${getChallengeTypeLabel(challenge.type)}):`,
-      challenge.question,
-      ``,
-      optionSummary ? `Available options:\n${optionSummary}` : null,
-      challenge.correctAnswer ? `Correct answer: ${challenge.correctAnswer}` : null,
-      challenge.hint ? `Hint provided to learner: ${challenge.hint}` : null,
-      challenge.explanation ? `Lesson explanation: ${challenge.explanation}` : null,
-      learnerProgressSummary ? `Learner attempts:\n${learnerProgressSummary}` : null,
-      resourcesSummary ? `Related resources:\n${resourcesSummary}` : null,
-      ``,
-      `Lesson performance summary:`,
-      `Lesson score: ${completion.score}% (Perfect: ${completion.wasPerfect ? "yes" : "no"})`,
-      lessonTime ? `Time spent on lesson: ${lessonTime}` : null,
-      completion.correctAnswers != null && completion.totalChallenges != null
-        ? `Lesson accuracy: ${completion.correctAnswers}/${completion.totalChallenges} correct`
-        : null,
-      ``,
-      `Provide a concise explanation tailored to this question, highlight the key concept the learner should understand, and suggest a quick follow-up practice idea if helpful.`,
-    ].filter(Boolean)
-
-    setAiQuestionRequest({
-      id: getConversationId(),
-      label: `Challenge Q${index + 1}`,
-      prompt: promptLines.join("\n"),
-      preferredEngine: "prompt",
     })
   }
 
@@ -394,6 +298,15 @@ export const LessonReviewContent = ({
                   const isExpanded = expandedChallenges.has(challenge.id)
                   const wasCompleted =
                     challenge.challengeProgress?.some((cp: any) => cp.completed) || false
+                  const isCoachOpen = studyCoachOpen[challenge.id] ?? false
+                  const lastMessageId = studyCoachLastMessage[challenge.id] ?? null
+                  const lessonContext = {
+                    lessonTitle: lesson.title,
+                    unitTitle: lesson.unit?.title ?? null,
+                    courseTitle: lesson.unit?.course?.title ?? null,
+                    percentage: completion.score,
+                    totalChallenges: lesson.challenges.length,
+                  }
 
                   return (
                     <div
@@ -687,17 +600,37 @@ export const LessonReviewContent = ({
                               </div>
                               <Button
                                 size='sm'
-                                variant='secondary'
-                                className='flex items-center gap-2'
+                                variant='outline'
+                                className='flex items-center gap-2 border border-blue-300 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-200'
                                 onClick={(event) => {
                                   event.stopPropagation()
-                                  handleAskAiAboutChallenge(challenge, index)
+                                  setStudyCoachOpen((prev) => ({
+                                    ...prev,
+                                    [challenge.id]: !isCoachOpen,
+                                  }))
                                 }}
                               >
                                 <Sparkles className='h-4 w-4' />
-                                Ask AI About This Question
+                                {isCoachOpen ? "Close Study Coach" : "Open Study Coach"}
                               </Button>
                             </div>
+
+                            {isCoachOpen && (
+                              <div className='mt-3'>
+                                <QuestionStudyCoach
+                                  lesson={lessonContext}
+                                  challenge={challenge}
+                                  options={challenge.challengeOptions ?? []}
+                                  lastMessageId={lastMessageId}
+                                  onMessagesChange={(latestId) =>
+                                    setStudyCoachLastMessage((prev) => ({
+                                      ...prev,
+                                      [challenge.id]: latestId,
+                                    }))
+                                  }
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
@@ -738,16 +671,6 @@ export const LessonReviewContent = ({
           </Card>
 
           {/* AI Learning Assistant - Full Width at Bottom */}
-          <AILearningAssistant
-            lessonData={lesson}
-            completionData={completion}
-            isPro={isPro}
-            isFullWidth={true}
-            externalRequest={aiQuestionRequest}
-            onExternalRequestConsumed={(id) =>
-              setAiQuestionRequest((current) => (current && current.id === id ? null : current))
-            }
-          />
         </div>
       </div>
     </div>

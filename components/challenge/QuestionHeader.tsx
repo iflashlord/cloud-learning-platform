@@ -45,14 +45,10 @@ export const QuestionHeader = ({
               <div className="flex items-center gap-2">
                 <Button
                   type='button'
-                  variant='ghost'
+                  variant='outline'
                   size='sm'
                   onClick={onToggleStudyCoach}
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm",
-                    "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white",
-                    "hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400",
-                  )}
+                  className='flex items-center gap-2 border border-blue-300 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-200'
                 >
                   <Sparkles className='w-4 h-4' />
                   {isStudyCoachOpen ? "Close Study Coach" : "Open Study Coach"}

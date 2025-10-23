@@ -140,16 +140,7 @@ export const Challenge = ({
         questionType={type}
         status={status}
         isStudyCoachOpen={showStudyCoach}
-        onToggleStudyCoach={() => {
-          setShowStudyCoach((prev) => {
-            const next = !prev
-            if (!prev && !lastMessageId) {
-              // ensure first open expands
-              setTimeout(() => setLastMessageId("auto-open"), 0)
-            }
-            return next
-          })
-        }}
+        onToggleStudyCoach={() => setShowStudyCoach((prev) => !prev)}
       >
         {type === "VIDEO" && <VideoChallenge challenge={challenge} />}
         {type === "LISTENING" && <ListeningChallenge {...baseProps} />}

@@ -170,13 +170,12 @@ export const QuestionStudyCoach = ({
     if (!messages.length) return
     const latest = messages[0].id
     onMessagesChange(latest)
-    setOpenItems((prev) => (prev.includes(latest) ? prev : [latest]))
+    setOpenItems((prev) => (prev.includes(latest) ? prev : [latest, ...prev]))
   }, [messages, onMessagesChange])
 
   useEffect(() => {
-    if (lastMessageId) {
-      setOpenItems([lastMessageId])
-    }
+    if (!lastMessageId) return
+    setOpenItems((prev) => (prev.includes(lastMessageId) ? prev : [lastMessageId, ...prev]))
   }, [lastMessageId])
 
   const ensureSession = useMemo(
@@ -339,7 +338,9 @@ export const QuestionStudyCoach = ({
                   className='w-full px-3 py-2 text-left text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center justify-between gap-2'
                   onClick={() =>
                     setOpenItems((prev) =>
-                      prev.includes(message.id) ? [] : [message.id],
+                      prev.includes(message.id)
+                        ? prev.filter((id) => id !== message.id)
+                        : [message.id, ...prev],
                     )
                   }
                 >
