@@ -101,9 +101,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <div className="loading-dot"></div>
           </div>
         )}
-        {!loading && leftIcon && <span className="mr-2 flex items-center">{leftIcon}</span>}
-        <span className={cn("flex items-center", loading ? "opacity-80" : "")}>{children}</span>
-        {!loading && rightIcon && <span className="ml-2 flex items-center">{rightIcon}</span>}
+        {!loading && leftIcon && <span className="mr-2 flex items-center relative z-10">{leftIcon}</span>}
+        <span className={cn("relative z-10 flex items-center", loading ? "opacity-80" : "")}>{children}</span>
+        {!loading && rightIcon && <span className="ml-2 flex items-center relative z-10">{rightIcon}</span>}
       </button>
     )
   }

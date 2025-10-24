@@ -277,7 +277,7 @@ export const LessonReviewContent = ({
           <Card className='p-4'>
             <CardHeader>
               <CardTitle className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2 p-2'>
                   <MessageSquare className='h-5 w-5' />
                   Questions & Answers Review
                   <Badge variant='neutral' className='text-xs'>
@@ -602,7 +602,7 @@ export const LessonReviewContent = ({
                               </div>
                               <Button
                                 size='sm'
-                                variant='ghost'
+                                variant='ai'
                                 onClick={(event) => {
                                   event.stopPropagation()
                                   setStudyCoachOpen((prev) => ({
@@ -611,10 +611,8 @@ export const LessonReviewContent = ({
                                   }))
                                 }}
                               >
-                                <span className='relative z-10 flex items-center gap-2'>
-                                  <Sparkles className='h-4 w-4' />
-                                  {isCoachOpen ? "Close Study Coach" : "Open Study Coach"}
-                                </span>
+                                <Sparkles className='h-4 w-4' />
+                                {isCoachOpen ? "Close Study Coach" : "Open Study Coach"}
                               </Button>
                             </div>
 

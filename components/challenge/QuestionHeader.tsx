@@ -48,11 +48,9 @@ export const QuestionHeader = ({
                 {challenge?.question}
               </p>
               <div className='flex items-center gap-2'>
-                <Button type='button' variant='success' size='sm' onClick={onToggleStudyCoach}>
-                  <span className='relative z-10 flex items-center gap-2'>
-                    <Sparkles className='w-4 h-4' />
-                    {isStudyCoachOpen ? "Close Study Coach" : "Open Study Coach"}
-                  </span>
+                <Button type='button' variant='ai' size='sm' onClick={onToggleStudyCoach}>
+                  <Sparkles className='w-4 h-4' />
+                  {isStudyCoachOpen ? "Close Study Coach" : "Open Study Coach"}
                 </Button>
                 {challenge?.hint && (
                   <button
