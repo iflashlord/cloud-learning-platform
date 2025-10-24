@@ -11,7 +11,7 @@ import { challenges } from "@/db/schema"
 
 interface QuestionHeaderProps {
   challenge: typeof challenges.$inferSelect
-  questionType: typeof challenges.$inferSelect["type"]
+  questionType: (typeof challenges.$inferSelect)["type"]
   status: "correct" | "wrong" | "none"
   children?: ReactNode
   isStudyCoachOpen: boolean
@@ -29,34 +29,26 @@ export const QuestionHeader = ({
   const [showHint, setShowHint] = useState(false)
 
   return (
-    <div className={cn("bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border rounded-xl p-6 mb-6 shadow-sm", statusStyles.info.border)}>
-      <div className="flex items-start space-x-4">
-        <Character 
-          questionType={questionType} 
+    <div
+      className={cn(
+        "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border rounded-xl p-6 mb-6 shadow-sm",
+        statusStyles.info.border,
+      )}
+    >
+      <div className='flex items-start space-x-4'>
+        <Character
+          questionType={questionType}
           challengeId={challenge?.id || 0}
           state={status === "correct" ? "correct" : status === "wrong" ? "wrong" : "default"}
         />
-        <div className="flex-1">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-neutral-200 dark:border-gray-600">
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-neutral-800 dark:text-gray-100 font-medium leading-relaxed flex-1">
+        <div className='flex-1'>
+          <div className='bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-neutral-200 dark:border-gray-600'>
+            <div className='flex items-start justify-between gap-3'>
+              <p className='text-neutral-800 dark:text-gray-100 font-medium leading-relaxed flex-1'>
                 {challenge?.question}
               </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  type='button'
-                  variant='ghost'
-                  size='sm'
-                  onClick={onToggleStudyCoach}
-                  className={cn(
-                    "relative overflow-hidden flex items-center gap-2 px-3 py-1.5 text-xs font-semibold",
-                    "border border-transparent text-blue-600 dark:text-blue-200",
-                    "before:absolute before:inset-0 before:rounded-md before:border before:border-transparent",
-                    "after:absolute after:-inset-px after:rounded-md after:bg-[radial-gradient(circle_at_top_left,#4285F4,transparent),radial-gradient(circle_at_top_right,#EA4335,transparent),radial-gradient(circle_at_bottom_right,#FBBC05,transparent),radial-gradient(circle_at_bottom_left,#34A853,transparent)]",
-                    "after:opacity-60 animate-[pulse_3s_infinite]", // gentle glow animation
-                    "hover:after:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400",
-                  )}
-                >
+              <div className='flex items-center gap-2'>
+                <Button type='button' variant='success' size='sm' onClick={onToggleStudyCoach}>
                   <span className='relative z-10 flex items-center gap-2'>
                     <Sparkles className='w-4 h-4' />
                     {isStudyCoachOpen ? "Close Study Coach" : "Open Study Coach"}
@@ -65,19 +57,29 @@ export const QuestionHeader = ({
                 {challenge?.hint && (
                   <button
                     onClick={() => setShowHint(!showHint)}
-                    className={cn("ml-1 flex items-center space-x-1 transition-colors", statusStyles.info.text, "hover:opacity-80")}
+                    className={cn(
+                      "ml-1 flex items-center space-x-1 transition-colors",
+                      statusStyles.info.text,
+                      "hover:opacity-80",
+                    )}
                     title={showHint ? "Hide hint" : "Show hint"}
                   >
-                    <HelpCircle className="w-5 h-5" />
-                    <span className="text-sm font-medium">Hint</span>
+                    <HelpCircle className='w-5 h-5' />
+                    <span className='text-sm font-medium'>Hint</span>
                   </button>
                 )}
               </div>
             </div>
             {challenge?.hint && showHint && (
-              <div className={cn("mt-3 p-3 rounded-lg border transition-all duration-300 ease-in-out", statusStyles.warning.bg, statusStyles.warning.border)}>
+              <div
+                className={cn(
+                  "mt-3 p-3 rounded-lg border transition-all duration-300 ease-in-out",
+                  statusStyles.warning.bg,
+                  statusStyles.warning.border,
+                )}
+              >
                 <p className={cn("text-sm flex items-start gap-2", statusStyles.warning.text)}>
-                  <Lightbulb className="w-4 h-4 mt-0.5" />
+                  <Lightbulb className='w-4 h-4 mt-0.5' />
                   <span>
                     <strong>Hint:</strong> {challenge.hint}
                   </span>
