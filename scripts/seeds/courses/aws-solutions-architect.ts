@@ -29,20 +29,21 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Amazon CloudFront",
                   correct: true,
                   guide:
-                    'Correct: Amazon CloudFront matches the Aws Service Commonly Used behavior highlighted in "Multi-Tier Architectures".',
+                    "Correct: CloudFront caches static assets close to users, making it an ideal presentation-tier edge layer for multi-tier web apps.",
                 },
                 {
                   text: "Amazon RDS",
                   guide:
-                    'This assumes Amazon RDS, but "Multi-Tier Architectures" showed Aws Service Commonly Used behaves differently, so this isn’t the best choice.',
+                    "RDS belongs in the data tier; exposing a database directly to end users breaks the separation of responsibilities.",
                 },
                 {
                   text: "AWS Backup",
                   guide:
-                    'This assumes AWS Backup, but "Multi-Tier Architectures" showed Aws Service Commonly Used behaves differently, so this isn’t the best choice.',
+                    "AWS Backup only handles snapshots and policies—it can’t serve front-end assets or handle HTTP requests.",
                 },
               ],
-              hint: 'Think back to "Multi-Tier Architectures" and how it framed Aws Service Commonly Used. Apply the same reasoning here.',
+              hint:
+                "Remember the edge service from the lesson that delivers static content close to users for faster page loads.",
             },
             {
               type: "DRAG_DROP",
@@ -54,22 +55,23 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Presentation Tier",
                   order: 1,
                   guide:
-                    'This assumes Presentation Tier, but "Multi-Tier Architectures" showed Arrange Layers Classic Three behaves differently, so this isn’t the best choice.',
+                    "Client-facing nodes belong at the top because they serve the UI and static assets to browsers and mobile devices.",
                 },
                 {
                   text: "Application Tier",
                   order: 2,
                   guide:
-                    'This assumes Application Tier, but "Multi-Tier Architectures" showed Arrange Layers Classic Three behaves differently, so this isn’t the best choice.',
+                    "Business logic sits in the middle to process requests before reaching the database layer.",
                 },
                 {
                   text: "Data Tier",
                   order: 3,
                   guide:
-                    'This assumes Data Tier, but "Multi-Tier Architectures" showed Arrange Layers Classic Three behaves differently, so this isn’t the best choice.',
+                    "Databases anchor the stack at the bottom to keep stateful storage isolated from the web tier.",
                 },
               ],
-              hint: 'Think back to "Multi-Tier Architectures" and how it framed Arrange Layers Classic Three. Apply the same reasoning here.',
+              hint:
+                "Stack the tiers in the same order a request travels: UI first, business logic second, persistent storage last.",
             },
             {
               type: "TRUE_FALSE",
@@ -81,15 +83,16 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Stateless Application Servers Make behavior highlighted in "Multi-Tier Architectures".',
+                    "Correct: When servers don’t store session data you can replace or scale them freely, which simplifies high-availability designs.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "Multi-Tier Architectures" showed Stateless Application Servers Make behaves differently, so this isn’t the best choice.',
+                    "The lesson highlighted that sticky sessions tie clients to a single node, which makes failover harder—exactly what statelessness avoids.",
                 },
               ],
-              hint: 'Think back to "Multi-Tier Architectures" and how it framed Stateless Application Servers Make. Apply the same reasoning here.',
+              hint:
+                "Recall why the architecture guide recommended keeping session data in DynamoDB or ElastiCache instead of on the EC2 instances themselves.",
             },
             {
               type: "TEXT_INPUT",
@@ -97,7 +100,8 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
               question:
                 "Name the AWS service that provides managed relational databases for the data tier.",
               correctAnswer: "Amazon RDS",
-              hint: 'Think back to "Multi-Tier Architectures" and how it framed Aws Service Provides Managed. Apply the same reasoning here.',
+              hint:
+                "Think about the managed service that automates backups, patching, and multi-AZ failover for relational engines.",
             },
           ],
         },

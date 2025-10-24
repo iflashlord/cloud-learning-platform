@@ -1,5 +1,4 @@
 import { CourseSeed } from "../types"
-import { enrichCourses } from "../course-utils"
 
 import { awsCloudPractitionerCourse } from "./aws-cloud-practitioner"
 import { awsSolutionsArchitectCourse } from "./aws-solutions-architect"
@@ -12,7 +11,7 @@ import { azureFundamentalsCourse } from "./azure-fundamentals"
 import { azureAdministratorAssociateCourse } from "./azure-administrator-associate"
 import { azureSolutionsArchitectCourse } from "./azure-solutions-architect"
 
-const baseCourseSeeds: CourseSeed[] = [
+export const courseSeeds: CourseSeed[] = [
   awsCloudPractitionerCourse,
   awsSolutionsArchitectCourse,
   awsDeveloperAssociateCourse,
@@ -24,5 +23,3 @@ const baseCourseSeeds: CourseSeed[] = [
   azureAdministratorAssociateCourse,
   azureSolutionsArchitectCourse,
 ]
-
-export const courseSeeds: CourseSeed[] = enrichCourses(baseCourseSeeds)
