@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { LESSON_AI_PROMPTS, LessonAiPromptId } from "@/lib/ai/lesson-prompts"
 import { resolveAssistantApi, resolveLanguageModelApi } from "@/lib/ai/chrome-ai-utils"
+import { renderMarkdownToHtml } from "@/lib/markdown"
 
 interface QuestionStudyCoachProps {
   lesson: {
@@ -30,59 +31,14 @@ interface CoachMessage {
   engine: "assistant" | "prompt"
 }
 
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
-
-const formatInlineMarkdown = (value: string) => {
-  let result = escapeHtml(value)
-  result = result.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-  result = result.replace(/\*(.+?)\*/g, "<em>$1</em>")
-  result = result.replace(/`([^`]+)`/g, "<code>$1</code>")
-  result = result.replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-  return result
+interface SavedCoachMessage extends CoachMessage {
+  savedAt?: string
+  lessonTitle?: string
+  challengeId?: number
 }
 
-const renderMarkdownToHtml = (markdown: string) => {
-  const trimmed = markdown.trim()
-  if (!trimmed) return ""
+const STORAGE_KEY = "aws-learning-study-coach-saved"
 
-  const blocks = trimmed.split(/\n{2,}/)
-  const htmlBlocks = blocks.map((block) => {
-    const trimmedBlock = block.trim()
-
-    if (/^```/.test(trimmedBlock) && /```$/.test(trimmedBlock)) {
-      const codeContent = trimmedBlock.replace(/^```[\w-]*\n?/, "").replace(/```$/, "")
-      return `<pre><code>${escapeHtml(codeContent)}</code></pre>`
-    }
-
-    const lines = trimmedBlock.split("\n")
-    if (lines.every((line) => /^[-*+]\s+/.test(line.trim()))) {
-      const items = lines
-        .map((line) => line.replace(/^[-*+]\s+/, ""))
-        .map((item) => `<li>${formatInlineMarkdown(item)}</li>`)
-        .join("")
-      return `<ul>${items}</ul>`
-    }
-
-    if (lines.every((line) => /^\d+\.\s+/.test(line.trim()))) {
-      const items = lines
-        .map((line) => line.replace(/^\d+\.\s+/, ""))
-        .map((item) => `<li>${formatInlineMarkdown(item)}</li>`)
-        .join("")
-      return `<ol>${items}</ol>`
-    }
-
-    const paragraph = lines.map((line) => formatInlineMarkdown(line)).join("<br />")
-    return `<p>${paragraph}</p>`
-  })
-
-  return htmlBlocks.join("")
-}
 
 const buildPrompt = (
   instruction: string,
@@ -150,6 +106,8 @@ export const QuestionStudyCoach = ({
   const [error, setError] = useState<string | null>(null)
   const [customPrompt, setCustomPrompt] = useState("")
   const [openItems, setOpenItems] = useState<string[]>([])
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const [notice, setNotice] = useState<string | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -163,6 +121,40 @@ export const QuestionStudyCoach = ({
       setIsSupported(false)
     } finally {
       setSupportChecked(true)
+    }
+
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const parsed: SavedCoachMessage[] = JSON.parse(raw)
+        setSavedIds(new Set(parsed.map((entry) => entry.id)))
+      }
+    } catch (err) {
+      console.error("Failed to read study coach saved entries:", err)
+    }
+
+    const handleSavedUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<SavedCoachMessage[]>).detail
+      if (detail) {
+        setSavedIds(new Set(detail.map((entry) => entry.id)))
+      } else if (typeof window !== "undefined") {
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY)
+          if (raw) {
+            const parsed: SavedCoachMessage[] = JSON.parse(raw)
+            setSavedIds(new Set(parsed.map((entry) => entry.id)))
+          } else {
+            setSavedIds(new Set())
+          }
+        } catch (err) {
+          console.error("Failed to sync study coach saved entries:", err)
+        }
+      }
+    }
+
+    window.addEventListener("study-coach-saved-updated", handleSavedUpdate as EventListener)
+    return () => {
+      window.removeEventListener("study-coach-saved-updated", handleSavedUpdate as EventListener)
     }
   }, [])
 
@@ -263,6 +255,84 @@ export const QuestionStudyCoach = ({
     setCustomPrompt("")
   }
 
+  const syncSavedEntries = (entries: SavedCoachMessage[], broadcast = true) => {
+    if (typeof window === "undefined") return
+    const normalized = entries.slice(0, 200)
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
+    setSavedIds(new Set(normalized.map((entry) => entry.id)))
+    if (broadcast && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("study-coach-saved-updated", { detail: normalized }))
+    }
+  }
+
+  const handleSaveEntry = (entry: CoachMessage) => {
+    try {
+      const savedEntry: SavedCoachMessage = {
+        ...entry,
+        savedAt: new Date().toISOString(),
+        lessonTitle: lesson.lessonTitle,
+        challengeId: challenge?.id ?? undefined,
+      }
+      const raw = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null
+      let saved: SavedCoachMessage[] = []
+      if (raw) {
+        try {
+          saved = JSON.parse(raw)
+        } catch (err) {
+          console.error("Failed to parse saved study coach entries:", err)
+        }
+      }
+      const filtered = saved.filter((item) => item.id !== savedEntry.id)
+      const updated = [savedEntry, ...filtered]
+      syncSavedEntries(updated)
+      setNotice("Saved locally.")
+    } catch (err) {
+      console.error("Failed to save study coach response:", err)
+      setNotice("Unable to save locally.")
+    }
+  }
+
+  const handleCopyEntry = async (entry: CoachMessage) => {
+    try {
+      await navigator.clipboard.writeText(entry.answer || "")
+      setNotice("Copied to clipboard.")
+    } catch (err) {
+      console.error("Copy failed:", err)
+      setNotice("Copy failed.")
+    }
+  }
+
+  const handleExportEntry = (entry: CoachMessage) => {
+    try {
+      const blob = new Blob([
+        `=== Study Coach Response ===\n`,
+        `Lesson: ${lesson.lessonTitle}\n`,
+        `Prompt: ${entry.prompt}\n`,
+        `Engine: ${entry.engine}\n`,
+        `---\n`,
+        entry.answer,
+      ])
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `study-coach-${entry.id.slice(0, 8)}.txt`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+      setNotice("Downloaded response.")
+    } catch (err) {
+      console.error("Download failed:", err)
+      setNotice("Download failed.")
+    }
+  }
+
+  useEffect(() => {
+    if (!notice) return
+    const timer = setTimeout(() => setNotice(null), 3000)
+    return () => clearTimeout(timer)
+  }, [notice])
+
   return (
     <div className='space-y-6 border border-blue-200 dark:border-blue-700 rounded-lg bg-blue-50/40 dark:bg-blue-900/20 px-4 py-4'>
       {!supportChecked ? (
@@ -324,6 +394,12 @@ export const QuestionStudyCoach = ({
         </div>
       )}
 
+      {notice && (
+        <div className='rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200'>
+          {notice}
+        </div>
+      )}
+
       {messages.length > 0 && (
         <div className='space-y-2'>
           {messages.map((message) => {
@@ -366,6 +442,34 @@ export const QuestionStudyCoach = ({
                 </button>
                 {isOpen && (
                   <div className='px-3 pb-3'>
+                    <div className='flex items-center justify-end gap-2 pb-2 text-xs text-gray-500 dark:text-gray-400'>
+                      <button
+                        type='button'
+                        className='px-2 py-1 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800'
+                        onClick={() => handleCopyEntry(message)}
+                      >
+                        Copy
+                      </button>
+                      <button
+                        type='button'
+                        className='px-2 py-1 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800'
+                        onClick={() => handleExportEntry(message)}
+                      >
+                        Download
+                      </button>
+                      <button
+                        type='button'
+                        className={cn(
+                          "px-2 py-1 border rounded-md",
+                          savedIds.has(message.id)
+                            ? "border-emerald-300 text-emerald-600 bg-emerald-50 dark:border-emerald-700 dark:text-emerald-200 dark:bg-emerald-900/30"
+                            : "border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-200",
+                        )}
+                        onClick={() => handleSaveEntry(message)}
+                      >
+                        {savedIds.has(message.id) ? "Saved" : "Save"}
+                      </button>
+                    </div>
                     <div
                       className='prose prose-sm max-w-none text-gray-700 dark:text-gray-200 dark:prose-invert'
                       dangerouslySetInnerHTML={{

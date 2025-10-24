@@ -600,8 +600,7 @@ export const LessonReviewContent = ({
                               </div>
                               <Button
                                 size='sm'
-                                variant='outline'
-                                className='flex items-center gap-2 border border-blue-300 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-200'
+                                variant='ghost'
                                 onClick={(event) => {
                                   event.stopPropagation()
                                   setStudyCoachOpen((prev) => ({
@@ -609,9 +608,14 @@ export const LessonReviewContent = ({
                                     [challenge.id]: !isCoachOpen,
                                   }))
                                 }}
+                                className={
+                                  "relative overflow-hidden flex items-center gap-2 px-3 py-1.5 text-xs font-semibold border border-transparent text-blue-600 dark:text-blue-200 before:absolute before:inset-0 before:rounded-md before:border before:border-transparent after:absolute after:-inset-px after:rounded-md after:bg-[radial-gradient(circle_at_top_left,#4285F4,transparent),radial-gradient(circle_at_top_right,#EA4335,transparent),radial-gradient(circle_at_bottom_right,#FBBC05,transparent),radial-gradient(circle_at_bottom_left,#34A853,transparent)] after:opacity-60 hover:after:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400"
+                                }
                               >
-                                <Sparkles className='h-4 w-4' />
-                                {isCoachOpen ? "Close Study Coach" : "Open Study Coach"}
+                                <span className='relative z-10 flex items-center gap-2'>
+                                  <Sparkles className='h-4 w-4' />
+                                  {isCoachOpen ? "Close Study Coach" : "Open Study Coach"}
+                                </span>
                               </Button>
                             </div>
 

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Settings, RotateCcw, Shield, Crown, BookOpen, ChevronDown, Volume2 } from "lucide-react"
+import { Settings, RotateCcw, Shield, Crown, BookOpen, ChevronDown, Volume2, Sparkles } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -172,6 +172,18 @@ export const SettingsDropdown = ({
             >
               <Volume2 className='mr-2 h-4 w-4' />
               <span>Audio Settings</span>
+            </Button>
+
+            <Button
+              variant='ghost'
+              className='w-full justify-start text-left h-auto py-2 px-2'
+              onClick={() => {
+                router.push("/settings/saved-ai")
+                setIsOpen(false)
+              }}
+            >
+              <Sparkles className='mr-2 h-4 w-4 text-blue-500' />
+              <span>Saved AI Responses</span>
             </Button>
 
             {/* Reset Progress */}
