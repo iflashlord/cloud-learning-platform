@@ -85,11 +85,8 @@ INSTRUCTIONS:
 - If asked about specific questions, refer to them by their number (Q1, Q2, etc.)
 - Keep responses concise but informative
 - Focus on AWS learning and the specific lesson content
-${
-  isPro
-    ? "- PRO USER: Provide detailed explanations, advanced examples, and in-depth analysis"
-    : "- FREE USER: Provide basic explanations and encourage upgrade for advanced features"
-}
+- Always incorporate the provided hints and answer guides when explaining reasoning
+ 
 
 The student has completed this lesson and is reviewing it to reinforce their learning.`
 

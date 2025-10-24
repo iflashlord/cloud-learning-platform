@@ -59,6 +59,29 @@ export const SelectChallenge = ({
           />
         ))}
       </div>
+      {(() => {
+        const selectedData = options.find(
+          (option) => option.id === selectedOption
+        )
+        const shouldShowGuide =
+          !!selectedData?.guide &&
+          (status !== "none" || (!!showCorrectAnswer && selectedData.correct))
+
+        if (!shouldShowGuide) return null
+
+        return (
+          <div
+            className={cn(
+              "mt-4 rounded-lg border px-4 py-3 text-sm leading-relaxed",
+              selectedData?.correct
+                ? "border-green-200 bg-green-50 text-green-800 dark:border-green-700/60 dark:bg-green-900/20 dark:text-green-200"
+                : "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-700/60 dark:bg-rose-900/20 dark:text-rose-200"
+            )}
+          >
+            {selectedData?.guide}
+          </div>
+        )
+      })()}
     </div>
   )
 }

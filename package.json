@@ -13,6 +13,7 @@
     "db:seed": "tsx ./scripts/seed.ts",
     "db:prod": "tsx ./scripts/prod.ts",
     "db:reset": "tsx ./scripts/reset.ts",
+    "seed:validate": "tsx ./scripts/seeds/validate.ts",
     "sync:branding": "node ./scripts/sync-branding.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
