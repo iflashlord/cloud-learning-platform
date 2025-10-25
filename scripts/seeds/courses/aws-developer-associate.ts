@@ -132,28 +132,28 @@ export const awsDeveloperAssociateCourse: CourseSeed = {
                   text: "Create IAM policy",
                   order: 1,
                   guide:
-                    'This assumes Create IAM policy, but "API Integrations" showed Place Steps Secure Api behaves differently, so this isn’t the best choice.',
+                    "Write the policy statement first so you can explicitly allow the API methods clients need.",
                 },
                 {
                   text: "Attach policy to role/user",
                   order: 2,
                   guide:
-                    'This assumes Attach policy to role/user, but "API Integrations" showed Place Steps Secure Api behaves differently, so this isn’t the best choice.',
+                    "Attach the policy to the IAM principal (user, role, or group) that signs the API calls.",
                 },
                 {
                   text: "Enable IAM auth on method",
                   order: 3,
                   guide:
-                    'This assumes Enable IAM auth on method, but "API Integrations" showed Place Steps Secure Api behaves differently, so this isn’t the best choice.',
+                    "Configure the API Gateway method to require IAM so that unsigned requests are rejected.",
                 },
                 {
                   text: "Test with signed request",
                   order: 4,
                   guide:
-                    'This assumes Test with signed request, but "API Integrations" showed Place Steps Secure Api behaves differently, so this isn’t the best choice.',
+                    "Finish by making a SigV4-signed call to verify only authorized identities can invoke the API.",
                 },
               ],
-              hint: 'Think back to "API Integrations" and how it framed Place Steps Secure Api. Apply the same reasoning here.',
+              hint: "Follow the same sequence you used in the lab: author permissions, attach them, enable IAM on the method, then test with a signed client call.",
             },
           ],
         },
@@ -170,20 +170,20 @@ export const awsDeveloperAssociateCourse: CourseSeed = {
                   text: "Amazon EventBridge",
                   correct: true,
                   guide:
-                    'Correct: Amazon EventBridge matches the Service Routes Events Between behavior highlighted in "Event-Driven Patterns".',
+                    "Correct: EventBridge ingests partner SaaS events and routes them to AWS targets via rules.",
                 },
                 {
                   text: "Amazon Kinesis",
                   guide:
-                    'This assumes Amazon Kinesis, but "Event-Driven Patterns" showed Service Routes Events Between behaves differently, so this isn’t the best choice.',
+                    "Kinesis handles streaming data analytics, not SaaS event routing and rule-based delivery.",
                 },
                 {
                   text: "AWS IoT Core",
                   guide:
-                    'This assumes AWS IoT Core, but "Event-Driven Patterns" showed Service Routes Events Between behaves differently, so this isn’t the best choice.',
+                    "IoT Core focuses on device telemetry rather than integrating generic SaaS systems with AWS services.",
                 },
               ],
-              hint: 'Use the example from "Event-Driven Patterns" about Service Routes Events Between to guide your answer.',
+              hint: "Pick the event bus service the lesson used to connect external SaaS providers into AWS workflows.",
             },
             {
               type: "TRUE_FALSE",
@@ -195,22 +195,22 @@ export const awsDeveloperAssociateCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Eventbridge Supports Schema Discovery behavior highlighted in "Event-Driven Patterns".',
+                    "Correct: The Schema Registry feature lets you capture event shapes and generate strongly typed bindings.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "Event-Driven Patterns" showed Eventbridge Supports Schema Discovery behaves differently, so this isn’t the best choice.',
+                    "Denying this would contradict the console demo where you downloaded auto-generated code bindings from the schema registry.",
                 },
               ],
-              hint: 'Use the example from "Event-Driven Patterns" about Eventbridge Supports Schema Discovery to guide your answer.',
+              hint: "Recall how the schema registry captured event shapes so IDEs could generate code for you.",
             },
             {
               type: "TEXT_INPUT",
               order: 3,
               question: "Name the service you would use to stream real-time data for analytics.",
               correctAnswer: "Amazon Kinesis",
-              hint: 'Use the example from "Event-Driven Patterns" about Service You Would Use to guide your answer.',
+              hint: "Choose the service the lesson used to ingest clickstream and IoT data for near real-time dashboards.",
             },
           ],
         },

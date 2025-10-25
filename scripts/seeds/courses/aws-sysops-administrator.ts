@@ -28,20 +28,20 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                   text: "Dashboards",
                   correct: true,
                   guide:
-                    'Correct: Dashboards matches the Cloudwatch Feature Lets You behavior highlighted in "CloudWatch Monitoring".',
+                    "Correct: Dashboards let you pin graphs from many metrics on a single board so operators can see CPU, latency, and errors in one view.",
                 },
                 {
                   text: "Logs Insights",
                   guide:
-                    'This assumes Logs Insights, but "CloudWatch Monitoring" showed Cloudwatch Feature Lets You behaves differently, so this isn’t the best choice.',
+                    "Logs Insights is the query engine for log events, not the visualization canvas referenced in the question.",
                 },
                 {
                   text: "Contributor Insights",
                   guide:
-                    'This assumes Contributor Insights, but "CloudWatch Monitoring" showed Cloudwatch Feature Lets You behaves differently, so this isn’t the best choice.',
+                    "Contributor Insights highlights top talkers within a metric, but it doesn’t combine multiple metrics into a single chart set.",
                 },
               ],
-              hint: 'Think back to "CloudWatch Monitoring" and how it framed Cloudwatch Feature Lets You. Apply the same reasoning here.',
+              hint: "Choose the feature you used to build operational wallboards with CPU, memory, and latency metrics side by side.",
             },
             {
               type: "TRUE_FALSE",
@@ -52,15 +52,15 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Cloudwatch Composite Alarms Can behavior highlighted in "CloudWatch Monitoring".',
+                    "Correct: Composite alarms watch the state of several underlying alarms and fire only when your combined condition is met.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "CloudWatch Monitoring" showed Cloudwatch Composite Alarms Can behaves differently, so this isn’t the best choice.',
+                    "Saying false would ignore the example where CPU and latency alarms were grouped so you alert only when both trip.",
                 },
               ],
-              hint: 'Think back to "CloudWatch Monitoring" and how it framed Cloudwatch Composite Alarms Can. Apply the same reasoning here.',
+              hint: "Remember how you reduced alarm noise by combining multiple metrics into a single composite signal.",
             },
             {
               type: "TEXT_INPUT",
@@ -68,7 +68,7 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
               question:
                 "Name the feature used to create custom metric queries using SQL-like syntax.",
               correctAnswer: "CloudWatch Logs Insights",
-              hint: 'Think back to "CloudWatch Monitoring" and how it framed Feature Used Create Custom. Apply the same reasoning here.',
+              hint: "Think of the CloudWatch console tab where you typed SQL-like queries to explore log data.",
             },
           ],
         },
@@ -85,21 +85,20 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                 {
                   text: "Amazon CloudWatch Logs",
                   guide:
-                    'This assumes Amazon CloudWatch Logs, but "Logging & Metrics" showed Service Centralizes Analyzes Vpc behaves differently, so this isn’t the best choice.',
+                    "CloudWatch Logs stores events but doesn’t provide the indexed search and visualization layer you used for analysis.",
                 },
                 {
                   text: "Amazon OpenSearch Service",
                   correct: true,
                   guide:
-                    'Correct: Amazon OpenSearch Service matches the Service Centralizes Analyzes Vpc behavior highlighted in "Logging & Metrics".',
+                    "Correct: OpenSearch ingests Flow Logs, Resolver logs, and CloudTrail events so you can query them centrally.",
                 },
                 {
                   text: "AWS Systems Manager",
-                  guide:
-                    'This assumes AWS Systems Manager, but "Logging & Metrics" showed Service Centralizes Analyzes Vpc behaves differently, so this isn’t the best choice.',
+                  guide: "Systems Manager handles fleet automation, not large-scale log analytics.",
                 },
               ],
-              hint: 'Use the example from "Logging & Metrics" about Service Centralizes Analyzes Vpc to guide your answer.',
+              hint: "Choose the managed search cluster you wired to Kibana dashboards for multi-source log analysis.",
             },
             {
               type: "ASSIST",
@@ -109,21 +108,21 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                 {
                   text: "30",
                   guide:
-                    'This assumes 30, but "Logging & Metrics" showed Aws Cloudtrail Records Api behaves differently, so this isn’t the best choice.',
+                    "Thirty days is too short—the default retention spans much longer for audit purposes.",
                 },
                 {
                   text: "90",
                   guide:
-                    'This assumes 90, but "Logging & Metrics" showed Aws Cloudtrail Records Api behaves differently, so this isn’t the best choice.',
+                    "Ninety days still undercuts the one-year retention highlighted in the lesson.",
                 },
                 {
                   text: "365",
                   correct: true,
                   guide:
-                    'Correct: 365 matches the Aws Cloudtrail Records Api behavior highlighted in "Logging & Metrics".',
+                    "Correct: CloudTrail keeps management events for 365 days by default unless you archive them elsewhere.",
                 },
               ],
-              hint: 'Use the example from "Logging & Metrics" about Aws Cloudtrail Records Api to guide your answer.',
+              hint: "Remember the compliance note that CloudTrail stores management events for a full year out of the box.",
             },
             {
               type: "DRAG_DROP",
@@ -134,28 +133,28 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                   text: "Install CloudWatch agent",
                   order: 1,
                   guide:
-                    'This assumes Install CloudWatch agent, but "Logging & Metrics" showed Order Steps Ship Application behaves differently, so this isn’t the best choice.',
+                    "Install the agent first so there’s a process collecting and forwarding logs from the instance.",
                 },
                 {
                   text: "Configure log file locations",
                   order: 2,
                   guide:
-                    'This assumes Configure log file locations, but "Logging & Metrics" showed Order Steps Ship Application behaves differently, so this isn’t the best choice.',
+                    "Next, tell the agent which directories or files to watch for new entries.",
                 },
                 {
                   text: "Attach IAM permissions",
                   order: 3,
                   guide:
-                    'This assumes Attach IAM permissions, but "Logging & Metrics" showed Order Steps Ship Application behaves differently, so this isn’t the best choice.',
+                    "Grant the agent an IAM role so it can publish log events into CloudWatch Logs.",
                 },
                 {
                   text: "Validate delivery",
                   order: 4,
                   guide:
-                    'This assumes Validate delivery, but "Logging & Metrics" showed Order Steps Ship Application behaves differently, so this isn’t the best choice.',
+                    "Finally, check the log group to confirm entries are arriving as expected before relying on the pipeline.",
                 },
               ],
-              hint: 'Use the example from "Logging & Metrics" about Order Steps Ship Application to guide your answer.',
+              hint: "Follow the same rollout you used in the lab: install the agent, configure sources, attach permissions, then verify delivery.",
             },
           ],
         },
@@ -172,20 +171,20 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                   text: "AWS Systems Manager Incident Manager",
                   correct: true,
                   guide:
-                    'Correct: AWS Systems Manager Incident Manager matches the Service Helps Coordinate Incident behavior highlighted in "Incident Response".',
+                    "Correct: Incident Manager keeps contacts, escalation plans, and runbooks in one place so you can execute playbooks quickly.",
                 },
                 {
                   text: "AWS Fault Injection Simulator",
                   guide:
-                    'This assumes AWS Fault Injection Simulator, but "Incident Response" showed Service Helps Coordinate Incident behaves differently, so this isn’t the best choice.',
+                    "Fault Injection Simulator is for chaos experiments, not for paging responders during an actual outage.",
                 },
                 {
                   text: "Amazon Detective",
                   guide:
-                    'This assumes Amazon Detective, but "Incident Response" showed Service Helps Coordinate Incident behaves differently, so this isn’t the best choice.',
+                    "Detective helps you investigate findings, but it doesn’t orchestrate incident communications or automation steps.",
                 },
               ],
-              hint: 'Use the example from "Incident Response" about Service Helps Coordinate Incident to guide your answer.',
+              hint: "Remember the Systems Manager capability you configured with contacts and response plans for outages.",
             },
             {
               type: "TRUE_FALSE",
@@ -197,15 +196,15 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Systems Manager Opscenter Can behavior highlighted in "Incident Response".',
+                    "Correct: OpsCenter integrates with AWS Organizations so OpsItems from child accounts roll up into one console.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "Incident Response" showed Systems Manager Opscenter Can behaves differently, so this isn’t the best choice.',
+                    "Answering false would ignore the cross-account OpsItem view demonstrated in the lesson.",
                 },
               ],
-              hint: 'Use the example from "Incident Response" about Systems Manager Opscenter Can to guide your answer.',
+              hint: "Think about how OpsCenter removed the need to switch accounts by showing issues from every environment in one list.",
             },
             {
               type: "TEXT_INPUT",
@@ -213,7 +212,7 @@ export const awsSysOpsAdministratorCourse: CourseSeed = {
               question:
                 "What AWS service provides post-incident analysis with integrated metrics and logs?",
               correctAnswer: "AWS Resilience Hub",
-              hint: 'Use the example from "Incident Response" about Aws Service Provides Post to guide your answer.',
+              hint: "Think of the service that scores workloads against resilience targets using CloudWatch metrics, alarms, and game day reports.",
             },
           ],
         },

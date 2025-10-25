@@ -42,8 +42,7 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                     "AWS Backup only handles snapshots and policies—it can’t serve front-end assets or handle HTTP requests.",
                 },
               ],
-              hint:
-                "Remember the edge service from the lesson that delivers static content close to users for faster page loads.",
+              hint: "Remember the edge service from the lesson that delivers static content close to users for faster page loads.",
             },
             {
               type: "DRAG_DROP",
@@ -70,8 +69,7 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                     "Databases anchor the stack at the bottom to keep stateful storage isolated from the web tier.",
                 },
               ],
-              hint:
-                "Stack the tiers in the same order a request travels: UI first, business logic second, persistent storage last.",
+              hint: "Stack the tiers in the same order a request travels: UI first, business logic second, persistent storage last.",
             },
             {
               type: "TRUE_FALSE",
@@ -91,8 +89,7 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                     "The lesson highlighted that sticky sessions tie clients to a single node, which makes failover harder—exactly what statelessness avoids.",
                 },
               ],
-              hint:
-                "Recall why the architecture guide recommended keeping session data in DynamoDB or ElastiCache instead of on the EC2 instances themselves.",
+              hint: "Recall why the architecture guide recommended keeping session data in DynamoDB or ElastiCache instead of on the EC2 instances themselves.",
             },
             {
               type: "TEXT_INPUT",
@@ -100,8 +97,7 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
               question:
                 "Name the AWS service that provides managed relational databases for the data tier.",
               correctAnswer: "Amazon RDS",
-              hint:
-                "Think about the managed service that automates backups, patching, and multi-AZ failover for relational engines.",
+              hint: "Think about the managed service that automates backups, patching, and multi-AZ failover for relational engines.",
             },
           ],
         },
@@ -118,20 +114,20 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Amazon SQS",
                   correct: true,
                   guide:
-                    'Correct: Amazon SQS matches the Service Best Enables Loose behavior highlighted in "Decoupling Strategies".',
+                    "Correct: SQS queues decouple producers and consumers with buffering and retry logic, letting each tier scale independently.",
                 },
                 {
                   text: "Amazon EC2",
                   guide:
-                    'This assumes Amazon EC2, but "Decoupling Strategies" showed Service Best Enables Loose behaves differently, so this isn’t the best choice.',
+                    "EC2 is compute infrastructure; by itself it doesn’t provide the messaging layer required to loosely couple application tiers.",
                 },
                 {
                   text: "AWS Backup",
                   guide:
-                    'This assumes AWS Backup, but "Decoupling Strategies" showed Service Best Enables Loose behaves differently, so this isn’t the best choice.',
+                    "AWS Backup handles data protection tasks, not asynchronous communication between microservices.",
                 },
               ],
-              hint: 'Remember the pattern you practiced in "Decoupling Strategies"—it explained how Service Best Enables Loose works within AWS.',
+              hint: "Think about the managed messaging service the lesson emphasized for buffering work between producers and consumers.",
             },
             {
               type: "ASSIST",
@@ -141,21 +137,21 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                 {
                   text: "tight",
                   guide:
-                    'This assumes tight, but "Decoupling Strategies" showed Event Driven Architectures Rely behaves differently, so this isn’t the best choice.',
+                    "Tight coupling forces services to know too much about each other, which the lesson warned against.",
                 },
                 {
                   text: "loose",
                   correct: true,
                   guide:
-                    'Correct: loose matches the Event Driven Architectures Rely behavior highlighted in "Decoupling Strategies".',
+                    "Correct: loose coupling keeps integrations asynchronous and resilient, which is the foundation of event-driven design.",
                 },
                 {
                   text: "manual",
                   guide:
-                    'This assumes manual, but "Decoupling Strategies" showed Event Driven Architectures Rely behaves differently, so this isn’t the best choice.',
+                    "Manual workflows reintroduce human coordination and latency—neither trait belongs in an automated event flow.",
                 },
               ],
-              hint: 'Remember the pattern you practiced in "Decoupling Strategies"—it explained how Event Driven Architectures Rely works within AWS.',
+              hint: "Recall how the module described services emitting events without depending on the consumers’ availability.",
             },
             {
               type: "DRAG_DROP",
@@ -166,22 +162,22 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Amazon SNS - Pub/Sub messaging",
                   order: 1,
                   guide:
-                    'This assumes Amazon SNS - Pub/Sub messaging, but "Decoupling Strategies" showed Match Each Service Problem behaves differently, so this isn’t the best choice.',
+                    "SNS broadcasts notifications to many subscribers, making it the best fit for pub/sub messaging.",
                 },
                 {
                   text: "Amazon SQS - Queue buffering",
                   order: 2,
                   guide:
-                    'This assumes Amazon SQS - Queue buffering, but "Decoupling Strategies" showed Match Each Service Problem behaves differently, so this isn’t the best choice.',
+                    "SQS queues absorb bursts of work and deliver messages when consumers are ready, so it clearly maps to queue buffering.",
                 },
                 {
                   text: "AWS Step Functions - Workflow orchestration",
                   order: 3,
                   guide:
-                    'This assumes AWS Step Functions - Workflow orchestration, but "Decoupling Strategies" showed Match Each Service Problem behaves differently, so this isn’t the best choice.',
+                    "Step Functions coordinate complex workflows with state machines—perfect for orchestration scenarios.",
                 },
               ],
-              hint: 'Remember the pattern you practiced in "Decoupling Strategies"—it explained how Match Each Service Problem works within AWS.',
+              hint: "Pair each managed service with the integration challenge it solves: broadcast, buffer, or orchestrate.",
             },
             {
               type: "TRUE_FALSE",
@@ -192,15 +188,15 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Amazon Api Gateway Can behavior highlighted in "Decoupling Strategies".',
+                    "Correct: API Gateway lets you define usage plans and throttling so backend services aren’t overwhelmed.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "Decoupling Strategies" showed Amazon Api Gateway Can behaves differently, so this isn’t the best choice.',
+                    "Saying “false” would ignore API Gateway’s built-in throttling and rate-limiting features showcased in the lesson.",
                 },
               ],
-              hint: 'Remember the pattern you practiced in "Decoupling Strategies"—it explained how Amazon Api Gateway Can works within AWS.',
+              hint: "Think about how API Gateway shields Lambda functions and microservices by enforcing usage plans at the edge.",
             },
           ],
         },
@@ -218,20 +214,20 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Multi-site active/active",
                   correct: true,
                   guide:
-                    'Correct: Multi-site active/active matches the Disaster Recovery Strategy Provides behavior highlighted in "Disaster Recovery".',
+                    "Correct: With active/active each Region serves traffic immediately, so failover is instantaneous and RTO approaches zero.",
                 },
                 {
                   text: "Pilot light",
                   guide:
-                    'This assumes Pilot light, but "Disaster Recovery" showed Disaster Recovery Strategy Provides behaves differently, so this isn’t the best choice.',
+                    "Pilot light keeps only critical services warm; you still need time to scale the rest, so the RTO is longer.",
                 },
                 {
                   text: "Warm standby",
                   guide:
-                    'This assumes Warm standby, but "Disaster Recovery" showed Disaster Recovery Strategy Provides behaves differently, so this isn’t the best choice.',
+                    "Warm standby runs a scaled-down environment that must be promoted, so it can’t beat the instant failover of active/active.",
                 },
               ],
-              hint: 'Think back to "Disaster Recovery" and how it framed Disaster Recovery Strategy Provides. Apply the same reasoning here.',
+              hint: "Pick the strategy where both Regions serve production traffic all the time, eliminating the need for a failover action.",
             },
             {
               type: "VIDEO",
@@ -244,33 +240,33 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                 {
                   text: "Backup & restore",
                   guide:
-                    'This assumes Backup & restore, but "Disaster Recovery" showed Watch Video Identify Dr behaves differently, so this isn’t the best choice.',
+                    "Backup & restore keeps only data backups—you still rebuild the stack from scratch, so infrastructure isn’t pre-provisioned.",
                 },
                 {
                   text: "Warm standby",
                   correct: true,
                   guide:
-                    'Correct: Warm standby matches the Watch Video Identify Dr behavior highlighted in "Disaster Recovery".',
+                    "Correct: Warm standby maintains a running but scaled-down copy that can quickly be promoted when the primary fails.",
                 },
                 {
                   text: "Multi-site active/active",
                   guide:
-                    'This assumes Multi-site active/active, but "Disaster Recovery" showed Watch Video Identify Dr behaves differently, so this isn’t the best choice.',
+                    "Active/active infrastructure isn’t idle—it already serves production traffic in multiple Regions.",
                 },
                 {
                   text: "Pilot light",
                   guide:
-                    'This assumes Pilot light, but "Disaster Recovery" showed Watch Video Identify Dr behaves differently, so this isn’t the best choice.',
+                    "Pilot light keeps only the minimal critical stack running and requires scaling, whereas the video described a fuller warm environment.",
                 },
               ],
-              hint: 'Think back to "Disaster Recovery" and how it framed Watch Video Identify Dr. Apply the same reasoning here.',
+              hint: "Focus on the strategy where a smaller copy of the stack is already deployed and simply needs scale-up, not a rebuild.",
             },
             {
               type: "TEXT_INPUT",
               order: 3,
               question: "What AWS tool helps you document and test DR plans?",
               correctAnswer: "AWS Resilience Hub",
-              hint: 'Think back to "Disaster Recovery" and how it framed Aws Tool Helps You. Apply the same reasoning here.',
+              hint: "Name the service introduced for evaluating compliance with resilience targets and running game-day experiments.",
             },
           ],
         },
@@ -295,20 +291,20 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "Amazon Redshift",
                   correct: true,
                   guide:
-                    'Correct: Amazon Redshift matches the Storage Option Best Serves behavior highlighted in "High Performance Storage".',
+                    "Correct: Redshift’s columnar engine and MPP architecture are purpose-built for analytics workloads.",
                 },
                 {
                   text: "Amazon Aurora",
                   guide:
-                    'This assumes Amazon Aurora, but "High Performance Storage" showed Storage Option Best Serves behaves differently, so this isn’t the best choice.',
+                    "Aurora is an OLTP database optimized for transactions, not columnar analytics queries.",
                 },
                 {
                   text: "Amazon Neptune",
                   guide:
-                    'This assumes Amazon Neptune, but "High Performance Storage" showed Storage Option Best Serves behaves differently, so this isn’t the best choice.',
+                    "Neptune targets graph workloads, so it doesn’t provide the columnar storage format analytics pipelines need.",
                 },
               ],
-              hint: 'Use the example from "High Performance Storage" about Storage Option Best Serves to guide your answer.',
+              hint: "Pick the data warehouse service that stores information in columns and parallelizes queries across nodes.",
             },
             {
               type: "ASSIST",
@@ -319,20 +315,20 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "latency",
                   correct: true,
                   guide:
-                    'Correct: latency matches the Provisioned Iops Volumes On behavior highlighted in "High Performance Storage".',
+                    "Correct: Provisioned IOPS volumes reserve IO capacity so latency stays predictable even under heavy load.",
                 },
                 {
                   text: "pricing",
                   guide:
-                    'This assumes pricing, but "High Performance Storage" showed Provisioned Iops Volumes On behaves differently, so this isn’t the best choice.',
+                    "The feature guarantees IO performance, not billing discounts, so pricing isn’t the missing word.",
                 },
                 {
                   text: "availability",
                   guide:
-                    'This assumes availability, but "High Performance Storage" showed Provisioned Iops Volumes On behaves differently, so this isn’t the best choice.',
+                    "Although EBS is durable, the key emphasis of Provisioned IOPS was predictable IO latency.",
                 },
               ],
-              hint: 'Use the example from "High Performance Storage" about Provisioned Iops Volumes On to guide your answer.',
+              hint: "Remember the graph showing how Provisioned IOPS volumes keep response times flat even when throughput spikes.",
             },
             {
               type: "TRUE_FALSE",
@@ -343,15 +339,15 @@ export const awsSolutionsArchitectCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Elasticache Supports Both Redis behavior highlighted in "High Performance Storage".',
+                    "Correct: ElastiCache offers managed clusters for either Redis or Memcached, letting you choose the engine that fits.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "High Performance Storage" showed Elasticache Supports Both Redis behaves differently, so this isn’t the best choice.',
+                    "The lesson explicitly mentioned selecting either Redis or Memcached when creating an ElastiCache cluster, so “false” contradicts that.",
                 },
               ],
-              hint: 'Use the example from "High Performance Storage" about Elasticache Supports Both Redis to guide your answer.',
+              hint: "Think back to the cache comparison slide that listed Redis features next to Memcached within ElastiCache.",
             },
           ],
         },

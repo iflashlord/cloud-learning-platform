@@ -28,20 +28,21 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "Update Management Center",
                   correct: true,
                   guide:
-                    'Correct: Update Management Center matches the Feature Orchestrates Updates Across behavior highlighted in "Virtual Machine Operations".',
+                    "Correct: Update Management Center schedules and automates patching across fleets of Azure and hybrid VMs, which was the exact capability highlighted in the lesson.",
                 },
                 {
                   text: "Azure Monitor Metrics",
                   guide:
-                    'This assumes Azure Monitor Metrics, but "Virtual Machine Operations" showed Feature Orchestrates Updates Across behaves differently, so this isn’t the best choice.',
+                    "Monitor Metrics only observes performance data; it doesn’t push updates or coordinate maintenance windows.",
                 },
                 {
                   text: "Azure Arc",
                   guide:
-                    'This assumes Azure Arc, but "Virtual Machine Operations" showed Feature Orchestrates Updates Across behaves differently, so this isn’t the best choice.',
+                    "Azure Arc onboards servers into Azure management, but patch orchestration still relies on Update Management Center once resources are connected.",
                 },
               ],
-              hint: 'Use the example from "Virtual Machine Operations" about Feature Orchestrates Updates Across to guide your answer.',
+              hint:
+                "Pick the service you used to define patch schedules and compliance reports for entire VM fleets.",
             },
             {
               type: "VIDEO",
@@ -55,32 +56,34 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "Azure Backup",
                   correct: true,
                   guide:
-                    'Correct: Azure Backup matches the Watch Clip About Vm behavior highlighted in "Virtual Machine Operations".',
+                    "Correct: Azure Backup lets you define policies for VM snapshots, retention, and vault placement—the features highlighted in the clip.",
                 },
                 {
                   text: "Azure Files",
                   guide:
-                    'This assumes Azure Files, but "Virtual Machine Operations" showed Watch Clip About Vm behaves differently, so this isn’t the best choice.',
+                    "Azure Files provides SMB shares; it doesn’t manage VM backup policies.",
                 },
                 {
                   text: "Azure Site Recovery",
                   guide:
-                    'This assumes Azure Site Recovery, but "Virtual Machine Operations" showed Watch Clip About Vm behaves differently, so this isn’t the best choice.',
+                    "Site Recovery replicates workloads for DR scenarios, whereas the video focused on scheduled backups.",
                 },
                 {
                   text: "Azure DevOps",
                   guide:
-                    'This assumes Azure DevOps, but "Virtual Machine Operations" showed Watch Clip About Vm behaves differently, so this isn’t the best choice.',
+                    "Azure DevOps handles CI/CD pipelines, not VM backup retention policies.",
                 },
               ],
-              hint: 'Use the example from "Virtual Machine Operations" about Watch Clip About Vm to guide your answer.',
+              hint:
+                "Select the service that stored recovery points in a vault and enforced backup schedules in the demonstration.",
             },
             {
               type: "TEXT_INPUT",
               order: 3,
               question: "Name the Azure tool used to capture a reusable VM configuration baseline.",
               correctAnswer: "Azure Image Builder",
-              hint: 'Use the example from "Virtual Machine Operations" about Azure Tool Used Capture to guide your answer.',
+              hint:
+                "Think of the Packer-based service you used to bake golden images for both Azure and hybrid environments.",
             },
           ],
         },
@@ -98,20 +101,21 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "Log Analytics workspace",
                   correct: true,
                   guide:
-                    'Correct: Log Analytics workspace matches the Monitoring Feature Aggregates Log behavior highlighted in "Storage and Monitoring".',
+                    "Correct: Log Analytics workspaces store Azure Monitor Logs and let you run Kusto queries across all collected telemetry.",
                 },
                 {
                   text: "Azure Advisor",
                   guide:
-                    'This assumes Azure Advisor, but "Storage and Monitoring" showed Monitoring Feature Aggregates Log behaves differently, so this isn’t the best choice.',
+                    "Advisor gives optimization recommendations; it doesn’t host log data or expose Kusto queries.",
                 },
                 {
                   text: "Azure Automation",
                   guide:
-                    'This assumes Azure Automation, but "Storage and Monitoring" showed Monitoring Feature Aggregates Log behaves differently, so this isn’t the best choice.',
+                    "Automation runs runbooks, not ad-hoc log searches, so it can’t satisfy the Kusto requirement.",
                 },
               ],
-              hint: 'Use the example from "Storage and Monitoring" about Monitoring Feature Aggregates Log to guide your answer.',
+              hint:
+                "Pick the Azure Monitor component where you wrote KQL queries against collected platform logs.",
             },
             {
               type: "ASSIST",
@@ -122,21 +126,22 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                 {
                   text: "manually",
                   guide:
-                    'This assumes manually, but "Storage and Monitoring" showed Azure Storage Lifecycle Policies behaves differently, so this isn’t the best choice.',
+                    "Lifecycle rules eliminate manual effort; choosing this would contradict the automation focus of the lesson.",
                 },
                 {
                   text: "automatically",
                   correct: true,
                   guide:
-                    'Correct: automatically matches the Azure Storage Lifecycle Policies behavior highlighted in "Storage and Monitoring".',
+                    "Correct: Policies automatically transition blobs between hot, cool, and archive tiers based on the conditions you set.",
                 },
                 {
                   text: "externally",
                   guide:
-                    'This assumes externally, but "Storage and Monitoring" showed Azure Storage Lifecycle Policies behaves differently, so this isn’t the best choice.',
+                    "External tools aren’t required—the policy engine is built into Azure Storage, so this option doesn’t fit.",
                 },
               ],
-              hint: 'Use the example from "Storage and Monitoring" about Azure Storage Lifecycle Policies to guide your answer.',
+              hint:
+                "Think about how you configured rules that moved aging data to cooler tiers without intervention.",
             },
             {
               type: "IMAGE_SELECT",
@@ -148,22 +153,23 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   imageSrc: "/azure-app-insights-icon.png",
                   correct: true,
                   guide:
-                    'Correct: Application Insights Logo matches the Icon Azure Application Insights behavior highlighted in "Storage and Monitoring".',
+                    "Correct: Application Insights uses the purple light-bulb icon you saw in the observability diagrams.",
                 },
                 {
                   text: "Azure Policy Logo",
                   imageSrc: "/azure-policy-icon.png",
                   guide:
-                    'This assumes Azure Policy Logo, but "Storage and Monitoring" showed Icon Azure Application Insights behaves differently, so this isn’t the best choice.',
+                    "The shield icon belongs to Azure Policy, which enforces governance—not Application Insights.",
                 },
                 {
                   text: "Azure Monitor Logo",
                   imageSrc: "/azure-monitor-icon.png",
                   guide:
-                    'This assumes Azure Monitor Logo, but "Storage and Monitoring" showed Icon Azure Application Insights behaves differently, so this isn’t the best choice.',
+                    "Azure Monitor’s waveform icon represents the overarching platform, not the Application Insights component specifically.",
                 },
               ],
-              hint: 'Use the example from "Storage and Monitoring" about Icon Azure Application Insights to guide your answer.',
+              hint:
+                "Look for the same purple light-bulb badge you clicked when opening Application Insights dashboards.",
             },
           ],
         },
