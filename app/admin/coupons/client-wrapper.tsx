@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,27 +18,30 @@ import { toast } from "sonner"
 type Coupon = any
 type Redemption = any
 
-export function CouponManagementClient() {
+export function groupRedemptions(redemptions: Redemption[]) {
+  const groups: Record<string, Redemption[]> = {}
+  for (const r of redemptions) {
+    const userId = r.userId || r.user?.userId
+    const code = r.coupon?.code
+    if (!userId || !code) continue
+    const key = `${userId}__${code}`
+    if (!groups[key]) groups[key] = []
+    groups[key].push(r)
+  }
+  Object.values(groups).forEach((arr) =>
+    arr.sort((a, b) => new Date(b.redeemedAt).getTime() - new Date(a.redeemedAt).getTime()),
+  )
+  return groups
+}
+
+interface CouponManagementClientProps {
+  fetcher?: typeof fetch
+}
+
+export function CouponManagementClient({ fetcher = fetch }: CouponManagementClientProps = {}) {
   const [coupons, setCoupons] = useState<Coupon[]>([])
   const [redemptions, setRedemptions] = useState<Redemption[]>([])
 
-  // Group redemptions by userId+couponCode
-  function groupRedemptions(redemptions: Redemption[]) {
-    const groups: Record<string, Redemption[]> = {}
-    for (const r of redemptions) {
-      const userId = r.userId || r.user?.userId
-      const code = r.coupon?.code
-      if (!userId || !code) continue
-      const key = `${userId}__${code}`
-      if (!groups[key]) groups[key] = []
-      groups[key].push(r)
-    }
-    // Sort each group by redeemedAt descending (latest first)
-    Object.values(groups).forEach((arr) =>
-      arr.sort((a, b) => new Date(b.redeemedAt).getTime() - new Date(a.redeemedAt).getTime()),
-    )
-    return groups
-  }
   const [loading, setLoading] = useState(true)
 
   const [form, setForm] = useState({
@@ -60,16 +63,12 @@ export function CouponManagementClient() {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
 
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const [cRes, rRes] = await Promise.all([
-        fetch("/api/admin/coupons"),
-        fetch("/api/admin/coupons/redemptions"),
+        fetcher("/api/admin/coupons"),
+        fetcher("/api/admin/coupons/redemptions"),
       ])
       if (cRes.ok) setCoupons(await cRes.json())
       if (rRes.ok) setRedemptions(await rRes.json())
@@ -78,12 +77,16 @@ export function CouponManagementClient() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetcher])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   async function createCoupon(e: React.FormEvent) {
     e.preventDefault()
     try {
-      const res = await fetch("/api/admin/coupons", {
+      const res = await fetcher("/api/admin/coupons", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -108,7 +111,7 @@ export function CouponManagementClient() {
     if (!editingCoupon) return
 
     try {
-      const res = await fetch(`/api/admin/coupons/${editingCoupon.id}`, {
+      const res = await fetcher(`/api/admin/coupons/${editingCoupon.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editForm),
@@ -134,7 +137,7 @@ export function CouponManagementClient() {
     }
 
     try {
-      const res = await fetch(`/api/admin/coupons/${couponId}`, {
+      const res = await fetcher(`/api/admin/coupons/${couponId}`, {
         method: "DELETE",
       })
       if (res.ok) {
@@ -166,7 +169,7 @@ export function CouponManagementClient() {
 
   async function toggleCouponActive(id: number, isActive: boolean) {
     try {
-      const res = await fetch(`/api/admin/coupons/${id}`, {
+      const res = await fetcher(`/api/admin/coupons/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive: !isActive }),
@@ -180,7 +183,7 @@ export function CouponManagementClient() {
 
   async function toggleRedemption(redemptionId: number, isActive: boolean) {
     try {
-      const res = await fetch(`/api/admin/coupons/redemptions/${redemptionId}`, {
+      const res = await fetcher(`/api/admin/coupons/redemptions/${redemptionId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: isActive ? "disable" : "enable" }),
