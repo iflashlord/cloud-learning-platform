@@ -34,7 +34,9 @@ export function CouponManagementClient() {
       groups[key].push(r)
     }
     // Sort each group by redeemedAt descending (latest first)
-  Object.values(groups).forEach(arr => arr.sort((a, b) => new Date(b.redeemedAt).getTime() - new Date(a.redeemedAt).getTime()))
+    Object.values(groups).forEach((arr) =>
+      arr.sort((a, b) => new Date(b.redeemedAt).getTime() - new Date(a.redeemedAt).getTime()),
+    )
     return groups
   }
   const [loading, setLoading] = useState(true)
@@ -450,12 +452,16 @@ export function CouponManagementClient() {
                       <div>
                         <div className='font-medium'>{latest.user?.userName || latest.userId}</div>
                         <div className='text-sm text-gray-600'>
-                          Code: {latest.coupon?.code} • Expires: {new Date(latest.proEndsAt).toLocaleString()}
+                          Code: {latest.coupon?.code} • Expires:{" "}
+                          {new Date(latest.proEndsAt).toLocaleString()}
                         </div>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <div className='text-sm'>{latest.isActive ? "Active" : "Disabled"}</div>
-                        <Button size='sm' onClick={() => toggleRedemption(latest.id, latest.isActive)}>
+                        <Button
+                          size='sm'
+                          onClick={() => toggleRedemption(latest.id, latest.isActive)}
+                        >
                           {latest.isActive ? "Disable" : "Enable"}
                         </Button>
                       </div>
@@ -467,7 +473,8 @@ export function CouponManagementClient() {
                           {group.slice(1).map((r, idx) => (
                             <div key={r.id} className='flex justify-between text-xs text-gray-600'>
                               <span>
-                                {r.isActive ? "Active" : "Disabled"} • Expires: {new Date(r.proEndsAt).toLocaleString()}
+                                {r.isActive ? "Active" : "Disabled"} • Expires:{" "}
+                                {new Date(r.proEndsAt).toLocaleString()}
                               </span>
                               <span>Redeemed: {new Date(r.redeemedAt).toLocaleString()}</span>
                             </div>
