@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Heart, Github, Twitter, Mail } from "lucide-react"
+import { Heart, Github, Twitter, Mail, Linkedin } from "lucide-react"
 import { BRAND_CONFIG } from "@/lib/config"
 import Link from "next/link"
 
@@ -29,7 +29,7 @@ export const Footer = () => {
                 <Github className='h-5 w-5' />
               </Button>
               <Button variant='ghost' size='sm' className='p-2'>
-                <Twitter className='h-5 w-5' />
+                <Linkedin className='h-5 w-5' />
               </Button>
               <Button variant='ghost' size='sm' className='p-2'>
                 <Mail className='h-5 w-5' />
@@ -49,7 +49,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/courses'>Courses</Link>
+                <Link href='/courses' className='pl-2'>
+                  Courses
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -57,7 +59,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/leaderboard'>Leaderboard</Link>
+                <Link href='/leaderboard' className='pl-2'>
+                  Leaderboard
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -65,7 +69,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/quests'>Quests</Link>
+                <Link href='/quests' className='pl-2'>
+                  Quests
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -73,7 +79,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/shop'>Shop</Link>
+                <Link href='/shop' className='pl-2'>
+                  Shop
+                </Link>
               </Button>
             </div>
           </div>
@@ -90,7 +98,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/pro'>Pro Membership</Link>
+                <Link href='/pro' className='pl-2'>
+                  Pro Membership
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -98,7 +108,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/subscription'>Subscription</Link>
+                <Link href='/subscription' className='pl-2'>
+                  Subscription
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -106,7 +118,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/help/getting-started'>Getting Started</Link>
+                <Link href='/help/getting-started' className='pl-2'>
+                  Getting Started
+                </Link>
               </Button>
             </div>
           </div>
@@ -123,7 +137,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/help'>Help Center</Link>
+                <Link href='/help' className='pl-2'>
+                  Help Center
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -131,7 +147,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/help/contact-support'>Contact Support</Link>
+                <Link href='/help/contact-support' className='pl-2'>
+                  Contact Support
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -139,7 +157,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/help/subscription-faq'>FAQ</Link>
+                <Link href='/help/subscription-faq' className='pl-2'>
+                  FAQ
+                </Link>
               </Button>
               <Button
                 variant='ghost'
@@ -147,7 +167,9 @@ export const Footer = () => {
                 asChild
                 className='p-0 h-auto font-normal text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white justify-start'
               >
-                <Link href='/help/hearts-system'>Hearts System</Link>
+                <Link href='/help/hearts-system' className='pl-2'>
+                  Hearts System
+                </Link>
               </Button>
             </div>
           </div>

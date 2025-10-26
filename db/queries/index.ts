@@ -24,6 +24,7 @@
 export {
   getUserProgress,
   getUserSubscription,
+  getUserActiveCoupons,
   getTopTenUsers,
   getTopTenUsersByCourse,
 } from "./user-queries"

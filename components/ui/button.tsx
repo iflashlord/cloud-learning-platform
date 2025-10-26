@@ -21,6 +21,8 @@ export interface ButtonProps
   courseTheme?: "compute" | "storage" | "security" | "networking" | "management" | "aiml"
   // Override disabled to allow boolean or undefined
   disabled?: boolean
+  // Allow overriding the default min-width constraints
+  noMinWidth?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -38,6 +40,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     animateError = false,
     courseTheme,
     children,
+    noMinWidth = false,
     ...props 
   }, ref) => {
     const isDisabled = disabled || loading
@@ -66,6 +69,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             legacyVariant 
               ? cn("inline-flex items-center justify-center text-base transition-all duration-150 ease-out h-11 px-6 py-3", getLegacyVariantClasses())
               : buttonVariants({ variant, size, fullWidth: false, loading: false }),
+            noMinWidth && "min-w-0",
             className
           )}
           ref={ref}
@@ -88,6 +92,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             "button-error-animate": animateError && !loading && !disabled,
             "button-loading": loading,
           },
+          noMinWidth && "min-w-0",
           className
         )}
         ref={ref}

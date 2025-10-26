@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -388,8 +389,9 @@ export const GamificationDashboard = ({
                 variant='primary'
                 size='lg'
                 className='bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+                asChild
               >
-                Upgrade to Pro
+                <Link href='/pro'>Upgrade to Pro</Link>
               </Button>
             </div>
           </CardContent>

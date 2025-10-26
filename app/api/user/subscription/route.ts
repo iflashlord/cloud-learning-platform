@@ -14,6 +14,8 @@ export async function GET() {
 
     return NextResponse.json({
       isActive: !!subscription?.isActive,
+      hasActiveCouponSubscription:
+        subscription?.proType === "coupon" && subscription?.activeCouponRedemption,
       subscription: subscription
         ? {
             id: subscription.id,
@@ -21,6 +23,8 @@ export async function GET() {
             stripeSubscriptionId: subscription.stripeSubscriptionId,
             stripePriceId: subscription.stripePriceId,
             stripeCurrentPeriodEnd: subscription.stripeCurrentPeriodEnd,
+            proType: subscription.proType,
+            activeCouponRedemption: subscription.activeCouponRedemption,
           }
         : null,
     })

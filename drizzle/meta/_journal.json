@@ -64,6 +64,13 @@
       "when": 1760828134992,
       "tag": "0008_living_solo",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1761352245284,
+      "tag": "0009_windy_ego",
+      "breakpoints": true
     }
   ]
 }

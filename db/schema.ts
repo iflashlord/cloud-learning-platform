@@ -589,3 +589,45 @@ export const aiMessagesRelations = relations(aiMessages, ({ one }) => ({
     references: [aiConversations.id],
   }),
 }))
+
+// Coupon System for Pro Access
+export const couponCodes = pgTable("coupon_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  description: text("description"),
+  maxUsages: integer("max_usages").notNull().default(1), // Maximum number of redemptions
+  currentUsages: integer("current_usages").notNull().default(0), // Current redemption count
+  durationDays: integer("duration_days").notNull().default(30), // Duration in days (default 1 month)
+  isActive: boolean("is_active").notNull().default(true),
+  expiresAt: timestamp("expires_at"), // When the coupon expires
+  createdBy: text("created_by").notNull(), // Admin user ID who created it
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
+export const couponCodesRelations = relations(couponCodes, ({ many }) => ({
+  userCouponRedemptions: many(userCouponRedemptions),
+}))
+
+export const userCouponRedemptions = pgTable("user_coupon_redemptions", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  couponId: integer("coupon_id")
+    .references(() => couponCodes.id, { onDelete: "cascade" })
+    .notNull(),
+  redeemedAt: timestamp("redeemed_at").defaultNow().notNull(),
+  proStartsAt: timestamp("pro_starts_at").notNull(),
+  proEndsAt: timestamp("pro_ends_at").notNull(),
+  isActive: boolean("is_active").notNull().default(true), // Admin can disable specific redemptions
+})
+
+export const userCouponRedemptionsRelations = relations(userCouponRedemptions, ({ one }) => ({
+  coupon: one(couponCodes, {
+    fields: [userCouponRedemptions.couponId],
+    references: [couponCodes.id],
+  }),
+  user: one(userProgress, {
+    fields: [userCouponRedemptions.userId],
+    references: [userProgress.userId],
+  }),
+}))

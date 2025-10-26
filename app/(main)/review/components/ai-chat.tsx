@@ -252,7 +252,10 @@ Keep responses concise but comprehensive, encouraging continued learning.`
           <Bot className='h-5 w-5 text-blue-600' />
           AI Learning Assistant
           {isPro && (
-            <Badge variant='warning' className='bg-yellow-100 text-yellow-800 border-yellow-300'>
+            <Badge
+              variant='warning'
+              className='bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-700'
+            >
               <Crown className='h-3 w-3 mr-1' />
               PRO
             </Badge>

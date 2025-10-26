@@ -45,6 +45,8 @@ const getHeaderNavItems = (isPro = false) => {
   return items
 }
 
+const CONTROL_ICON_CLASS = "h-4 w-4 sm:h-5 sm:w-5"
+
 interface HeaderNavItemProps {
   item: {
     label: string
@@ -57,35 +59,26 @@ interface HeaderNavItemProps {
 
 const HeaderNavItem = ({ item, isActive }: HeaderNavItemProps) => {
   const { label, href, icon: Icon, activeColor } = item
+  const stateColor = isActive ? activeColor : "text-muted-foreground"
 
   return (
-    <Link
-      href={href}
+    <Button
+      asChild
+      variant='ghost'
+      size='sm'
+      noMinWidth
       className={cn(
-        "flex flex-col items-center justify-center relative",
-        "min-w-0 flex-1 py-1 px-2",
-        "transition-all duration-200 ease-out",
-        "active:scale-95",
-        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background",
-        "rounded-lg",
+        "gap-1 px-2 h-8 justify-center text-xs font-semibold",
+        "border border-transparent hover:border-border/60",
+        "bg-transparent hover:bg-muted/60 transition-all",
+        stateColor,
       )}
     >
-      <Icon
-        className={cn(
-          "h-5 w-5 transition-all duration-200",
-          isActive ? activeColor : "text-muted-foreground",
-        )}
-      />
-      <span
-        className={cn(
-          "text-xs font-medium mt-0.5 truncate w-full text-center",
-          "transition-all duration-200",
-          isActive ? activeColor : "text-muted-foreground",
-        )}
-      >
-        {label}
-      </span>
-    </Link>
+      <Link href={href} className='flex items-center justify-center gap-1'>
+        <Icon className={cn(CONTROL_ICON_CLASS, stateColor)} />
+        <span className='truncate'>{label}</span>
+      </Link>
+    </Button>
   )
 }
 
@@ -277,6 +270,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
+                  noMinWidth
                   className='flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-8'
                 >
                   <Image
@@ -296,9 +290,10 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
+                  noMinWidth
                   className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.XP.text)}
                 >
-                  <Coins className={cn("h-4 w-4 sm:h-5 sm:w-5", GAME_ELEMENT_COLORS.XP.icon)} />
+                  <Coins className={cn(CONTROL_ICON_CLASS, GAME_ELEMENT_COLORS.XP.icon)} />
                   <span className='font-bold text-xs sm:text-sm'>{userProgress.points}</span>
                 </Button>
               </Link>
@@ -307,9 +302,10 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
+                  noMinWidth
                   className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.GEMS.text)}
                 >
-                  <Gem className={cn("h-4 w-4 sm:h-5 sm:w-5", GAME_ELEMENT_COLORS.GEMS.icon)} />
+                  <Gem className={cn(CONTROL_ICON_CLASS, GAME_ELEMENT_COLORS.GEMS.icon)} />
                   <span className='font-bold text-xs sm:text-sm'>{userProgress.gems}</span>
                 </Button>
               </Link>
@@ -318,17 +314,25 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
                 <Button
                   variant='ghost'
                   size='sm'
+                  noMinWidth
                   className={cn("gap-1 px-2 h-8", GAME_ELEMENT_COLORS.HEARTS.text)}
                 >
                   <Heart
                     className={cn(
-                      "h-4 w-4 sm:h-5 sm:w-5 fill-current",
+                      CONTROL_ICON_CLASS,
+                      "fill-current",
                       GAME_ELEMENT_COLORS.HEARTS.icon,
                     )}
                   />
                   <span className='font-medium text-xs sm:text-sm'>
                     {isPro ? (
-                      <InfinityIcon className='h-3 w-3 sm:h-4 sm:w-4 stroke-[3]' />
+                      <InfinityIcon
+                        className={cn(
+                          CONTROL_ICON_CLASS,
+                          "stroke-[3]",
+                          GAME_ELEMENT_COLORS.HEARTS.icon,
+                        )}
+                      />
                     ) : (
                       userProgress.hearts
                     )}
@@ -340,7 +344,7 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
         </ClerkLoaded>
       </div>
 
-      <div className='flex items-center gap-1 sm:gap-2'>
+      <div className='flex items-center gap-0.5 sm:gap-1'>
         <div className='hidden sm:flex items-center'>
           {headerNavItems.map((item) => (
             <HeaderNavItem
@@ -357,9 +361,9 @@ export const EnhancedMobileHeaderSimple: React.FC = () => {
           isProMode={isProMode}
         />
 
-        <ThemeSwitcher variant='compact' size='sm' />
+        <ThemeSwitcher variant='compact' size='sm' className='h-8 w-8 p-0' />
 
-        <div className='ml-1'>
+        <div className='ml-0.5 sm:ml-1 mt-1'>
           <ClerkLoading>
             <div className='w-7 h-7 bg-muted rounded-full animate-pulse' />
           </ClerkLoading>

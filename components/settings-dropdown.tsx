@@ -1,7 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { Settings, RotateCcw, Shield, Crown, BookOpen, ChevronDown, Volume2, Sparkles } from "lucide-react"
+import {
+  Settings,
+  RotateCcw,
+  Shield,
+  Crown,
+  BookOpen,
+  ChevronDown,
+  Volume2,
+  Sparkles,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -145,6 +154,7 @@ export const SettingsDropdown = ({
         size='sm'
         className='h-8 w-8 p-0 hover:bg-muted/80'
         onClick={() => setIsOpen(!isOpen)}
+        noMinWidth
       >
         <Settings className='h-4 w-4' />
         <span className='sr-only'>Settings</span>

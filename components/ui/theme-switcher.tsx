@@ -11,11 +11,18 @@ export interface ThemeSwitcherProps {
   className?: string
   size?: "sm" | "md" | "lg"
   variant?: "default" | "outline" | "ghost" | "compact"
+  iconClassName?: string
 }
 
-export function ThemeSwitcher({ className, size = "md", variant = "default" }: ThemeSwitcherProps) {
+export function ThemeSwitcher({
+  className,
+  size = "md",
+  variant = "default",
+  iconClassName,
+}: ThemeSwitcherProps) {
   const [theme, setTheme] = useState<Theme>("system")
   const [mounted, setMounted] = useState(false)
+  const iconClass = iconClassName ?? "w-4 h-4"
 
   // Get system theme preference
   const getSystemTheme = (): "light" | "dark" => {
@@ -86,25 +93,25 @@ export function ThemeSwitcher({ className, size = "md", variant = "default" }: T
 
   const themes: Array<{
     value: Theme
-    icon: React.ReactNode
+    Icon: typeof Monitor
     label: string
     description: string
   }> = [
     {
       value: "system",
-      icon: <Monitor className='w-4 h-4' />,
+      Icon: Monitor,
       label: "System",
       description: "Follow system preference",
     },
     {
       value: "light",
-      icon: <Sun className='w-4 h-4' />,
+      Icon: Sun,
       label: "Light",
       description: "Light theme",
     },
     {
       value: "dark",
-      icon: <Moon className='w-4 h-4' />,
+      Icon: Moon,
       label: "Dark",
       description: "Dark theme",
     },
@@ -114,6 +121,7 @@ export function ThemeSwitcher({ className, size = "md", variant = "default" }: T
     // Compact single button that cycles through themes
     const currentIndex = themes.findIndex((t) => t.value === theme)
     const nextTheme = themes[(currentIndex + 1) % themes.length]
+    const CurrentIcon = themes[currentIndex].Icon
 
     return (
       <Button
@@ -122,8 +130,9 @@ export function ThemeSwitcher({ className, size = "md", variant = "default" }: T
         onClick={() => handleThemeChange(nextTheme.value)}
         className={cn("relative transition-all duration-200 hover:scale-105", className)}
         title={`Current: ${themes[currentIndex].label}. Click to switch to ${nextTheme.label}`}
+        noMinWidth
       >
-        {themes[currentIndex].icon}
+        <CurrentIcon className={iconClass} />
         <span className='sr-only'>{themes[currentIndex].label} theme</span>
       </Button>
     )
@@ -131,25 +140,29 @@ export function ThemeSwitcher({ className, size = "md", variant = "default" }: T
 
   return (
     <div className={cn("flex items-center gap-1", className)}>
-      {themes.map((themeOption) => (
-        <Button
-          key={themeOption.value}
-          variant={theme === themeOption.value ? "primary" : "ghost"}
-          size={size}
-          onClick={() => handleThemeChange(themeOption.value)}
-          className={cn(
-            "transition-all duration-200 hover:scale-105",
-            theme === themeOption.value && "ring-2 ring-blue-500 ring-offset-2 dark:ring-blue-400",
-          )}
-          title={themeOption.description}
-        >
-          {themeOption.icon}
-          {variant !== "ghost" && (
-            <span className='ml-2 text-sm font-medium'>{themeOption.label}</span>
-          )}
-          <span className='sr-only'>{themeOption.description}</span>
-        </Button>
-      ))}
+      {themes.map((themeOption) => {
+        const ThemeIcon = themeOption.Icon
+        return (
+          <Button
+            key={themeOption.value}
+            variant={theme === themeOption.value ? "primary" : "ghost"}
+            size={size}
+            onClick={() => handleThemeChange(themeOption.value)}
+            className={cn(
+              "transition-all duration-200 hover:scale-105",
+              theme === themeOption.value && "ring-2 ring-blue-500 ring-offset-2 dark:ring-blue-400",
+            )}
+            title={themeOption.description}
+            noMinWidth={variant === "compact"}
+          >
+            <ThemeIcon className={iconClass} />
+            {variant !== "ghost" && (
+              <span className='ml-2 text-sm font-medium'>{themeOption.label}</span>
+            )}
+            <span className='sr-only'>{themeOption.description}</span>
+          </Button>
+        )
+      })}
     </div>
   )
 }

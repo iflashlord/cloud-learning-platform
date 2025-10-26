@@ -150,7 +150,7 @@ export const LessonReviewContent = ({
                 <p className='text-xs text-gray-600 dark:text-gray-400'>Final Score</p>
               </div>
               {completion.wasPerfect && (
-                <Badge className='bg-green-100 text-green-800 border-green-300'>
+                <Badge className='bg-green-100 text-green-800 border-green-300 dark:bg-green-900/20 dark:text-green-300 dark:border-green-700'>
                   <Trophy className='h-3 w-3 mr-1' />
                   Perfect Score!
                 </Badge>

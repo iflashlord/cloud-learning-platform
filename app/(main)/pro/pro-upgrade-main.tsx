@@ -16,14 +16,21 @@ import {
   Target,
   Award,
   Sparkles,
+  CreditCard,
+  Ticket,
+  ArrowRight,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PageHeader } from "@/components/ui/page-header"
 import { StatCard } from "@/components/ui/stat-card"
+import { CouponRedemptionForm } from "@/components/coupon-redemption-form"
 import { createStripeUrl } from "@/actions/user-subscription"
+import { cancelMyCouponRedemption } from "@/actions/coupon"
 import { cn } from "@/lib/utils"
 import { statusStyles } from "@/lib/style-utils"
 import { BRAND_CONFIG } from "@/lib/config"
@@ -36,10 +43,22 @@ interface ProUpgradeMainProps {
     userImageSrc: string
   }
   isProActive: boolean
+  subscription?: {
+    proType?: string | null
+    remainingDays?: number
+    expiresAt?: Date | string
+    activeCouponRedemption?: any
+  } | null
 }
 
-export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProps) => {
+export const ProUpgradeMain = ({
+  userProgress,
+  isProActive,
+  subscription,
+}: ProUpgradeMainProps) => {
   const [pending, startTransition] = useTransition()
+  const [cancelPending, startCancelTransition] = useTransition()
+  const [upgradeMethod, setUpgradeMethod] = useState("payment")
 
   const onUpgrade = () => {
     startTransition(() => {
@@ -50,6 +69,24 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
           }
         })
         .catch(() => toast.error("Something went wrong. Please try again."))
+    })
+  }
+
+  const handleCouponSuccess = () => {
+    // Redirect to learn page or refresh the page to show pro status
+    window.location.href = "/learn"
+  }
+
+  const handleCancelCoupon = () => {
+    startCancelTransition(() => {
+      cancelMyCouponRedemption()
+        .then((response) => {
+          toast.success(response.message || "Coupon trial cancelled successfully!")
+          window.location.href = "/learn"
+        })
+        .catch((error) => {
+          toast.error(error.message || "Something went wrong. Please try again.")
+        })
     })
   }
 
@@ -92,25 +129,78 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
     },
   ]
 
+  const isCouponUser = subscription?.proType === "coupon"
+
   return (
     <div className='space-y-8'>
+      {/* Coupon User Special Banner */}
+      {isCouponUser && (
+        <div className='bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 border border-purple-200 dark:border-purple-700 rounded-xl p-6'>
+          <div className='flex items-center justify-center gap-2 mb-3'>
+            <Crown className='w-6 h-6 text-purple-600' />
+            <h2 className='text-xl font-bold text-purple-800 dark:text-purple-200'>
+              Currently on Pro Trial
+            </h2>
+            <Badge variant='info' className='bg-purple-600 text-white'>
+              {subscription?.activeCouponRedemption?.coupon?.code || "COUPON"}
+            </Badge>
+          </div>
+          <p className='text-purple-700 dark:text-purple-300 mb-4 text-center'>
+            You&apos;re enjoying Pro benefits via coupon code with{" "}
+            {subscription?.remainingDays || 0} days remaining. Upgrade now to continue your Pro
+            experience without interruption!
+          </p>
+          <div className='bg-purple-200 dark:bg-purple-800 rounded-lg p-3 text-sm text-purple-800 dark:text-purple-200 mb-4 text-center'>
+            ⏰ <strong>Expires:</strong>{" "}
+            {subscription?.expiresAt
+              ? new Date(subscription.expiresAt).toLocaleDateString()
+              : "Unknown"}
+          </div>
+          <div className='flex items-center justify-center gap-3'>
+            <Button
+              onClick={handleCancelCoupon}
+              disabled={cancelPending}
+              variant='outline'
+              size='sm'
+              className=' bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300'
+            >
+              {cancelPending ? (
+                <div className='flex items-center gap-2'>
+                  <div className='w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin' />
+                  <span>Cancelling...</span>
+                </div>
+              ) : (
+                <div className='flex items-center gap-2'>
+                  <X className='w-4 h-4' />
+                  <span>Cancel Trial</span>
+                </div>
+              )}
+            </Button>
+            <span className='text-xs text-purple-600 dark:text-purple-300'>
+              Return to free tier anytime
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className='text-center space-y-4 mb-8'>
         <div className='flex items-center justify-center gap-3 mb-4'>
           <Crown className='w-8 h-8 text-yellow-500' />
           <h1 className='text-3xl sm:text-4xl font-bold'>
-            Upgrade to{" "}
+            {isCouponUser ? "Upgrade to Paid " : "Upgrade to "}{" "}
             <span className='bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'>
               Pro
             </span>
           </h1>
           <Badge variant='warning' className='font-bold text-xs'>
-            LIMITED TIME
+            {isCouponUser ? "KEEP YOUR ACCESS" : "LIMITED TIME"}
           </Badge>
         </div>
         <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-          Unlock unlimited learning potential with advanced features, exclusive content, and
-          priority support.
+          {isCouponUser
+            ? "Continue enjoying unlimited learning with a paid Pro subscription. No interruption to your current access!"
+            : "Unlock unlimited learning potential with advanced features, exclusive content, and priority support."}
         </p>
       </div>
 
@@ -131,7 +221,7 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
           subtitle='Earned through lessons'
         />
         <StatCard
-          variant='warning'
+          variant='info'
           icon={<TrendingUp className='w-6 h-6' />}
           title='Account Status'
           value='FREE'
@@ -160,43 +250,115 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
               Transform your learning experience with unlimited access and premium features.
             </p>
 
-            {/* Pricing */}
+            {/* Upgrade Methods */}
             <div className='bg-white/80 dark:bg-black/20 rounded-xl p-6 mb-6 border border-yellow-200 dark:border-yellow-700/50'>
-              <div className='flex items-center justify-center gap-4 mb-4'>
-                <div className='text-center'>
-                  <div className='text-4xl font-bold text-foreground'>$9.99</div>
-                  <div className='text-sm text-muted-foreground'>per month</div>
-                </div>
-                <div className='text-muted-foreground'>•</div>
-                <div className='text-center'>
-                  <div className='text-lg font-semibold text-green-600 dark:text-green-400'>
-                    7-day
-                  </div>
-                  <div className='text-sm text-muted-foreground'>free trial</div>
-                </div>
-              </div>
+              <Tabs value={upgradeMethod} onValueChange={setUpgradeMethod} className='w-full'>
+                <TabsList className='grid w-full grid-cols-2 mb-6'>
+                  <TabsTrigger value='payment' className='flex items-center gap-2'>
+                    <CreditCard className='w-4 h-4' />
+                    <span>Payment</span>
+                  </TabsTrigger>
+                  <TabsTrigger value='coupon' className='flex items-center gap-2'>
+                    <Ticket className='w-4 h-4' />
+                    <span>Coupon Code</span>
+                  </TabsTrigger>
+                </TabsList>
 
-              <Button
-                onClick={onUpgrade}
-                disabled={pending}
-                size='lg'
-                className='w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 h-12'
-              >
-                {pending ? (
-                  <div className='flex items-center gap-2'>
-                    <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
-                    <span>Processing...</span>
+                <TabsContent value='payment'>
+                  <div className='text-center'>
+                    <div className='flex items-center justify-center gap-4 mb-4'>
+                      <div className='text-center'>
+                        <div className='text-4xl font-bold text-foreground'>$9.99</div>
+                        <div className='text-sm text-muted-foreground'>per month</div>
+                      </div>
+                      <div className='text-muted-foreground'>•</div>
+                      <div className='text-center'>
+                        <div className='text-lg font-semibold text-green-600 dark:text-green-400'>
+                          7-day
+                        </div>
+                        <div className='text-sm text-muted-foreground'>free trial</div>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={onUpgrade}
+                      disabled={pending}
+                      variant='outline'
+                      className='w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 h-12'
+                    >
+                      {pending ? (
+                        <div className='flex items-center gap-2'>
+                          <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                          <span>Processing...</span>
+                        </div>
+                      ) : (
+                        <div className='flex items-center gap-2'>
+                          <Rocket className='w-5 h-5' />
+                          <span>
+                            {isCouponUser ? "Continue with Paid Pro" : "Start Free Trial"}
+                          </span>
+                        </div>
+                      )}
+                    </Button>
+                    <p className='text-xs text-muted-foreground mt-3 text-center'>
+                      Cancel anytime • No commitment • Instant activation
+                    </p>
                   </div>
-                ) : (
-                  <div className='flex items-center gap-2'>
-                    <Rocket className='w-5 h-5' />
-                    <span>Start Free Trial</span>
-                  </div>
-                )}
-              </Button>
-              <p className='text-xs text-muted-foreground mt-3 text-center'>
-                Cancel anytime • No commitment • Instant activation
-              </p>
+                </TabsContent>
+
+                <TabsContent value='coupon'>
+                  {isCouponUser ? (
+                    <div className='text-center'>
+                      <div className='bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-lg p-6 mb-4'>
+                        <Crown className='w-12 h-12 text-purple-600 mx-auto mb-3' />
+                        <h3 className='text-lg font-semibold mb-2 text-purple-800 dark:text-purple-200'>
+                          You&apos;re Already Using a Coupon!
+                        </h3>
+                        <p className='text-sm text-purple-700 dark:text-purple-300 mb-3'>
+                          Code:{" "}
+                          <span className='font-mono font-bold'>
+                            {subscription?.activeCouponRedemption?.coupon?.code}
+                          </span>
+                        </p>
+                        <p className='text-sm text-muted-foreground mb-4'>
+                          Switch to the Payment tab to upgrade to a paid subscription and keep your
+                          Pro access beyond the trial period.
+                        </p>
+                        <div className='flex items-center justify-center gap-2 text-xs text-muted-foreground'>
+                          <span>Want to stop using this coupon?</span>
+                          <Button
+                            onClick={handleCancelCoupon}
+                            disabled={cancelPending}
+                            variant='link'
+                            size='sm'
+                            className='text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-0 h-auto font-normal'
+                          >
+                            {cancelPending ? "Cancelling..." : "Cancel Trial"}
+                          </Button>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => setUpgradeMethod("payment")}
+                        variant='outline'
+                        className='w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300'
+                      >
+                        <ArrowRight className='w-4 h-4 mr-2' />
+                        Go to Payment Options
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className='text-center mb-4'>
+                        <h3 className='text-lg font-semibold mb-2'>Have a Coupon Code?</h3>
+                        <p className='text-sm text-muted-foreground'>
+                          Redeem your coupon for instant Pro access
+                        </p>
+                      </div>
+                      <CouponRedemptionForm onSuccess={handleCouponSuccess} variant='compact' />
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
 
@@ -332,7 +494,7 @@ export const ProUpgradeMain = ({ userProgress, isProActive }: ProUpgradeMainProp
         <Button
           onClick={onUpgrade}
           disabled={pending}
-          size='lg'
+          variant='outline'
           className='bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300'
         >
           {pending ? (

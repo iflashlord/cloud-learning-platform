@@ -241,7 +241,10 @@ export const ReviewDashboard = ({
                         {completion.lesson.title}
                       </h3>
                       {completion.wasPerfect && (
-                        <Badge variant='warning' className='bg-yellow-100 text-yellow-800'>
+                        <Badge
+                          variant='warning'
+                          className='bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+                        >
                           <Star className='h-3 w-3 mr-1' />
                           Perfect
                         </Badge>

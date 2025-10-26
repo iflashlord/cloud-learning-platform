@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { ContentGrid } from "@/lib/css-grid-system"
 import { lessons, units as unitsSchema } from "@/db/schema"
 import { ProUpgradeCard } from "@/components/pro-upgrade-card"
+import { ProStatusBanner } from "@/components/pro-status-banner"
 import { Quests } from "@/components/quests"
 import {
   getCourseProgress,
@@ -22,21 +23,15 @@ const LearnPage = async () => {
   const userSubscriptionData = getUserSubscription()
   const coursesData = getCourses()
 
-  const [
-    userProgress,
-    units,
-    courseProgress,
-    lessonPercentage,
-    userSubscription,
-    courses,
-  ] = await Promise.all([
-    userProgressData,
-    unitsData,
-    courseProgressData,
-    lessonPercentageData,
-    userSubscriptionData,
-    coursesData,
-  ])
+  const [userProgress, units, courseProgress, lessonPercentage, userSubscription, courses] =
+    await Promise.all([
+      userProgressData,
+      unitsData,
+      courseProgressData,
+      lessonPercentageData,
+      userSubscriptionData,
+      coursesData,
+    ])
 
   if (!userProgress || !userProgress.activeCourse) {
     redirect("/courses")
@@ -48,23 +43,17 @@ const LearnPage = async () => {
 
   const isPro = !!userSubscription?.isActive
 
-  const activeCourseData = courses.find(
-    (course) => course.id === userProgress.activeCourse?.id
-  )
+  const activeCourseData = courses.find((course) => course.id === userProgress.activeCourse?.id)
 
   const totalUnits = units.length
   const completedUnits = units.filter((unit) =>
-    unit.lessons.every((lesson) => lesson.completed)
+    unit.lessons.every((lesson) => lesson.completed),
   ).length
 
-  const totalLessons = units.reduce(
-    (total, unit) => total + unit.lessons.length,
-    0
-  )
+  const totalLessons = units.reduce((total, unit) => total + unit.lessons.length, 0)
   const completedLessons = units.reduce(
-    (total, unit) =>
-      total + unit.lessons.filter((lesson) => lesson.completed).length,
-    0
+    (total, unit) => total + unit.lessons.filter((lesson) => lesson.completed).length,
+    0,
   )
 
   return (
@@ -103,6 +92,7 @@ const LearnPage = async () => {
         </div>
 
         <div className='hidden lg:block w-80 space-y-4'>
+          <ProStatusBanner subscription={userSubscription} />
           {!isPro && <ProUpgradeCard />}
           <Quests points={userProgress.points} />
         </div>

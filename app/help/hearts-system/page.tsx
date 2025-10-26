@@ -430,7 +430,7 @@ const HeartsSystemPage = () => {
               asChild
               className='bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
             >
-              <Link href='/subscription'>
+              <Link href='/pro'>
                 <Crown className='w-5 h-5 mr-2' />
                 Upgrade to Pro
               </Link>

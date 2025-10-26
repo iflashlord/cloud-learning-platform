@@ -56,6 +56,10 @@ interface SubscriptionManagerProps {
     stripePriceId?: string
     stripeCurrentPeriodEnd?: Date
     isActive: boolean
+    proType?: string | null
+    remainingDays?: number
+    expiresAt?: Date | string
+    activeCouponRedemption?: any
   } | null
   isPro: boolean
 }
@@ -66,6 +70,13 @@ export const SubscriptionManager = ({
   isPro,
 }: SubscriptionManagerProps) => {
   const [pending, startTransition] = useTransition()
+  const [cancelingCoupon, setCancelingCoupon] = useState(false)
+
+  // Check if this is a coupon-based subscription
+  const isCouponSubscription = subscription?.proType === "coupon"
+  const isStripeSubscription =
+    subscription?.proType === "stripe" ||
+    (subscription?.stripeSubscriptionId && !isCouponSubscription)
 
   const onManageSubscription = () => {
     startTransition(() => {
@@ -89,6 +100,37 @@ export const SubscriptionManager = ({
         })
         .catch(() => toast.error("Failed to start upgrade process. Please try again."))
     })
+  }
+
+  const onCancelCouponTrial = async () => {
+    if (
+      !confirm(
+        "Are you sure you want to cancel your coupon trial? You'll lose Pro access immediately and return to the free tier.",
+      )
+    ) {
+      return
+    }
+
+    setCancelingCoupon(true)
+    try {
+      const response = await fetch("/api/coupons/cancel", {
+        method: "POST",
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast.success(data.message)
+        // Refresh the page to update the subscription status
+        window.location.reload()
+      } else {
+        toast.error(data.error || "Failed to cancel coupon trial")
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.")
+    } finally {
+      setCancelingCoupon(false)
+    }
   }
 
   const formatDate = (date: Date | undefined) => {
@@ -152,109 +194,222 @@ export const SubscriptionManager = ({
 
       {isPro ? (
         <div className='space-y-6'>
-          <Card className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-3'>
-                <div className='w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center'>
-                  <CheckCircle className='w-5 h-5 text-white' />
-                </div>
-                <div>
-                  <div className='flex items-center gap-2'>
-                    <span>Pro Membership Active</span>
-                    <Badge variant='success' className='font-bold'>
-                      ACTIVE
-                    </Badge>
+          {/* Coupon-based Pro Subscription */}
+          {isCouponSubscription ? (
+            <Card className='p-4 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-2 border-purple-200 dark:border-purple-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+              <CardHeader>
+                <CardTitle className='flex items-center gap-3'>
+                  <div className='w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center'>
+                    <CheckCircle className='w-5 h-5 text-white' />
                   </div>
-                  <p className='text-sm text-muted-foreground font-normal'>
-                    You&apos;re enjoying all Pro benefits
-                  </p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
-                  <Calendar className='w-5 h-5 text-blue-500' />
                   <div>
-                    <div className='font-medium text-sm'>Next Billing</div>
-                    <div className='text-xs text-muted-foreground'>
-                      {formatDate(subscription?.stripeCurrentPeriodEnd)}
+                    <div className='flex items-center gap-2'>
+                      <span>Pro Trial Active (Coupon)</span>
+                      <Badge variant='success' className='font-bold'>
+                        TRIAL
+                      </Badge>
+                    </div>
+                    <p className='text-sm text-muted-foreground font-normal'>
+                      You&apos;re enjoying all Pro benefits via coupon code
+                    </p>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <Calendar className='w-5 h-5 text-purple-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Trial Ends</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {subscription?.expiresAt
+                          ? formatDate(new Date(subscription.expiresAt))
+                          : "Unknown"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <Star className='w-5 h-5 text-purple-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Remaining Days</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {subscription?.remainingDays || 0} days left
+                      </div>
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <Crown className='w-5 h-5 text-yellow-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Coupon Code</div>
+                      <div className='text-xs text-muted-foreground font-mono'>
+                        {subscription?.activeCouponRedemption?.coupon?.code || "N/A"}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
-                  <CreditCard className='w-5 h-5 text-purple-500' />
-                  <div>
-                    <div className='font-medium text-sm'>Plan</div>
-                    <div className='text-xs text-muted-foreground'>Pro Monthly ($9.99)</div>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
-                  <Star className='w-5 h-5 text-yellow-500' />
-                  <div>
-                    <div className='font-medium text-sm'>Status</div>
-                    <div className='text-xs text-green-600 dark:text-green-400 font-medium'>
-                      All Features Unlocked
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className='mt-6 flex flex-col sm:flex-row gap-4'>
-                <Button
-                  onClick={onManageSubscription}
-                  disabled={pending}
-                  className='flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium'
-                >
-                  {pending ? (
-                    <div className='flex items-center gap-2'>
-                      <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
-                      <span>Loading...</span>
-                    </div>
-                  ) : (
-                    <div className='flex items-center gap-2'>
-                      <Settings className='w-4 h-4' />
-                      <span>Manage Subscription</span>
-                      <ExternalLink className='w-4 h-4' />
-                    </div>
-                  )}
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant='outline'
-                      className='border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20'
-                    >
-                      <XCircle className='w-4 h-4 mr-2' />
-                      Cancel Subscription
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent showCloseButton={false}>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className='flex items-center gap-2'>
-                        <AlertTriangle className='w-5 h-5 text-red-500' />
-                        Cancel Pro Subscription?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className='p-4'>
-                        You&apos;ll lose access to Pro features when your current billing period
-                        ends on {formatDate(subscription?.stripeCurrentPeriodEnd)}. Your learning
-                        progress will remain saved.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Keep Pro</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={onManageSubscription}
-                        className='bg-red-500 hover:bg-red-600'
+                <div className='mt-6 flex flex-col sm:flex-row gap-4'>
+                  <Button
+                    onClick={onUpgradeNow}
+                    disabled={pending}
+                    className='flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold'
+                  >
+                    {pending ? (
+                      <div className='flex items-center gap-2'>
+                        <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                        <span>Loading...</span>
+                      </div>
+                    ) : (
+                      <div className='flex items-center gap-2'>
+                        <Crown className='w-4 h-4' />
+                        <span>Upgrade to Paid Pro</span>
+                      </div>
+                    )}
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant='outline'
+                        className='border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20'
+                        disabled={cancelingCoupon}
                       >
-                        Continue to Cancel
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </CardContent>
-          </Card>
+                        <XCircle className='w-4 h-4 mr-2' />
+                        Cancel Trial
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent showCloseButton={false}>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className='flex items-center gap-2'>
+                          <AlertTriangle className='w-5 h-5 text-red-500' />
+                          Cancel Coupon Trial?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className='p-4'>
+                          You&apos;ll immediately lose access to Pro features and return to the free
+                          tier. Your learning progress will remain saved. You can always upgrade to
+                          a paid Pro subscription later.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Keep Trial</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={onCancelCouponTrial}
+                          className='bg-red-500 hover:bg-red-600'
+                          disabled={cancelingCoupon}
+                        >
+                          {cancelingCoupon ? "Canceling..." : "Cancel Trial"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            /* Stripe-based Pro Subscription */
+            <Card className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+              <CardHeader>
+                <CardTitle className='flex items-center gap-3'>
+                  <div className='w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center'>
+                    <CheckCircle className='w-5 h-5 text-white' />
+                  </div>
+                  <div>
+                    <div className='flex items-center gap-2'>
+                      <span>Pro Membership Active</span>
+                      <Badge variant='success' className='font-bold'>
+                        ACTIVE
+                      </Badge>
+                    </div>
+                    <p className='text-sm text-muted-foreground font-normal'>
+                      You&apos;re enjoying all Pro benefits
+                    </p>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <Calendar className='w-5 h-5 text-blue-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Next Billing</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {formatDate(subscription?.stripeCurrentPeriodEnd)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <CreditCard className='w-5 h-5 text-purple-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Plan</div>
+                      <div className='text-xs text-muted-foreground'>Pro Monthly ($9.99)</div>
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-3 p-4 bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200'>
+                    <Star className='w-5 h-5 text-yellow-500' />
+                    <div>
+                      <div className='font-medium text-sm'>Status</div>
+                      <div className='text-xs text-green-600 dark:text-green-400 font-medium'>
+                        All Features Unlocked
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='mt-6 flex flex-col sm:flex-row gap-4'>
+                  <Button
+                    onClick={onManageSubscription}
+                    disabled={pending}
+                    className='flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium'
+                  >
+                    {pending ? (
+                      <div className='flex items-center gap-2'>
+                        <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                        <span>Loading...</span>
+                      </div>
+                    ) : (
+                      <div className='flex items-center gap-2'>
+                        <Settings className='w-4 h-4' />
+                        <span>Manage Subscription</span>
+                        <ExternalLink className='w-4 h-4' />
+                      </div>
+                    )}
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant='outline'
+                        className='border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20'
+                      >
+                        <XCircle className='w-4 h-4 mr-2' />
+                        Cancel Subscription
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent showCloseButton={false}>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className='flex items-center gap-2'>
+                          <AlertTriangle className='w-5 h-5 text-red-500' />
+                          Cancel Pro Subscription?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className='p-4'>
+                          You&apos;ll lose access to Pro features when your current billing period
+                          ends on {formatDate(subscription?.stripeCurrentPeriodEnd)}. Your learning
+                          progress will remain saved.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Keep Pro</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={onManageSubscription}
+                          className='bg-red-500 hover:bg-red-600'
+                        >
+                          Continue to Cancel
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Card className='p-4 border-2 border-border shadow-lg hover:shadow-xl transition-shadow duration-300'>
             <CardHeader>

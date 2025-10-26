@@ -68,7 +68,8 @@ export default function Home() {
                         <SignUpButton mode='modal'>
                           <Button
                             size='lg'
-                            className='w-full sm:w-auto bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200'
+                            variant='success'
+                            className='w-full sm:w-auto px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200'
                           >
                             <PlayCircle className='w-5 h-5 mr-2' />
                             Start Learning Free
@@ -77,8 +78,8 @@ export default function Home() {
                         <SignInButton mode='modal'>
                           <Button
                             size='lg'
-                            variant='outline'
-                            className='w-full sm:w-auto px-8 py-4 text-lg font-semibold border-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200'
+                            variant='success'
+                            className='w-full sm:w-auto px-8 py-4 text-lg font-semibold border-2  transition-all duration-200'
                           >
                             Sign In
                           </Button>
@@ -88,7 +89,8 @@ export default function Home() {
                         <Link href='/learn'>
                           <Button
                             size='lg'
-                            className='w-full sm:w-auto bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200'
+                            variant='success'
+                            className='w-full sm:w-auto px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200'
                           >
                             <ArrowRight className='w-5 h-5 mr-2' />
                             Continue Learning

@@ -9,7 +9,7 @@ import {
   BookOpen,
   Trophy,
   Target,
-  ShoppingCart,
+  Crown,
   Infinity,
   RotateCcw,
 } from "lucide-react"
@@ -48,7 +48,7 @@ export const Sidebar = ({ className }: Props) => {
         <SidebarItem label='Leaderboard' href='/leaderboard' icon={Trophy} />
         <SidebarItem label='Quests' href='/quests' icon={Target} />
         <SidebarItem label='Review' href='/review' icon={RotateCcw} />
-        <SidebarItem label='Shop' href='/shop' icon={ShoppingCart} />
+        <SidebarItem label='Pro' href='/pro' icon={Crown} />
         <SidebarItem label='Courses' href='/courses' icon={BookOpen} />
       </div>
       <div className='px-4 pb-4'>

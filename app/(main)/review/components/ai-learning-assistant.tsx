@@ -64,7 +64,6 @@ type SavedConversationEntry = ConversationEntry & { savedAt?: string }
 
 const SAVED_STORAGE_KEY = "aws-learning-ai-assistant-saved"
 
-
 const escapeHtml = (value: string) => {
   return value
     .replace(/&/g, "&amp;")
@@ -359,9 +358,7 @@ export const AILearningAssistant = ({
         const objectives: string[] = Array.isArray(lessonData?.objectives)
           ? lessonData.objectives
           : []
-        const challenges: any[] = Array.isArray(lessonData?.challenges)
-          ? lessonData.challenges
-          : []
+        const challenges: any[] = Array.isArray(lessonData?.challenges) ? lessonData.challenges : []
 
         const lessonContent = [
           `Lesson title: ${lessonData?.title ?? "Lesson"}`,
@@ -370,9 +367,7 @@ export const AILearningAssistant = ({
           `Score: ${completionData?.score ?? 0}%`,
           ``,
           `Learning objectives:`,
-          ...objectives.map(
-            (objective: string, index: number) => `${index + 1}. ${objective}`,
-          ),
+          ...objectives.map((objective: string, index: number) => `${index + 1}. ${objective}`),
           ``,
           `Challenge highlights:`,
           ...challenges.map(
@@ -416,9 +411,7 @@ export const AILearningAssistant = ({
   }
 
   const buildSystemPrompt = (summaryText?: string | null) => {
-    const challenges: any[] = Array.isArray(lessonData?.challenges)
-      ? lessonData.challenges
-      : []
+    const challenges: any[] = Array.isArray(lessonData?.challenges) ? lessonData.challenges : []
     const snippetLimit = summaryText ? 5 : Math.min(challenges.length, 8)
     const challengeSnippets = challenges
       .slice(0, snippetLimit)
@@ -939,10 +932,10 @@ If the student asks for more depth, you can request specific challenge details. 
       <div className='rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-4 space-y-3 shadow-sm'>
         <div className='flex items-center justify-between gap-3'>
           <div className='flex flex-wrap items-center gap-2'>
-            <Badge variant='outline' className='text-xs'>
+            <Badge variant='neutral' emphasis='outline' className='text-xs'>
               {entry.originLabel}
             </Badge>
-            <Badge variant='outline' className='text-xs'>
+            <Badge variant='neutral' emphasis='outline' className='text-xs'>
               {entry.engine === "prompt" ? "Chrome Prompt API" : "Chrome Gemini Nano"}
             </Badge>
             {isSaved && (
@@ -1104,12 +1097,12 @@ If the student asks for more depth, you can request specific challenge details. 
           <Bot className='h-5 w-5' />
           AI Learning Assistant
           <div className='flex items-center gap-2'>
-            <Badge className='bg-green-100 text-green-800 border-green-300'>
+            <Badge className='bg-green-100 text-green-800 border-green-300 dark:bg-green-900/20 dark:text-green-300 dark:border-green-700'>
               <Activity className='h-3 w-3 mr-1' />
               Chrome Gemini Nano
             </Badge>
             {promptApiAvailable && (
-              <Badge className='bg-blue-100 text-blue-800 border-blue-300'>
+              <Badge className='bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-700'>
                 <Sparkles className='h-3 w-3 mr-1' />
                 Chrome Prompt API
               </Badge>
