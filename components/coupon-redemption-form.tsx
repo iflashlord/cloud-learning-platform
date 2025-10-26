@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useEffect } from "react"
 import { toast } from "sonner"
-import { Ticket, Check, AlertCircle, Loader2 } from "lucide-react"
+import { Ticket, Check, AlertCircle, Loader2, PartyPopper } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -157,7 +157,7 @@ export const CouponRedemptionForm = ({
               onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
               onKeyPress={handleKeyPress}
               disabled={pending}
-              className='text-center font-mono text-lg tracking-wider uppercase placeholder:lowercase placeholder:font-sans border-2 focus:border-purple-400 dark:focus:border-purple-500 dark:text-black'
+              className='text-center font-mono text-lg tracking-wider uppercase placeholder:lowercase placeholder:font-sans border-2 focus:border-purple-400 dark:focus:border-purple-500 '
               maxLength={20}
             />
             {!couponCode.trim() && (
@@ -170,7 +170,8 @@ export const CouponRedemptionForm = ({
           <Button
             onClick={handleRedeem}
             disabled={pending || !couponCode.trim()}
-            className='w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 h-12'
+            className='w-full'
+            variant='success'
             size='lg'
           >
             {pending ? (
@@ -188,7 +189,9 @@ export const CouponRedemptionForm = ({
 
           <div className='bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 border border-purple-200 dark:border-purple-800'>
             <div className='text-xs text-purple-700 dark:text-purple-300 text-center space-y-1'>
-              <p className='font-medium'>🎉 Instant Pro Access</p>
+              <p className='font-medium'>
+                <PartyPopper className='inline-block' /> Instant Pro Access
+              </p>
               <p className='flex items-center justify-center gap-3 text-xs opacity-80'>
                 <span>✓ Unlimited Hearts</span>
                 <span>✓ All Features</span>

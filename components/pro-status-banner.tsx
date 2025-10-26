@@ -47,7 +47,7 @@ export const ProStatusBanner = ({ subscription, className }: ProStatusBannerProp
         )}
       >
         <CardContent className='p-4'>
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between flex-col gap-2'>
             <div className='flex items-center gap-3'>
               {isExpiringSoon ? (
                 <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400' />
