@@ -21,6 +21,22 @@ type Redemption = any
 export function CouponManagementClient() {
   const [coupons, setCoupons] = useState<Coupon[]>([])
   const [redemptions, setRedemptions] = useState<Redemption[]>([])
+
+  // Group redemptions by userId+couponCode
+  function groupRedemptions(redemptions: Redemption[]) {
+    const groups: Record<string, Redemption[]> = {}
+    for (const r of redemptions) {
+      const userId = r.userId || r.user?.userId
+      const code = r.coupon?.code
+      if (!userId || !code) continue
+      const key = `${userId}__${code}`
+      if (!groups[key]) groups[key] = []
+      groups[key].push(r)
+    }
+    // Sort each group by redeemedAt descending (latest first)
+  Object.values(groups).forEach(arr => arr.sort((a, b) => new Date(b.redeemedAt).getTime() - new Date(a.redeemedAt).getTime()))
+    return groups
+  }
   const [loading, setLoading] = useState(true)
 
   const [form, setForm] = useState({
@@ -425,23 +441,43 @@ export function CouponManagementClient() {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <div className='space-y-3'>
-              {redemptions.map((r: Redemption) => (
-                <div key={r.id} className='flex items-center justify-between'>
-                  <div>
-                    <div className='font-medium'>{r.user?.userName || r.userId}</div>
-                    <div className='text-sm text-gray-600'>
-                      Code: {r.coupon?.code} • Expires: {new Date(r.proEndsAt).toLocaleString()}
+            <div className='space-y-6'>
+              {Object.entries(groupRedemptions(redemptions)).map(([key, group]) => {
+                const latest = group[0]
+                return (
+                  <div key={key} className='border rounded p-3'>
+                    <div className='flex items-center justify-between'>
+                      <div>
+                        <div className='font-medium'>{latest.user?.userName || latest.userId}</div>
+                        <div className='text-sm text-gray-600'>
+                          Code: {latest.coupon?.code} • Expires: {new Date(latest.proEndsAt).toLocaleString()}
+                        </div>
+                      </div>
+                      <div className='flex items-center space-x-2'>
+                        <div className='text-sm'>{latest.isActive ? "Active" : "Disabled"}</div>
+                        <Button size='sm' onClick={() => toggleRedemption(latest.id, latest.isActive)}>
+                          {latest.isActive ? "Disable" : "Enable"}
+                        </Button>
+                      </div>
                     </div>
+                    {group.length > 1 && (
+                      <details className='mt-2'>
+                        <summary className='cursor-pointer text-xs text-gray-500'>History</summary>
+                        <div className='mt-1 space-y-1'>
+                          {group.slice(1).map((r, idx) => (
+                            <div key={r.id} className='flex justify-between text-xs text-gray-600'>
+                              <span>
+                                {r.isActive ? "Active" : "Disabled"} • Expires: {new Date(r.proEndsAt).toLocaleString()}
+                              </span>
+                              <span>Redeemed: {new Date(r.redeemedAt).toLocaleString()}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    )}
                   </div>
-                  <div className='flex items-center space-x-2'>
-                    <div className='text-sm'>{r.isActive ? "Active" : "Disabled"}</div>
-                    <Button size='sm' onClick={() => toggleRedemption(r.id, r.isActive)}>
-                      {r.isActive ? "Disable" : "Enable"}
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </CardContent>

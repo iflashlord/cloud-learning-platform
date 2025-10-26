@@ -41,8 +41,7 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                     "Azure Arc onboards servers into Azure management, but patch orchestration still relies on Update Management Center once resources are connected.",
                 },
               ],
-              hint:
-                "Pick the service you used to define patch schedules and compliance reports for entire VM fleets.",
+              hint: "Pick the service you used to define patch schedules and compliance reports for entire VM fleets.",
             },
             {
               type: "VIDEO",
@@ -60,8 +59,7 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                 },
                 {
                   text: "Azure Files",
-                  guide:
-                    "Azure Files provides SMB shares; it doesn’t manage VM backup policies.",
+                  guide: "Azure Files provides SMB shares; it doesn’t manage VM backup policies.",
                 },
                 {
                   text: "Azure Site Recovery",
@@ -70,20 +68,17 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                 },
                 {
                   text: "Azure DevOps",
-                  guide:
-                    "Azure DevOps handles CI/CD pipelines, not VM backup retention policies.",
+                  guide: "Azure DevOps handles CI/CD pipelines, not VM backup retention policies.",
                 },
               ],
-              hint:
-                "Select the service that stored recovery points in a vault and enforced backup schedules in the demonstration.",
+              hint: "Select the service that stored recovery points in a vault and enforced backup schedules in the demonstration.",
             },
             {
               type: "TEXT_INPUT",
               order: 3,
               question: "Name the Azure tool used to capture a reusable VM configuration baseline.",
               correctAnswer: "Azure Image Builder",
-              hint:
-                "Think of the Packer-based service you used to bake golden images for both Azure and hybrid environments.",
+              hint: "Think of the Packer-based service you used to bake golden images for both Azure and hybrid environments.",
             },
           ],
         },
@@ -114,8 +109,7 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                     "Automation runs runbooks, not ad-hoc log searches, so it can’t satisfy the Kusto requirement.",
                 },
               ],
-              hint:
-                "Pick the Azure Monitor component where you wrote KQL queries against collected platform logs.",
+              hint: "Pick the Azure Monitor component where you wrote KQL queries against collected platform logs.",
             },
             {
               type: "ASSIST",
@@ -140,8 +134,7 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                     "External tools aren’t required—the policy engine is built into Azure Storage, so this option doesn’t fit.",
                 },
               ],
-              hint:
-                "Think about how you configured rules that moved aging data to cooler tiers without intervention.",
+              hint: "Think about how you configured rules that moved aging data to cooler tiers without intervention.",
             },
             {
               type: "IMAGE_SELECT",
@@ -168,8 +161,7 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                     "Azure Monitor’s waveform icon represents the overarching platform, not the Application Insights component specifically.",
                 },
               ],
-              hint:
-                "Look for the same purple light-bulb badge you clicked when opening Application Insights dashboards.",
+              hint: "Look for the same purple light-bulb badge you clicked when opening Application Insights dashboards.",
             },
           ],
         },
@@ -193,20 +185,20 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "Azure Traffic Manager",
                   correct: true,
                   guide:
-                    'Correct: Azure Traffic Manager matches the Service Provides Dns Hosting behavior highlighted in "Connectivity Solutions".',
+                    "Correct: Traffic Manager hosts DNS and routes users based on priority, weighted, latency, or geographic rules.",
                 },
                 {
                   text: "Azure Load Testing",
                   guide:
-                    'This assumes Azure Load Testing, but "Connectivity Solutions" showed Service Provides Dns Hosting behaves differently, so this isn’t the best choice.',
+                    "Load Testing generates synthetic traffic for experiments; it doesn’t manage production DNS records.",
                 },
                 {
                   text: "Azure Bastion",
                   guide:
-                    'This assumes Azure Bastion, but "Connectivity Solutions" showed Service Provides Dns Hosting behaves differently, so this isn’t the best choice.',
+                    "Bastion provides secure VM access over RDP/SSH, not global traffic routing.",
                 },
               ],
-              hint: 'Use the example from "Connectivity Solutions" about Service Provides Dns Hosting to guide your answer.',
+              hint: "Pick the DNS-based traffic manager you configured to fail over between regional endpoints.",
             },
             {
               type: "DRAG_DROP",
@@ -217,28 +209,28 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "Create virtual network gateway",
                   order: 1,
                   guide:
-                    'This assumes Create virtual network gateway, but "Connectivity Solutions" showed Arrange Steps Configure Vpn behaves differently, so this isn’t the best choice.',
+                    "Deploy the Azure VPN gateway first so the platform has an endpoint for the tunnel.",
                 },
                 {
                   text: "Define local network gateway",
                   order: 2,
                   guide:
-                    'This assumes Define local network gateway, but "Connectivity Solutions" showed Arrange Steps Configure Vpn behaves differently, so this isn’t the best choice.',
+                    "Next describe your on-premises gateway IP and address prefixes via the local network gateway.",
                 },
                 {
                   text: "Configure shared key",
                   order: 3,
                   guide:
-                    'This assumes Configure shared key, but "Connectivity Solutions" showed Arrange Steps Configure Vpn behaves differently, so this isn’t the best choice.',
+                    "After both gateways exist, set the pre-shared key they will use for IPsec authentication.",
                 },
                 {
                   text: "Establish site-to-site connection",
                   order: 4,
                   guide:
-                    'This assumes Establish site-to-site connection, but "Connectivity Solutions" showed Arrange Steps Configure Vpn behaves differently, so this isn’t the best choice.',
+                    "Finally, create the connection resource to bring the tunnel up between Azure and on-premises.",
                 },
               ],
-              hint: 'Use the example from "Connectivity Solutions" about Arrange Steps Configure Vpn to guide your answer.',
+              hint: "Follow the same checklist from the lesson: deploy the Azure gateway, define on-prem, set the shared key, then connect.",
             },
             {
               type: "TRUE_FALSE",
@@ -250,15 +242,15 @@ export const azureAdministratorAssociateCourse: CourseSeed = {
                   text: "True",
                   correct: true,
                   guide:
-                    'Correct: True matches the Azure Load Balancer Supports behavior highlighted in "Connectivity Solutions".',
+                    "Correct: Standard Load Balancer handles inbound traffic to backend pools and also provides outbound SNAT.",
                 },
                 {
                   text: "False",
                   guide:
-                    'This assumes False, but "Connectivity Solutions" showed Azure Load Balancer Supports behaves differently, so this isn’t the best choice.',
+                    "Denying this would ignore the outbound SNAT scenarios highlighted in the module.",
                 },
               ],
-              hint: 'Use the example from "Connectivity Solutions" about Azure Load Balancer Supports to guide your answer.',
+              hint: "Remember the diagram where the same load balancer handled inbound traffic and outbound Internet access.",
             },
           ],
         },
