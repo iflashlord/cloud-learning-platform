@@ -21,7 +21,7 @@ export const UnitsAndLessons = ({ units, courseId }: UnitsAndLessonsProps) => {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Course Content
         </h2>
-        <Link href={`/admin/courses/${courseId}/units/new`}>
+        <Link href={`/admin/units/new?courseId=${courseId}`}>
           <Button className="flex items-center space-x-2">
             <Plus className="w-4 h-4" />
             <span>Add Unit</span>
@@ -35,7 +35,7 @@ export const UnitsAndLessons = ({ units, courseId }: UnitsAndLessonsProps) => {
             <div className="text-gray-500 dark:text-gray-400">
               <h3 className="font-medium mb-2">No units yet</h3>
               <p className="text-sm mb-4">Start building your course by adding the first unit.</p>
-              <Link href={`/admin/courses/${courseId}/units/new`}>
+              <Link href={`/admin/units/new?courseId=${courseId}`}>
                 <Button>Add First Unit</Button>
               </Link>
             </div>
@@ -82,7 +82,7 @@ const UnitCard = ({ unit, courseId }: UnitCardProps) => {
             <Badge variant="neutral">
               {totalChallenges} question{totalChallenges !== 1 ? 's' : ''}
             </Badge>
-            <Link href={`/admin/units/${unit.id}/lessons/new`}>
+            <Link href={`/admin/lessons/new?unitId=${unit.id}`}>
               <Button size="sm" variant="outline">
                 <Plus className="w-4 h-4" />
               </Button>

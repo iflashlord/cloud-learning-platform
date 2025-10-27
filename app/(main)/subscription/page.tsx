@@ -24,6 +24,17 @@ const SubscriptionPage = async () => {
     (course) => course.id === userProgress.activeCourse?.id
   )
 
+  const normalizedSubscription = userSubscription
+    ? {
+        ...userSubscription,
+        id: (
+          userSubscription.id ??
+          userSubscription.activeCouponRedemption?.id ??
+          "coupon-access"
+        ).toString(),
+      }
+    : null
+
   return (
     <div className='w-full min-h-screen'>
       <div className='w-full max-w-[1200px] mx-auto px-4 pt-6'>
@@ -31,14 +42,7 @@ const SubscriptionPage = async () => {
           <ContentGrid cols={1} gap='xl' className='max-w-5xl mx-auto py-8'>
             <SubscriptionManager
               userProgress={userProgress}
-              subscription={
-                userSubscription
-                  ? {
-                      ...userSubscription,
-                      id: userSubscription.id.toString(),
-                    }
-                  : null
-              }
+              subscription={normalizedSubscription}
               isPro={isPro}
             />
           </ContentGrid>

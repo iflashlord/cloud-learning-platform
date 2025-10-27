@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Save, Sparkles, Lightbulb, ChevronDown, ChevronRight } from "lucide-react";
+import { ArrowLeft, Save, Sparkles, Lightbulb, ChevronDown, ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -50,6 +51,7 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
     bulletPoints: string[];
   }>(null);
   const [aiPromptSeeded, setAiPromptSeeded] = useState(false);
+  const [postSubmitAction, setPostSubmitAction] = useState<"back" | "createLesson">("back");
 
   const fetchCourses = async () => {
     try {
@@ -89,6 +91,8 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
     }
   }, [mode, courseIdParam, fetchNextOrder]);
 
+  const backUrl = courseIdParam ? `/admin/courses/${courseIdParam}` : "/admin/units";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -105,18 +109,27 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const backUrl = courseIdParam ? `/admin/courses/${courseIdParam}` : "/admin/units";
-        router.push(backUrl);
-        router.refresh();
-      } else {
+      if (!response.ok) {
         alert(`Failed to ${mode} unit`);
+        return;
       }
+
+      const data = await response.json();
+      const resolvedUnitId = (mode === "create" ? data?.id : unitId) ?? data?.id;
+
+      if (postSubmitAction === "createLesson" && resolvedUnitId) {
+        router.push(`/admin/lessons/new?unitId=${resolvedUnitId}`);
+        return;
+      }
+
+      router.push(backUrl);
+      router.refresh();
     } catch (error) {
       console.error(`Error ${mode}ing unit:`, error);
       alert(`Failed to ${mode} unit`);
     } finally {
       setLoading(false);
+      setPostSubmitAction("back");
     }
   };
 
@@ -181,25 +194,33 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
     toast.success("Description applied.");
   };
 
-  const backUrl = courseIdParam ? `/admin/courses/${courseIdParam}` : "/admin/units";
-
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Link href={backUrl}>
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {mode === "create" ? "Add" : "Edit"} Unit
-          </h1>
-          <p className="text-gray-600">
-            {mode === "create" ? "Create a new" : "Update the"} course unit
-          </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-4">
+          <Link href={backUrl}>
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {mode === "create" ? "Add" : "Edit"} Unit
+            </h1>
+            <p className="text-gray-600">
+              {mode === "create" ? "Create a new" : "Update the"} course unit
+            </p>
+          </div>
         </div>
+        {mode === "edit" && typeof unitId === "number" && (
+          <Link href={`/admin/lessons/new?unitId=${unitId}`}>
+            <Button variant="outline" size="sm" className="inline-flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add Lesson
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Form */}
@@ -276,10 +297,16 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
                   }}
                   disabled={!hasTitleContext}
                 >
-                  <span className="inline-flex items-center gap-2">
+                  <div className="inline-flex items-center gap-2">
                     {showAiDescription ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                    Prompt AI Description
-                  </span>
+                    <Sparkles className="h-4 w-4 text-amber-600" />
+                    <div className="inline-flex items-center gap-2">
+                      Prompt AI Description
+                      <Badge variant="aiml" size="xs" className="uppercase tracking-[0.08em] text-xs">
+                        AI Tool
+                      </Badge>
+                    </div>
+                  </div>
                   <span className={`text-xs ${hasTitleContext ? "text-amber-800" : "text-amber-400"}`}>
                     {hasTitleContext ? "Use unit context" : "Add title first"}
                   </span>
@@ -377,15 +404,29 @@ export const UnitForm = ({ initialData, unitId, mode }: UnitFormProps) => {
               </p>
             </div>
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex flex-wrap justify-end gap-3">
               <Link href={backUrl}>
                 <Button variant="ghost">
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" variant="primary" disabled={loading}>
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={loading}
+                onClick={() => setPostSubmitAction("createLesson")}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {loading && postSubmitAction === "createLesson" ? "Saving..." : "Save & Add Lesson"}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={loading}
+                onClick={() => setPostSubmitAction("back")}
+              >
                 <Save className="w-4 h-4 mr-2" />
-                {loading ? "Saving..." : mode === "create" ? "Create" : "Update"}
+                {loading && postSubmitAction === "back" ? "Saving..." : mode === "create" ? "Create" : "Update"}
               </Button>
             </div>
           </form>

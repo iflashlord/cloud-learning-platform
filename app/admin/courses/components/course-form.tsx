@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Plus } from "lucide-react";
 import Link from "next/link";
 
 interface CourseFormData {
@@ -27,6 +27,7 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
     }
   );
   const [loading, setLoading] = useState(false);
+  const [postSubmitAction, setPostSubmitAction] = useState<"list" | "createUnit">("list");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,17 +45,27 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        router.push("/admin/courses");
-        router.refresh();
-      } else {
+      if (!response.ok) {
         alert(`Failed to ${mode} course`);
+        return;
       }
+
+      const data = await response.json();
+      const resolvedCourseId = (mode === "create" ? data?.id : courseId) ?? data?.id;
+
+      if (postSubmitAction === "createUnit" && resolvedCourseId) {
+        router.push(`/admin/units/new?courseId=${resolvedCourseId}`);
+        return;
+      }
+
+      router.push("/admin/courses");
+      router.refresh();
     } catch (error) {
       console.error(`Error ${mode}ing course:`, error);
       alert(`Failed to ${mode} course`);
     } finally {
       setLoading(false);
+      setPostSubmitAction("list");
     }
   };
 
@@ -65,20 +76,30 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Link href="/admin/courses">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {mode === "create" ? "Add" : "Edit"} Course
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            {mode === "create" ? "Create a new" : "Update the"} course
-          </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-4">
+          <Link href="/admin/courses">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {mode === "create" ? "Add" : "Edit"} Course
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300">
+              {mode === "create" ? "Create a new" : "Update the"} course
+            </p>
+          </div>
         </div>
+        {mode === "edit" && typeof courseId === "number" && (
+          <Link href={`/admin/units/new?courseId=${courseId}`}>
+            <Button variant="outline" size="sm" className="inline-flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add Unit
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Form */}
@@ -134,15 +155,29 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
               )}
             </div>
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex flex-wrap justify-end gap-3">
               <Link href="/admin/courses">
                 <Button variant="ghost">
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" variant="primary" disabled={loading}>
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={loading}
+                onClick={() => setPostSubmitAction("createUnit")}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {loading && postSubmitAction === "createUnit" ? "Saving..." : "Save & Add Unit"}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={loading}
+                onClick={() => setPostSubmitAction("list")}
+              >
                 <Save className="w-4 h-4 mr-2" />
-                {loading ? "Saving..." : mode === "create" ? "Create" : "Update"}
+                {loading && postSubmitAction === "list" ? "Saving..." : mode === "create" ? "Create" : "Update"}
               </Button>
             </div>
           </form>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Sparkles, Lightbulb, ChevronDown, ChevronRight } from "lucide-react";
@@ -406,14 +407,20 @@ export const ChallengeForm = ({
               className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-amber-900"
               onClick={() => setShowAiBuilder((prev) => !prev)}
             >
-              <span className="inline-flex items-center gap-2">
+              <div className="inline-flex items-center gap-2">
                 {showAiBuilder ? (
                   <ChevronDown className="h-4 w-4" />
                 ) : (
                   <ChevronRight className="h-4 w-4" />
                 )}
-                Prompt AI Builder
-              </span>
+                <Sparkles className="h-4 w-4 text-amber-600" />
+                <div className="inline-flex items-center gap-2">
+                  Prompt AI Builder
+                  <Badge variant="aiml" size="xs" className="uppercase tracking-[0.08em] text-xs">
+                    AI Tool
+                  </Badge>
+                </div>
+              </div>
               <span className="text-xs text-amber-800">
                 {aiSuggestion ? "Last draft ready" : "Generate question & hint"}
               </span>
@@ -572,14 +579,20 @@ export const ChallengeForm = ({
                 }}
                 disabled={!hasQuestionContext}
               >
-                <span className="inline-flex items-center gap-2">
+                <div className="inline-flex items-center gap-2">
                   {showAiAnswers ? (
                     <ChevronDown className="h-4 w-4" />
                   ) : (
                     <ChevronRight className="h-4 w-4" />
                   )}
-                  Prompt AI Answers
-                </span>
+                  <Sparkles className="h-4 w-4 text-sky-600" />
+                  <div className="inline-flex items-center gap-2">
+                    Prompt AI Answers
+                    <Badge variant="aiml" size="xs" className="uppercase tracking-[0.08em] text-xs">
+                      AI Tool
+                    </Badge>
+                  </div>
+                </div>
                 <span className={`text-xs ${hasQuestionContext ? "text-sky-800" : "text-sky-400"}`}>
                   {hasQuestionContext ? "Use question context" : "Enter question to unlock"}
                 </span>
