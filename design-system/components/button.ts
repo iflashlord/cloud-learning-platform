@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority"
 
 export const buttonVariants = cva(
   [
@@ -156,17 +156,16 @@ export const buttonVariants = cva(
           "dark:focus-visible:ring-blue-400",
         ],
         ai: [
-          "border border-transparent bg-transparent",
-          "text-purple-600 dark:text-purple-200 font-semibold",
-          "overflow-hidden",
-          "before:absolute before:inset-0 before:rounded-xl before:content-['']",
-          "before:bg-[conic-gradient(from_0deg,#8b5cf6,#6366f1,#ec4899,#f97316,#14b8a6,#8b5cf6)]",
-          "before:opacity-80 before:animate-[spin_6s_linear_infinite]",
-          "after:absolute after:inset-[2px] after:rounded-lg after:content-['']",
-          "after:bg-white dark:after:bg-gray-900",
-          "hover:-translate-y-0.5 hover:before:opacity-100",
-          "focus-visible:ring-purple-400 focus-visible:ring-offset-2",
-          "shadow-none",
+          "border-0 border-b-0 bg-transparent text-slate-900 dark:text-white font-semibold",
+          "isolate overflow-hidden shadow-[0_0_8px_rgba(79,70,229,0.4)] dark:shadow-[0_0_8px_rgba(14,165,233,0.35)]",
+          "transition-[transform,box-shadow] duration-300 ease-linear",
+          "hover:-translate-y-0.5 hover:shadow-[0_0_38px_rgba(168,85,247,0.55)]",
+          "focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950",
+          "before:absolute before:top-1/2 before:left-1/2 before:w-[200%] before:h-[80%]",
+          "before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-90",
+          "before:bg-[conic-gradient(from_0deg,rgba(244,114,182,0.8)_0deg,rgba(192,132,252,0.8)_60deg,transparent_200deg)]",
+          "before:animate-spin-border before:content-[''] before:-z-20",
+          "after:absolute after:inset-[2px] after:rounded-[inherit] after:bg-white after:content-[''] after:-z-10 dark:after:bg-slate-950",
         ],
         compute: [
           "bg-orange-600 border-orange-800",
@@ -263,7 +262,7 @@ export const buttonVariants = cva(
       loading: false,
       disabled: false,
     },
-  }
-);
+  },
+)
 
-export type ButtonVariantProps = VariantProps<typeof buttonVariants>;
+export type ButtonVariantProps = VariantProps<typeof buttonVariants>

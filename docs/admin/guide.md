@@ -157,6 +157,12 @@ After saving, you'll be on the Edit page with tabs:
 - "Back to List" buttons on all edit pages
 - Related item quick links
 
+### Prompt AI Builder
+- Launch the **Prompt AI Builder** when creating or editing a challenge question
+- Describe the AWS scenario plus difficulty (Beginner/Intermediate/Advanced)
+- AI suggests a full question, hint, answer guides, and writing tips
+- Apply the suggestion with one click and fine-tune before saving
+
 ---
 
 ## 💡 Pro Tips
