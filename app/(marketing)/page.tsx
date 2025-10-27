@@ -104,7 +104,7 @@ export default function Home() {
                   <div className='mt-8 flex items-center justify-center lg:justify-start gap-6 text-sm text-gray-600 dark:text-gray-400'>
                     <div className='flex items-center gap-2'>
                       <Users className='w-4 h-4' />
-                      <span>10,000+ learners</span>
+                      <span>Many learners</span>
                     </div>
                     <div className='flex items-center gap-2'>
                       <Star className='w-4 h-4 text-yellow-500' />
@@ -112,7 +112,7 @@ export default function Home() {
                     </div>
                     <div className='flex items-center gap-2'>
                       <BookOpen className='w-4 h-4' />
-                      <span>500+ lessons</span>
+                      <span>So many lessons</span>
                     </div>
                   </div>
                 </div>

@@ -9,17 +9,17 @@ export default function SettingsPage() {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
   
-  const handleExport = async (format: 'json' | 'csv' = 'json') => {
+  const handleExport = async () => {
     setExporting(true);
     try {
-      const response = await fetch(`/api/admin/export?format=${format}`);
+      const response = await fetch(`/api/admin/export?format=json`);
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = `learning-platform-export-${new Date().toISOString().split('T')[0]}.${format}`;
+        a.download = `learning-platform-export-${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -53,7 +53,18 @@ export default function SettingsPage() {
 
       if (response.ok) {
         const result = await response.json();
-        alert(`Import successful! ${result.results.coursesImported} courses imported.`);
+        const { coursesImported, unitsImported, lessonsImported, challengesImported, optionsImported } =
+          result.results || {};
+        alert(
+          [
+            "Import successful!",
+            `Courses: ${coursesImported ?? 0}`,
+            `Units: ${unitsImported ?? 0}`,
+            `Lessons: ${lessonsImported ?? 0}`,
+            `Challenges: ${challengesImported ?? 0}`,
+            `Options: ${optionsImported ?? 0}`,
+          ].join("\n"),
+        );
         window.location.reload();
       } else {
         const error = await response.text();
@@ -91,32 +102,21 @@ export default function SettingsPage() {
               Export and import course data
             </p>
             <div className="space-y-2">
-              <div className="space-y-2">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={() => handleExport('json')}
-                  disabled={exporting}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  {exporting ? 'Exporting...' : 'Export as JSON'}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={() => handleExport('csv')}
-                  disabled={exporting}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  {exporting ? 'Exporting...' : 'Export as CSV'}
-                </Button>
-              </div>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={handleExport}
+                disabled={exporting}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                {exporting ? 'Exporting...' : 'Export as JSON'}
+              </Button>
               <div className="relative">
                 <input
                   type="file"
                   accept=".json"
                   onChange={handleImport}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   disabled={importing}
                 />
                 <Button 

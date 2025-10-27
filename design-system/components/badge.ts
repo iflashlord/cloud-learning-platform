@@ -14,23 +14,25 @@ export const badgeVariants = cva(
         neutral:
           "bg-[hsl(var(--ds-neutral-100))] text-[hsl(var(--ds-neutral-800))] border-[hsl(var(--ds-neutral-200))] dark:bg-[hsl(var(--ds-neutral-800))] dark:text-[hsl(var(--ds-neutral-0))] dark:border-[hsl(var(--ds-neutral-700))]",
         success:
-          "bg-green-50 text-green-800 border-green-200 dark:bg-green-900 dark:border-green-700",
-        error: "bg-red-50 text-red-800 border-red-200 dark:bg-red-900 dark:border-red-700",
+          "bg-green-50 text-green-800 border-green-200 dark:bg-green-900 dark:border-green-700 dark:text-green-100",
+        error:
+          "bg-red-50 text-red-800 border-red-200 dark:bg-red-900 dark:border-red-700 dark:text-red-100",
         warning:
           "bg-amber-50 text-amber-900 border-amber-200 dark:bg-amber-900 dark:text-amber-100 dark:border-amber-700",
         info: "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-100",
         primary:
-          "bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:border-indigo-700",
+          "bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:border-indigo-700 dark:text-indigo-100",
         compute:
-          "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-900 dark:border-orange-700",
-        storage: "bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-900 dark:border-sky-700",
+          "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-900 dark:border-orange-700 dark:text-orange-100",
+        storage:
+          "bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-900 dark:border-sky-700 dark:text-sky-100",
         security:
-          "bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-900 dark:border-purple-700",
+          "bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-100",
         networking:
-          "bg-teal-50 text-teal-800 border-teal-200 dark:bg-teal-900 dark:border-teal-700",
+          "bg-teal-50 text-teal-800 border-teal-200 dark:bg-teal-900 dark:border-teal-700 dark:text-teal-100",
         management:
-          "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700",
-        aiml: "bg-violet-50 text-violet-800 border-violet-200 dark:bg-violet-900 dark:border-violet-700",
+          "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-emerald-100",
+        aiml: "bg-violet-50 text-violet-800 border-violet-200 dark:bg-violet-900 dark:border-violet-700 dark:text-violet-100",
       },
       size: {
         xs: "px-2 py-1 text-[length:var(--ds-text-xs)] min-w-[48px]",

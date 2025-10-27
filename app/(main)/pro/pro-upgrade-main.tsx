@@ -433,7 +433,9 @@ export const ProUpgradeMain = ({
           <h3 className='text-xl font-semibold mb-4'>Join thousands of successful learners</h3>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6 text-sm'>
             <div>
-              <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>10,000+</div>
+              <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
+                More that harderds{" "}
+              </div>
               <div className='text-muted-foreground'>Active Pro members</div>
             </div>
             <div>

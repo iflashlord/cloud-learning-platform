@@ -84,7 +84,15 @@ describe("Admin SettingsPage", () => {
   });
 
   it("imports data from a JSON file and reloads the page", async () => {
-    const importResult = { results: { coursesImported: 3 } };
+    const importResult = {
+      results: {
+        coursesImported: 3,
+        unitsImported: 7,
+        lessonsImported: 21,
+        challengesImported: 42,
+        optionsImported: 168,
+      },
+    };
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => importResult,
@@ -119,7 +127,16 @@ describe("Admin SettingsPage", () => {
       }));
     });
 
-    expect(window.alert).toHaveBeenCalledWith("Import successful! 3 courses imported.");
+    expect(window.alert).toHaveBeenCalledWith(
+      [
+        "Import successful!",
+        "Courses: 3",
+        "Units: 7",
+        "Lessons: 21",
+        "Challenges: 42",
+        "Options: 168",
+      ].join("\n"),
+    );
     expect(reloadMock).toHaveBeenCalled();
     expect(mockFile.text).toHaveBeenCalled();
   });
