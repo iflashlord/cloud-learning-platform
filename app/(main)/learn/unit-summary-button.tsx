@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Loader2, Sparkles, X } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button, type ButtonProps } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -45,6 +46,7 @@ type UnitSummaryButtonProps = {
   className?: string
   fullWidth?: boolean
   label?: string
+  ariaLabel?: string
 }
 
 type SummarizerLike = {
@@ -237,6 +239,7 @@ export const UnitSummaryButton = ({
   className,
   fullWidth = false,
   label,
+  ariaLabel,
 }: UnitSummaryButtonProps) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const [loading, setLoading] = useState(false)
@@ -280,9 +283,10 @@ export const UnitSummaryButton = ({
       const summarizer = await getChromeSummarizer()
 
       if (!summarizer) {
-        throw new Error(
+        toast.error(
           "Chrome's on-device summarizer isn't available in this build. Please update Chrome Canary and enable chrome://flags/#prompt-api-for-gemini-nano.",
         )
+        return
       }
 
       ensureDialogElement(dialogRef.current)
@@ -323,10 +327,14 @@ export const UnitSummaryButton = ({
 
   const buttonLabel = useMemo(() => {
     if (loading) {
-      return "Summarizing..."
+      return label === "" ? "" : "Summarizing..."
     }
 
-    return label ?? "Summarize"
+    if (label !== undefined) {
+      return label
+    }
+
+    return "Summarize"
   }, [label, loading])
 
   const summaryHtml = useMemo(
@@ -342,6 +350,8 @@ export const UnitSummaryButton = ({
         onClick={handleSummarize}
         disabled={loading}
         className={cn("flex items-center gap-2", fullWidth && "w-full", className)}
+        aria-label={ariaLabel}
+        title={ariaLabel}
       >
         {loading ? <Loader2 className='h-4 w-4 animate-spin' /> : <Sparkles className='h-4 w-4' />}
         {buttonLabel}

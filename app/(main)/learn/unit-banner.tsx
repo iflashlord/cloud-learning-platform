@@ -24,6 +24,8 @@ export const UnitBanner = ({
   isPro = false,
 }: Props) => {
   const progress = lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
+  const actionLabel = isCompleted ? "Review lesson" : "Continue lesson"
+  const summaryLabel = `Summarize ${title}`
 
   return (
     <div
@@ -98,18 +100,42 @@ export const UnitBanner = ({
         )}
       </div>
 
-      <div className='hidden xl:flex items-center gap-2 relative z-10'>
-        <UnitSummaryButton unitId={unitId} unitTitle={title} variant='ai' size='sm' />
-        <Link href='/lesson'>
-          <Button
-            size='sm'
-            variant='secondary'
-            className='border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200'
-          >
-            <NotebookText className='mr-1 w-4 h-4' />
-            {isCompleted ? "Review" : "Continue"}
-          </Button>
-        </Link>
+      <div className='flex shrink-0 items-center gap-2 relative z-10'>
+        <div className='hidden xl:flex items-center gap-2 shrink-0'>
+          <UnitSummaryButton unitId={unitId} unitTitle={title} variant='ai' size='sm' />
+          <Link href='/lesson'>
+            <Button
+              size='sm'
+              variant='secondary'
+              className='border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200'
+            >
+              <NotebookText className='mr-1 w-4 h-4' />
+              {isCompleted ? "Review" : "Continue"}
+            </Button>
+          </Link>
+        </div>
+
+        <div className='flex xl:hidden items-center gap-2 shrink-0'>
+          <UnitSummaryButton
+            unitId={unitId}
+            unitTitle={title}
+            variant='ai'
+            size='icon'
+            className='gap-0 shrink-0'
+            label=''
+            ariaLabel={summaryLabel}
+          />
+          <Link href='/lesson' aria-label={actionLabel}>
+            <Button
+              size='icon'
+              variant='secondary'
+              title={actionLabel}
+              className='border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200 shrink-0'
+            >
+              <NotebookText className='w-4 h-4' />
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   )

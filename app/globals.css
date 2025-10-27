@@ -55,6 +55,9 @@ html.dark {
     --ring: 94 98% 40%;
  
     --radius: 0.75rem;
+    --button-shadow-color: rgba(15, 23, 42, 0.2);
+    --button-shadow-hover-color: rgba(15, 23, 42, 0.24);
+    --button-shadow-focus-ring: rgba(59, 130, 246, 0.5);
   }
  
   .dark {
@@ -78,6 +81,10 @@ html.dark {
  
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
+
+    --button-shadow-color: rgba(15, 23, 42, 0.45);
+    --button-shadow-hover-color: rgba(15, 23, 42, 0.5);
+    --button-shadow-focus-ring: rgba(59, 130, 246, 0.35);
  
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -580,8 +587,8 @@ html.dark {
   .button-duolingo:focus-visible {
     outline: none;
     box-shadow: 
-      0 0 0 3px rgba(59, 130, 246, 0.5),
-      0 4px 0 currentColor;
+      0 0 0 3px var(--button-shadow-focus-ring, rgba(59, 130, 246, 0.5)),
+      0 4px 0 var(--button-shadow-color, rgba(15, 23, 42, 0.2));
   }
   
   /* Loading spinner styles */
@@ -607,32 +614,32 @@ html.dark {
   /* Disabled button state improvements */
   .button-duolingo:disabled {
     transform: none !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
     opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;
   }
-  
+ 
   .dark .button-duolingo:disabled {
-    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
   }
-  
+ 
   .button-duolingo:disabled:hover {
     transform: none !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
   }
-  
+ 
   .dark .button-duolingo:disabled:hover {
-    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
   }
-  
+ 
   .button-duolingo:disabled:active {
     transform: none !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
   }
-  
+ 
   .dark .button-duolingo:disabled:active {
-    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
   }
   
   /* Loading button state */
