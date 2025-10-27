@@ -7,12 +7,18 @@ const { mockTriggerBackfillLessons, mockDebugUserProgress } = vi.hoisted(() => (
   mockDebugUserProgress: vi.fn(),
 }));
 
+const mockUseIsAdmin = vi.fn();
+
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
     </a>
   ),
+}));
+
+vi.mock("@/hooks/useIsAdmin", () => ({
+  useIsAdmin: () => mockUseIsAdmin(),
 }));
 
 vi.mock("@/actions/backfill-lessons", () => ({
@@ -39,6 +45,8 @@ describe("ReviewDashboard", () => {
     mockTriggerBackfillLessons.mockResolvedValue({ success: true, message: "Synced" });
     mockDebugUserProgress.mockReset();
     mockDebugUserProgress.mockResolvedValue({ lessonProgress: [] });
+    mockUseIsAdmin.mockReset();
+    mockUseIsAdmin.mockReturnValue({ isAdmin: true, isChecking: false, isLoggedIn: true });
   });
 
   afterEach(() => {
@@ -117,7 +125,7 @@ describe("ReviewDashboard", () => {
     expect(screen.getByText("Intro to AWS")).toBeInTheDocument();
     expect(screen.getByText("AWS Fundamentals")).toBeInTheDocument();
     expect(screen.getByText("Perfect")).toBeInTheDocument();
-    expect(screen.getByText("AI Available")).toBeInTheDocument();
+    expect(screen.getAllByText("AI Available")).toHaveLength(2);
     expect(screen.getByText("Scaling on AWS")).toBeInTheDocument();
   });
 
@@ -150,5 +158,14 @@ describe("ReviewDashboard", () => {
     expect(screen.getByRole("button", { name: "Debug Progress" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sync Completed Lessons" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Learning" })).toBeInTheDocument();
+  });
+
+  it("hides debug progress button for non-admin users", () => {
+    mockUseIsAdmin.mockReturnValue({ isAdmin: false, isChecking: false, isLoggedIn: true });
+
+    renderComponent({ completedLessons: [] });
+
+    expect(screen.queryByRole("button", { name: "Debug Progress" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sync Completed Lessons" })).toBeInTheDocument();
   });
 });

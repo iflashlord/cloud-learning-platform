@@ -1,6 +1,7 @@
 import { lessons, units } from "@/db/schema"
 import { UnitBanner } from "./unit-banner"
 import { LessonButton } from "./lesson-button"
+import { UnitSummaryButton } from "./unit-summary-button"
 import { Check } from "lucide-react"
 
 type Props = {
@@ -80,9 +81,21 @@ export const Unit = ({
               </div>
             )}
           </div>
+          <div className='mt-3 relative z-10'>
+            <UnitSummaryButton
+              unitId={id}
+              unitTitle={title}
+              variant='secondary'
+              size='sm'
+              fullWidth
+              className='bg-white/20 text-white border-white/40 hover:bg-white/30'
+              label='Unit Summary'
+            />
+          </div>
         </div>
         <div className='hidden lg:block'>
           <UnitBanner
+            unitId={id}
             title={title}
             description={description}
             lessonCount={lessons.length}

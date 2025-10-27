@@ -2,8 +2,10 @@ import Link from "next/link"
 import { NotebookText, BookOpen, Target, Award, Crown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { UnitSummaryButton } from "./unit-summary-button"
 
 type Props = {
+  unitId: number
   title: string
   description: string
   lessonCount?: number
@@ -13,6 +15,7 @@ type Props = {
 }
 
 export const UnitBanner = ({
+  unitId,
   title,
   description,
   lessonCount = 0,
@@ -20,8 +23,7 @@ export const UnitBanner = ({
   isCompleted = false,
   isPro = false,
 }: Props) => {
-  const progress =
-    lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
+  const progress = lessonCount > 0 ? Math.round((completedLessons / lessonCount) * 100) : 0
 
   return (
     <div
@@ -34,11 +36,7 @@ export const UnitBanner = ({
       <div className='absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent'></div>
 
       <div className='absolute top-2 right-2 opacity-20'>
-        {isCompleted ? (
-          <Award className='w-5 h-5' />
-        ) : (
-          <Target className='w-5 h-5' />
-        )}
+        {isCompleted ? <Award className='w-5 h-5' /> : <Target className='w-5 h-5' />}
       </div>
 
       <div className='space-y-1 flex-1 relative z-10'>
@@ -56,9 +54,7 @@ export const UnitBanner = ({
               {isPro && (
                 <div className='flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 rounded-md border border-yellow-400/30'>
                   <Crown className='w-3 h-3 text-yellow-200' />
-                  <span className='text-xs font-medium text-yellow-200'>
-                    PRO ACCESS
-                  </span>
+                  <span className='text-xs font-medium text-yellow-200'>PRO ACCESS</span>
                 </div>
               )}
             </div>
@@ -102,16 +98,19 @@ export const UnitBanner = ({
         )}
       </div>
 
-      <Link href='/lesson'>
-        <Button
-          size='sm'
-          variant='secondary'
-          className='hidden xl:flex border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200 relative z-10'
-        >
-          <NotebookText className='mr-1 w-4 h-4' />
-          {isCompleted ? "Review" : "Continue"}
-        </Button>
-      </Link>
+      <div className='hidden xl:flex items-center gap-2 relative z-10'>
+        <UnitSummaryButton unitId={unitId} unitTitle={title} variant='ai' size='sm' />
+        <Link href='/lesson'>
+          <Button
+            size='sm'
+            variant='secondary'
+            className='border-2 border-b-4 active:border-b-2 bg-card text-foreground hover:bg-muted font-bold shadow-lg hover:shadow-xl transition-all duration-200'
+          >
+            <NotebookText className='mr-1 w-4 h-4' />
+            {isCompleted ? "Review" : "Continue"}
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 }

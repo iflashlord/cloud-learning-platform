@@ -1,6 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { triggerBackfillLessons } from "@/actions/backfill-lessons"
+import { debugUserProgress } from "@/actions/debug-progress"
+import { useIsAdmin } from "@/hooks/useIsAdmin"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,9 +19,6 @@ import {
   Calendar,
   RotateCcw,
 } from "lucide-react"
-import Link from "next/link"
-import { triggerBackfillLessons } from "@/actions/backfill-lessons"
-import { debugUserProgress } from "@/actions/debug-progress"
 
 interface ReviewDashboardProps {
   completedLessons: any[]
@@ -40,6 +41,7 @@ export const ReviewDashboard = ({
   const [filter, setFilter] = useState<"all" | "perfect" | "recent">("all")
   const [isBackfilling, setIsBackfilling] = useState(false)
   const [isDebugging, setIsDebugging] = useState(false)
+  const { isAdmin } = useIsAdmin()
 
   const handleDebug = async () => {
     setIsDebugging(true)
@@ -208,14 +210,16 @@ export const ReviewDashboard = ({
               <div className='flex flex-col sm:flex-row gap-3 justify-center'>
                 {completedLessons.length === 0 && (
                   <>
-                    <Button
-                      onClick={handleDebug}
-                      disabled={isDebugging}
-                      variant='secondary'
-                      size='sm'
-                    >
-                      {isDebugging ? "Checking..." : "Debug Progress"}
-                    </Button>
+                    {isAdmin && (
+                      <Button
+                        onClick={handleDebug}
+                        disabled={isDebugging}
+                        variant='secondary'
+                        size='sm'
+                      >
+                        {isDebugging ? "Checking..." : "Debug Progress"}
+                      </Button>
+                    )}
                     <Button onClick={handleBackfill} disabled={isBackfilling} variant='outline'>
                       <RotateCcw
                         className={`h-4 w-4 mr-2 ${isBackfilling ? "animate-spin" : ""}`}

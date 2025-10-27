@@ -14,6 +14,7 @@ describe("Unit Banner", () => {
   it("renders unit title and description", () => {
     render(
       <UnitBanner
+        unitId={1}
         title="AWS Fundamentals"
         description="Learn the basics of Amazon Web Services"
         isCompleted={false}
@@ -27,6 +28,7 @@ describe("Unit Banner", () => {
   it("displays completion status for completed units", () => {
     render(
       <UnitBanner
+        unitId={1}
         title="AWS Fundamentals"
         description="Learn the basics of Amazon Web Services"
         isCompleted={true}
@@ -41,6 +43,7 @@ describe("Unit Banner", () => {
   it("shows continue button for incomplete units", () => {
     render(
       <UnitBanner
+        unitId={1}
         title="AWS Fundamentals"
         description="Learn the basics of Amazon Web Services"
         isCompleted={false}
@@ -55,6 +58,7 @@ describe("Unit Banner", () => {
   it("shows completion message for completed units", () => {
     render(
       <UnitBanner
+        unitId={1}
         title="Test Unit"
         description="Test Description"
         isCompleted={true}
@@ -69,6 +73,7 @@ describe("Unit Banner", () => {
   it("displays progress information correctly", () => {
     render(
       <UnitBanner
+        unitId={1}
         title="AWS Security"
         description="Learn AWS security best practices"
         isCompleted={false}
@@ -86,6 +91,7 @@ describe("Unit Banner", () => {
   it("has proper styling for completed vs incomplete states", () => {
     const { container, rerender } = render(
       <UnitBanner
+        unitId={1}
         title="Test Unit"
         description="Test Description"
         isCompleted={false}
@@ -97,6 +103,7 @@ describe("Unit Banner", () => {
 
     rerender(
       <UnitBanner
+        unitId={1}
         title="Test Unit"
         description="Test Description"
         isCompleted={true}
