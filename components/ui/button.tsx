@@ -12,8 +12,6 @@ export interface ButtonProps
   loading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
-  // Legacy support for existing app variants
-  legacyVariant?: "locked" | "sidebar" | "sidebarOutline"
   // Animation support for Duolingo-style interactions
   animateSuccess?: boolean
   animateError?: boolean
@@ -34,7 +32,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     loading = false,
     leftIcon,
     rightIcon,
-    legacyVariant,
     disabled,
     animateSuccess = false,
     animateError = false,
@@ -48,27 +45,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Use course theme as variant if provided
     const effectiveVariant = courseTheme || variant
 
-    const getLegacyVariantClasses = () => {
-      switch (legacyVariant) {
-        case "locked":
-          return "bg-muted text-muted-foreground/60 border-border border-2 border-b-4 cursor-not-allowed rounded-xl font-bold";
-        case "sidebar":
-          return "bg-card border-border border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-muted hover:-translate-y-0.5 hover:shadow-[0_6px_0_hsl(var(--border))] text-muted-foreground rounded-xl font-bold shadow-[0_4px_0_hsl(var(--border))]";
-        case "sidebarOutline":
-          return "bg-card border-border border-2 border-b-4 active:border-b-2 active:translate-y-1 hover:bg-muted hover:-translate-y-0.5 hover:shadow-[0_6px_0_hsl(var(--primary))] text-primary rounded-xl font-bold shadow-[0_4px_0_hsl(var(--primary))]";
-        default:
-          return "";
-      }
-    };
-
     if (asChild) {
       const Comp = Slot;
       return (
         <Comp
           className={cn(
-            legacyVariant 
-              ? cn("inline-flex items-center justify-center text-base transition-all duration-150 ease-out h-11 px-6 py-3", getLegacyVariantClasses())
-              : buttonVariants({ variant, size, fullWidth: false, loading: false }),
+            buttonVariants({ variant: effectiveVariant, size, fullWidth: false, loading: false }),
             noMinWidth && "min-w-0",
             className
           )}
@@ -83,9 +65,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          legacyVariant 
-            ? cn("inline-flex items-center justify-center text-base transition-all duration-150 ease-out h-11 px-6 py-3", getLegacyVariantClasses())
-            : buttonVariants({ variant: effectiveVariant, size, fullWidth: false, loading, disabled: isDisabled }),
+          buttonVariants({ variant: effectiveVariant, size, fullWidth: false, loading, disabled: isDisabled }),
           "button-duolingo", // Add Duolingo-style base class
           {
             "button-success-animate": animateSuccess && !loading && !disabled,

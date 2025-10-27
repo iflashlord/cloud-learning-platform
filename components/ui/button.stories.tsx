@@ -22,27 +22,31 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: [
-        'primary',
-        'secondary',
-        'success',
-        'error',
-        'danger',
-        'warning',
-        'info',
-        'ghost',
-        'outline',
-        'subtle',
-        'elevation',
-        'link',
-        'compute',
-        'storage',
-        'security',
-        'networking',
-        'management',
-        'aiml',
-      ],
-    },
+    options: [
+      'primary',
+      'secondary',
+      'success',
+      'error',
+      'danger',
+      'warning',
+      'info',
+      'ghost',
+      'outline',
+      'subtle',
+      'elevation',
+      'link',
+      'ai',
+      'compute',
+      'storage',
+      'security',
+      'networking',
+      'management',
+      'aiml',
+      'locked',
+      'sidebar',
+      'sidebarOutline',
+    ],
+  },
     size: {
       control: { type: 'select' },
       options: ['xs', 'sm', 'md', 'lg', 'xl', 'icon'],
@@ -56,16 +60,6 @@ const meta: Meta<typeof Button> = {
     },
     disabled: {
       control: { type: 'boolean' },
-    },
-    legacyVariant: {
-      control: { type: 'select' },
-      options: ['none', 'locked', 'sidebar', 'sidebarOutline'],
-      mapping: {
-        none: undefined,
-        locked: 'locked',
-        sidebar: 'sidebar',
-        sidebarOutline: 'sidebarOutline',
-      },
     },
     animateSuccess: {
       control: { type: 'boolean' },
@@ -180,11 +174,11 @@ export const IconButton: Story = {
 export const LegacyVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      <Button legacyVariant="locked" disabled>
+      <Button variant="locked" disabled>
         Locked
       </Button>
-      <Button legacyVariant="sidebar">Sidebar</Button>
-      <Button legacyVariant="sidebarOutline">Outline</Button>
+      <Button variant="sidebar">Sidebar</Button>
+      <Button variant="sidebarOutline">Outline</Button>
     </div>
   ),
 };
