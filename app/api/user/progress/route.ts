@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
-import { getUserProgress } from "@/db/queries"
+import db from "@/db/drizzle"
+import { userProgress } from "@/db/schema"
+import { eq } from "drizzle-orm"
 
 export async function GET() {
   try {
@@ -10,26 +12,38 @@ export async function GET() {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const userProgress = await getUserProgress()
+    const progress = await db.query.userProgress.findFirst({
+      where: eq(userProgress.userId, userId),
+      with: {
+        activeCourse: {
+          columns: {
+            id: true,
+            title: true,
+            imageSrc: true,
+          },
+        },
+      },
+    })
 
-    if (!userProgress) {
+    if (!progress) {
       return new NextResponse("User progress not found", { status: 404 })
     }
 
     return NextResponse.json({
       activeCourse: {
-        id: userProgress.activeCourse?.id || 0,
-        title: userProgress.activeCourse?.title || "No Course",
-        imageSrc: userProgress.activeCourse?.imageSrc || "/placeholder.svg",
+        id: progress.activeCourse?.id || 0,
+        title: progress.activeCourse?.title || "No Course",
+        imageSrc: progress.activeCourse?.imageSrc || "/placeholder.svg",
       },
-      hearts: userProgress.hearts,
-      points: userProgress.points,
-      gems: userProgress.gems,
-      streak: userProgress.streak,
-      totalXpEarned: userProgress.totalXpEarned,
+      hearts: progress.hearts,
+      points: progress.points,
+      gems: progress.gems,
+      streak: progress.streak,
+      totalXpEarned: progress.totalXpEarned,
     })
   } catch (error) {
     console.error("[USER_PROGRESS_GET]", error)
     return new NextResponse("Internal Error", { status: 500 })
   }
 }
+export const dynamic = "force-dynamic"

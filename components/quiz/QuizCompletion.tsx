@@ -4,6 +4,7 @@ import Confetti from "react-confetti"
 import { CheckCircle, PartyPopper, RotateCcw } from "lucide-react"
 import { useWindowSize } from "react-use"
 import { ResultCard } from "../../app/lesson/result-card"
+import { GAMIFICATION } from "@/constants"
 import { Button } from "@/components/ui/button"
 
 interface QuizCompletionProps {
@@ -16,6 +17,7 @@ interface QuizCompletionProps {
   userSubscription?: {
     isActive: boolean
   } | null
+  isPractice?: boolean
 }
 
 export const QuizCompletion = ({
@@ -26,12 +28,27 @@ export const QuizCompletion = ({
   onRedo,
   finishAudio,
   userSubscription,
+  isPractice = false,
 }: QuizCompletionProps) => {
   const { width, height } = useWindowSize()
 
-  const baseXP = challenges.length * 10
-  const bonusXP = userSubscription?.isActive ? Math.round(baseXP * 0.5) : 0
-  const totalXP = baseXP + bonusXP
+  const questionXPPer = isPractice
+    ? GAMIFICATION.XP_PER_PRACTICE_QUESTION
+    : GAMIFICATION.XP_PER_QUESTION
+  const questionXP = questionXPPer * challenges.length
+
+  const lessonXP = isPractice
+    ? userSubscription?.isActive
+      ? GAMIFICATION.XP_PER_PRACTICE_LESSON_PRO
+      : GAMIFICATION.XP_PER_PRACTICE_LESSON
+    : GAMIFICATION.XP_PER_LESSON
+
+  const totalXP = lessonXP + questionXP
+
+  const practiceProBonus =
+    isPractice && userSubscription?.isActive
+      ? GAMIFICATION.XP_PER_PRACTICE_LESSON_PRO - GAMIFICATION.XP_PER_PRACTICE_LESSON
+      : 0
 
   return (
     <div className='flex flex-col h-screen'>
@@ -56,10 +73,21 @@ export const QuizCompletion = ({
             <ResultCard variant='hearts' value={hearts} />
           </div>
 
-          {userSubscription?.isActive && bonusXP > 0 && (
+          <div className='text-sm text-muted-foreground space-y-1'>
+            <p>
+              {isPractice ? "Practice lesson" : "Lesson"} reward: <strong>{lessonXP} XP</strong>
+            </p>
+            {questionXPPer > 0 && (
+              <p>
+                Questions: {challenges.length} × {questionXPPer} XP = <strong>{questionXP} XP</strong>
+              </p>
+            )}
+          </div>
+
+          {practiceProBonus > 0 && (
             <div className='mt-2 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-bold align-middle'>
-              <PartyPopper className='inline align-middle' /> Pro Bonus: +
-              {bonusXP} XP
+              <PartyPopper className='inline align-middle' /> Pro Practice Bonus: +
+              {practiceProBonus} XP
             </div>
           )}
         </div>

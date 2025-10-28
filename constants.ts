@@ -44,10 +44,12 @@ export const GAMIFICATION = {
   HEARTS_REFILL_COST_XP: 10,
 
   // XP System
-  XP_PER_LESSON: 10,
-  XP_PER_LESSON_PRO: 15, // 50% bonus for Pro users
-  XP_PER_PRACTICE: 5,
-  XP_PER_PRACTICE_PRO: 8,
+  XP_PER_LESSON: 40,
+  XP_PER_LESSON_PRO: 40, // kept aligned with base to maintain flat rewards
+  XP_PER_QUESTION: 1,
+  XP_PER_PRACTICE_QUESTION: 1,
+  XP_PER_PRACTICE_LESSON: 20,
+  XP_PER_PRACTICE_LESSON_PRO: 25,
   XP_PERFECT_LESSON_BONUS: 5, // Bonus for no mistakes
   XP_STREAK_BONUS: 5, // Daily streak bonus
 

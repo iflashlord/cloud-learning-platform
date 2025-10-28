@@ -113,6 +113,30 @@ export const EnhancedMobileHeader: React.FC = () => {
 
   const themeClasses = useThemeClasses()
 
+  const refreshUserData = async () => {
+    try {
+      setIsLoading(true)
+      const [subscriptionResponse, progressResponse] = await Promise.all([
+        fetch("/api/user/subscription", { cache: "no-store" }),
+        fetch("/api/user/progress", { cache: "no-store" }),
+      ])
+      if (subscriptionResponse.ok) {
+        const subscriptionData = await subscriptionResponse.json()
+        setIsPro(!!subscriptionData.isActive)
+      }
+      if (progressResponse.ok) {
+        const progressData = await progressResponse.json()
+        setUserProgress(progressData)
+      }
+      setHasLoadedOnce(true)
+    } catch (e) {
+      console.error("Failed to refresh user data:", e)
+      setLoadingError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   // Fetch user data when Clerk user is available
   React.useEffect(() => {
     let mounted = true
@@ -128,8 +152,8 @@ export const EnhancedMobileHeader: React.FC = () => {
 
       try {
         const [subscriptionResponse, progressResponse] = await Promise.all([
-          fetch("/api/user/subscription"),
-          fetch("/api/user/progress"),
+          fetch("/api/user/subscription", { cache: "no-store" }),
+          fetch("/api/user/progress", { cache: "no-store" }),
         ])
 
         if (!mounted) return
@@ -184,6 +208,20 @@ export const EnhancedMobileHeader: React.FC = () => {
       if (failsafeTimeoutId) clearTimeout(failsafeTimeoutId)
     }
   }, [isSignedIn, user?.id, hasLoadedOnce])
+
+  // Listen for refresh events from other parts of the app (e.g., after answering)
+  React.useEffect(() => {
+    const handler = () => {
+      // avoid overlapping loads
+      if (!isLoadingRef.current) {
+        refreshUserData()
+      }
+    }
+    window.addEventListener("user-progress:refresh", handler)
+    return () => {
+      window.removeEventListener("user-progress:refresh", handler)
+    }
+  }, [])
 
   // Reset states when user signs out
   React.useEffect(() => {

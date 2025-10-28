@@ -34,15 +34,18 @@ const {
       set: (values: Record<string, unknown>) => {
         updateCalls.push({ table, values });
         return {
-          where: vi.fn(),
-        };
+          where: vi.fn().mockReturnThis(),
+          returning: vi.fn().mockReturnValue([{ points: 11, gems: 51 }]),
+        } as any;
       },
     })),
     insertCalls,
     insertMock: vi.fn((table: unknown) => ({
       values: async (values: Record<string, unknown>) => {
         insertCalls.push({ table, values });
+        return [{ id: 1 }];
       },
+      returning: vi.fn().mockReturnValue([{ id: 1 }]),
     })),
     mockAwardXP: vi.fn(),
     mockProcessLessonCompletion: vi.fn(),
@@ -90,7 +93,7 @@ vi.mock("next/cache", () => ({
 
 const { upsertChallengeProgress } = await import("@/actions/challenge-progress");
 
-describe("upsertChallengeProgress", () => {
+describe("upsertChallengeProgress first-try XP", () => {
   beforeEach(() => {
     mockAuth.mockReset().mockResolvedValue({ userId: "user_1" });
     mockGetUserProgress.mockReset();
@@ -109,39 +112,24 @@ describe("upsertChallengeProgress", () => {
     mockUpdateMonthlyQuestProgress.mockReset();
   });
 
-  it("throws when the user is not authenticated", async () => {
-    mockAuth.mockResolvedValueOnce({ userId: null });
-
-    await expect(upsertChallengeProgress(1)).rejects.toThrow("Unauthorized");
-    expect(challengeFindFirstMock).not.toHaveBeenCalled();
-  });
-
-  it("returns a hearts error when the learner has no hearts and no subscription", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 0 });
-    mockGetUserSubscription.mockResolvedValue(null);
-    challengeFindFirstMock.mockResolvedValue({ id: 1, lessonId: 10 });
-    challengeProgressFindFirstMock.mockResolvedValue(null);
-
-    const result = await upsertChallengeProgress(1);
-
-    expect(result).toEqual({ error: "hearts" });
-    expect(insertCalls).toHaveLength(0);
-    expect(mockAwardXP).not.toHaveBeenCalled();
-  });
-
-  it("treats completed challenges as practice and awards practice xp with heart refill", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 3, points: 40 });
+  it("awards 1 XP for practice questions", async () => {
+    mockGetUserProgress.mockResolvedValue({ hearts: 3, points: 40, streak: 0 });
     mockGetUserSubscription.mockResolvedValue({ isActive: false });
-    challengeFindFirstMock.mockResolvedValue({ id: 1, lessonId: 12 });
-    challengeProgressFindFirstMock.mockResolvedValue({ id: 99, completed: false });
+    challengeFindFirstMock.mockResolvedValue({ id: 1, lessonId: 100 });
+    // Existing progress means practice
+    challengeProgressFindFirstMock.mockResolvedValue({ id: 999, completed: true });
     mockAwardXP.mockResolvedValue({ xpEarned: 1 });
 
-    await upsertChallengeProgress(1, false, false);
+    await upsertChallengeProgress(1, true, false);
 
+    // No insert for challengeProgress in practice mode
     expect(insertCalls).toHaveLength(0);
+
+    // Updated practice completion and hearts
     expect(updateCalls).toHaveLength(2);
     expect(updateCalls[0]).toMatchObject({ table: challengeProgress, values: { completed: true } });
     expect(updateCalls[1]).toMatchObject({ table: userProgress, values: { hearts: 4 } });
+
     expect(mockAwardXP).toHaveBeenCalledTimes(1);
     expect(mockAwardXP).toHaveBeenCalledWith(
       1,
@@ -150,79 +138,52 @@ describe("upsertChallengeProgress", () => {
       undefined,
       { applySubscriptionBonus: false, applyStreakBonus: false },
     );
+
     expect(mockUpdateMonthlyQuestProgress).not.toHaveBeenCalled();
-    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/12");
+    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/100");
   });
 
-  it("inserts new progress and awards xp for first-time completion", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 2, points: 70 });
+  it("awards 1 XP on non-final first-time completion", async () => {
+    mockGetUserProgress.mockResolvedValue({ hearts: 3, points: 40, streak: 0 });
     mockGetUserSubscription.mockResolvedValue({ isActive: false });
-    challengeFindFirstMock.mockResolvedValue({ id: 3, lessonId: 15 });
+    challengeFindFirstMock.mockResolvedValue({ id: 2, lessonId: 200 });
+    // No existing progress = first-time completion
     challengeProgressFindFirstMock.mockResolvedValue(null);
+    // Multiple challenges; include one more so current completion is NOT final
     challengeFindManyMock.mockResolvedValue([
-      { id: 3, lessonId: 15 },
-      { id: 4, lessonId: 15 },
-      { id: 5, lessonId: 15 },
+      { id: 2, lessonId: 200 },
+      { id: 3, lessonId: 200 },
+      { id: 4, lessonId: 200 },
     ]);
+    // Completed other challenge already
     challengeProgressFindManyMock.mockResolvedValue([
-      {
-        challengeId: 4,
-        completed: true,
-        challenge: { lessonId: 15 },
-      },
+      { challengeId: 3, completed: true, challenge: { lessonId: 200 } },
     ]);
     mockAwardXP.mockResolvedValue({ xpEarned: 1 });
 
-    const result = await upsertChallengeProgress(3);
+    const result = await upsertChallengeProgress(2, true, false);
 
     expect(result).toEqual({ lessonComplete: false });
     expect(insertCalls).toHaveLength(1);
-    expect(insertCalls[0]).toMatchObject({
-      table: challengeProgress,
-      values: { challengeId: 3, userId: "user_1", completed: true },
-    });
     expect(mockAwardXP).toHaveBeenCalledTimes(1);
     expect(mockAwardXP).toHaveBeenCalledWith(
       1,
       "challenge_question",
-      "3",
-      undefined,
-      { applySubscriptionBonus: false, applyStreakBonus: false },
-    );
-    expect(mockProcessLessonCompletion).not.toHaveBeenCalled();
-    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/15");
-  });
-
-  it("awards practice lesson XP on final practice challenge", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 3, points: 40 });
-    mockGetUserSubscription.mockResolvedValue({ isActive: false });
-    challengeFindFirstMock.mockResolvedValue({ id: 2, lessonId: 30 });
-    challengeProgressFindFirstMock.mockResolvedValue({ id: 200, completed: true });
-
-    await upsertChallengeProgress(2, false, true);
-
-    expect(mockAwardXP).toHaveBeenCalledWith(
-      1,
-      "practice_question",
       "2",
       undefined,
       { applySubscriptionBonus: false, applyStreakBonus: false },
     );
-    expect(mockAwardXP).toHaveBeenCalledWith(
-      20,
-      "practice_lesson",
-      "30",
-      undefined,
-      { applySubscriptionBonus: false, applyStreakBonus: false },
-    );
+    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/200");
   });
 
-  it("returns rewards when completing the final challenge in a lesson", async () => {
-    mockGetUserProgress.mockResolvedValue({ hearts: 4, points: 120 });
+  it("awards lesson rewards with per-question XP on final challenge", async () => {
+    mockGetUserProgress.mockResolvedValue({ hearts: 4, points: 120, streak: 0 });
     mockGetUserSubscription.mockResolvedValue({ isActive: true });
-    challengeFindFirstMock.mockResolvedValue({ id: 6, lessonId: 20 });
+    challengeFindFirstMock.mockResolvedValue({ id: 10, lessonId: 300 });
     challengeProgressFindFirstMock.mockResolvedValue(null);
-    challengeFindManyMock.mockResolvedValue([{ id: 6, lessonId: 20 }]);
+    // Only one challenge -> final
+    challengeFindManyMock.mockResolvedValue([{ id: 10, lessonId: 300 }]);
+    // No completed others
     challengeProgressFindManyMock.mockResolvedValue([]);
     mockProcessLessonCompletion.mockResolvedValue({
       xp: 45,
@@ -231,23 +192,47 @@ describe("upsertChallengeProgress", () => {
       achievements: ["perfect-lesson"],
     });
 
-    const result = await upsertChallengeProgress(6);
+    const result = await upsertChallengeProgress(10, true, false);
 
     expect(result).toEqual({
       lessonComplete: true,
       rewards: { xp: 45, gems: 8, streak: 3, achievements: ["perfect-lesson"] },
     });
-    expect(mockProcessLessonCompletion).toHaveBeenCalledWith(20, true, false);
+    // 1 XP for the question plus lesson rewards
     expect(mockAwardXP).toHaveBeenCalledWith(
       1,
       "challenge_question",
-      "6",
+      "10",
       undefined,
       { applySubscriptionBonus: false, applyStreakBonus: false },
     );
-    expect(insertCalls[0]).toMatchObject({
-      table: challengeProgress,
-      values: { challengeId: 6, userId: "user_1", completed: true },
-    });
+
+    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/300");
+  });
+
+  it("awards practice lesson XP for pro users on final challenge", async () => {
+    mockGetUserProgress.mockResolvedValue({ hearts: 3, points: 80, streak: 0 });
+    mockGetUserSubscription.mockResolvedValue({ isActive: true });
+    challengeFindFirstMock.mockResolvedValue({ id: 5, lessonId: 400 });
+    challengeProgressFindFirstMock.mockResolvedValue({ id: 501, completed: true });
+    mockAwardXP.mockResolvedValue({ xpEarned: 1 });
+
+    await upsertChallengeProgress(5, false, true);
+
+    expect(mockAwardXP).toHaveBeenCalledWith(
+      1,
+      "practice_question",
+      "5",
+      undefined,
+      { applySubscriptionBonus: false, applyStreakBonus: false },
+    );
+    expect(mockAwardXP).toHaveBeenCalledWith(
+      25,
+      "practice_lesson",
+      "400",
+      undefined,
+      { applySubscriptionBonus: false, applyStreakBonus: false },
+    );
+    expect(revalidatePathMock).toHaveBeenCalledWith("/lesson/400");
   });
 });

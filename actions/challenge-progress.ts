@@ -7,20 +7,38 @@ import { revalidatePath } from "next/cache"
 import db from "@/db/drizzle"
 import { getUserProgress, getUserSubscription } from "@/db/queries"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
+import { GAMIFICATION } from "@/constants"
 import { processLessonCompletion, awardXP } from "@/actions/gamification"
 
-export const upsertChallengeProgress = async (challengeId: number) => {
+export const upsertChallengeProgress = async (
+  challengeId: number,
+  wasFirstTry: boolean = false,
+  isFinalChallenge: boolean = false,
+) => {
   const { userId } = await auth()
 
   if (!userId) {
     throw new Error("Unauthorized")
   }
 
-  const currentUserProgress = await getUserProgress()
+  let currentUserProgress = await getUserProgress()
   const userSubscription = await getUserSubscription()
 
   if (!currentUserProgress) {
-    throw new Error("User progress not found")
+    const defaultProgress = await db
+      .insert(userProgress)
+      .values({
+        userId,
+        hearts: 5,
+        points: 0,
+        gems: 50,
+      })
+      .returning()
+
+    currentUserProgress = defaultProgress[0] ?? null
+    if (!currentUserProgress) {
+      return { error: "progress_init_failed" }
+    }
   }
 
   const challenge = await db.query.challenges.findFirst({
@@ -28,13 +46,13 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   })
 
   if (!challenge) {
-    throw new Error("Challenge not found")
+    return { error: "challenge_not_found" }
   }
 
   const lessonId = challenge.lessonId
 
   if (!lessonId) {
-    throw new Error("Challenge is not associated with a lesson")
+    return { error: "lesson_missing" }
   }
 
   const existingChallengeProgress = await db.query.challengeProgress.findFirst({
@@ -58,13 +76,32 @@ export const upsertChallengeProgress = async (challengeId: number) => {
       })
       .where(eq(challengeProgress.id, existingChallengeProgress.id))
 
-    // For practice lessons, just award XP (no lesson completion processing)
-    const xpAmount = userSubscription?.isActive ? 8 : 5 // Practice XP
-    await awardXP(xpAmount, "practice_lesson", lessonId.toString())
+    // For practice lessons, award per-question XP (optional)
+    if (GAMIFICATION.XP_PER_PRACTICE_QUESTION > 0) {
+      await awardXP(
+        GAMIFICATION.XP_PER_PRACTICE_QUESTION,
+        "practice_question",
+        challengeId.toString(),
+        undefined,
+        { applySubscriptionBonus: false, applyStreakBonus: false },
+      )
+    }
 
-    // Update monthly quest progress for practice lessons
-    const { updateMonthlyQuestProgress } = await import("@/actions/gamification")
-    await updateMonthlyQuestProgress("complete_monthly_lessons", 1)
+    if (isFinalChallenge) {
+      const practiceLessonXP = userSubscription?.isActive
+        ? GAMIFICATION.XP_PER_PRACTICE_LESSON_PRO
+        : GAMIFICATION.XP_PER_PRACTICE_LESSON
+
+      if (practiceLessonXP > 0) {
+        await awardXP(
+          practiceLessonXP,
+          "practice_lesson",
+          lessonId.toString(),
+          undefined,
+          { applySubscriptionBonus: false, applyStreakBonus: false },
+        )
+      }
+    }
 
     // Pro users get unlimited hearts and enhanced XP
     const heartsUpdate = userSubscription?.isActive
@@ -92,6 +129,14 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     userId,
     completed: true,
   })
+
+  await awardXP(
+    GAMIFICATION.XP_PER_QUESTION,
+    "challenge_question",
+    challengeId.toString(),
+    undefined,
+    { applySubscriptionBonus: false, applyStreakBonus: false },
+  )
 
   // Check if this is the last challenge in the lesson
   const allChallengesInLesson = await db.query.challenges.findMany({
@@ -139,10 +184,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
       },
     }
   } else {
-    // Just a challenge completion, award basic XP
-    const xpAmount = userSubscription?.isActive ? 15 : 10
-    await awardXP(xpAmount, "challenge_complete", challengeId.toString())
-
+    // Just a challenge completion already awarded per-question XP above
     revalidatePath("/learn")
     revalidatePath("/lesson")
     revalidatePath("/quests")

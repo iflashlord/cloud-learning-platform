@@ -99,6 +99,33 @@ const useUserData = () => {
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
+  const refetch = React.useCallback(async () => {
+    if (!isLoaded || !isSignedIn || !user?.id) return
+    setIsLoading(true)
+    setError(null)
+    try {
+      const [subscriptionRes, progressRes] = await Promise.all([
+        fetch("/api/user/subscription", { cache: "no-store" }),
+        fetch("/api/user/progress", { cache: "no-store" }),
+      ])
+      if (subscriptionRes.ok) {
+        const subData = await subscriptionRes.json()
+        setIsPro(!!subData.isActive)
+      }
+      if (progressRes.ok) {
+        const progressData = await progressRes.json()
+        setUserProgress(progressData)
+      } else {
+        setError("Failed to load progress")
+      }
+    } catch (err) {
+      setError("Network error")
+      console.error("User data fetch error:", err)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [isLoaded, isSignedIn, user?.id])
+
   React.useEffect(() => {
     if (!isLoaded || !isSignedIn || !user?.id) {
       setUserProgress(null)
@@ -112,46 +139,27 @@ const useUserData = () => {
     setIsLoading(true)
     setError(null)
 
-    const fetchData = async () => {
-      try {
-        const [subscriptionRes, progressRes] = await Promise.all([
-          fetch("/api/user/subscription"),
-          fetch("/api/user/progress"),
-        ])
-
-        if (cancelled) return
-
-        if (subscriptionRes.ok) {
-          const subData = await subscriptionRes.json()
-          setIsPro(!!subData.isActive)
-        }
-
-        if (progressRes.ok) {
-          const progressData = await progressRes.json()
-          setUserProgress(progressData)
-        } else {
-          setError("Failed to load progress")
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError("Network error")
-          console.error("User data fetch error:", err)
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false)
-        }
-      }
-    }
-
     // Add small delay to ensure Clerk is stable
-    const timeoutId = setTimeout(fetchData, 100)
+    const timeoutId = setTimeout(() => {
+      if (!cancelled) refetch()
+    }, 100)
 
     return () => {
       cancelled = true
       clearTimeout(timeoutId)
     }
-  }, [isLoaded, isSignedIn, user?.id])
+  }, [isLoaded, isSignedIn, user?.id, refetch])
+
+  // Listen for manual refresh signals
+  React.useEffect(() => {
+    const handler = () => {
+      refetch()
+    }
+    window.addEventListener("user-progress:refresh", handler)
+    return () => {
+      window.removeEventListener("user-progress:refresh", handler)
+    }
+  }, [refetch])
 
   return {
     userProgress,

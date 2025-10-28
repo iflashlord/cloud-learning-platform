@@ -1,7 +1,7 @@
 "use server"
 
 import { auth } from "@clerk/nextjs/server"
-import { and, eq, desc, sql } from "drizzle-orm"
+import { and, eq, desc, sql, gte } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 
 import db from "@/db/drizzle"
@@ -24,29 +24,48 @@ import {
   challenges,
 } from "@/db/schema"
 
+const fetchUserProgress = async (userId: string) => {
+  return await db.query.userProgress.findFirst({
+    where: eq(userProgress.userId, userId),
+  })
+}
+
 // XP System Actions
+interface AwardXPOptions {
+  applySubscriptionBonus?: boolean
+  applyStreakBonus?: boolean
+}
+
 export const awardXP = async (
   amount: number,
   source: string,
   sourceId?: string,
   description?: string,
+  options?: AwardXPOptions,
 ) => {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
-  const userSubscription = await getUserSubscription()
+  const applySubscriptionBonus = options?.applySubscriptionBonus ?? true
+  const applyStreakBonus = options?.applyStreakBonus ?? true
 
+  const currentUserProgress = await fetchUserProgress(userId)
   if (!currentUserProgress) throw new Error("User progress not found")
+
+  const userSubscription = applySubscriptionBonus ? await getUserSubscription() : null
 
   // Apply Pro bonus if applicable
   let finalAmount = amount
-  if (userSubscription?.isActive && (source.includes("lesson") || source.includes("practice"))) {
+  if (
+    applySubscriptionBonus &&
+    userSubscription?.isActive &&
+    (source.includes("lesson") || source.includes("practice"))
+  ) {
     finalAmount = Math.floor(amount * 1.5) // 50% bonus for Pro users
   }
 
   // Apply streak bonus
-  if (currentUserProgress.streak > 0 && source.includes("lesson")) {
+  if (applyStreakBonus && source.includes("lesson") && currentUserProgress.streak > 0) {
     const streakMultiplier = Math.min(
       1 + currentUserProgress.streak * 0.1,
       1 + GAMIFICATION.MAX_STREAK_BONUS_DAYS * 0.1,
@@ -55,27 +74,27 @@ export const awardXP = async (
   }
 
   // Update user progress
-  await db.transaction(async (tx) => {
-    await tx
-      .update(userProgress)
-      .set({
-        points: currentUserProgress.points + finalAmount,
-        totalXpEarned: currentUserProgress.totalXpEarned + finalAmount,
-      })
-      .where(eq(userProgress.userId, userId))
-
-    // Log transaction
-    await tx.insert(xpTransactions).values({
-      userId,
-      type: "earned",
-      amount: finalAmount,
-      source,
-      sourceId,
-      description: description || `Earned ${finalAmount} XP from ${source}`,
+  const updated = await db
+    .update(userProgress)
+    .set({
+      points: sql`${userProgress.points} + ${finalAmount}`,
+      totalXpEarned: sql`${userProgress.totalXpEarned} + ${finalAmount}`,
     })
+    .where(eq(userProgress.userId, userId))
+    .returning({ points: userProgress.points })
+
+  const newTotal = updated[0]?.points ?? currentUserProgress.points
+
+  await db.insert(xpTransactions).values({
+    userId,
+    type: "earned",
+    amount: finalAmount,
+    source,
+    sourceId,
+    description: description || `Earned ${finalAmount} XP from ${source}`,
   })
 
-  return { xpEarned: finalAmount, newTotal: currentUserProgress.points + finalAmount }
+  return { xpEarned: finalAmount, newTotal }
 }
 
 export const spendXP = async (
@@ -87,32 +106,31 @@ export const spendXP = async (
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
+  const currentUserProgress = await fetchUserProgress(userId)
   if (!currentUserProgress) throw new Error("User progress not found")
 
-  if (currentUserProgress.points < amount) {
+  const updated = await db
+    .update(userProgress)
+    .set({ points: sql`${userProgress.points} - ${amount}` })
+    .where(and(eq(userProgress.userId, userId), gte(userProgress.points, amount)))
+    .returning({ points: userProgress.points })
+
+  if (!updated.length) {
     throw new Error("Insufficient XP")
   }
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(userProgress)
-      .set({
-        points: currentUserProgress.points - amount,
-      })
-      .where(eq(userProgress.userId, userId))
+  const newTotal = updated[0].points
 
-    await tx.insert(xpTransactions).values({
-      userId,
-      type: "spent",
-      amount: -amount,
-      source,
-      sourceId,
-      description: description || `Spent ${amount} XP on ${source}`,
-    })
+  await db.insert(xpTransactions).values({
+    userId,
+    type: "spent",
+    amount: -amount,
+    source,
+    sourceId,
+    description: description || `Spent ${amount} XP on ${source}`,
   })
 
-  return { xpSpent: amount, newTotal: currentUserProgress.points - amount }
+  return { xpSpent: amount, newTotal }
 }
 
 // Gems System Actions
@@ -125,19 +143,18 @@ export const awardGems = async (
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
+  const currentUserProgress = await fetchUserProgress(userId)
   if (!currentUserProgress) throw new Error("User progress not found")
 
   try {
-    // Update user gems
-    await db
+    const updated = await db
       .update(userProgress)
-      .set({
-        gems: currentUserProgress.gems + amount,
-      })
+      .set({ gems: sql`${userProgress.gems} + ${amount}` })
       .where(eq(userProgress.userId, userId))
+      .returning({ gems: userProgress.gems })
 
-    // Log the gem transaction
+    const newTotal = updated[0]?.gems ?? currentUserProgress.gems
+
     await db.insert(gemTransactions).values({
       userId,
       type: "earned",
@@ -147,7 +164,7 @@ export const awardGems = async (
       description: description || `Earned ${amount} gems from ${source}`,
     })
 
-    return { gemsEarned: amount, newTotal: currentUserProgress.gems + amount }
+    return { gemsEarned: amount, newTotal }
   } catch (error) {
     console.error("Failed to award gems:", error)
     throw new Error(
@@ -165,20 +182,19 @@ export const spendGems = async (
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
+  const currentUserProgress = await fetchUserProgress(userId)
   if (!currentUserProgress) throw new Error("User progress not found")
 
-  if (currentUserProgress.gems < amount) {
+  // Atomically check balance and deduct
+  const updated = await db
+    .update(userProgress)
+    .set({ gems: sql`${userProgress.gems} - ${amount}` })
+    .where(and(eq(userProgress.userId, userId), gte(userProgress.gems, amount)))
+    .returning({ gems: userProgress.gems })
+
+  if (!updated.length) {
     throw new Error("Insufficient gems")
   }
-
-  // Update user gems
-  await db
-    .update(userProgress)
-    .set({
-      gems: currentUserProgress.gems - amount,
-    })
-    .where(eq(userProgress.userId, userId))
 
   // Log the gem transaction
   await db.insert(gemTransactions).values({
@@ -190,7 +206,7 @@ export const spendGems = async (
     description: description || `Spent ${amount} gems on ${source}`,
   })
 
-  return { gemsSpent: amount, newTotal: currentUserProgress.gems - amount }
+  return { gemsSpent: amount, newTotal: updated[0].gems }
 }
 
 // Hearts System Actions
@@ -198,7 +214,7 @@ export const refillHeartsWithGems = async () => {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
+  const currentUserProgress = await fetchUserProgress(userId)
   const userSubscription = await getUserSubscription()
 
   if (!currentUserProgress) throw new Error("User progress not found")
@@ -245,7 +261,7 @@ export const updateStreak = async (isLessonCompleted: boolean = true) => {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const currentUserProgress = await getUserProgress()
+  const currentUserProgress = await fetchUserProgress(userId)
   if (!currentUserProgress) throw new Error("User progress not found")
 
   const today = new Date()
@@ -567,57 +583,52 @@ export const purchaseShopItem = async (shopItemKey: string) => {
     throw new Error("Insufficient XP")
   }
 
-  await db.transaction(async (tx) => {
-    // Deduct costs
-    const updates: any = {}
-    if (shopItem.gemCost > 0) {
-      updates.gems = currentUserProgress.gems - shopItem.gemCost
-    }
-    if (shopItem.xpCost > 0) {
-      updates.points = currentUserProgress.points - shopItem.xpCost
-    }
+  const updates: any = {}
+  if (shopItem.gemCost > 0) {
+    updates.gems = currentUserProgress.gems - shopItem.gemCost
+  }
+  if (shopItem.xpCost > 0) {
+    updates.points = currentUserProgress.points - shopItem.xpCost
+  }
 
-    // Apply item effects
-    switch (shopItem.type) {
-      case "hearts_refill":
-        updates.hearts = GAMIFICATION.MAX_HEARTS
-        updates.heartsRefillAt = null
-        break
-      // Add other item types as needed
-    }
+  switch (shopItem.type) {
+    case "hearts_refill":
+      updates.hearts = GAMIFICATION.MAX_HEARTS
+      updates.heartsRefillAt = null
+      break
+  }
 
-    await tx.update(userProgress).set(updates).where(eq(userProgress.userId, userId))
+  if (Object.keys(updates).length > 0) {
+    await db.update(userProgress).set(updates).where(eq(userProgress.userId, userId))
+  }
 
-    // Record purchase
-    await tx.insert(userPurchases).values({
-      userId,
-      shopItemId: shopItem.id,
-      gemCost: shopItem.gemCost,
-      xpCost: shopItem.xpCost,
-    })
-
-    // Log transactions
-    if (shopItem.gemCost > 0) {
-      await tx.insert(gemTransactions).values({
-        userId,
-        type: "spent",
-        amount: -shopItem.gemCost,
-        source: "shop_purchase",
-        sourceId: shopItem.id.toString(),
-        description: `Purchased ${shopItem.title}`,
-      })
-    }
-    if (shopItem.xpCost > 0) {
-      await tx.insert(xpTransactions).values({
-        userId,
-        type: "spent",
-        amount: -shopItem.xpCost,
-        source: "shop_purchase",
-        sourceId: shopItem.id.toString(),
-        description: `Purchased ${shopItem.title}`,
-      })
-    }
+  await db.insert(userPurchases).values({
+    userId,
+    shopItemId: shopItem.id,
+    gemCost: shopItem.gemCost,
+    xpCost: shopItem.xpCost,
   })
+
+  if (shopItem.gemCost > 0) {
+    await db.insert(gemTransactions).values({
+      userId,
+      type: "spent",
+      amount: -shopItem.gemCost,
+      source: "shop_purchase",
+      sourceId: shopItem.id.toString(),
+      description: `Purchased ${shopItem.title}`,
+    })
+  }
+  if (shopItem.xpCost > 0) {
+    await db.insert(xpTransactions).values({
+      userId,
+      type: "spent",
+      amount: -shopItem.xpCost,
+      source: "shop_purchase",
+      sourceId: shopItem.id.toString(),
+      description: `Purchased ${shopItem.title}`,
+    })
+  }
 
   revalidatePath("/shop")
   revalidatePath("/learn")
@@ -723,7 +734,13 @@ export const processLessonCompletion = async (
     xpAmount += GAMIFICATION.XP_PERFECT_LESSON_BONUS
   }
 
-  const xpResult = await awardXP(xpAmount, "lesson_complete", lessonId.toString())
+  const xpResult = await awardXP(
+    xpAmount,
+    "lesson_complete",
+    lessonId.toString(),
+    undefined,
+    { applySubscriptionBonus: false, applyStreakBonus: false },
+  )
   rewards.xp = xpResult.xpEarned
 
   // Gems for first-time completion
@@ -866,25 +883,21 @@ export const buyHeartsWithGems = async () => {
     throw new Error("Insufficient gems")
   }
 
-  await db.transaction(async (tx) => {
-    // Spend gems
-    await tx
-      .update(userProgress)
-      .set({
-        gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
-        hearts: GAMIFICATION.MAX_HEARTS,
-        heartsRefillAt: null, // Reset the refill timer since hearts are full
-      })
-      .where(eq(userProgress.userId, userId))
-
-    // Record gem transaction
-    await tx.insert(gemTransactions).values({
-      userId,
-      type: "spent",
-      amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
-      source: "hearts_refill",
-      description: `Spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts`,
+  await db
+    .update(userProgress)
+    .set({
+      gems: currentUserProgress.gems - GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+      hearts: GAMIFICATION.MAX_HEARTS,
+      heartsRefillAt: null,
     })
+    .where(eq(userProgress.userId, userId))
+
+  await db.insert(gemTransactions).values({
+    userId,
+    type: "spent",
+    amount: -GAMIFICATION.HEARTS_REFILL_COST_GEMS,
+    source: "hearts_refill",
+    description: `Spent ${GAMIFICATION.HEARTS_REFILL_COST_GEMS} gems to refill hearts`,
   })
 
   revalidatePath("/shop")

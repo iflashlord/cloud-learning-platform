@@ -191,7 +191,13 @@ export const Quiz = ({
 
   const handleChallengeComplete = async (challengeId: number) => {
     try {
-      await upsertChallengeProgress(challengeId)
+      const wasFirstTry = wrongAttempts === 0
+      const isFinalChallenge = activeIndex === initialLessonChallenges.length - 1
+      await upsertChallengeProgress(challengeId, wasFirstTry, isFinalChallenge)
+      // Notify UI elements (e.g., headers) to refresh user progress
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("user-progress:refresh"))
+      }
     } catch (error) {
       console.error("Failed to update challenge progress:", error)
     }
@@ -207,6 +213,7 @@ export const Quiz = ({
         onRedo={handleRedo}
         finishAudio={finishAudio || undefined}
         userSubscription={userSubscription}
+        isPractice={isPractice}
       />
     )
   }
