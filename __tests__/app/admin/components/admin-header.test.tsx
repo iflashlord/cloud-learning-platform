@@ -1,7 +1,15 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import { AdminHeader } from "@/app/admin/components/admin-header";
+
+const mockSignOut = vi.fn();
+
+vi.mock("@clerk/nextjs", () => ({
+  useClerk: () => ({
+    signOut: mockSignOut,
+  }),
+}));
 
 describe("AdminHeader", () => {
   beforeAll(() => {
@@ -29,5 +37,16 @@ describe("AdminHeader", () => {
     expect(screen.getByRole("button", { name: /Logout/i })).toBeInTheDocument();
     expect(screen.getByText(/Admin/i)).toBeInTheDocument();
     expect(screen.getByTitle(/Current:/i)).toBeInTheDocument();
+  });
+
+  it("signs the user out when clicking logout", () => {
+    mockSignOut.mockReset();
+
+    render(<AdminHeader />);
+
+    const logoutButton = screen.getByRole("button", { name: /Logout/i });
+    fireEvent.click(logoutButton);
+
+    expect(mockSignOut).toHaveBeenCalledWith({ redirectUrl: "/" });
   });
 });
