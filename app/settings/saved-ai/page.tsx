@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import {
   ArrowLeft,
@@ -8,11 +8,14 @@ import {
   Copy,
   Trash2,
   Sparkles,
+  Search,
+  FileText,
 } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { renderMarkdownToHtml } from "@/lib/markdown"
 
 interface SavedEntry {
@@ -104,9 +107,57 @@ const loadSavedEntries = (): SavedEntry[] => {
 const SavedAiPage = () => {
   const [entries, setEntries] = useState<SavedEntry[]>([])
   const [notice, setNotice] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [sourceFilter, setSourceFilter] = useState<"all" | string>("all")
 
   useEffect(() => {
     setEntries(loadSavedEntries())
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    const refreshEntries = () => {
+      setEntries(loadSavedEntries())
+    }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (!event.key) {
+        return
+      }
+
+      if (STORAGE_SOURCES.some((source) => source.key === event.key)) {
+        refreshEntries()
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshEntries()
+      }
+    }
+
+    const handleFocus = () => {
+      refreshEntries()
+    }
+
+    const handleStudyCoachUpdated: EventListener = () => {
+      refreshEntries()
+    }
+
+    window.addEventListener("storage", handleStorage)
+    window.addEventListener("focus", handleFocus)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    window.addEventListener("study-coach-saved-updated", handleStudyCoachUpdated)
+
+    return () => {
+      window.removeEventListener("storage", handleStorage)
+      window.removeEventListener("focus", handleFocus)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      window.removeEventListener("study-coach-saved-updated", handleStudyCoachUpdated)
+    }
   }, [])
 
   useEffect(() => {
@@ -175,10 +226,79 @@ const SavedAiPage = () => {
     }
   }
 
-  const entriesBySource = STORAGE_SOURCES.map((source) => ({
+  const countsBySource = useMemo(() => {
+    const totals: Record<string, number> = {}
+    STORAGE_SOURCES.forEach((source) => {
+      totals[source.key] = 0
+    })
+    entries.forEach((entry) => {
+      totals[entry.sourceKey] = (totals[entry.sourceKey] ?? 0) + 1
+    })
+    return totals
+  }, [entries])
+
+  const filteredEntries = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase()
+
+    return entries.filter((entry) => {
+      const matchesSource = sourceFilter === "all" || entry.sourceKey === sourceFilter
+      if (!matchesSource) {
+        return false
+      }
+
+      if (!normalizedSearch) {
+        return true
+      }
+
+      const haystacks = [
+        entry.label,
+        entry.prompt,
+        entry.answer,
+        entry.lessonTitle,
+        entry.engine,
+        entry.challengeId ? `challenge-${entry.challengeId}` : null,
+        entry.sourceLabel,
+      ]
+        .filter(Boolean)
+        .map((value) => String(value).toLowerCase())
+
+      return haystacks.some((value) => value.includes(normalizedSearch))
+    })
+  }, [entries, searchTerm, sourceFilter])
+
+  const activeSources =
+    sourceFilter === "all"
+      ? STORAGE_SOURCES
+      : STORAGE_SOURCES.filter((source) => source.key === sourceFilter)
+
+  const entriesBySource = activeSources.map((source) => ({
     source,
-    entries: entries.filter((entry) => entry.sourceKey === source.key),
+    entries: filteredEntries.filter((entry) => entry.sourceKey === source.key),
   }))
+
+  const handleResetFilters = () => {
+    setSearchTerm("")
+    setSourceFilter("all")
+  }
+
+  const handleCopyPrompt = async (entry: SavedEntry) => {
+    const prompt = entry.prompt?.trim()
+    if (!prompt) {
+      setNotice("No prompt saved for this entry.")
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(prompt)
+      setNotice("Prompt copied to clipboard.")
+    } catch (error) {
+      console.error("Copy prompt failed:", error)
+      setNotice("Copy prompt failed.")
+    }
+  }
+
+  const hasEntries = entries.length > 0
+  const hasFilteredEntries = filteredEntries.length > 0
 
   return (
     <div className='min-h-screen bg-muted/10 py-10'>
@@ -195,16 +315,74 @@ const SavedAiPage = () => {
           </Button>
         </div>
 
+        <Card>
+          <CardContent className='space-y-3 py-4'>
+            <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
+              <div className='relative w-full md:max-w-md'>
+                <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+                <Input
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder='Search saved responses...'
+                  className='pl-10'
+                  aria-label='Search saved responses'
+                />
+              </div>
+              <div className='flex flex-wrap items-center gap-2'>
+                <Button
+                  variant={sourceFilter === "all" ? "secondary" : "outline"}
+                  size='sm'
+                  onClick={() => setSourceFilter("all")}
+                  aria-pressed={sourceFilter === "all"}
+                >
+                  All ({entries.length})
+                </Button>
+                {STORAGE_SOURCES.map((source) => (
+                  <Button
+                    key={source.key}
+                    variant={sourceFilter === source.key ? "secondary" : "outline"}
+                    size='sm'
+                    onClick={() => setSourceFilter(source.key)}
+                    aria-pressed={sourceFilter === source.key}
+                  >
+                    {source.label} ({countsBySource[source.key] ?? 0})
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className='flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground'>
+              <span>
+                Showing {filteredEntries.length} of {entries.length} saved responses
+              </span>
+              {(searchTerm || sourceFilter !== "all") && (
+                <button
+                  type='button'
+                  className='text-xs font-medium text-primary underline-offset-4 hover:underline'
+                  onClick={handleResetFilters}
+                >
+                  Reset filters
+                </button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {notice && (
           <div className='rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200'>
             {notice}
           </div>
         )}
 
-        {entries.length === 0 ? (
+        {!hasEntries ? (
           <Card>
             <CardContent className='py-12 text-center text-sm text-gray-500 dark:text-gray-400'>
               You don&apos;t have any saved AI responses yet. Use the Save buttons inside Study Coach or the review assistant to collect interesting explanations.
+            </CardContent>
+          </Card>
+        ) : !hasFilteredEntries ? (
+          <Card>
+            <CardContent className='py-12 text-center text-sm text-gray-500 dark:text-gray-400'>
+              No saved responses match your current filters.
             </CardContent>
           </Card>
         ) : (
@@ -229,7 +407,9 @@ const SavedAiPage = () => {
               </CardHeader>
               <CardContent className='space-y-4'>
                 {sourceEntries.length === 0 ? (
-                  <p className='text-sm text-gray-500 dark:text-gray-400'>No saved responses from {source.label} yet.</p>
+                  <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    {countsBySource[source.key] ? "No saved responses match your current filters." : `No saved responses from ${source.label} yet.`}
+                  </p>
                 ) : (
                   sourceEntries.map((entry) => (
                     <div
@@ -248,6 +428,9 @@ const SavedAiPage = () => {
                           )}
                         </div>
                         <div className='flex items-center gap-2'>
+                          <Button variant='ghost' size='icon' className='h-8 w-8 text-gray-500' onClick={() => handleCopyPrompt(entry)}>
+                            <FileText className='h-4 w-4' />
+                          </Button>
                           <Button variant='ghost' size='icon' className='h-8 w-8 text-gray-500' onClick={() => handleCopy(entry)}>
                             <Copy className='h-4 w-4' />
                           </Button>
@@ -259,6 +442,17 @@ const SavedAiPage = () => {
                           </Button>
                         </div>
                       </div>
+                      {entry.prompt && entry.prompt.trim() && (
+                        <details className='rounded-md border border-dashed border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800/40 dark:text-gray-300'>
+                          <summary className='cursor-pointer text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400'>
+                            View saved prompt
+                          </summary>
+                          <div
+                            className='prose prose-sm mt-2 max-w-none text-gray-700 dark:text-gray-200 dark:prose-invert'
+                            dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(entry.prompt) }}
+                          />
+                        </details>
+                      )}
                       <div
                         className='prose prose-sm max-w-none text-gray-700 dark:text-gray-200 dark:prose-invert'
                         dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(entry.answer) }}
