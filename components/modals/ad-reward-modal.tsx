@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Play, X, Coins, Trophy, CheckCircle, Clock, Gem } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { Play, X, Coins, Trophy, CheckCircle, Clock, Gem, AlertTriangle } from "lucide-react"
 import { toast } from "sonner"
 
 import {
@@ -16,6 +16,11 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { GAME_ELEMENT_COLORS } from "@/constants"
 import { cn } from "@/lib/utils"
+import { GoogleAd } from "@/components/google/google-ad"
+
+const GOOGLE_ADS_CONFIGURED =
+  Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID) &&
+  Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT)
 
 interface AdRewardModalProps {
   isOpen: boolean
@@ -37,10 +42,22 @@ export const AdRewardModal = ({
   const [adState, setAdState] = useState<"ready" | "playing" | "completed">("ready")
   const [adProgress, setAdProgress] = useState(0)
   const [isClient, setIsClient] = useState(false)
+  const [adRenderKey, setAdRenderKey] = useState(0)
+  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [isClaimingReward, setIsClaimingReward] = useState(false)
 
   useEffect(() => setIsClient(true), [])
+  useEffect(() => {
+    return () => {
+      if (progressTimerRef.current) {
+        clearInterval(progressTimerRef.current)
+        progressTimerRef.current = null
+      }
+    }
+  }, [])
 
   const canWatchMoreAds = dailyAdsWatched < maxDailyAds
+  const isWatchDisabled = !canWatchMoreAds || !GOOGLE_ADS_CONFIGURED
 
   const watchAd = () => {
     if (!canWatchMoreAds) {
@@ -48,10 +65,20 @@ export const AdRewardModal = ({
       return
     }
 
+    if (!GOOGLE_ADS_CONFIGURED) {
+      toast.error("Google Ads is not configured yet. Please try again later.")
+      return
+    }
+
     setAdState("playing")
     setAdProgress(0)
+    setAdRenderKey((prev) => prev + 1)
+    if (progressTimerRef.current) {
+      clearInterval(progressTimerRef.current)
+      progressTimerRef.current = null
+    }
 
-    // Simulate 15-second ad with progress
+    // Require a minimum watch duration before enabling claim.
     const duration = 15000 // 15 seconds
     const interval = 100 // Update every 100ms
     const increment = (interval / duration) * 100
@@ -61,16 +88,19 @@ export const AdRewardModal = ({
         const newProgress = prev + increment
         if (newProgress >= 100) {
           clearInterval(progressTimer)
+          progressTimerRef.current = null
           setAdState("completed")
           return 100
         }
         return newProgress
       })
     }, interval)
+    progressTimerRef.current = progressTimer
   }
 
   const claimReward = async () => {
     try {
+      setIsClaimingReward(true)
       await onRewardEarned(rewardPoints)
       setAdState("ready")
       setAdProgress(0)
@@ -79,12 +109,19 @@ export const AdRewardModal = ({
     } catch (error) {
       console.error("Failed to claim reward:", error)
       toast.error("Failed to claim reward. Please try again.")
+    } finally {
+      setIsClaimingReward(false)
     }
   }
 
   const handleClose = () => {
+    if (progressTimerRef.current) {
+      clearInterval(progressTimerRef.current)
+      progressTimerRef.current = null
+    }
     setAdState("ready")
     setAdProgress(0)
+    setIsClaimingReward(false)
     onClose()
   }
 
@@ -111,13 +148,7 @@ export const AdRewardModal = ({
                 </div>
               </div>
             )}
-            {adState === "playing" && (
-              <div className='relative'>
-                <div className='w-24 h-24 bg-gray-800 rounded-xl flex items-center justify-center'>
-                  <div className='text-white text-lg font-bold'>AD</div>
-                </div>
-              </div>
-            )}
+
             {adState === "completed" && (
               <div className='relative'>
                 <Trophy className='h-24 w-24 text-yellow-500 fill-current' />
@@ -139,6 +170,12 @@ export const AdRewardModal = ({
                 <span className='text-sm text-muted-foreground mt-2 block'>
                   Daily limit: {dailyAdsWatched}/{maxDailyAds} ads watched
                 </span>
+                {!GOOGLE_ADS_CONFIGURED && (
+                  <span className='mt-3 text-xs text-amber-600 dark:text-amber-300 flex items-center gap-1 justify-center'>
+                    <AlertTriangle className='w-4 h-4' />
+                    Google ad unit not configured yet. Set NEXT_PUBLIC_GOOGLE_ADS_* env values.
+                  </span>
+                )}
               </>
             )}
             {adState === "playing" && (
@@ -155,15 +192,13 @@ export const AdRewardModal = ({
 
         {adState === "playing" && (
           <div className='space-y-4'>
-            <div className='bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center'>
-              <div className='text-lg font-bold text-gray-800 dark:text-gray-200 mb-2'>
-                Dummy Advertisement
+            <div className='rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3'>
+              <div className='text-xs text-muted-foreground flex items-center gap-2 mb-2'>
+                <AlertTriangle className='w-4 h-4 text-amber-500' />
+                If the advertisement does not appear, disable ad blockers and try again.
               </div>
-              <div className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
-                🎮 Play Amazing Games! 🎮
-              </div>
-              <div className='text-xs text-gray-500'>
-                This is a placeholder for future Google AdSense integration
+              <div className='rounded-md bg-gray-50 dark:bg-gray-800/80 p-2 flex items-center justify-center min-h-[120px]'>
+                <GoogleAd key={adRenderKey} className='mx-auto w-full' />
               </div>
             </div>
 
@@ -189,10 +224,14 @@ export const AdRewardModal = ({
                   className='w-full flex items-center gap-2'
                   size='lg'
                   onClick={watchAd}
-                  disabled={!canWatchMoreAds}
+                  disabled={isWatchDisabled}
                 >
                   <Play className='w-5 h-5' />
-                  {canWatchMoreAds ? `Watch Ad (+${rewardPoints} Gems)` : "Daily Limit Reached"}
+                  {!canWatchMoreAds
+                    ? "Daily Limit Reached"
+                    : !GOOGLE_ADS_CONFIGURED
+                    ? "Configure Google Ads"
+                    : `Watch Ad (+${rewardPoints} Gems)`}
                 </Button>
                 <Button
                   variant='outline'
@@ -219,9 +258,19 @@ export const AdRewardModal = ({
                   className='w-full flex items-center gap-2'
                   size='lg'
                   onClick={claimReward}
+                  disabled={isClaimingReward}
                 >
-                  <Trophy className='w-5 h-5' />
-                  Claim {rewardPoints} Gems
+                  {isClaimingReward ? (
+                    <div className='flex items-center gap-2'>
+                      <div className='w-4 h-4 border border-white/40 border-t-white rounded-full animate-spin' />
+                      <span>Claiming...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Trophy className='w-5 h-5' />
+                      <span>Claim {rewardPoints} Gems</span>
+                    </>
+                  )}
                 </Button>
               </>
             )}

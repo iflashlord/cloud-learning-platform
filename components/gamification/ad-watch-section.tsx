@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
-import { Play, Gem, Heart, Clock, Gift, Sparkles } from "lucide-react"
+import { Play, Gem, Heart, Clock, Gift, Sparkles, AlertTriangle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CurrencyDisplay } from "./currency-display"
 import { watchAdForGems } from "@/actions/gamification"
-import { GAME_ELEMENT_COLORS } from "@/constants"
+import { AdRewardModal } from "@/components/modals/ad-reward-modal"
+import { useDailyAds } from "@/hooks/use-daily-ads"
+import { GAMIFICATION, GAME_ELEMENT_COLORS } from "@/constants"
 
 interface AdReward {
   type: "gems" | "hearts" | "xp"
@@ -27,16 +29,15 @@ interface AdWatchSectionProps {
   onHeartsChange?: (newHearts: number) => void
 }
 
+const GOOGLE_ADS_CONFIGURED =
+  Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID) &&
+  Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT)
+
 const adRewards: AdReward[] = [
   {
     type: "gems",
-    amount: 5,
-    description: "Watch a short video to earn 5 gems",
-  },
-  {
-    type: "gems",
-    amount: 10,
-    description: "Watch a longer video to earn 10 gems",
+    amount: GAMIFICATION.GEMS_FROM_AD_WATCH,
+    description: `Watch a short video to earn ${GAMIFICATION.GEMS_FROM_AD_WATCH} gems`,
   },
 ]
 
@@ -48,8 +49,10 @@ export const AdWatchSection = ({
   onGemsChange,
   onHeartsChange,
 }: AdWatchSectionProps) => {
-  const [pending, startTransition] = useTransition()
   const [lastAdWatchTime, setLastAdWatchTime] = useState<number>(0)
+  const [showAdModal, setShowAdModal] = useState(false)
+  const [selectedReward, setSelectedReward] = useState<AdReward | null>(null)
+  const dailyAds = useDailyAds(5)
 
   // Cooldown period in milliseconds (5 minutes)
   const AD_COOLDOWN = 5 * 60 * 1000
@@ -65,35 +68,40 @@ export const AdWatchSection = ({
     return `${minutes}m`
   }
 
-  const handleWatchAd = (gemAmount: number) => {
+  const handleWatchAd = (reward: AdReward) => {
+    if (!GOOGLE_ADS_CONFIGURED) {
+      toast.error("Google Ads is not configured yet. Please try again later.")
+      return
+    }
+
+    if (!dailyAds.canWatch) {
+      toast.error("You've reached your daily ad limit. Come back tomorrow!")
+      return
+    }
+
     if (!canWatchAd()) {
       toast.error("Please wait before watching another ad")
       return
     }
 
-    startTransition(async () => {
-      try {
-        // Simulate ad watching delay
-        toast.info("Loading advertisement...", {
-          duration: 2000,
-        })
+    setSelectedReward(reward)
+    setShowAdModal(true)
+  }
 
-        // Simulate watching ad (in real implementation, integrate with ad provider)
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-
-        // Award gems for watching ad
-        const result = await watchAdForGems()
-
-        setLastAdWatchTime(Date.now())
-        onGemsChange?.(result.newTotal)
-
-        toast.success(`You earned ${gemAmount} gems for watching the ad!`, {
-          icon: <Gem className={cn("h-4 w-4", GAME_ELEMENT_COLORS.GEMS.text)} />,
-        })
-      } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Failed to watch ad")
-      }
-    })
+  const handleRewardEarned = async (points: number) => {
+    try {
+      const result = await watchAdForGems()
+      setLastAdWatchTime(Date.now())
+      dailyAds.watchAd()
+      onGemsChange?.(result.newTotal)
+      toast.success(`You earned ${points} gems for watching the ad!`, {
+        icon: <Gem className={cn("h-4 w-4", GAME_ELEMENT_COLORS.GEMS.text)} />,
+        duration: 4000,
+      })
+    } catch (error) {
+      console.error("[AdWatchSection] Failed to award ad reward:", error)
+      throw error
+    }
   }
 
   return (
@@ -113,6 +121,12 @@ export const AdWatchSection = ({
         <div className='text-sm text-muted-foreground'>
           Watch short advertisements to earn free gems! Pro users still benefit from these rewards.
         </div>
+        {!GOOGLE_ADS_CONFIGURED && (
+          <div className='flex items-center gap-2 text-xs text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-md px-3 py-2'>
+            <AlertTriangle className='h-4 w-4 flex-shrink-0' />
+            <span>Google ad unit not configured. Set NEXT_PUBLIC_GOOGLE_ADS_* env variables to enable ads.</span>
+          </div>
+        )}
 
         <div className='grid gap-3'>
           {adRewards.map((reward, index) => (
@@ -135,15 +149,20 @@ export const AdWatchSection = ({
               </div>
 
               <Button
-                onClick={() => handleWatchAd(reward.amount)}
-                disabled={!canWatchAd() || pending}
+                onClick={() => handleWatchAd(reward)}
+                disabled={!GOOGLE_ADS_CONFIGURED || !dailyAds.canWatch || !canWatchAd()}
                 size='sm'
-                className='bg-purple-500 hover:bg-purple-600 text-white'
+                className='bg-purple-500 hover:bg-purple-600 text-white disabled:opacity-70 disabled:cursor-not-allowed'
               >
-                {pending ? (
+                {!GOOGLE_ADS_CONFIGURED ? (
                   <div className='flex items-center gap-1'>
-                    <div className='w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin' />
-                    <span className='text-xs'>Loading...</span>
+                    <AlertTriangle className='h-3 w-3' />
+                    <span className='text-xs'>Setup Required</span>
+                  </div>
+                ) : !dailyAds.canWatch ? (
+                  <div className='flex items-center gap-1'>
+                    <Clock className='h-3 w-3' />
+                    <span className='text-xs'>Daily Limit</span>
                   </div>
                 ) : !canWatchAd() ? (
                   <div className='flex items-center gap-1'>
@@ -165,6 +184,19 @@ export const AdWatchSection = ({
           💡 Tip: Ads help support the platform and are completely optional!
         </div>
       </CardContent>
+      <AdRewardModal
+        isOpen={showAdModal}
+        onClose={() => {
+          setShowAdModal(false)
+          setSelectedReward(null)
+        }}
+        onRewardEarned={async (points) => {
+          await handleRewardEarned(points)
+        }}
+        dailyAdsWatched={dailyAds.adsWatched}
+        maxDailyAds={dailyAds.maxAds}
+        rewardPoints={selectedReward?.amount ?? GAMIFICATION.GEMS_FROM_AD_WATCH}
+      />
     </Card>
   )
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Nunito } from "next/font/google"
+import Script from "next/script"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Toaster } from "@/components/ui/sonner"
 import { ExitModal } from "@/components/modals/exit-modal"
@@ -28,6 +29,15 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl='/'>
       <html lang='en'>
         <body className={font.className}>
+          {process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && (
+            <Script
+              id='google-ads-script'
+              strategy='afterInteractive'
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
+              crossOrigin='anonymous'
+            />
+          )}
           <ThemeProvider>
             <AudioSettingsProvider>
               <EnhancedThemeLayoutWrapper>
