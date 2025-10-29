@@ -31,9 +31,13 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl='/'>
       <html lang='en'>
         <head>
-          {originTrialToken && (
-            <meta httpEquiv='origin-trial' content={originTrialToken} />
-          )}
+          {originTrialToken && <meta httpEquiv='origin-trial' content={originTrialToken} />}
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+          <link rel='icon' href='/favicon.ico' sizes='any' />
+          <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+          <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
+          <link rel='manifest' href='/site.webmanifest' />
+          <meta name='theme-color' content='#ffffff' />
         </head>
         <body className={font.className}>
           {process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && (
