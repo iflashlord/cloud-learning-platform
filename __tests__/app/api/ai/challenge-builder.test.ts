@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { synthesizeChallengeSuggestion } from "@/app/api/ai/challenge-builder/route"
+import { synthesizeChallengeSuggestion } from "@/app/api/ai/challenge-builder/synthesizer"
 
 describe("synthesizeChallengeSuggestion", () => {
   it("infers a cost optimization scenario from prompt keywords", () => {
