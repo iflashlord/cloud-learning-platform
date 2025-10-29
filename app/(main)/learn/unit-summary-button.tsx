@@ -7,10 +7,7 @@ import { toast } from "sonner"
 import { Button, type ButtonProps } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { renderMarkdownToHtml } from "@/lib/markdown"
-import type {
-  ChromeSummarizerInstance,
-  ChromeSummarizerNamespace,
-} from "@/lib/ai/chrome-ai-types"
+import type { ChromeSummarizerInstance, ChromeSummarizerNamespace } from "@/lib/ai/chrome-ai-types"
 
 type ChallengeSummary = {
   id: number
@@ -185,9 +182,8 @@ const getChromeSummarizer = async (): Promise<ChromeSummarizerInstance | null> =
   const summarizerSource: ChromeSummarizerNamespace | null =
     aiNamespace && typeof aiNamespace.create === "function"
       ? aiNamespace
-      : ((
-          aiNamespace as unknown as { summarizer?: ChromeSummarizerNamespace | null }
-        )?.summarizer ?? null)
+      : (aiNamespace as unknown as { summarizer?: ChromeSummarizerNamespace | null })?.summarizer ??
+        null
 
   const createFn =
     summarizerSource && typeof summarizerSource.create === "function"
@@ -362,8 +358,10 @@ export const UnitSummaryButton = ({
         <div className='p-6 space-y-4'>
           <div className='flex items-start justify-between gap-4'>
             <div>
-              <h2 className='text-lg font-semibold text-foreground'>{unitTitle} — AI Summary</h2>
-              <p className='text-sm text-muted-foreground'>
+              <h2 className='text-lg font-semibold text-foreground dark:text-gray-800'>
+                {unitTitle} — AI Summary
+              </h2>
+              <p className='text-sm text-muted-foreground dark:text-gray-600'>
                 Generated with Chrome&apos;s built-in summarizer.
               </p>
             </div>
