@@ -1,23 +1,40 @@
+export type ChallengeType =
+  | "SELECT"
+  | "ASSIST"
+  | "TRUE_FALSE"
+  | "DRAG_DROP"
+  | "TEXT_INPUT"
+  | "IMAGE_SELECT"
+  | "LISTENING"
+  | "SPEECH_INPUT"
+  | "VIDEO"
+
 export interface ChallengeOption {
-  id: number;
-  text: string;
-  correct: boolean;
-  imageSrc?: string | null;
-  audioSrc?: string | null;
+  id: number
+  challengeId: number
+  text: string
+  correct: boolean
+  imageSrc: string | null
+  audioSrc: string | null
+  guide: string | null
+  order: number | null
+  value: string | null
 }
 
 export interface QuizChallenge {
   id: number;
-  lessonId: number;
+  lessonId: number | null;
   question: string;
-  type: string;
+  type: ChallengeType;
   order: number;
   completed: boolean;
   challengeOptions: ChallengeOption[];
-  correctAnswer?: string | null;
-  imageSrc?: string | null;
-  audioSrc?: string | null;
-  hint?: string | null;
+  correctAnswer: string | null;
+  imageSrc: string | null;
+  audioSrc: string | null;
+  videoSrc: string | null;
+  hint: string | null;
+  chestId: number | null;
 }
 
 export interface UserSubscription {

@@ -4,22 +4,6 @@ import { getUserSubscription } from "@/db/queries"
 
 export const dynamic = "force-dynamic"
 
-// Chrome AI API types
-interface ChromeAI {
-  assistant: {
-    create(options?: { systemPrompt?: string; temperature?: number; topK?: number }): Promise<{
-      prompt(message: string): Promise<string>
-      promptStreaming(message: string): AsyncIterable<string>
-    }>
-  }
-}
-
-declare global {
-  interface Window {
-    ai?: ChromeAI
-  }
-}
-
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth()

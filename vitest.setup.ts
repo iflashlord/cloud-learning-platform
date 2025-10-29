@@ -19,7 +19,12 @@ vi.mock("next/image", () => ({
     fill: _fill,
     priority: _priority,
     ...rest
-  }: Partial<React.ComponentProps<"img">> & { src?: string; alt?: string }) => {
+  }: Partial<React.ComponentProps<"img">> & {
+    src?: string
+    alt?: string
+    fill?: boolean
+    priority?: boolean
+  }) => {
     return React.createElement("img", { src, alt, width, height, ...rest });
   },
 }));

@@ -214,7 +214,7 @@ const SavedAiPage = () => {
                 <div className='flex items-center gap-2'>
                   <Sparkles className='h-4 w-4 text-blue-500' />
                   <CardTitle className='text-base'>{source.label}</CardTitle>
-                  <Badge variant='secondary'>{sourceEntries.length}</Badge>
+                  <Badge variant='neutral'>{sourceEntries.length}</Badge>
                 </div>
                 {sourceEntries.length > 0 && (
                   <Button

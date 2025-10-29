@@ -35,7 +35,25 @@ export const upsertChallengeProgress = async (
       })
       .returning()
 
-    currentUserProgress = defaultProgress[0] ?? null
+    if (!defaultProgress[0]) {
+      return { error: "progress_init_failed" }
+    }
+
+    // Re-fetch to include relations (activeCourse) expected downstream
+    currentUserProgress =
+      (await db.query.userProgress.findFirst({
+        where: eq(userProgress.userId, userId),
+        with: {
+          activeCourse: {
+            columns: {
+              id: true,
+              title: true,
+              imageSrc: true,
+            },
+          },
+        },
+      })) ?? null
+
     if (!currentUserProgress) {
       return { error: "progress_init_failed" }
     }

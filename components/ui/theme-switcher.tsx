@@ -153,7 +153,6 @@ export function ThemeSwitcher({
               theme === themeOption.value && "ring-2 ring-blue-500 ring-offset-2 dark:ring-blue-400",
             )}
             title={themeOption.description}
-            noMinWidth={variant === "compact"}
           >
             <ThemeIcon className={iconClass} />
             {variant !== "ghost" && (

@@ -3,9 +3,13 @@
 import { useMount } from "react-use"
 import { useHeartsModal } from "@/store/use-hearts-modal"
 import { usePracticeModal } from "@/store/use-practice-modal"
-import { challengeOptions, challenges, userSubscription } from "@/db/schema"
+import { challengeOptions, challenges } from "@/db/schema"
 import { Quiz as ModularQuiz } from "@/components/quiz"
 import { LessonMeta } from "@/components/quiz/types"
+
+type QuizUserSubscription = {
+  isActive: boolean
+}
 
 type Props = {
   initialPercentage: number
@@ -15,11 +19,7 @@ type Props = {
     completed: boolean
     challengeOptions: (typeof challengeOptions.$inferSelect)[]
   })[]
-  userSubscription:
-    | (typeof userSubscription.$inferSelect & {
-        isActive: boolean
-      })
-    | null
+  userSubscription: QuizUserSubscription | null
   lesson: LessonMeta
 }
 

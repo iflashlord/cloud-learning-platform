@@ -35,22 +35,6 @@ interface Message {
   timestamp: Date
 }
 
-// Chrome AI API types
-interface ChromeAI {
-  assistant: {
-    create(options?: { systemPrompt?: string; temperature?: number; topK?: number }): Promise<{
-      prompt(message: string): Promise<string>
-      promptStreaming(message: string): AsyncIterable<string>
-    }>
-  }
-}
-
-declare global {
-  interface Window {
-    ai?: ChromeAI
-  }
-}
-
 export const AIChat = ({
   lessonData,
   completionData,
@@ -131,7 +115,12 @@ Help them understand AWS concepts better with detailed explanations, real-world 
 
 Keep responses concise but comprehensive, encouraging continued learning.`
 
-          const session = await window.ai.assistant.create({
+          const assistant = window.ai?.assistant
+          if (!assistant) {
+            throw new Error("Chrome AI assistant is unavailable in this session.")
+          }
+
+          const session = await assistant.create({
             systemPrompt,
             temperature: 0.7,
             topK: 40,

@@ -7,6 +7,10 @@ import { toast } from "sonner"
 import { Button, type ButtonProps } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { renderMarkdownToHtml } from "@/lib/markdown"
+import type {
+  ChromeSummarizerInstance,
+  ChromeSummarizerNamespace,
+} from "@/lib/ai/chrome-ai-types"
 
 type ChallengeSummary = {
   id: number
@@ -47,20 +51,6 @@ type UnitSummaryButtonProps = {
   fullWidth?: boolean
   label?: string
   ariaLabel?: string
-}
-
-type SummarizerLike = {
-  summarize: (input: { text: string }) => Promise<any>
-}
-
-declare global {
-  interface Navigator {
-    ai?: any
-  }
-
-  interface Window {
-    ai?: any
-  }
 }
 
 const buildPromptFromPayload = (payload: UnitSummaryPayload) => {
@@ -104,7 +94,9 @@ const parseSummaryResult = (result: any): string => {
 
   if (Array.isArray(result.summaries)) {
     return result.summaries
-      .map((item) => (typeof item === "string" ? item : item?.summary))
+      .map((item: string | { summary?: string }) =>
+        typeof item === "string" ? item : item?.summary,
+      )
       .filter(Boolean)
       .join("\n")
   }
@@ -135,16 +127,17 @@ const ensureDialogElement = (dialog: HTMLDialogElement | null) => {
   }
 }
 
-const getChromeSummarizer = async (): Promise<SummarizerLike | null> => {
+const getChromeSummarizer = async (): Promise<ChromeSummarizerInstance | null> => {
   if (typeof window === "undefined") {
     return null
   }
 
+  const globalSummarizer = (
+    globalThis as typeof globalThis & { Summarizer?: ChromeSummarizerNamespace }
+  ).Summarizer
+
   const aiNamespace =
-    (navigator as any)?.ai?.summarizer ??
-    (window as any)?.ai?.summarizer ??
-    (globalThis as any)?.Summarizer ??
-    null
+    window.navigator?.ai?.summarizer ?? window.ai?.summarizer ?? globalSummarizer ?? null
 
   if (!aiNamespace) {
     return null
@@ -163,13 +156,13 @@ const getChromeSummarizer = async (): Promise<SummarizerLike | null> => {
       const status =
         typeof availability === "string"
           ? availability
-          : availability?.available ?? availability?.status
+          : availability?.available ?? availability?.status ?? null
 
-      if (["no", "unavailable"].includes(status)) {
+      if (status && ["no", "unavailable"].includes(status)) {
         return null
       }
 
-      if (["after-download", "downloadable"].includes(status)) {
+      if (status && ["after-download", "downloadable"].includes(status)) {
         throw new Error(
           "Chrome is still downloading the on-device Gemini Nano model. Please keep this tab open and try again shortly.",
         )
@@ -189,11 +182,16 @@ const getChromeSummarizer = async (): Promise<SummarizerLike | null> => {
     )
   }
 
+  const summarizerSource: ChromeSummarizerNamespace | null =
+    aiNamespace && typeof aiNamespace.create === "function"
+      ? aiNamespace
+      : ((
+          aiNamespace as unknown as { summarizer?: ChromeSummarizerNamespace | null }
+        )?.summarizer ?? null)
+
   const createFn =
-    typeof aiNamespace.create === "function"
-      ? aiNamespace.create.bind(aiNamespace)
-      : typeof aiNamespace.summarizer?.create === "function"
-      ? aiNamespace.summarizer.create.bind(aiNamespace.summarizer)
+    summarizerSource && typeof summarizerSource.create === "function"
+      ? summarizerSource.create.bind(summarizerSource)
       : undefined
 
   if (!createFn) {
@@ -209,7 +207,7 @@ const getChromeSummarizer = async (): Promise<SummarizerLike | null> => {
       length: "medium",
     })
 
-    if (summarizer?.summarize) {
+    if (summarizer && typeof summarizer.summarize === "function") {
       return summarizer
     }
   } catch (error: any) {

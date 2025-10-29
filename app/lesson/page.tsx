@@ -27,14 +27,32 @@ const LessonPage = async () => {
     .filter((challenge) => challenge.completed)
     .length / lesson.challenges.length * 100;
 
+  const normalizedSubscription: { isActive: boolean } | null = userSubscription
+    ? { isActive: Boolean(userSubscription.isActive) }
+    : null;
+
   return ( 
     <Quiz
       initialLessonId={lesson.id}
       initialLessonChallenges={lesson.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
-      userSubscription={userSubscription}
-      lesson={lesson}
+      userSubscription={normalizedSubscription}
+      lesson={{
+        id: lesson.id,
+        title: lesson.title,
+        unit: lesson.unit
+          ? {
+              title: lesson.unit.title,
+              course: lesson.unit.course
+                ? {
+                    title: lesson.unit.course.title,
+                  }
+                : null,
+            }
+          : null,
+        challenges: lesson.challenges,
+      }}
     />
   );
 };

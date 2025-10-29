@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { synthesizeUnitDescription } from "@/app/api/ai/unit-description/route"
+import { synthesizeUnitDescription } from "@/app/api/ai/unit-description/synthesizer"
 
 describe("synthesizeUnitDescription", () => {
   it("returns architecture-focused description when keywords match", () => {
