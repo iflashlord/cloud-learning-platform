@@ -17,6 +17,8 @@ import { QuestListing } from "@/components/ui/quest-listing"
 import { MonthlyQuestContainer } from "@/components/quests/MonthlyQuestContainer"
 import { quests } from "@/constants"
 
+export const dynamic = "force-dynamic"
+
 const QuestsPage = async () => {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()

@@ -3,6 +3,8 @@ import { DashboardLayout, ContentGrid } from "@/lib/css-grid-system"
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries"
 import { SubscriptionManager } from "./subscription-manager"
 
+export const dynamic = "force-dynamic"
+
 const SubscriptionPage = async () => {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()

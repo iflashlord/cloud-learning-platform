@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getUserProgress, getUserSubscription, getCourses } from "@/db/queries"
 import { ShopPageClient } from "./client-wrapper"
 
+export const dynamic = "force-dynamic"
+
 const ShopPage = async () => {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()

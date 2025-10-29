@@ -15,6 +15,8 @@ import {
 import { Unit } from "./unit"
 import { EnhancedLearnHeader } from "@/components/enhanced-learn-header"
 
+export const dynamic = "force-dynamic"
+
 const LearnPage = async () => {
   const userProgressData = getUserProgress()
   const courseProgressData = getCourseProgress()
