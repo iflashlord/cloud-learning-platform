@@ -25,9 +25,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const originTrialToken = process.env.NEXT_PUBLIC_CHROME_ORIGIN_TRIAL_TOKEN
+
   return (
     <ClerkProvider afterSignOutUrl='/'>
       <html lang='en'>
+        <head>
+          {originTrialToken && (
+            <meta httpEquiv='origin-trial' content={originTrialToken} />
+          )}
+        </head>
         <body className={font.className}>
           {process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && (
             <Script
