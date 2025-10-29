@@ -1,4 +1,10 @@
-export type LessonAiPromptId = "concept" | "steps" | "analogy" | "practice" | "pitfalls"
+export type LessonAiPromptId =
+  | "concept"
+  | "steps"
+  | "analogy"
+  | "practice"
+  | "pitfalls"
+  | "simplify"
 
 type LessonAiPrompt = {
   id: LessonAiPromptId
@@ -48,6 +54,14 @@ export const LESSON_AI_PROMPTS: LessonAiPrompt[] = [
     instruction:
       "Briefly explain why each incorrect answer choice is wrong. Highlight the misunderstanding it might reveal and give the correct takeaway.",
     preferredEngine: "assistant",
+  },
+  {
+    id: "simplify",
+    title: "Simplify the question",
+    description: "Break down the question into simpler terms.",
+    instruction:
+      "Rewrite the question in simpler terms without losing its meaning. Use clear, straightforward language suitable for beginners.",
+    preferredEngine: "prompt",
   },
 ]
 
