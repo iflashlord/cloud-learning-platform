@@ -121,17 +121,19 @@ export const upsertChallengeProgress = async (
       }
     }
 
-    // Pro users get unlimited hearts and enhanced XP
-    const heartsUpdate = userSubscription?.isActive
-      ? currentUserProgress.hearts // Keep current hearts for pro (unlimited display)
-      : Math.min(currentUserProgress.hearts + 1, 5) // Cap at 5 for free users
+    // Pro users get unlimited hearts and enhanced XP. Free users should not auto-refill hearts from practice.
+    if (!userSubscription?.isActive && currentUserProgress.hearts > 0) {
+      const nextHearts = Math.min(currentUserProgress.hearts + 1, GAMIFICATION.MAX_HEARTS)
 
-    await db
-      .update(userProgress)
-      .set({
-        hearts: heartsUpdate,
-      })
-      .where(eq(userProgress.userId, userId))
+      if (nextHearts !== currentUserProgress.hearts) {
+        await db
+          .update(userProgress)
+          .set({
+            hearts: nextHearts,
+          })
+          .where(eq(userProgress.userId, userId))
+      }
+    }
 
     revalidatePath("/learn")
     revalidatePath("/lesson")

@@ -75,6 +75,12 @@ export const QuizCompletion = ({
           <h1 className='text-xl lg:text-3xl font-bold text-foreground'>
             Great job! <br /> You&apos;ve completed the lesson.
           </h1>
+
+          <div className='flex items-center gap-x-4 w-full'>
+            <ResultCard variant='points' value={totalXP} />
+            <ResultCard variant='hearts' value={hearts} />
+          </div>
+
           <LessonRecapButton
             lessonId={lessonId}
             lessonTitle={lessonTitle}
@@ -83,10 +89,6 @@ export const QuizCompletion = ({
             label='Get AI recap'
             fullWidth
           />
-          <div className='flex items-center gap-x-4 w-full'>
-            <ResultCard variant='points' value={totalXP} />
-            <ResultCard variant='hearts' value={hearts} />
-          </div>
 
           <div className='text-sm text-muted-foreground space-y-1'>
             <p>
@@ -94,7 +96,8 @@ export const QuizCompletion = ({
             </p>
             {questionXPPer > 0 && (
               <p>
-                Questions: {challenges.length} × {questionXPPer} XP = <strong>{questionXP} XP</strong>
+                Questions: {challenges.length} × {questionXPPer} XP ={" "}
+                <strong>{questionXP} XP</strong>
               </p>
             )}
           </div>

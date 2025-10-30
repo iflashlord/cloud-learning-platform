@@ -61,7 +61,7 @@ export const HeartsDepleteModal = ({ isOpen, onClose }: HeartsDepleteModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='max-w-lg'>
+      <DialogContent className='max-w-lg' showCloseButton={false}>
         <DialogHeader>
           <div className='flex items-center w-full justify-center mb-5'>
             <div className='relative'>
