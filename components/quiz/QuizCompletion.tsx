@@ -6,6 +6,7 @@ import { useWindowSize } from "react-use"
 import { ResultCard } from "../../app/lesson/result-card"
 import { GAMIFICATION } from "@/constants"
 import { Button } from "@/components/ui/button"
+import { LessonRecapButton } from "./LessonRecapButton"
 
 interface QuizCompletionProps {
   challenges: any[]
@@ -18,6 +19,9 @@ interface QuizCompletionProps {
     isActive: boolean
   } | null
   isPractice?: boolean
+  lessonTitle: string
+  unitTitle?: string | null
+  courseTitle?: string | null
 }
 
 export const QuizCompletion = ({
@@ -29,6 +33,9 @@ export const QuizCompletion = ({
   finishAudio,
   userSubscription,
   isPractice = false,
+  lessonTitle,
+  unitTitle,
+  courseTitle,
 }: QuizCompletionProps) => {
   const { width, height } = useWindowSize()
 
@@ -68,6 +75,14 @@ export const QuizCompletion = ({
           <h1 className='text-xl lg:text-3xl font-bold text-foreground'>
             Great job! <br /> You&apos;ve completed the lesson.
           </h1>
+          <LessonRecapButton
+            lessonId={lessonId}
+            lessonTitle={lessonTitle}
+            unitTitle={unitTitle}
+            courseTitle={courseTitle}
+            label='Get AI recap'
+            fullWidth
+          />
           <div className='flex items-center gap-x-4 w-full'>
             <ResultCard variant='points' value={totalXP} />
             <ResultCard variant='hearts' value={hearts} />

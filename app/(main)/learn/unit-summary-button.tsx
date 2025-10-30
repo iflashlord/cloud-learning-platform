@@ -1,10 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Loader2, Sparkles, X } from "lucide-react"
+import { Loader2, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button, type ButtonProps } from "@/components/ui/button"
+import { AiDialog } from "@/components/ai/ai-dialog"
 import { cn } from "@/lib/utils"
 import { renderMarkdownToHtml } from "@/lib/markdown"
 import type { ChromeSummarizerInstance, ChromeSummarizerNamespace } from "@/lib/ai/chrome-ai-types"
@@ -238,6 +239,7 @@ export const UnitSummaryButton = ({
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const [loading, setLoading] = useState(false)
   const [summaryText, setSummaryText] = useState<string | null>(null)
+  const [summaryHtml, setSummaryHtml] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -248,6 +250,7 @@ export const UnitSummaryButton = ({
 
     const handleCancel = () => {
       setSummaryText(null)
+      setSummaryHtml(null)
       setErrorMessage(null)
     }
 
@@ -265,12 +268,14 @@ export const UnitSummaryButton = ({
     }
     dialog.close()
     setSummaryText(null)
+    setSummaryHtml(null)
     setErrorMessage(null)
   }, [])
 
   const handleSummarize = useCallback(async () => {
     setLoading(true)
     setSummaryText(null)
+    setSummaryHtml(null)
     setErrorMessage(null)
 
     try {
@@ -308,6 +313,7 @@ export const UnitSummaryButton = ({
       const summary = parseSummaryResult(result)
 
       setSummaryText(summary)
+      setSummaryHtml(renderMarkdownToHtml(summary))
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unable to generate a summary at this time."
@@ -331,11 +337,6 @@ export const UnitSummaryButton = ({
     return "Summarize"
   }, [label, loading])
 
-  const summaryHtml = useMemo(
-    () => (summaryText ? renderMarkdownToHtml(summaryText) : ""),
-    [summaryText],
-  )
-
   return (
     <>
       <Button
@@ -343,7 +344,7 @@ export const UnitSummaryButton = ({
         size={size}
         onClick={handleSummarize}
         disabled={loading}
-        className={cn("flex items-center gap-2", fullWidth && "w-full", className)}
+        className={cn("flex items-center gap-2 self-start", className)}
         aria-label={ariaLabel}
         title={ariaLabel}
       >
@@ -351,58 +352,43 @@ export const UnitSummaryButton = ({
         {buttonLabel}
       </Button>
 
-      <dialog
+      <AiDialog
         ref={dialogRef}
-        className='backdrop:bg-black/50 rounded-xl p-0 border border-border shadow-2xl max-w-2xl w-[min(90vw,640px)]'
+        title={`${unitTitle} — AI Summary`}
+        subtitle="Generated with Chrome's built-in summarizer."
+        onClose={closeDialog}
+        footer={
+          <Button variant='outline' size='sm' onClick={closeDialog}>
+            Close
+          </Button>
+        }
       >
-        <div className='p-6 space-y-4'>
-          <div className='flex items-start justify-between gap-4'>
-            <div>
-              <h2 className='text-lg font-semibold text-foreground dark:text-gray-800'>
-                {unitTitle} — AI Summary
-              </h2>
-              <p className='text-sm text-muted-foreground dark:text-gray-600'>
-                Generated with Chrome&apos;s built-in summarizer.
-              </p>
-            </div>
-            <Button variant='ghost' size='icon' className='h-8 w-8' onClick={closeDialog}>
-              <X className='h-4 w-4' />
-            </Button>
+        {summaryHtml && (
+          <div
+            className='rounded-lg border bg-muted/60 p-4 text-sm leading-relaxed text-foreground [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mt-1.5 [&>p]:mb-2 [&>ol]:list-decimal [&>ol]:pl-5'
+            dangerouslySetInnerHTML={{ __html: summaryHtml }}
+          />
+        )}
+
+        {summaryText && !summaryHtml && (
+          <div className='rounded-lg border bg-muted/60 p-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap'>
+            {summaryText}
           </div>
+        )}
 
-          {summaryHtml && (
-            <div
-              className='rounded-lg border bg-muted/60 p-4 text-sm leading-relaxed text-foreground [&>ul]:list-disc [&>ul]:pl-5 [&>ul>li]:mt-1.5 [&>p]:mb-2 [&>ol]:list-decimal [&>ol]:pl-5'
-              dangerouslySetInnerHTML={{ __html: summaryHtml }}
-            />
-          )}
-
-          {summaryText && !summaryHtml && (
-            <div className='rounded-lg border bg-muted/60 p-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap'>
-              {summaryText}
-            </div>
-          )}
-
-          {errorMessage && (
-            <div className='rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm leading-relaxed text-destructive'>
-              {errorMessage}
-            </div>
-          )}
-
-          {!summaryText && !errorMessage && (
-            <div className='flex items-center gap-3 text-sm text-muted-foreground'>
-              <Loader2 className='h-4 w-4 animate-spin' />
-              Gathering unit content…
-            </div>
-          )}
-
-          <div className='flex justify-end gap-2'>
-            <Button variant='outline' size='sm' onClick={closeDialog}>
-              Close
-            </Button>
+        {errorMessage && (
+          <div className='rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm leading-relaxed text-destructive'>
+            {errorMessage}
           </div>
-        </div>
-      </dialog>
+        )}
+
+        {!summaryText && !errorMessage && (
+          <div className='flex items-center gap-3 text-sm text-muted-foreground'>
+            <Loader2 className='h-4 w-4 animate-spin' />
+            Gathering unit content…
+          </div>
+        )}
+      </AiDialog>
     </>
   )
 }

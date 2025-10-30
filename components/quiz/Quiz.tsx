@@ -11,6 +11,7 @@ import { QuizCompletion } from "./QuizCompletion"
 import { HeartsDepleteModal } from "./HeartsDepleteModal"
 import { LessonMeta, QuizChallenge, UserSubscription } from "./types"
 import { upsertChallengeProgress } from "@/actions/challenge-progress"
+import { LessonRecapButton } from "./LessonRecapButton"
 
 interface QuizProps {
   initialLessonId: number
@@ -214,9 +215,24 @@ export const Quiz = ({
         finishAudio={finishAudio || undefined}
         userSubscription={userSubscription}
         isPractice={isPractice}
+        lessonTitle={lesson.title}
+        unitTitle={lesson.unit?.title ?? null}
+        courseTitle={lesson.unit?.course?.title ?? null}
       />
     )
   }
+
+  const practiceLessonAccessory = isPractice ? (
+    <div className='flex w-full justify-end'>
+      <LessonRecapButton
+        lessonId={lessonId!}
+        lessonTitle={lesson.title}
+        unitTitle={lesson.unit?.title ?? null}
+        courseTitle={lesson.unit?.course?.title ?? null}
+        size='sm'
+      />
+    </div>
+  ) : null
 
   return (
     <>
@@ -242,6 +258,7 @@ export const Quiz = ({
         onTextChange={setTextInput}
         lesson={lesson}
         totalChallenges={initialLessonChallenges.length}
+        lessonAccessory={practiceLessonAccessory}
       />
 
       <HeartsDepleteModal isOpen={showHeartsModal} onClose={() => setShowHeartsModal(false)} />
