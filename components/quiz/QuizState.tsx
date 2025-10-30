@@ -87,6 +87,16 @@ export const useQuizState = ({
     setPercentage(newPercentage)
   }, [activeIndex, initialChallenges.length])
 
+  const resetQuiz = () => {
+    setActiveIndex(0)
+    setSelectedOption(undefined)
+    setTextInput("")
+    setStatus("none")
+    setWrongAttempts(0)
+    setShowCorrectAnswer(false)
+    setPercentage(0)
+  }
+
   return {
     lessonId,
     activeIndex,
@@ -109,5 +119,6 @@ export const useQuizState = ({
     setTextInput,
     setWrongAttempts,
     setShowCorrectAnswer,
+    resetQuiz,
   }
 }

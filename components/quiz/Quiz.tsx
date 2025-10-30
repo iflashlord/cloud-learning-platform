@@ -56,6 +56,7 @@ export const Quiz = ({
     setTextInput,
     setWrongAttempts,
     setShowCorrectAnswer,
+    resetQuiz,
   } = useQuizState({
     initialChallenges: initialLessonChallenges,
     initialHearts,
@@ -187,7 +188,8 @@ export const Quiz = ({
   }
 
   const handleRedo = () => {
-    router.refresh()
+    resetQuiz()
+    setShowHeartsModal(false)
   }
 
   const handleChallengeComplete = async (challengeId: number) => {
