@@ -286,8 +286,8 @@ export const LessonRecapButton = ({
           <div className='flex items-start gap-2 text-sm text-blue-900 dark:text-blue-200'>
             <Sparkles className='mt-0.5 h-4 w-4 shrink-0' />
             <p>
-              Lesson completed! Chrome AI can recap the key takeaways using the questions you just
-              mastered, open it anytime to refresh your memory.
+              Chrome AI can recap the key takeaways using the questions you just mastered, open it
+              anytime to refresh your memory.
             </p>
           </div>
           <Button
