@@ -146,12 +146,11 @@ npm run db:seed
 
 ## 📖 Documentation
 
-See `guides/aws-transformation-guide.md` for detailed information about:
-- Complete course structure
-- How to add more content
-- Challenge types
-- Future certification courses
-- Customization tips
+Need deeper guidance on authoring and expanding lessons? Read [Content Quick Reference](./content-quick-reference.md) for:
+- Full course map and domain weights
+- Question templates and challenge types
+- Tips for expanding certifications and writing new content
+- Branding suggestions and customization ideas
 
 ---
 
