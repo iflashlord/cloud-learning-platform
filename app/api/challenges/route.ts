@@ -6,7 +6,7 @@ import { isAdmin } from "@/lib/admin";
 import { challenges, lessons, units } from "@/db/schema";
 
 export const GET = async (req: Request) => {
-  if (!isAdmin()) {
+  if (!(await isAdmin())) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -51,7 +51,7 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-  if (!isAdmin()) {
+  if (!(await isAdmin())) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 

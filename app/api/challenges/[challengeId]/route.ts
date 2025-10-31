@@ -2,14 +2,14 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import db from "@/db/drizzle";
-import { challenges } from "@/db/schema";
+import { challenges, challengeOptions } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
 
 export const GET = async (
   req: Request,
   { params }: { params: { challengeId: string } },
 ) => {
-  if (!isAdmin()) {
+  if (!(await isAdmin())) {
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
@@ -53,7 +53,7 @@ export const PUT = async (
   req: Request,
   { params }: { params: { challengeId: string } },
 ) => {
-  if (!isAdmin()) {
+  if (!(await isAdmin())) {
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
@@ -75,8 +75,6 @@ export const PUT = async (
 
   // Update challenge options if provided
   if (body.challengeOptions && body.challengeOptions.length > 0) {
-    const { challengeOptions } = await import("@/db/schema");
-    
     // Delete existing options
     await db.delete(challengeOptions).where(eq(challengeOptions.challengeId, challengeId));
     
@@ -102,19 +100,26 @@ export const DELETE = async (
   req: Request,
   { params }: { params: { challengeId: string } },
 ) => {
-  if (!isAdmin()) {
+  if (!(await isAdmin())) {
     return new NextResponse("Unauthorized", { status: 403 });
   }
 
   const challengeId = parseInt(params.challengeId);
-  const { challengeOptions } = await import("@/db/schema");
-  
-  // Delete challenge options first (foreign key constraint)
-  await db.delete(challengeOptions).where(eq(challengeOptions.challengeId, challengeId));
-  
-  // Delete the challenge
-  const data = await db.delete(challenges)
-    .where(eq(challenges.id, challengeId)).returning();
+  try {
+    await db.delete(challengeOptions).where(eq(challengeOptions.challengeId, challengeId));
 
-  return NextResponse.json(data[0]);
+    const data = await db
+      .delete(challenges)
+      .where(eq(challenges.id, challengeId))
+      .returning();
+
+    if (!data.length) {
+      return new NextResponse("Challenge not found", { status: 404 });
+    }
+
+    return NextResponse.json(data[0]);
+  } catch (error) {
+    console.error("[DELETE_CHALLENGE]", error);
+    return new NextResponse("Failed to delete challenge", { status: 500 });
+  }
 };

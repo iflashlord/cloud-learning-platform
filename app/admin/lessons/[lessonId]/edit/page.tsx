@@ -4,10 +4,12 @@ import { isAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowLeft, Edit, Plus, Trash2, Eye, AlertTriangle, Lightbulb } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Eye, AlertTriangle, Lightbulb } from "lucide-react";
 import db from "@/db/drizzle";
 import { lessons } from "@/db/schema";
 import { LessonForm } from "../../components/lesson-form";
+import { getChallengeTypeBadgeClass, getChallengeTypeLabel } from "@/lib/challenges/challenge-type-meta";
+import { ChallengeDeleteButton } from "../../components/challenge-delete-button";
 
 const AdminLessonEditPage = async ({
   params
@@ -51,12 +53,7 @@ const AdminLessonEditPage = async ({
     return redirect("/admin/lessons");
   }
 
-  // Fetch challenges for this lesson
-  const challengesResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/challenges?lessonId=${lessonId}`, {
-    cache: 'no-store'
-  });
-  
-  const challenges = challengesResponse.ok ? await challengesResponse.json() : [];
+  const challenges = lesson.challenges ?? [];
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -136,12 +133,10 @@ const AdminLessonEditPage = async ({
                             <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
                               Question {challenge.order}
                             </span>
-                            <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
-                              challenge.type === 'SELECT' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-purple-100 text-purple-800'
-                            }`}>
-                              {challenge.type === 'SELECT' ? 'Multiple Choice' : 'Fill in Blank'}
+                            <span
+                              className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${getChallengeTypeBadgeClass(challenge.type)}`}
+                            >
+                              {getChallengeTypeLabel(challenge.type)}
                             </span>
                             {challenge.hint && (
                               <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
@@ -168,9 +163,7 @@ const AdminLessonEditPage = async ({
                               <Edit className="h-4 w-4" />
                             </Button>
                           </Link>
-                          <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <ChallengeDeleteButton challengeId={challenge.id} />
                         </div>
                       </div>
                     </div>

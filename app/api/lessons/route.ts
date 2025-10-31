@@ -17,6 +17,7 @@ export const GET = async (req: Request) => {
         columns: {
           id: true,
           title: true,
+          order: true,
         },
         with: {
           course: {
@@ -30,7 +31,18 @@ export const GET = async (req: Request) => {
     },
   });
 
-  return NextResponse.json(data);
+  const sortedData = [...data].sort((a, b) => {
+    const unitOrderA = a.unit?.order ?? Number.MAX_SAFE_INTEGER;
+    const unitOrderB = b.unit?.order ?? Number.MAX_SAFE_INTEGER;
+
+    if (unitOrderA !== unitOrderB) {
+      return unitOrderA - unitOrderB;
+    }
+
+    return a.order - b.order;
+  });
+
+  return NextResponse.json(sortedData);
 };
 
 export const POST = async (req: Request) => {

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AdminPageHeader } from "@/components/ui/admin-page-header";
 import { AdminEmptyState } from "@/components/ui/admin-empty-state";
+import { FilterSelector } from "@/components/ui/filter-selector";
 import { Plus, Edit, Trash2, ListChecks } from "lucide-react";
 
 interface Lesson {
@@ -15,8 +16,11 @@ interface Lesson {
   unitId: number;
   order: number;
   unit?: {
+    id: number;
     title: string;
+    order: number;
     course?: {
+      id: number;
       title: string;
     };
   };
@@ -27,6 +31,8 @@ export default function LessonsPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("all");
+  const [selectedUnitId, setSelectedUnitId] = useState<string>("all");
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -36,8 +42,24 @@ export default function LessonsPage() {
   const fetchLessons = async () => {
     try {
       const response = await fetch('/api/lessons');
-      const data = await response.json();
-      setLessons(data);
+      const data: Lesson[] = await response.json();
+
+      const sortedLessons = [...data].sort((a, b) => {
+        const unitOrderA = a.unit?.order ?? Number.MAX_SAFE_INTEGER;
+        const unitOrderB = b.unit?.order ?? Number.MAX_SAFE_INTEGER;
+
+        if (unitOrderA !== unitOrderB) {
+          return unitOrderA - unitOrderB;
+        }
+
+        if (a.order !== b.order) {
+          return a.order - b.order;
+        }
+
+        return a.id - b.id;
+      });
+
+      setLessons(sortedLessons);
     } catch (error) {
       console.error('Failed to fetch lessons:', error);
     } finally {
@@ -66,17 +88,100 @@ export default function LessonsPage() {
     }
   };
 
-  // Filter lessons based on search term
-  const filteredLessons = lessons.filter(lesson =>
-    lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lesson.unit?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lesson.unit?.course?.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const courseFilters = useMemo(() => {
+    const coursesMap = new Map<string, { id: string; name: string }>();
+
+    lessons.forEach((lesson) => {
+      const course = lesson.unit?.course;
+      if (course && !coursesMap.has(String(course.id))) {
+        coursesMap.set(String(course.id), {
+          id: String(course.id),
+          name: course.title,
+        });
+      }
+    });
+
+    return [
+      { id: "all", name: "All Courses" },
+      ...Array.from(coursesMap.values()).sort((a, b) => a.name.localeCompare(b.name)),
+    ];
+  }, [lessons]);
+
+  const unitFilters = useMemo(() => {
+    const filteredLessonsByCourse = lessons.filter((lesson) => {
+      if (selectedCourseId === "all") {
+        return true;
+      }
+      return lesson.unit?.course?.id === Number(selectedCourseId);
+    });
+
+    const unitsMap = new Map<string, { id: string; name: string; order: number }>();
+
+    filteredLessonsByCourse.forEach((lesson) => {
+      if (lesson.unit && !unitsMap.has(String(lesson.unit.id))) {
+        unitsMap.set(String(lesson.unit.id), {
+          id: String(lesson.unit.id),
+          name: lesson.unit.title,
+          order: lesson.unit.order,
+        });
+      }
+    });
+
+    const unitList = Array.from(unitsMap.values()).sort((a, b) => {
+      if (a.order !== b.order) {
+        return a.order - b.order;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    return [
+      { id: "all", name: "All Units" },
+      ...unitList.map(({ id, name }) => ({ id, name })),
+    ];
+  }, [lessons, selectedCourseId]);
+
+  useEffect(() => {
+    if (selectedUnitId === "all") {
+      return;
+    }
+
+    const unitExists = unitFilters.some((unit) => unit.id === selectedUnitId);
+
+    if (!unitExists) {
+      setSelectedUnitId("all");
+    }
+  }, [unitFilters, selectedUnitId]);
+
+  const filteredLessons = useMemo(() => {
+    const search = searchTerm.trim().toLowerCase();
+
+    return lessons.filter((lesson) => {
+      const lessonTitle = lesson.title.toLowerCase();
+      const unitTitle = lesson.unit?.title?.toLowerCase() ?? "";
+      const courseTitle = lesson.unit?.course?.title?.toLowerCase() ?? "";
+
+      const matchesSearch =
+        search.length === 0 ||
+        lessonTitle.includes(search) ||
+        unitTitle.includes(search) ||
+        courseTitle.includes(search);
+
+      const matchesCourse =
+        selectedCourseId === "all" ||
+        lesson.unit?.course?.id === Number(selectedCourseId);
+
+      const matchesUnit =
+        selectedUnitId === "all" ||
+        lesson.unitId === Number(selectedUnitId);
+
+      return matchesSearch && matchesCourse && matchesUnit;
+    });
+  }, [lessons, searchTerm, selectedCourseId, selectedUnitId]);
 
   // Reset to first page when search changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, selectedCourseId, selectedUnitId]);
 
   if (loading) {
     return (
@@ -98,6 +203,27 @@ export default function LessonsPage() {
         addNewLabel="Add Lesson"
         addNewIcon={ListChecks}
       />
+
+      {(courseFilters.length > 1 || unitFilters.length > 1) && (
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          {courseFilters.length > 1 && (
+            <FilterSelector
+              filters={courseFilters}
+              selectedFilter={selectedCourseId}
+              onFilterChange={setSelectedCourseId}
+              label="Course"
+            />
+          )}
+          {unitFilters.length > 1 && (
+            <FilterSelector
+              filters={unitFilters}
+              selectedFilter={selectedUnitId}
+              onFilterChange={setSelectedUnitId}
+              label="Unit"
+            />
+          )}
+        </div>
+      )}
 
       {/* Lessons List */}
       {lessons.length === 0 ? (
