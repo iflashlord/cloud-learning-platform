@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const awsDeveloperAssociateCourse: CourseSeed = {
   id: 3,
   title: "AWS Developer Associate",
-  imageSrc: "/aws-developer.svg",
+  imageSrc: "/icons/aws-developer-icon.png",
   category: "Development",
   description:
     "Master AWS services for application development and deployment. Great for developers building cloud applications.",

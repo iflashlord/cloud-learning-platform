@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const googleCloudDigitalLeaderCourse: CourseSeed = {
   id: 5,
   title: "Google Cloud Digital Leader",
-  imageSrc: "/gcp-digital-leader.svg",
+  imageSrc: "/icons/gcp-digital-leader-icon.png",
   category: "Google Cloud",
   description:
     "Build foundational knowledge of core Google Cloud Platform services, billing structure, and security concepts.",

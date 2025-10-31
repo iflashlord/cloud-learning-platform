@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const awsCloudPractitionerCourse: CourseSeed = {
   id: 1,
   title: "AWS Cloud Practitioner",
-  imageSrc: "/aws-cloud-practitioner.svg",
+  imageSrc: "/icons/aws-cloud-practitioner-icon.png",
   category: "AWS",
   description:
     "Build foundational knowledge of cloud concepts and AWS services. Perfect for beginners entering the cloud computing field.",
@@ -92,39 +92,6 @@ export const awsCloudPractitionerCourse: CourseSeed = {
               question: "What does AWS stand for? (Type the full name)",
               correctAnswer: "Amazon Web Services",
               hint: "Spell out the same Amazon-branded name you see on the console banner and in certification titles.",
-            },
-            {
-              type: "DRAG_DROP",
-              order: 5,
-              question:
-                "Arrange these AWS service types by typical learning order (most basic first):",
-              hint: "Build knowledge from storing data, to running code, to connecting components, and finally to managing everything at scale.",
-              options: [
-                {
-                  text: "Storage Services (S3, EBS)",
-                  order: 1,
-                  guide:
-                    "You usually begin with storage because every workload needs a place to hold data before processing it.",
-                },
-                {
-                  text: "Compute Services (EC2, Lambda)",
-                  order: 2,
-                  guide:
-                    "After storage basics, learners move on to running applications with EC2 or Lambda so they can act on that data.",
-                },
-                {
-                  text: "Networking Services (VPC, CloudFront)",
-                  order: 3,
-                  guide:
-                    "Networking comes next so you can securely connect multiple compute and storage components.",
-                },
-                {
-                  text: "Management Services (CloudWatch, CloudFormation)",
-                  order: 4,
-                  guide:
-                    "Automation, monitoring, and governance tools typically make sense once you understand the foundational services.",
-                },
-              ],
             },
             {
               type: "IMAGE_SELECT",
@@ -390,44 +357,6 @@ export const awsCloudPractitionerCourse: CourseSeed = {
                 },
               ],
               hint: 'Use the example from "Cloud Architecture" about Well Architected System Designed to guide your answer.',
-            },
-            {
-              type: "DRAG_DROP",
-              order: 4,
-              question: "Arrange the AWS Well-Architected Framework pillars in alphabetical order:",
-              options: [
-                {
-                  text: "Cost Optimization",
-                  order: 1,
-                  guide:
-                    'This assumes Cost Optimization, but "Cloud Architecture" showed Arrange Aws Well Architected behaves differently, so this isn’t the best choice.',
-                },
-                {
-                  text: "Operational Excellence",
-                  order: 2,
-                  guide:
-                    'This assumes Operational Excellence, but "Cloud Architecture" showed Arrange Aws Well Architected behaves differently, so this isn’t the best choice.',
-                },
-                {
-                  text: "Performance Efficiency",
-                  order: 3,
-                  guide:
-                    'This assumes Performance Efficiency, but "Cloud Architecture" showed Arrange Aws Well Architected behaves differently, so this isn’t the best choice.',
-                },
-                {
-                  text: "Reliability",
-                  order: 4,
-                  guide:
-                    'This assumes Reliability, but "Cloud Architecture" showed Arrange Aws Well Architected behaves differently, so this isn’t the best choice.',
-                },
-                {
-                  text: "Security",
-                  order: 5,
-                  guide:
-                    'This assumes Security, but "Cloud Architecture" showed Arrange Aws Well Architected behaves differently, so this isn’t the best choice.',
-                },
-              ],
-              hint: 'Use the example from "Cloud Architecture" about Arrange Aws Well Architected to guide your answer.',
             },
           ],
         },

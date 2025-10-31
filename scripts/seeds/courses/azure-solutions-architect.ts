@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const azureSolutionsArchitectCourse: CourseSeed = {
   id: 10,
   title: "Azure Solutions Architect Expert AZ-305",
-  imageSrc: "/azure-solutions-architect.svg",
+  imageSrc: "/icons/azure-solutions-architect-icon.png",
   category: "Azure",
   description:
     "Design secure, resilient Azure solutions that meet enterprise architecture requirements.",

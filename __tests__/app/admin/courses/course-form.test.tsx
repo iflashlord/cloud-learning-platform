@@ -43,7 +43,10 @@ describe("CourseForm", () => {
   });
 
   it("creates a new course and navigates back to the courses list", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ id: 123 }),
+    });
     global.fetch = fetchMock as unknown as typeof fetch;
 
     render(<CourseForm mode="create" />);
@@ -87,7 +90,10 @@ describe("CourseForm", () => {
   });
 
   it("updates an existing course", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ id: 42 }),
+    });
     global.fetch = fetchMock as unknown as typeof fetch;
 
     render(
@@ -115,6 +121,35 @@ describe("CourseForm", () => {
         body: JSON.stringify({
           title: "Updated Course",
           imageSrc: "https://example.com/old.svg",
+        }),
+      }));
+    });
+
+    expect(pushMock).toHaveBeenCalledWith("/admin/courses");
+    expect(refreshMock).toHaveBeenCalled();
+  });
+
+  it("allows relative image paths", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ id: 456 }),
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    render(<CourseForm mode="create" />);
+
+    await userEvent.type(screen.getByLabelText("Course Title *"), "Relative Course");
+    await userEvent.type(screen.getByLabelText("Image URL *"), "/images/course.svg");
+
+    await userEvent.click(screen.getByRole("button", { name: "Create" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith("/api/courses", expect.objectContaining({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "Relative Course",
+          imageSrc: "/images/course.svg",
         }),
       }));
     });

@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const googleCloudAssociateCloudEngineerCourse: CourseSeed = {
   id: 6,
   title: "Google Cloud Associate Cloud Engineer",
-  imageSrc: "/gcp-associate-cloud-engineer.svg",
+  imageSrc: "/icons/gcp-associate-cloud-engineer-icon.png",
   category: "Google Cloud",
   description:
     "Deploy, secure, and operate Google Cloud workloads using best practices for compute, networking, and observability.",

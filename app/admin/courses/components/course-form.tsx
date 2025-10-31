@@ -18,6 +18,23 @@ interface CourseFormProps {
   mode: "create" | "edit";
 }
 
+const isValidImageSrc = (value: string) => {
+  if (!value) {
+    return false;
+  }
+
+  if (value.startsWith("/")) {
+    return true;
+  }
+
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => {
   const router = useRouter();
   const [formData, setFormData] = useState<CourseFormData>(
@@ -32,6 +49,12 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (!isValidImageSrc(formData.imageSrc)) {
+      alert("Image URL must be an absolute http(s) URL or start with '/'.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const url = mode === "create" ? "/api/courses" : `/api/courses/${courseId}`;
@@ -129,13 +152,15 @@ export const CourseForm = ({ initialData, courseId, mode }: CourseFormProps) => 
                 Image URL *
               </label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
                 id="imageSrc"
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="https://example.com/image.svg"
+                placeholder="https://example.com/image.svg or /images/course.svg"
                 value={formData.imageSrc}
                 onChange={(e) => handleInputChange("imageSrc", e.target.value)}
+                title="Provide an absolute http(s) URL or a relative path that starts with '/'"
               />
               {formData.imageSrc && (
                 <div className="mt-2">

@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const awsSolutionsArchitectCourse: CourseSeed = {
   id: 2,
   title: "AWS Solutions Architect Associate",
-  imageSrc: "/aws-solutions-architect.svg",
+  imageSrc: "/icons/aws-solutions-architect-icon.png",
   category: "Architecture",
   description:
     "Learn to design distributed systems and applications on AWS. Essential for cloud architects and engineers.",

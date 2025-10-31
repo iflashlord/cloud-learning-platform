@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const azureFundamentalsCourse: CourseSeed = {
   id: 8,
   title: "Azure Fundamentals AZ-900",
-  imageSrc: "/azure-fundamentals.svg",
+  imageSrc: "/icons/azure-fundamentals-icon.png",
   category: "Azure",
   description: "Learn essential Azure concepts, global infrastructure, and pricing fundamentals.",
   level: "Beginner",

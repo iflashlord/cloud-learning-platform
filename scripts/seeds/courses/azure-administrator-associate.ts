@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const azureAdministratorAssociateCourse: CourseSeed = {
   id: 9,
   title: "Azure Administrator Associate AZ-104",
-  imageSrc: "/azure-administrator.svg",
+  imageSrc: "/icons/azure-administrator-icon.png",
   category: "Azure",
   description:
     "Manage Azure identities, storage, compute, and networking for production workloads.",

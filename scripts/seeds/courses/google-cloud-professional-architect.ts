@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const googleCloudProfessionalArchitectCourse: CourseSeed = {
   id: 7,
   title: "Google Cloud Professional Architect",
-  imageSrc: "/gcp-professional-architect.svg",
+  imageSrc: "/icons/gcp-professional-architect-icon.png",
   category: "Google Cloud",
   description:
     "Design resilient, secure, and scalable solutions that leverage the full Google Cloud portfolio.",

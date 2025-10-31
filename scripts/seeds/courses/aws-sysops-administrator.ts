@@ -3,7 +3,7 @@ import { CourseSeed } from "../types"
 export const awsSysOpsAdministratorCourse: CourseSeed = {
   id: 4,
   title: "AWS SysOps Administrator",
-  imageSrc: "/aws-sysops.svg",
+  imageSrc: "/icons/aws-sysops-icon.png",
   category: "DevOps",
   description:
     "Develop expertise in deploying, managing, and operating AWS systems. Perfect for system administrators.",
