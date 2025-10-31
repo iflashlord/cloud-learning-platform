@@ -190,6 +190,9 @@ export const Quiz = ({
   const handleRedo = () => {
     resetQuiz()
     setShowHeartsModal(false)
+    if (lessonId) {
+      router.replace(`/lesson/${lessonId}`)
+    }
   }
 
   const handleChallengeComplete = async (challengeId: number) => {

@@ -72,12 +72,12 @@ export const useQuizState = ({
     }
 
     if (status === "correct") {
-      onNext()
       setStatus("none")
       setSelectedOption(undefined)
       setTextInput("")
       setWrongAttempts(0) // Reset attempts on new question
       setShowCorrectAnswer(false)
+      onNext()
     }
   }
 
