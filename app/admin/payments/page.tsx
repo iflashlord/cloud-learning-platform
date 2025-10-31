@@ -134,22 +134,27 @@ export default function PaymentManagementPage() {
     }
   };
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
   const filteredPayments = payments.filter(payment => {
-    const matchesSearch = 
-      payment.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.userId.toLowerCase().includes(searchTerm.toLowerCase());
-    
+    const matchesSearch =
+      !normalizedSearch ||
+      [payment.userName, payment.transactionId, payment.userId].some(value =>
+        value?.toLowerCase().includes(normalizedSearch)
+      );
+
     const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
 
   const filteredSubscriptions = subscriptions.filter(sub => {
-    const matchesSearch = 
-      sub.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sub.userId.toLowerCase().includes(searchTerm.toLowerCase());
-    
+    const matchesSearch =
+      !normalizedSearch ||
+      [sub.userName, sub.userId].some(value =>
+        value?.toLowerCase().includes(normalizedSearch)
+      );
+
     const matchesStatus = statusFilter === "all" || sub.status === statusFilter;
     
     return matchesSearch && matchesStatus;

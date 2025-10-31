@@ -49,11 +49,21 @@ const buildPrompt = (
   const optionLines = options
     ?.map((option: any, index: number) => {
       const label = String.fromCharCode(65 + index)
-      const correctness = option.correct ? " (correct)" : ""
       const guide = option?.guide ? ` | guide: ${option.guide}` : ""
-      return `${label}. ${option.text}${correctness}${guide}`
+      return `${label}. ${option.text}${guide}${option.correct ? " (correct)" : ""}`
     })
     .join("\n")
+
+  const correctOptionTexts = Array.isArray(options)
+    ? options
+        .filter((option: any) => option?.correct)
+        .map((option: any) => option?.text)
+        .filter(Boolean)
+    : []
+
+  const correctAnswerText =
+    challenge?.correctAnswer ??
+    (correctOptionTexts.length > 0 ? correctOptionTexts.join("; ") : null)
 
   const baseLines = [
     `Lesson title: ${lesson.lessonTitle}`,
@@ -61,22 +71,18 @@ const buildPrompt = (
     `Course: ${lesson.courseTitle ?? "Not specified"}`,
     `Current learner progress: ${Math.round(lesson.percentage)}% across ${lesson.totalChallenges} questions.`,
     ``,
-    `Challenge order: ${
-      typeof challenge?.order === "number" ? challenge.order + 1 : "Unknown"
-    }`,
+    `Challenge order: ${typeof challenge?.order === "number" ? challenge.order + 1 : "Unknown"}`,
     `Question type: ${challenge?.type}`,
     `Question: ${challenge?.question}`,
     optionLines ? `Answer options:\n${optionLines}` : "This question has no multiple-choice options.",
-    challenge?.correctAnswer
-      ? `Correct answer text (if applicable): ${challenge.correctAnswer}`
-      : null,
+    correctAnswerText ? `Correct answer: ${correctAnswerText}` : null,
     challenge?.hint ? `Lesson hint: ${challenge.hint}` : null,
     challenge?.explanation ? `Lesson explanation: ${challenge.explanation}` : null,
   ]
     .filter(Boolean)
     .join("\n")
 
-  return `${baseLines}\n\n${instruction}\nKeep the tone supportive and help the learner grow their AWS understanding.`
+  return `${baseLines}\n\nPrompt: ${instruction}\n\nRespond to the learner using the prompt above. Do not repeat or reveal the context, question text, or correct answer in your reply—only share the resulting guidance. Keep the tone supportive and help the learner grow their AWS understanding.`
 }
 
 const normalizeResponse = (response: any) => {
